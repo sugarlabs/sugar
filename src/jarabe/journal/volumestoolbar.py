@@ -1,9 +1,9 @@
 # Copyright (C) 2007, 2011, One Laptop Per Child
 # Copyright (C) 2014, Ignacio Rodriguez
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 import os
@@ -92,7 +91,7 @@ def _convert_entries(root):
     for posting_item in database.postlist(''):
         try:
             document = database.get_document(posting_item.docid)
-        except xapian.DocNotFoundError, e:
+        except xapian.DocNotFoundError as e:
             logging.debug('Convert DS-0 Journal entries: error getting '
                           'document %s: %s', posting_item.docid, e)
             continue
@@ -102,7 +101,7 @@ def _convert_entries(root):
 def _convert_entry(root, document):
     try:
         metadata_loaded = cPickle.loads(document.get_data())
-    except cPickle.PickleError, e:
+    except cPickle.PickleError as e:
         logging.debug('Convert DS-0 Journal entries: '
                       'error converting metadata: %s', e)
         return
@@ -306,7 +305,7 @@ class BaseButton(RadioToolButton):
 
         try:
             model.copy(metadata, self.mount_point)
-        except IOError, e:
+        except IOError as e:
             logging.exception('Error while copying the entry. %s', e.strerror)
             self.emit('volume-error',
                       _('Error while copying the entry. %s') % e.strerror,
@@ -314,6 +313,7 @@ class BaseButton(RadioToolButton):
 
 
 class VolumeButton(BaseButton):
+
     def __init__(self, mount):
         self._mount = mount
         mount_point = mount.get_root().get_path()
@@ -332,6 +332,7 @@ class VolumeButton(BaseButton):
 
 
 class JournalButton(BaseButton):
+
     def __init__(self):
         BaseButton.__init__(self, mount_point='/')
 
@@ -372,7 +373,7 @@ class JournalButtonPalette(Palette):
 
         fraction = (total_space - free_space) / float(total_space)
         self._progress_bar.props.fraction = fraction
-        self._free_space_label.props.label = _('%(free_space)d MB Free') % \
+        self._free_space_label.props.label = _('%(free_space)d MiB Free') % \
             {'free_space': free_space / (1024 * 1024)}
 
 

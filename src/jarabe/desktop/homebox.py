@@ -1,8 +1,8 @@
 # Copyright (C) 2008 One Laptop Per Child
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,13 +11,13 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import Gio
 
 from jarabe.desktop import favoritesview
 from jarabe.desktop.activitieslist import ActivitiesList
@@ -59,7 +59,8 @@ class HomeBox(Gtk.VBox):
 
         self._set_view(self._favorites_views_indicies[0])
         self._query = ''
-        self._resume_mode = True
+        self._resume_mode = Gio.Settings(
+            'org.sugarlabs.user').get_boolean('resume-activity')
 
     def __desktop_view_icons_changed_cb(self, model):
         number_of_views = desktop.get_number_of_views()
@@ -117,7 +118,7 @@ class HomeBox(Gtk.VBox):
             self._list_view.run_activity(entry._icon_selected[0]['bundle_id'],
                                          self._resume_mode)
             entry._icon_selected = []
-            self.set_resume_mode(True)
+            self.set_resume_mode(self._resume_mode)
 
     def __activitylist_clear_clicked_cb(self, widget, toolbar):
         toolbar.clear_query()

@@ -4,9 +4,9 @@
 # Copyright (C) 2014 Gonzalo Odiard
 # Copyright (C) 2014 Martin Abente
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -15,8 +15,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gettext import gettext as _
 
@@ -102,7 +101,7 @@ class AudioManagerWidget(Gtk.VBox):
         self._ok_icon = Icon(icon_name='dialog-ok')
         self._cancel_icon = Icon(icon_name='dialog-cancel')
 
-        icon = Icon(icon_size=Gtk.IconSize.MENU)
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE)
         icon.props.icon_name = icon_name
         icon.props.xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                       style.COLOR_BUTTON_GREY.get_svg()))

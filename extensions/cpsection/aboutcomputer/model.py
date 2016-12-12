@@ -1,8 +1,8 @@
 # Copyright (C) 2008 One Laptop Per Child
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 import os
@@ -23,6 +22,7 @@ import errno
 import time
 
 from gi.repository import Gio
+from gi.repository import GLib
 
 from jarabe import config
 from jarabe.model.network import get_wireless_interfaces
@@ -35,6 +35,8 @@ _DMI_DIRECTORY = '/sys/class/dmi/id'
 _logger = logging.getLogger('ControlPanel - AboutComputer')
 _not_available = _('Not available')
 
+_serial_no = None
+
 
 def get_aboutcomputer():
     msg = 'Serial Number: %s \nBuild Number: %s \nFirmware Number: %s \n' \
@@ -46,11 +48,26 @@ def print_aboutcomputer():
     print get_aboutcomputer()
 
 
-def get_serial_number():
+def _get_serial_number():
     serial_no = _read_device_tree('serial-number')
-    if serial_no is None:
-        serial_no = _not_available
-    return serial_no
+    if serial_no is not None:
+        return serial_no
+
+    cmd = 'pkexec sugar-serial-number-helper'
+    result, output, error, status = GLib.spawn_command_line_sync(cmd)
+    if status != 0:
+        return _not_available
+
+    return output.rstrip('\n')
+
+
+def get_serial_number():
+    global _serial_no
+
+    if _serial_no is None:
+        _serial_no = _get_serial_number()
+
+    return _serial_no
 
 
 def print_serial_number():
@@ -96,6 +113,7 @@ def get_firmware_number():
             firmware_no = firmware_no[6:13].strip()
         ec_name = _read_device_tree('ec-name')
         if ec_name:
+            ec_name = ec_name.replace('Ver:', '')
             firmware_no = '%(firmware)s with %(ec)s' % {
                 'firmware': firmware_no, 'ec': ec_name}
 
@@ -113,7 +131,11 @@ def get_hardware_model():
         model = _read_device_tree('mfg-data/MN')
         sku = _read_device_tree('mfg-data/sk')
         if sku:
-            model = '%s (SKU%s)' % (model, sku)
+            if sku.startswith('SKU'):
+                model = '%s, %s' % (model, sku)
+            else:
+                model = '%s, SKU%s' % (model, sku)
+    return model
 
 
 def get_secondary_licenses():
@@ -211,7 +233,7 @@ def _read_file(path):
 
 
 def get_license():
-    license_file = os.path.join(config.data_path, 'GPLv2')
+    license_file = os.path.join(config.data_path, 'GPLv3')
     lang = os.environ['LANG']
     if lang.endswith('UTF-8'):
         lang = lang[:-6]

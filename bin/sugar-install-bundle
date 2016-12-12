@@ -9,22 +9,19 @@ DBusGMainLoop(set_as_default=True)
 
 
 def cmd_help():
-    print 'Usage: sugar-install-bundle [ bundlename ] \n\n\
-    Install an activity bundle (.xo). \n'
+    print 'Usage: sugar-install-bundle activitybundle.xo [...] \n\n\
+    Install activity bundles\n'
 
-if len(sys.argv) != 2:
+if len(sys.argv) < 2:
     cmd_help()
     sys.exit(2)
 
-if 'SUGAR_PROFILE' in os.environ:
-    # We are in sugar, so use the bundle registry so the correct signals
-    # are sent to the activity list
-    from jarabe.model.bundleregistry import get_registry
-    registry = get_registry()
-    bundle = ActivityBundle(sys.argv[1])
-    registry.install(bundle, force_downgrade=True)
-else:
-    bundle = ActivityBundle(sys.argv[1])
-    bundle.install()
+for name in sys.argv[1:]:
+    bundle = ActivityBundle(name)
+    path = bundle.install()
 
-print "%s: '%s' installed." % (sys.argv[0], sys.argv[1])
+    # make sure that the BundleRegistry will add this bundle
+    # by triggering a GFileMonitor ATTRIBUTE_CHANGED event.
+    os.utime(path, None)
+
+    print "%s: '%s' installed." % (sys.argv[0], name)

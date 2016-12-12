@@ -2,9 +2,9 @@
 # Copyright (C) 2009, Simon Schampijer
 # Copyright (C) 2014, Walter Bender
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -13,8 +13,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 import logging
 
@@ -31,8 +31,13 @@ from sugar3.graphics.palettemenu import PaletteMenuItem
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
-_translate_language = lambda msg: gettext.dgettext('iso_639', msg)
-_translate_country = lambda msg: gettext.dgettext('iso_3166', msg)
+
+def _translate_language(msg):
+    return gettext.dgettext('iso_639', msg)
+
+
+def _translate_country(msg):
+    return gettext.dgettext('iso_3166', msg)
 
 CLASS = 'Language'
 ICON = 'module-language'
@@ -45,6 +50,7 @@ class Language(SectionView):
 
         self._model = model
         self.restart_alerts = alerts
+        self.props.is_deferrable = False
         self._lang_sid = 0
         self._selected_lang_count = 0
         self._labels = []
@@ -120,14 +126,18 @@ class Language(SectionView):
                               xpadding=1, ypadding=1)
         label.show()
 
-        self._country_codes.append(locale_code)
         locale_language = None
         locale_country = None
 
-        for language, country, code in self._available_locales:
-            if code == locale_code:
-                locale_language = language
-                locale_country = country
+        if locale_code is not None:
+            for language, country, code in self._available_locales:
+                if code == locale_code:
+                    locale_language = language
+                    locale_country = country
+            for language, country, code in self._available_locales:
+                if code == '.'.join([locale_code, 'utf8']):
+                    locale_language = language
+                    locale_country = country
 
         language_palette = []
         key_list = self._language_dict.keys()
@@ -152,6 +162,13 @@ class Language(SectionView):
                 locale_country = self._country_dict[locale_language][0]
         new_country_button = FilterToolItem(
             'go-down', 'go-up', locale_country, new_country_widget)
+
+        if locale_code is None:
+            # check the locale code acordinig to the default values selected
+            for language, country, code in self._available_locales:
+                if language == locale_language and country == locale_country:
+                    locale_code = code
+        self._country_codes.append(locale_code)
 
         self._language_buttons.append(new_language_button)
         self._attach_to_table(
@@ -249,6 +266,9 @@ class Language(SectionView):
 
         self._table.resize(self._selected_lang_count * 2, 3)
 
+        if self._selected_lang_count < 1:
+            return
+
         self._add_remove_boxes[-1].show_all()
 
         # Hide or show the Remove button in the new last row,
@@ -262,12 +282,16 @@ class Language(SectionView):
 
     def setup(self):
         for locale in self._selected_locales:
-            logging.debug('locale_code=%s' % (locale))
             self._add_row(locale_code=locale)
+
+    def _delete_all_rows(self):
+        while self._selected_lang_count > 0:
+            self._delete_last_row()
 
     def undo(self):
         self._model.undo()
         self._lang_alert.hide()
+        self._delete_all_rows()
 
     def _create_add_remove_box(self):
         """Creates Gtk.Hbox with add/remove buttons"""
@@ -363,11 +387,19 @@ class Language(SectionView):
 
     def __lang_timeout_cb(self, codes):
         self._lang_sid = 0
-        self._model.set_languages_list(codes)
-        self.restart_alerts.append('lang')
-        self.needs_restart = True
-        self._lang_alert.props.msg = self.restart_msg
-        self._lang_alert.show()
+        try:
+            self._model.set_languages_list(codes)
+            self.restart_alerts.append('lang')
+            self.needs_restart = True
+            self._lang_alert.props.msg = self.restart_msg
+            self._lang_alert.show()
+        except IOError as e:
+            logging.exception('Error writing i18n config %s', e)
+            self.undo()
+            self._lang_alert.props.msg = gettext.gettext(
+                'Error writing language configuration (%s)') % e
+            self._lang_alert.show()
+            self.props.is_valid = False
         return False
 
 

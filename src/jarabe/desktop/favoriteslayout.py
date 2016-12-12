@@ -1,9 +1,9 @@
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2010 Sugar Labs
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 import math
@@ -35,6 +34,7 @@ _BASE_SCALE = 1000
 
 
 class Layout(object):
+
     def __init__(self):
         pass
 
@@ -46,6 +46,7 @@ class Layout(object):
 
 
 class ViewLayout(Layout):
+
     def __init__(self):
         self._grid = None
         self._width = 0
@@ -156,6 +157,7 @@ class ViewLayout(Layout):
 
 
 class SpreadLayout(ViewLayout):
+
     def __init__(self):
         ViewLayout.__init__(self)
 
@@ -172,7 +174,17 @@ class SpreadLayout(ViewLayout):
         for child in children:
             if not self._grid.is_in_grid(child):
                 width, height = self._get_child_grid_size(child)
-                self._grid.add(child, width, height, None, None, locked=False)
+                x = y = None
+
+                if hasattr(child, "get_positioning_data"):
+                    md5hash = hashlib.md5(child.get_positioning_data())
+                    digest = abs(hash(md5hash.digest()))
+                    w = (self._grid.width - (width * 3))
+                    h = (self._grid.height - (width * 3))
+                    x = ((digest & 0xFFFF) % w)
+                    y = ((digest >> 16) % h)
+
+                self._grid.add(child, width, height, x, y, locked=False)
 
             requisition = child.get_preferred_size()[0]
             rect = self._grid.get_child_rect(child)
@@ -547,8 +559,11 @@ class BoxLayout(RingLayout):
             # mirror around 180
             return cos_d(360 - d)
 
-        cos = lambda r: cos_d(math.degrees(r))
-        sin = lambda r: cos_d(math.degrees(r) - 90)
+        def cos(r):
+            return cos_d(math.degrees(r))
+
+        def sin(r):
+            return cos_d(math.degrees(r) - 90)
 
         return RingLayout._calculate_position(self, radius, icon_size, index,
                                               children_count, width, height,
@@ -607,8 +622,11 @@ class TriangleLayout(RingLayout):
             # mirror around 90
             return sin_d(180 - d)
 
-        cos = lambda r: cos_d(math.degrees(r))
-        sin = lambda r: sin_d(math.degrees(r))
+        def cos(r):
+            return cos_d(math.degrees(r))
+
+        def sin(r):
+            return sin_d(math.degrees(r))
 
         return RingLayout._calculate_position(self, radius, icon_size, index,
                                               children_count, width, height,

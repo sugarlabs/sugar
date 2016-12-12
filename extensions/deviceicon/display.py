@@ -1,9 +1,9 @@
 # Copyright (C) 2014 Sam Parkinson
 # Copyright (C) 2015 Martin Abente Lahaye
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gettext import gettext as _
 import math
@@ -82,14 +81,14 @@ class DeviceView(TrayIcon):
 
 class BrightnessManagerWidget(Gtk.VBox):
 
-    TIMEOUT_DELAY = 100
+    TIMEOUT_DELAY = 10
 
     def __init__(self, text, icon_name):
         Gtk.VBox.__init__(self)
         self._progress_bar = None
         self._adjustment = None
 
-        icon = Icon(icon_size=Gtk.IconSize.MENU)
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE)
         icon.props.icon_name = icon_name
         icon.props.xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                       style.COLOR_BUTTON_GREY.get_svg()))
@@ -171,7 +170,7 @@ class BrightnessManagerWidget(Gtk.VBox):
         if self._adjustment_timeout_id is not None:
             GLib.source_remove(self._adjustment_timeout_id)
         self._adjustment_timeout_id = GLib.timeout_add(
-            self.TIMEOUT_DELAY,  self._adjust_brightness)
+            self.TIMEOUT_DELAY, self._adjust_brightness)
 
     def _adjust_brightness(self):
         self._model.handler_block(self._model_changed_hid)

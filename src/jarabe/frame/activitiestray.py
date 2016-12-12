@@ -2,9 +2,9 @@
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -13,8 +13,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 from gettext import gettext as _
@@ -32,7 +31,6 @@ from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.icon import Icon, get_icon_file_name
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
@@ -55,6 +53,7 @@ import jarabe.frame
 
 
 class ActivityButton(RadioToolButton):
+
     def __init__(self, home_activity, group):
         RadioToolButton.__init__(self, group=group)
 
@@ -178,7 +177,7 @@ class InviteButton(ToolButton):
             self.emit('remove-invite')
 
     def __clicked_cb(self, button):
-        self.palette.popup(immediate=True, state=Palette.SECONDARY)
+        self.palette.popup(immediate=True)
 
     def __remove_invite_cb(self, palette):
         self.emit('remove-invite')
@@ -202,14 +201,18 @@ class InvitePalette(Palette):
 
         self._invite = invite
 
-        menu_item = MenuItem(_('Join'), icon_name='dialog-ok')
+        self.menu_box = PaletteMenuBox()
+        self.set_content(self.menu_box)
+        self.menu_box.show()
+
+        menu_item = PaletteMenuItem(_('Join'), icon_name='dialog-ok')
         menu_item.connect('activate', self.__join_activate_cb)
-        self.menu.append(menu_item)
+        self.menu_box.append_item(menu_item)
         menu_item.show()
 
-        menu_item = MenuItem(_('Decline'), icon_name='dialog-cancel')
+        menu_item = PaletteMenuItem(_('Decline'), icon_name='dialog-cancel')
         menu_item.connect('activate', self.__decline_activate_cb)
-        self.menu.append(menu_item)
+        self.menu_box.append_item(menu_item)
         menu_item.show()
 
         bundle_id = invite.get_bundle_id()
@@ -217,11 +220,14 @@ class InvitePalette(Palette):
         registry = bundleregistry.get_registry()
         self._bundle = registry.get_bundle(bundle_id)
         if self._bundle:
-            name = self._bundle.get_name()
+            activity_name = self._bundle.get_name()
         else:
-            name = bundle_id
+            activity_name = bundle_id
+        self.set_primary_text(activity_name)
 
-        self.set_primary_text(name)
+        title = self._invite.get_activity_title()
+        if title is not None:
+            self.set_secondary_text(title)
 
     def __join_activate_cb(self, menu_item):
         self._invite.join()
@@ -232,6 +238,7 @@ class InvitePalette(Palette):
 
 
 class ActivitiesTray(HTray):
+
     def __init__(self):
         HTray.__init__(self)
 
@@ -399,6 +406,7 @@ class ActivitiesTray(HTray):
 class BaseTransferButton(ToolButton):
     """Button with a notification attached
     """
+
     def __init__(self, file_transfer):
         ToolButton.__init__(self)
 
@@ -422,7 +430,7 @@ class BaseTransferButton(ToolButton):
             self.notif_icon = None
 
     def __button_clicked_cb(self, button):
-        self.palette.popup(immediate=True, state=Palette.SECONDARY)
+        self.palette.popup(immediate=True)
 
     def remove(self):
         frame = jarabe.frame.get_view()
@@ -441,6 +449,7 @@ class BaseTransferButton(ToolButton):
 class IncomingTransferButton(BaseTransferButton):
     """UI element representing an ongoing incoming file transfer
     """
+
     def __init__(self, file_transfer):
         BaseTransferButton.__init__(self, file_transfer)
 
@@ -522,6 +531,7 @@ class IncomingTransferButton(BaseTransferButton):
 class OutgoingTransferButton(BaseTransferButton):
     """UI element representing an ongoing outgoing file transfer
     """
+
     def __init__(self, file_transfer):
         BaseTransferButton.__init__(self, file_transfer)
 
@@ -592,11 +602,11 @@ class BaseTransferPalette(Palette):
 
     def _format_size(self, size):
         if size < 1024:
-            return _('%dB') % size
+            return _('%d B') % size
         elif size < 1048576:
-            return _('%dKB') % (size / 1024)
+            return _('%d KiB') % (size / 1024)
         else:
-            return _('%dMB') % (size / 1048576)
+            return _('%d MiB') % (size / 1048576)
 
     def update_progress(self):
         logging.debug('update_progress: %r',

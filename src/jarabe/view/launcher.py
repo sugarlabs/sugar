@@ -1,8 +1,8 @@
 # Copyright (C) 2008, Red Hat, Inc.
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,12 +11,12 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 from gettext import gettext as _
 
+from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import Gdk
 
@@ -25,6 +25,9 @@ from sugar3.graphics import style
 
 from jarabe.model import shell
 from jarabe.view.pulsingicon import PulsingIcon
+
+
+_INTERVAL = 100
 
 
 class LaunchWindow(Gtk.Window):
@@ -47,16 +50,22 @@ class LaunchWindow(Gtk.Window):
         header.show()
         canvas.pack_start(header, False, True, 0)
 
+        box = Gtk.HBox()
+        box.set_size_request(Gdk.Screen.width() / 5, -1)
+        box.show()
+        canvas.pack_start(box, True, True, 0)
+
         self._activity_id = activity_id
 
         self._activity_icon = PulsingIcon(file=icon_path,
-                                          pixel_size=style.XLARGE_ICON_SIZE)
+                                          pixel_size=style.XLARGE_ICON_SIZE,
+                                          interval=_INTERVAL)
         self._activity_icon.set_base_color(icon_color)
         self._activity_icon.set_zooming(style.SMALL_ICON_SIZE,
                                         style.XLARGE_ICON_SIZE, 10)
         self._activity_icon.set_pulsing(True)
         self._activity_icon.show()
-        canvas.pack_start(self._activity_icon, True, True, 0)
+        box.pack_start(self._activity_icon, True, False, 0)
 
         footer = Gtk.VBox(spacing=style.DEFAULT_SPACING)
         footer.set_size_request(-1, bar_size)
@@ -111,6 +120,11 @@ class LaunchWindow(Gtk.Window):
 
 
 def setup():
+    global _INTERVAL
+
+    settings = Gio.Settings('org.sugarlabs.desktop')
+    _INTERVAL = settings.get_int('launcher-interval')
+
     model = shell.get_model()
     model.connect('launch-started', __launch_started_cb)
     model.connect('launch-failed', __launch_failed_cb)

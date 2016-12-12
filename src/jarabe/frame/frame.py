@@ -1,8 +1,8 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,14 +11,14 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
+from gi.repository import Gio
 
 from sugar3.graphics import animator
 from sugar3.graphics import style
@@ -41,10 +41,11 @@ TOP_LEFT = 1
 BOTTOM_RIGHT = 2
 BOTTOM_LEFT = 3
 
-_NOTIFICATION_DURATION = 5000
+NOTIFICATION_DURATION = 5000
 
 
 class _Animation(animator.Animation):
+
     def __init__(self, frame, end):
         start = frame.current_position
         animator.Animation.__init__(self, start, end)
@@ -54,21 +55,12 @@ class _Animation(animator.Animation):
         self._frame.move(current)
 
 
-class _KeyListener(object):
-    def __init__(self, frame):
-        self._frame = frame
-
-    def key_press(self):
-        if self._frame.visible:
-            self._frame.hide()
-        else:
-            self._frame.show()
-
-
 class Frame(object):
+
     def __init__(self):
         logging.debug('STARTUP: Loading the frame')
 
+        self.settings = Gio.Settings('org.sugarlabs.frame')
         self._palette_group = palettegroup.get_group('frame')
 
         self._left_panel = None
@@ -76,10 +68,11 @@ class Frame(object):
         self._top_panel = None
         self._bottom_panel = None
 
+        self._wanted = False
         self.current_position = 0.0
         self._animator = None
 
-        self._event_area = EventArea()
+        self._event_area = EventArea(self.settings)
         self._event_area.connect('enter', self._enter_corner_cb)
         self._event_area.show()
 
@@ -90,8 +83,6 @@ class Frame(object):
 
         screen = Gdk.Screen.get_default()
         screen.connect('size-changed', self._size_changed_cb)
-
-        self._key_listener = _KeyListener(self)
 
         self._notif_by_icon = {}
 
@@ -106,25 +97,36 @@ class Frame(object):
 
     visible = property(is_visible, None)
 
+    def toggle(self):
+        if not self._wanted:
+            self.show()
+        else:
+            self.hide()
+
     def hide(self):
-        if not self.visible:
+        if not self._wanted:
             return
+
+        self._wanted = False
 
         if self._animator:
             self._animator.stop()
 
         palettegroup.popdown_all()
-        self._animator = animator.Animator(0.5)
+        self._animator = animator.Animator(0.5, widget=self._top_panel)
         self._animator.add(_Animation(self, 0.0))
         self._animator.start()
 
     def show(self):
-        if self.visible:
+        if self._wanted:
             return
+
+        self._wanted = True
+
         if self._animator:
             self._animator.stop()
 
-        self._animator = animator.Animator(0.5)
+        self._animator = animator.Animator(0.5, widget=self._top_panel)
         self._animator.add(_Animation(self, 1.0))
         self._animator.start()
 
@@ -207,16 +209,18 @@ class Frame(object):
         self._update_position()
 
     def _enter_corner_cb(self, event_area):
-        if self.visible:
-            self.hide()
-        else:
-            self.show()
+        self.toggle()
 
     def notify_key_press(self):
-        self._key_listener.key_press()
+        self.toggle()
+
+    '''
+    The function adds a notification and returns the id of the timeout
+    signal after which the notification will dissapear.
+    '''
 
     def add_notification(self, icon, corner=Gtk.CornerType.TOP_LEFT,
-                         duration=_NOTIFICATION_DURATION):
+                         duration=NOTIFICATION_DURATION):
 
         if not isinstance(icon, NotificationIcon):
             raise TypeError('icon must be a NotificationIcon.')
@@ -242,8 +246,9 @@ class Frame(object):
 
         self._notif_by_icon[icon] = window
 
-        GObject.timeout_add(duration,
-                            lambda: self.remove_notification(icon))
+        timeout_id = GObject.timeout_add(
+            duration, lambda: self.remove_notification(icon))
+        return timeout_id
 
     def remove_notification(self, icon):
         if icon not in self._notif_by_icon:
@@ -282,7 +287,7 @@ class Frame(object):
 
         duration = kwargs.get('expire_timeout', -1)
         if duration == -1:
-            duration = _NOTIFICATION_DURATION
+            duration = NOTIFICATION_DURATION
 
         self.add_notification(icon, Gtk.CornerType.TOP_LEFT, duration)
 

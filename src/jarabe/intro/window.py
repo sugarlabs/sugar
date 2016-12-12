@@ -1,8 +1,8 @@
 # Copyright (C) 2007, Red Hat, Inc.
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import os.path
@@ -121,6 +120,7 @@ class _Page(Gtk.VBox):
 
 
 class _NamePage(_Page):
+
     def __init__(self, intro):
         _Page.__init__(self)
         self._intro = intro
@@ -161,6 +161,7 @@ class _NamePage(_Page):
 
 
 class _ColorPage(_Page):
+
     def __init__(self):
         _Page.__init__(self)
 
@@ -190,6 +191,7 @@ class _ColorPage(_Page):
 
 
 class _GenderPage(_Page):
+
     def __init__(self):
         _Page.__init__(self)
 
@@ -222,6 +224,7 @@ class _GenderPage(_Page):
 
 
 class _AgePage(_Page):
+
     def __init__(self, gender):
         _Page.__init__(self)
 
@@ -323,7 +326,7 @@ class _IntroBox(Gtk.VBox):
             self.PAGE_COLOR: _setup_color_page,
             self.PAGE_GENDER: _setup_gender_page,
             self.PAGE_AGE: _setup_age_page
-            }
+        }
 
         setup_methods[self._page](self)
         self.pack_start(self._current_page, True, True, 0)
@@ -449,6 +452,8 @@ class IntroWindow(Gtk.Window):
             self._intro_box.back()
             return True
         return False
+if hasattr(IntroWindow, 'set_css_name'):
+    IntroWindow.set_css_name('introwindow')
 
 
 if __name__ == '__main__':

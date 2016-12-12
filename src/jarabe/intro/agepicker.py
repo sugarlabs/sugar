@@ -1,9 +1,9 @@
 # Copyright (C) 2014, Sugar Labs
 # Copyright (C) 2014, Walter Bender
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -158,7 +158,8 @@ class Picker(Gtk.Grid):
         self.attach(self._button, 0, 0, 1, 1)
         self._button.hide()
 
-        self._label = Gtk.Label(label)
+        self._label = Gtk.Label(label.replace(' ', '\n'))
+        self._label.props.justify = Gtk.Justification.CENTER
         self.attach(self._label, 0, 1, 1, 1)
         self._label.hide()
 
@@ -173,7 +174,7 @@ class Picker(Gtk.Grid):
         self.hide()
 
     def connect(self, callback, arg):
-        self._button.connect('button-press-event', callback, arg)
+        self._button.connect('activate', callback, arg)
 
     def set_color(self, color):
         self._button.xo_color = color
@@ -214,7 +215,7 @@ class AgePicker(Gtk.Grid):
             self._pickers.append(
                 Picker(self._group_labels.ICONS[i][gender_index],
                        _(self._group_labels.LABELS[i])))
-            self._pickers[i].connect(self._button_press_cb, i)
+            self._pickers[i].connect(self._button_activate_cb, i)
 
         self._fixed = Gtk.Fixed()
         fixed_size = width - 4 * style.GRID_CELL_SIZE
@@ -284,9 +285,8 @@ class AgePicker(Gtk.Grid):
         self._set_age(self._group_labels.AGES[age_index])
         self._pickers[age_index].set_color(self._color)
 
-    def _button_press_cb(self, widget, event, age_index):
-        if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:
-            self._do_selected(age_index)
+    def _button_activate_cb(self, widget, age_index):
+        self._do_selected(age_index)
 
     def get_age(self):
         if self._page is None:

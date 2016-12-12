@@ -1,8 +1,8 @@
 # Copyright (C) 2008, Red Hat, Inc.
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk
 from gi.repository import GObject
@@ -64,8 +63,15 @@ class SessionManager(GObject.GObject):
         self.shutdown_signal.emit()
         self.session.initiate_shutdown()
 
+    def cancel_shutdown(self):
+        self.session.cancel_shutdown()
+        self._shutdown_tries = 0
+        self._logout_mode = None
+
     def __shutdown_completed_cb(self, session):
-        GObject.timeout_add_seconds(self.SHUTDOWN_TIMEOUT, self._try_shutdown)
+        if self._logout_mode is not None:
+            if self._try_shutdown():
+                GObject.timeout_add(self.SHUTDOWN_TIMEOUT, self._try_shutdown)
 
     def _try_shutdown(self):
         if len(self._shell_model) > 0:

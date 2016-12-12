@@ -3,9 +3,9 @@
 # Copyright (C) 2009-2010 One Laptop per Child
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -14,8 +14,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gettext import gettext as _
 import logging
@@ -52,6 +51,7 @@ _FILTERED_ALPHA = 0.33
 
 
 class _ActivityIcon(CanvasIcon):
+
     def __init__(self, model, file_name, xo_color,
                  size=style.STANDARD_ICON_SIZE, is_joinable=None):
         CanvasIcon.__init__(self, file_name=file_name,
@@ -106,6 +106,7 @@ class _ActivityIcon(CanvasIcon):
 
 
 class ActivityView(SnowflakeLayout):
+
     def __init__(self, model):
         SnowflakeLayout.__init__(self)
 
@@ -165,6 +166,9 @@ class ActivityView(SnowflakeLayout):
         for icon in self._icons.itervalues():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(query)
+
+    def get_positioning_data(self):
+        return str(self._model.activity_id)
 
 
 class DeviceObserver(GObject.GObject):
@@ -365,6 +369,7 @@ class MeshBox(ViewContainer):
         owner_icon = BuddyIcon(get_owner_instance(),
                                style.STANDARD_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, owner_icon)
+        self.set_can_focus(False)
 
         self.wireless_networks = {}
         self._adhoc_manager = None

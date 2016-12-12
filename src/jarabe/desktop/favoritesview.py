@@ -4,9 +4,9 @@
 # Copyright (C) 2013 Daniel Francis
 # Copyright (C) 2013 Walter Bender
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -15,8 +15,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 from gettext import gettext as _
@@ -33,7 +32,7 @@ from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import CanvasIcon
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.alert import Alert
+from sugar3.graphics.alert import Alert, ErrorAlert
 from sugar3.graphics.xocolor import XoColor
 from sugar3.activity import activityfactory
 from sugar3 import dispatch
@@ -127,6 +126,7 @@ class FavoritesView(ViewContainer):
         ViewContainer.__init__(self, layout=self._layout,
                                owner_icon=owner_icon,
                                activity_icon=current_activity)
+        self.set_can_focus(False)
 
         self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
                         Gdk.EventMask.POINTER_MOTION_HINT_MASK)
@@ -149,7 +149,8 @@ class FavoritesView(ViewContainer):
         self._last_clicked_icon = None
 
         self._alert = None
-        self._resume_mode = True
+        self._resume_mode = Gio.Settings(
+            'org.sugarlabs.user').get_boolean('resume-activity')
 
         GLib.idle_add(self.__connect_to_bundle_registry_cb)
 
@@ -175,7 +176,7 @@ class FavoritesView(ViewContainer):
             layout = favoriteslayout.RingLayout.key
             assert layout in LAYOUT_MAP
 
-        if type(self._layout) == LAYOUT_MAP[layout]:
+        if isinstance(self._layout, LAYOUT_MAP[layout]):
             return False
 
         if self._layout is not None and self._dragging_mode:
@@ -380,10 +381,10 @@ class FavoritesView(ViewContainer):
 
     def __register(self):
         self._box.remove_alert()
-        alert = Alert()
+        alert = ErrorAlert()
         try:
             schoolserver.register_laptop()
-        except RegisterError, e:
+        except RegisterError as e:
             alert.props.title = _('Registration Failed')
             alert.props.msg = '%s' % e
         else:
@@ -391,11 +392,8 @@ class FavoritesView(ViewContainer):
             alert.props.msg = _('You are now registered '
                                 'with your school server.')
 
-        ok_icon = Icon(icon_name='dialog-ok')
-        alert.add_button(Gtk.ResponseType.OK, _('Ok'), ok_icon)
-
-        self._box.add_alert(alert)
         alert.connect('response', self.__register_alert_response_cb)
+        self._box.add_alert(alert)
         return False
 
     def __register_alert_response_cb(self, alert, response_id):
@@ -420,10 +418,10 @@ class ActivityIcon(CanvasIcon):
 
         self._activity_info = activity_info
         self._journal_entries = []
-        self._resume_mode = True
+        self._resume_mode = Gio.Settings(
+            'org.sugarlabs.user').get_boolean('resume-activity')
 
-        self.connect_after('button-release-event',
-                           self.__button_release_event_cb)
+        self.connect_after('activate', self.__button_activate_cb)
 
         datastore.updated.connect(self.__datastore_listener_updated_cb)
         datastore.deleted.connect(self.__datastore_listener_deleted_cb)
@@ -502,7 +500,7 @@ class ActivityIcon(CanvasIcon):
         height += ActivityIcon._BORDER_WIDTH * 2
         return (height, height)
 
-    def __button_release_event_cb(self, icon, event):
+    def __button_activate_cb(self, icon):
         self._activate()
 
     def _resume(self, journal_entry):
@@ -597,6 +595,7 @@ class FavoritePalette(ActivityPalette):
 
 
 class CurrentActivityIcon(CanvasIcon):
+
     def __init__(self):
         CanvasIcon.__init__(self, icon_name='activity-journal',
                             pixel_size=style.STANDARD_ICON_SIZE, cache=True)
@@ -609,10 +608,9 @@ class CurrentActivityIcon(CanvasIcon):
         self._home_model.connect('active-activity-changed',
                                  self.__active_activity_changed_cb)
 
-        self.connect_after('button-release-event',
-                           self.__button_release_event_cb)
+        self.connect_after('activate', self.__activate_cb)
 
-    def __button_release_event_cb(self, icon, event):
+    def __activate_cb(self, icon):
         window = self._home_model.get_active_activity().get_window()
         window.activate(Gtk.get_current_event_time())
 
@@ -622,13 +620,21 @@ class CurrentActivityIcon(CanvasIcon):
             self.props.xo_color = self._home_activity.get_icon_color()
 
             if self._home_activity.is_journal():
-                self.get_window().set_cursor(None)
+                if self._unbusy():
+                    GLib.timeout_add(100, self._unbusy)
 
         self.props.pixel_size = style.STANDARD_ICON_SIZE
 
         if self.palette is not None:
             self.palette.destroy()
             self.palette = None
+
+    def _unbusy(self):
+        if self.get_window():
+            import jarabe.desktop.homewindow
+            jarabe.desktop.homewindow.get_instance().unbusy()
+            return False
+        return True
 
     def create_palette(self):
         if self._home_activity is not None:

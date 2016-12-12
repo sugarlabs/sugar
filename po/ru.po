@@ -108,8 +108,8 @@ msgid ""
 msgstr ""
 "Sugar это графический интерфейс пользователя, который вы сейчас видите. Это "
 "свободный программный продукт, защищенный лицензией GNU General Public "
-"License и вы можете свободно изменять и/или распространять его так как "
-"определено лицензией приведенной здесь."
+"License, и вы можете свободно изменять и/или распространять его так, как "
+"определено лицензией, приведенной здесь."
 
 #: ../extensions/cpsection/aboutcomputer/view.py:199
 msgid "Full license:"
@@ -121,11 +121,11 @@ msgstr "Фон"
 
 #: ../extensions/cpsection/background/view.py:39
 msgid "Select a background:"
-msgstr ""
+msgstr "Выбрать фон:"
 
 #: ../extensions/cpsection/background/view.py:46
 msgid "Clear background"
-msgstr ""
+msgstr "Очистить фон"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
@@ -229,7 +229,7 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr ""
+msgstr "Страна:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
@@ -490,7 +490,7 @@ msgstr "Заряжен"
 
 #: ../extensions/deviceicon/frame.py:56
 msgid "Show my keyboard"
-msgstr ""
+msgstr "Показать мою клавиатуру"
 
 #: ../extensions/deviceicon/network.py:50
 #, python-format
@@ -579,7 +579,7 @@ msgstr ""
 #: ../extensions/deviceicon/network.py:331
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "Ошибка: %s"
 
 #: ../extensions/deviceicon/network.py:335
 #, python-format
@@ -965,7 +965,7 @@ msgstr "Показывать Завершение сеанса"
 
 #: ../data/sugar.schemas.in.h:56
 msgid "Show Restart"
-msgstr ""
+msgstr "Показывать Перезагрузка"
 
 #: ../data/sugar.schemas.in.h:57
 msgid "Show Sugar Ad-hoc networks"
@@ -1002,7 +1002,7 @@ msgstr "Адрес для хранения бэкапов."
 
 #: ../data/sugar.schemas.in.h:66
 msgid "User Color"
-msgstr "Цвет ползователя"
+msgstr "Цвет пользователя"
 
 #: ../data/sugar.schemas.in.h:67
 msgid "User Name"
@@ -1112,11 +1112,11 @@ msgstr "Перезапустить сейчас"
 #: ../src/jarabe/journal/journaltoolbox.py:89
 #, python-format
 msgid "Search in %s"
-msgstr ""
+msgstr "Искать в %s"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
-msgstr ""
+msgstr "Настройки"
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:211
 msgid "Done"
@@ -1228,7 +1228,7 @@ msgstr "Зарегистрироваться"
 #: ../src/jarabe/desktop/favoritesview.py:656
 #: ../src/jarabe/desktop/favoritesview.py:672
 msgid "Register again"
-msgstr ""
+msgstr "Зарегистрироваться повторно"
 
 #: ../src/jarabe/desktop/homewindow.py:228
 #: ../src/jarabe/frame/zoomtoolbar.py:49
@@ -1351,7 +1351,7 @@ msgstr "Запретить"
 
 #: ../src/jarabe/frame/activitiestray.py:680
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "Другой участник отменил перенос файла"
 
 #: ../src/jarabe/frame/activitiestray.py:730
 #, python-format
@@ -1416,7 +1416,7 @@ msgstr "Далее"
 #: ../src/jarabe/journal/palettes.py:156
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
-msgstr ""
+msgstr "Вы хотите навсегда стереть \"%s\"?"
 
 #: ../src/jarabe/journal/expandedentry.py:296
 #: ../src/jarabe/journal/listmodel.py:159 ../src/jarabe/journal/model.py:721
@@ -1470,7 +1470,7 @@ msgstr "Тэги:"
 
 #: ../src/jarabe/journal/expandedentry.py:469
 msgid "Comments:"
-msgstr ""
+msgstr "Комментарии:"
 
 #: ../src/jarabe/journal/journalactivity.py:140
 #: ../src/jarabe/journal/journaltoolbox.py:89
@@ -1529,16 +1529,16 @@ msgstr "Всё"
 #: ../src/jarabe/journal/journaltoolbox.py:419
 #: ../src/jarabe/journal/palettes.py:99
 msgid "Copy to"
-msgstr ""
+msgstr "Копировать в"
 
 #: ../src/jarabe/journal/journaltoolbox.py:427
 #: ../src/jarabe/journal/palettes.py:110 ../src/jarabe/view/viewsource.py:282
 msgid "Duplicate"
-msgstr ""
+msgstr "Сделать копию"
 
 #: ../src/jarabe/journal/journaltoolbox.py:433
 msgid "Refresh"
-msgstr ""
+msgstr "Обновить"
 
 #: ../src/jarabe/journal/journaltoolbox.py:470
 #: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
@@ -1551,7 +1551,7 @@ msgstr ""
 #: ../src/jarabe/journal/palettes.py:150 ../src/jarabe/journal/palettes.py:361
 #: ../src/jarabe/journal/volumestoolbar.py:311
 msgid "Error"
-msgstr ""
+msgstr "Ошибка"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
@@ -1562,27 +1562,27 @@ msgstr "Старт"
 
 #: ../src/jarabe/journal/journaltoolbox.py:579
 msgid "Sort by date modified"
-msgstr ""
+msgstr "Сортировать по дате изменения"
 
 #: ../src/jarabe/journal/journaltoolbox.py:580
 msgid "Sort by date created"
-msgstr ""
+msgstr "Сортировать по дате создания"
 
 #: ../src/jarabe/journal/journaltoolbox.py:581
 msgid "Sort by size"
-msgstr ""
+msgstr "Сортировать по размеру"
 
 #: ../src/jarabe/journal/journaltoolbox.py:590
 msgid "Sort view"
-msgstr ""
+msgstr "Сортировать"
 
 #: ../src/jarabe/journal/journaltoolbox.py:661
 msgid "Deselect all"
-msgstr ""
+msgstr "Отменить выбор"
 
 #: ../src/jarabe/journal/journaltoolbox.py:674
 msgid "Select all"
-msgstr ""
+msgstr "Выбрать всё"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 #, python-format
@@ -1595,13 +1595,13 @@ msgstr[2] ""
 #: ../src/jarabe/journal/journaltoolbox.py:714
 #: ../src/jarabe/journal/palettes.py:364
 msgid "Copy"
-msgstr ""
+msgstr "Копировать"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:759
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr ""
+msgstr "Выбрано %(selected)d из %(total)d"
 
 #: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
@@ -1682,7 +1682,7 @@ msgstr ""
 #: ../src/jarabe/journal/palettes.py:260
 #: ../src/jarabe/journal/volumestoolbar.py:211
 msgid "Documents"
-msgstr ""
+msgstr "Документы"
 
 #: ../src/jarabe/journal/palettes.py:349 ../src/jarabe/journal/palettes.py:409
 #: ../src/jarabe/journal/volumestoolbar.py:301
@@ -1719,7 +1719,7 @@ msgstr "Стоп"
 
 #: ../src/jarabe/journal/palettes.py:561
 msgid "Continue"
-msgstr ""
+msgstr "Продолжить"
 
 #: ../src/jarabe/journal/palettes.py:598
 #, python-format
@@ -2008,7 +2008,7 @@ msgstr "Исходный код: %r"
 
 #~ msgid "Update your activities to ensure compatibility with your new software"
 #~ msgstr ""
-#~ "Обновите свои свои активности чтобы быть удостовериться с совместимости с "
+#~ "Обновите свои активности чтобы быть удостовериться в совместимости с "
 #~ "вашими новыми программами"
 
 #~ msgid "Check now"

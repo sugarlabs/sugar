@@ -1,19 +1,17 @@
 # Copyright (c) 2013 Walter Bender
 #
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation; either
-# version 2 of the License, or (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-# This library is distributed in the hope that it will be useful,
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Lesser General Public License for more details.
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import sys
@@ -88,7 +86,7 @@ def _ensure_module_repository():
         if module is not None and hasattr(module, 'get_account'):
             try:
                 account_module = module.get_account()
-            except Exception, e:
+            except Exception as e:
                 logging.error('%s.get_account() failed: %s' %
                               (service_name, e))
                 traceback.format_exc()
@@ -130,7 +128,7 @@ def _load_module(path, module):
     try:
         module = import_module(_convert_path_to_module_name(path, module),
                                [module])
-    except ImportError, e:
+    except ImportError as e:
         module = None
         logging.debug('ImportError: %s' % (e))
 
@@ -175,7 +173,7 @@ def _extend_icon_theme_search_path(path):
     icon_search_path = icon_theme.get_search_path()
     try:
         icon_path_dirs = os.listdir(path)
-    except OSError, e:
+    except OSError as e:
         icon_path_dirs = []
         logging.warning('listdir: %s: %s' % (path, e))
 

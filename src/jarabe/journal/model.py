@@ -1,8 +1,8 @@
 # Copyright (C) 2007-2011, One Laptop per Child
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 import os
@@ -206,6 +205,7 @@ class BaseResultSet(object):
 class DatastoreResultSet(BaseResultSet):
     """Encapsulates the result of a query on the datastore
     """
+
     def __init__(self, query, page_size):
 
         if query.get('query', '') and not query['query'].startswith('"'):
@@ -237,6 +237,7 @@ class DatastoreResultSet(BaseResultSet):
 class InplaceResultSet(BaseResultSet):
     """Encapsulates the result of a query on a mount point
     """
+
     def __init__(self, query, page_size, mount_point):
         BaseResultSet.__init__(self, query, page_size)
         self._mount_point = mount_point
@@ -355,7 +356,7 @@ class InplaceResultSet(BaseResultSet):
 
         try:
             stat = os.lstat(full_path)
-        except OSError, e:
+        except OSError as e:
             if e.errno != errno.ENOENT:
                 logging.exception(
                     'Error reading metadata of file %r', full_path)
@@ -364,7 +365,7 @@ class InplaceResultSet(BaseResultSet):
         if S_IFMT(stat.st_mode) == S_IFLNK:
             try:
                 link = os.readlink(full_path)
-            except OSError, e:
+            except OSError as e:
                 logging.exception(
                     'Error reading target of link %r', full_path)
                 return
@@ -375,7 +376,7 @@ class InplaceResultSet(BaseResultSet):
             try:
                 stat = os.stat(full_path)
 
-            except OSError, e:
+            except OSError as e:
                 if e.errno != errno.ENOENT:
                     logging.exception(
                         'Error reading metadata of linked file %r', full_path)
@@ -450,7 +451,7 @@ class InplaceResultSet(BaseResultSet):
 
         try:
             entries = os.listdir(dir_path)
-        except OSError, e:
+        except OSError as e:
             if e.errno != errno.EACCES:
                 logging.exception('Error reading directory %r', dir_path)
             return
@@ -950,7 +951,7 @@ def get_documents_path():
         if os.path.exists(documents_path) and \
                 os.environ.get('HOME') != documents_path:
             _documents_path = documents_path
-    except OSError, exception:
+    except OSError as exception:
         if exception.errno != errno.ENOENT:
             logging.exception('Could not run xdg-user-dir')
     return _documents_path

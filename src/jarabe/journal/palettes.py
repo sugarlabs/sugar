@@ -1,9 +1,9 @@
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2014 Ignacio Rodriguez
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gettext import gettext as _
 from gettext import ngettext
@@ -44,6 +43,8 @@ from jarabe.journal import journalwindow
 from jarabe.webservice import accountsmanager
 from jarabe.journal.misc import get_mount_color
 
+PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
+
 
 class ObjectPalette(Palette):
 
@@ -54,6 +55,8 @@ class ObjectPalette(Palette):
                            ([str])),
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
+        'choose-project': (GObject.SignalFlags.RUN_FIRST, None,
+                          ([object])),
     }
 
     def __init__(self, journalactivity, metadata, detail=False):
@@ -96,6 +99,13 @@ class ObjectPalette(Palette):
             start_with_menu = StartWithMenu(self._metadata)
             menu_item.set_submenu(start_with_menu)
 
+        elif metadata.get('activity', None) == PROJECT_BUNDLE_ID:
+            open_label = _('Open')
+            menu_item = MenuItem(open_label, 'project-box')
+            menu_item.connect('activate', self.__open_project_activate_cb)
+            self.menu.append(menu_item)
+            menu_item.show()
+
         else:
             menu_item = MenuItem(_('No activity to start entry'))
             menu_item.set_sensitive(False)
@@ -111,6 +121,12 @@ class ObjectPalette(Palette):
         copy_menu = CopyMenu(self._journalactivity, self.__get_uid_list_cb)
         copy_menu.connect('volume-error', self.__volume_error_cb)
         menu_item.set_submenu(copy_menu)
+
+        if not metadata.get('activity', None) == PROJECT_BUNDLE_ID:
+            menu_item = MenuItem(_('Send to project...'), 'project-box')
+            menu_item.connect('activate', self.__copy_to_project_activated_cb)
+            self.menu.append(menu_item)
+            menu_item.show()
 
         if self._metadata['mountpoint'] == '/':
             menu_item = MenuItem(_('Duplicate'))
@@ -143,6 +159,15 @@ class ObjectPalette(Palette):
     def __get_uid_list_cb(self):
         return [self._metadata['uid']]
 
+    def __copy_to_project_activated_cb(self, menu_item):
+        self.emit('choose-project', self._metadata)
+        self.destroy()
+
+    def __open_project_activate_cb(self, menu_item):
+        self._journalactivity.project_view_activated_cb(
+            list_view=None,
+            metadata=self._metadata)
+
     def __start_activate_cb(self, menu_item):
         misc.resume(self._metadata,
                     alert_window=journalwindow.get_journal_window())
@@ -150,7 +175,7 @@ class ObjectPalette(Palette):
     def __duplicate_activate_cb(self, menu_item):
         try:
             model.copy(self._metadata, '/')
-        except IOError, e:
+        except IOError as e:
             logging.exception('Error while copying the entry. %s', e.strerror)
             self.emit('volume-error',
                       _('Error while copying the entry. %s') % e.strerror,
@@ -221,7 +246,6 @@ class CopyMenu(Gtk.Menu):
 
     def __init__(self, journalactivity, get_uid_list_cb):
         Gtk.Menu.__init__(self)
-
         CopyMenuBuilder(journalactivity, get_uid_list_cb,
                         self.__volume_error_cb, self)
 
@@ -367,7 +391,7 @@ class VolumeMenu(MenuItem):
             try:
                 metadata = model.get(uid)
                 model.copy(metadata, self._mount_point)
-            except IOError, e:
+            except IOError as e:
                 logging.exception('Error while copying the entry. %s',
                                   e.strerror)
                 self.emit('volume-error',
@@ -391,7 +415,7 @@ class VolumeMenu(MenuItem):
             return
         try:
             model.copy(metadata, self._mount_point)
-        except IOError, e:
+        except IOError as e:
             logging.exception('Error while copying the entry. %s',
                               e.strerror)
 
@@ -526,12 +550,13 @@ class StartWithMenu(Gtk.Menu):
 
 
 class BuddyPalette(Palette):
+
     def __init__(self, buddy):
         self._buddy = buddy
 
         nick, colors = buddy
         buddy_icon = Icon(icon_name='computer-xo',
-                          icon_size=style.STANDARD_ICON_SIZE,
+                          pixel_size=style.STANDARD_ICON_SIZE,
                           xo_color=XoColor(colors))
 
         Palette.__init__(self, primary_text=nick, icon=buddy_icon)

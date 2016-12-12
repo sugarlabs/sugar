@@ -1,9 +1,9 @@
 # Copyright (C) 2008-2013 Sugar Labs
 # Copyright (C) 2013 Walter Bender
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,9 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+from gettext import gettext as _
 
 from gi.repository import GObject
 from gi.repository import Gio
@@ -37,6 +38,7 @@ class DesktopViewModel(GObject.GObject):
         self._number_of_views = 1
         self._view_icons = None
         self._favorite_icons = None
+        self._view_labels = None
 
         self._settings = Gio.Settings(_DESKTOP_CONF_DIR)
         self._ensure_view_icons()
@@ -58,6 +60,11 @@ class DesktopViewModel(GObject.GObject):
 
     favorite_icons = GObject.property(type=object, getter=get_favorite_icons)
 
+    def get_view_labels(self):
+        return self._view_labels
+
+    view_labels = GObject.property(type=object, getter=get_view_labels)
+
     def _ensure_view_icons(self, update=False):
         if self._view_icons and not update:
             return
@@ -71,6 +78,12 @@ class DesktopViewModel(GObject.GObject):
         self._number_of_views = len(homeviews)
         self._view_icons = [view['view-icon'] for view in homeviews]
         self._favorite_icons = [view['favorite-icon'] for view in homeviews]
+        self._view_labels = []
+        for view in homeviews:
+            if 'view-label' not in view:
+                view['view-label'] = _('Favorites view %d' % (
+                    len(self._view_labels) + 1))
+            self._view_labels.append(view['view-label'])
 
         self.emit('desktop-view-icons-changed')
 
@@ -91,6 +104,10 @@ def get_view_icons():
 
 def get_favorite_icons():
     return get_model().get_favorite_icons()
+
+
+def get_view_labels():
+    return get_model().get_view_labels()
 
 
 def get_number_of_views():

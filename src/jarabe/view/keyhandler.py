@@ -1,9 +1,9 @@
 # Copyright (C) 2006-2007, Red Hat, Inc.
 # Copyright (C) 2009 Simon Schampijer
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,12 +12,12 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import logging
 
+from gi.repository import GObject
 from gi.repository import Gdk
 from gi.repository import SugarExt
 
@@ -30,6 +30,7 @@ from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shell import ShellModel
 from jarabe import config
 from jarabe.journal import journalactivity
+from jarabe.controlpanel.gui import ControlPanel
 
 
 _VOLUME_STEP = sound.VOLUME_STEP
@@ -58,6 +59,7 @@ _actions_table = {
     'XF86WebCam': 'open_search',
     '<alt><shift>f': 'frame',
     'XF86Search': 'open_search',
+    '<alt><shift>m': 'open_controlpanel',
     '<alt><shift>o': 'open_search',
     '<alt><shift>q': 'logout',
     '<alt><shift>d': 'dump_ui_tree'
@@ -70,6 +72,7 @@ _instance = None
 
 
 class KeyHandler(object):
+
     def __init__(self, frame):
         self._frame = frame
         self._key_pressed = None
@@ -159,10 +162,21 @@ class KeyHandler(object):
 
     def handle_logout(self, event_time):
         if "SUGAR_DEVELOPER" in os.environ:
-            session.get_session_manager().logout()
+            session_manager = session.get_session_manager()
+            session_manager.logout()
+            GObject.timeout_add_seconds(3, session_manager.shutdown_completed)
 
     def handle_open_search(self, event_time):
         journalactivity.get_journal().show_journal()
+
+    def handle_open_controlpanel(self, event_time):
+        if shell.get_model().has_modal():
+            return
+
+        self._frame.hide()
+
+        panel = ControlPanel()
+        panel.show()
 
     def handle_dump_ui_tree(self, event_time):
         print uitree.get_root().dump()

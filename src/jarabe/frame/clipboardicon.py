@@ -1,9 +1,9 @@
 # Copyright (C) 2007, Red Hat, Inc.
 # Copyright (C) 2007, One Laptop Per Child
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,14 +12,14 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import SugarExt
+from gi.repository import GObject
 
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.icon import Icon
@@ -75,6 +75,10 @@ class ClipboardIcon(RadioToolButton):
 
     def _drag_data_get_cb(self, widget, context, selection, target_type,
                           event_time):
+        frame = jarabe.frame.get_view()
+        self._timeout_id = GObject.timeout_add(
+            jarabe.frame.frame.NOTIFICATION_DURATION,
+            lambda: frame.remove_notification(self._notif_icon))
         target_atom = selection.get_target()
         target_name = target_atom.name()
         logging.debug('_drag_data_get_cb: requested target %s', target_name)
@@ -168,10 +172,17 @@ class ClipboardIcon(RadioToolButton):
             XoColor('%s,%s' % (self._icon.props.stroke_color,
                                self._icon.props.fill_color))
         frame = jarabe.frame.get_view()
-        frame.add_notification(self._notif_icon, Gtk.CornerType.BOTTOM_LEFT)
+        self._timeout_id = frame.add_notification(
+            self._notif_icon, Gtk.CornerType.BOTTOM_LEFT)
+        self._notif_icon.connect('drag_data_get', self._drag_data_get_cb)
+        self._notif_icon.connect('drag-begin', self._drag_begin_cb)
+        self._notif_icon.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
+                                         self._get_targets(),
+                                         Gdk.DragAction.COPY)
 
     def _drag_begin_cb(self, widget, context):
         # TODO: We should get the pixbuf from the icon, with colors, etc.
+        GObject.source_remove(self._timeout_id)
         icon_theme = Gtk.IconTheme.get_default()
         pixbuf = icon_theme.load_icon(self._icon.props.icon_name,
                                       style.STANDARD_ICON_SIZE, 0)

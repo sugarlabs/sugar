@@ -4,9 +4,9 @@
 # Copyright (C) 2013 Daniel Francis
 # Copyright (C) 2013 Walter Bender
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -15,8 +15,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import logging
@@ -55,6 +54,7 @@ class ActivitiesTreeView(Gtk.TreeView):
 
     def __init__(self):
         Gtk.TreeView.__init__(self)
+        self.set_can_focus(False)
 
         self._query = ''
 
@@ -69,20 +69,24 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._model.set_visible_func(self.__model_visible_cb)
         self.set_model(self._model)
 
+        self._favorite_columns = []
         for i in range(desktop.get_number_of_views()):
-            column = Gtk.TreeViewColumn()
-            cell = CellRendererFavorite(i)
-            cell.connect('clicked', self.__favorite_clicked_cb)
-            column.pack_start(cell, True)
-            column.set_cell_data_func(cell, self.__favorite_set_data_cb)
-            self.append_column(column)
+            self.fav_column = Gtk.TreeViewColumn()
+            self.cell_favorite = CellRendererFavorite(i)
+            self.cell_favorite.connect('clicked', self.__favorite_clicked_cb)
+            self.fav_column.pack_start(self.cell_favorite, True)
+            self.fav_column.set_cell_data_func(self.cell_favorite,
+                                               self.__favorite_set_data_cb)
+            self.append_column(self.fav_column)
 
-        cell_icon = CellRendererActivityIcon()
-        cell_icon.connect('clicked', self.__icon_clicked_cb)
+            self._favorite_columns.append(self.fav_column)
+
+        self.cell_icon = CellRendererActivityIcon()
 
         column = Gtk.TreeViewColumn()
-        column.pack_start(cell_icon, True)
-        column.add_attribute(cell_icon, 'file-name', self._model.column_icon)
+        column.pack_start(self.cell_icon, True)
+        column.add_attribute(self.cell_icon, 'file-name',
+                             self._model.column_icon)
         self.append_column(column)
 
         self._icon_column = column
@@ -102,37 +106,56 @@ class ActivitiesTreeView(Gtk.TreeView):
         cell_text = Gtk.CellRendererText()
         cell_text.props.xalign = 1
 
-        column = Gtk.TreeViewColumn()
-        column.set_alignment(1)
-        column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
-        column.props.resizable = True
-        column.props.reorderable = True
-        column.props.expand = True
-        column.set_sort_column_id(self._model.column_version)
-        column.pack_start(cell_text, True)
-        column.add_attribute(cell_text, 'text',
-                             self._model.column_version_text)
-        self.append_column(column)
+        self.version_column = Gtk.TreeViewColumn()
+        self.version_column.set_alignment(1)
+        self.version_column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
+        self.version_column.props.resizable = True
+        self.version_column.props.reorderable = True
+        self.version_column.props.expand = True
+        self.version_column.set_sort_column_id(self._model.column_version)
+        self.version_column.pack_start(cell_text, True)
+        self.version_column.add_attribute(cell_text, 'text',
+                                          self._model.column_version_text)
+        self.append_column(self.version_column)
 
         cell_text = Gtk.CellRendererText()
         cell_text.props.xalign = 1
 
-        column = Gtk.TreeViewColumn()
-        column.set_alignment(1)
-        column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
-        column.props.resizable = True
-        column.props.reorderable = True
-        column.props.expand = True
-        column.set_sort_column_id(self._model.column_date)
-        column.pack_start(cell_text, True)
-        column.add_attribute(cell_text, 'text', self._model.column_date_text)
-        self.append_column(column)
+        self.date_column = Gtk.TreeViewColumn()
+        self.date_column.set_alignment(1)
+        self.date_column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
+        self.date_column.props.resizable = True
+        self.date_column.props.reorderable = True
+        self.date_column.props.expand = True
+        self.date_column.set_sort_column_id(self._model.column_date)
+        self.date_column.pack_start(cell_text, True)
+        self.date_column.add_attribute(cell_text, 'text',
+                                       self._model.column_date_text)
+        self.append_column(self.date_column)
 
         self.set_search_column(self._model.column_title)
         self.set_enable_search(False)
         self._activity_selected = None
         self._invoker = TreeViewInvoker()
         self._invoker.attach_treeview(self)
+
+        self.button_press_handler = None
+        self.button_reslease_handler = None
+        self.icon_clicked_handler = None
+        self.row_activated_handler = None
+        if hasattr(self.props, 'activate_on_single_click'):
+            # Gtk+ 3.8 and later
+            self.props.activate_on_single_click = True
+            self.row_activated_handler = self.connect('row-activated',
+                                                      self.__row_activated_cb)
+        else:
+            self.icon_clicked_handler = self.cell_icon.connect(
+                'clicked', self.__icon_clicked_cb)
+            self.button_press_handler = self.connect(
+                'button-press-event', self.__button_press_cb)
+            self.button_reslease_handler = self.connect(
+                'button-release-event', self.__button_release_cb)
+            self._row_activated_armed_path = None
 
     def __favorite_set_data_cb(self, column, cell, model, tree_iter, data):
         favorite = \
@@ -152,7 +175,59 @@ class ActivitiesTreeView(Gtk.TreeView):
             cell.favorite_view)
 
     def __icon_clicked_cb(self, cell, path):
+        """
+        A click on activity icon cell is to start an activity.
+        """
+        logging.debug('__icon_clicked_cb')
         self._start_activity(path)
+
+    def __row_activated_cb(self, treeview, path, col):
+        """
+        A click on cells other than the favorite toggle is to start an
+        activity.  Gtk+ 3.8 and later.
+        """
+        logging.debug('__row_activated_cb')
+        if col is not treeview.get_column(0):
+            self._start_activity(path)
+
+    def __button_to_path(self, event, event_type):
+        if event.window != self.get_bin_window() or \
+           event.button != 1 or \
+           event.type != event_type:
+            return None
+
+        pos = self.get_path_at_pos(int(event.x), int(event.y))
+        if pos is None:
+            return None
+
+        path, column, x_, y_ = pos
+        if column == self._icon_column:
+            return None
+
+        if column in self._favorite_columns:
+            return None
+
+        return path
+
+    def __button_press_cb(self, widget, event):
+        logging.debug('__button_press_cb')
+        path = self.__button_to_path(event, Gdk.EventType.BUTTON_PRESS)
+        if path is None:
+            return
+
+        self._row_activated_armed_path = path
+
+    def __button_release_cb(self, widget, event):
+        logging.debug('__button_release_cb')
+        path = self.__button_to_path(event, Gdk.EventType.BUTTON_RELEASE)
+        if path is None:
+            return
+
+        if self._row_activated_armed_path != path:
+            return
+
+        self._start_activity(path)
+        self._row_activated_armed_path = None
 
     def _start_activity(self, path):
         model = self.get_model()
@@ -177,10 +252,6 @@ class ActivitiesTreeView(Gtk.TreeView):
         title = model[tree_iter][self._model.column_title]
         title = normalize_string(title.decode('utf-8'))
         return title is not None and title.find(self._query) > -1
-
-    def do_row_activated(self, path, column):
-        if column == self._icon_column:
-            self._start_activity(path)
 
     def create_palette(self, path, column):
         if column == self._icon_column:
@@ -234,6 +305,8 @@ class ActivitiesTreeView(Gtk.TreeView):
     def connect_to_scroller(self, scrolled):
         scrolled.connect('scroll-start', self._scroll_start_cb)
         scrolled.connect('scroll-end', self._scroll_end_cb)
+        self.cell_icon.connect_to_scroller(scrolled)
+        self.cell_favorite.connect_to_scroller(scrolled)
 
     def _scroll_start_cb(self, event):
         self._invoker.detach()
@@ -388,6 +461,7 @@ class CellRendererActivityIcon(CellRendererIcon):
 
 
 class ClearMessageBox(Gtk.EventBox):
+
     def __init__(self, message, button_callback):
         Gtk.EventBox.__init__(self)
 
@@ -442,6 +516,7 @@ class ActivitiesList(Gtk.VBox):
         Gtk.VBox.__init__(self)
 
         self._scrolled_window = Gtk.ScrolledWindow()
+        self._scrolled_window.set_can_focus(False)
         self._scrolled_window.set_policy(Gtk.PolicyType.NEVER,
                                          Gtk.PolicyType.AUTOMATIC)
         self._scrolled_window.set_shadow_type(Gtk.ShadowType.NONE)

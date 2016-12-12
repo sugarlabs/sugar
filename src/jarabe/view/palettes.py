@@ -1,8 +1,8 @@
 # Copyright (C) 2008 One Laptop Per Child
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import statvfs
@@ -42,6 +41,7 @@ from jarabe.journal import misc
 
 
 class BasePalette(Palette):
+
     def __init__(self, home_activity):
         Palette.__init__(self)
 
@@ -192,6 +192,7 @@ class ActivityPalette(Palette):
 
 
 class JournalPalette(BasePalette):
+
     def __init__(self, home_activity):
         self._home_activity = home_activity
         self._progress_bar = None
@@ -248,11 +249,12 @@ class JournalPalette(BasePalette):
 
         fraction = (total_space - free_space) / float(total_space)
         self._progress_bar.props.fraction = fraction
-        self._free_space_label.props.label = _('%(free_space)d MB Free') % \
+        self._free_space_label.props.label = _('%(free_space)d MiB Free') % \
             {'free_space': free_space / (1024 * 1024)}
 
 
 class VolumePalette(Palette):
+
     def __init__(self, mount):
         Palette.__init__(self, label=mount.get_name())
         self._mount = mount
@@ -314,5 +316,5 @@ class VolumePalette(Palette):
 
         fraction = (total_space - free_space) / float(total_space)
         self._progress_bar.props.fraction = fraction
-        self._free_space_label.props.label = _('%(free_space)d MB Free') % \
+        self._free_space_label.props.label = _('%(free_space)d MiB Free') % \
             {'free_space': free_space / (1024 * 1024)}

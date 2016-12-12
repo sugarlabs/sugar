@@ -2,9 +2,9 @@
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009-2010 One Laptop per Child
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -13,8 +13,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gettext import gettext as _
 import logging
@@ -51,6 +50,7 @@ _FILTERED_ALPHA = 0.33
 
 
 class WirelessNetworkView(EventPulsingIcon):
+
     def __init__(self, initial_ap):
         EventPulsingIcon.__init__(self, pixel_size=style.STANDARD_ICON_SIZE,
                                   cache=True)
@@ -72,6 +72,7 @@ class WirelessNetworkView(EventPulsingIcon):
         self._device_caps = 0
         self._device_state = None
         self._color = None
+        self._removed_hid = None
 
         if self._mode == network.NM_802_11_MODE_ADHOC and \
                 network.is_sugar_adhoc_network(self._ssid):
@@ -117,7 +118,7 @@ class WirelessNetworkView(EventPulsingIcon):
     def _create_palette(self):
         icon_name = get_icon_state(_AP_ICON_NAME, self._strength)
         self._palette_icon = Icon(icon_name=icon_name,
-                                  icon_size=style.STANDARD_ICON_SIZE,
+                                  pixel_size=style.STANDARD_ICON_SIZE,
                                   badge_name=self.props.badge_name)
 
         p = palette.Palette(primary_text=self._display_name,
@@ -137,6 +138,12 @@ class WirelessNetworkView(EventPulsingIcon):
         self._disconnect_item.connect(
             'activate', self.__disconnect_activate_cb)
         self.menu_box.add(self._disconnect_item)
+
+        self._forget_item = PaletteMenuItem(_('Forget'))
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='list-remove')
+        self._forget_item.set_image(icon)
+        self._forget_item.connect('activate', self.__forget_activate_cb)
+        self.menu_box.add(self._forget_item)
 
         p.set_content(self.menu_box)
         self.menu_box.show_all()
@@ -220,19 +227,37 @@ class WirelessNetworkView(EventPulsingIcon):
                 icon.props.icon_name = icon_name
 
     def _update_badge(self):
+        badge = None
+        favorite = False
         if self._mode != network.NM_802_11_MODE_ADHOC:
-            if network.find_connection_by_ssid(self._ssid) is not None:
-                self.props.badge_name = 'emblem-favorite'
-                self._palette_icon.props.badge_name = 'emblem-favorite'
-            elif self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
-                self.props.badge_name = 'emblem-locked'
-                self._palette_icon.props.badge_name = 'emblem-locked'
-            else:
-                self.props.badge_name = None
-                self._palette_icon.props.badge_name = None
-        else:
-            self.props.badge_name = None
-            self._palette_icon.props.badge_name = None
+            locked = (self._flags == network.NM_802_11_AP_FLAGS_PRIVACY)
+            connection = network.find_connection_by_ssid(self._ssid)
+            if connection is not None:
+                favorite = True
+                self._connect_removed(connection)
+                if locked:
+                    badge = 'emblem-favorite-locked'
+                else:
+                    badge = 'emblem-favorite'
+            elif locked:
+                badge = 'emblem-locked'
+        self.props.badge_name = self._palette_icon.props.badge_name = badge
+        self._forget_item.set_visible(favorite)
+
+    def _connect_removed(self, connection):
+        if self._removed_hid is not None:
+            return
+
+        self._removed_hid = connection.connect('removed',
+                                               self._connection_removed_cb)
+
+    def _disconnect_removed(self, connection):
+        connection.disconnect(self._removed_hid)
+        self._removed_hid = None
+
+    def _connection_removed_cb(self, connection):
+        self._update_badge()
+        self._disconnect_removed(connection)
 
     def _update_state(self):
         if self._active_ap is not None:
@@ -274,6 +299,9 @@ class WirelessNetworkView(EventPulsingIcon):
     def __disconnect_activate_cb(self, item):
         ap_paths = self._access_points.keys()
         network.disconnect_access_points(ap_paths)
+
+    def __forget_activate_cb(self, item):
+        network.forget_wireless_network(self._ssid)
 
     def _add_ciphers_from_flags(self, flags, pairwise):
         ciphers = []
@@ -447,6 +475,9 @@ class WirelessNetworkView(EventPulsingIcon):
             path=self._device.object_path,
             dbus_interface=network.NM_WIRELESS_IFACE)
 
+    def get_positioning_data(self):
+        return str(self.get_first_ap().network_hash())
+
 
 class SugarAdhocView(EventPulsingIcon):
     """To mimic the mesh behavior on devices where mesh hardware is
@@ -491,7 +522,7 @@ class SugarAdhocView(EventPulsingIcon):
     def _create_palette(self):
         self._palette_icon = Icon(
             icon_name=self._ICON_NAME + str(self._channel),
-            icon_size=style.STANDARD_ICON_SIZE)
+            pixel_size=style.STANDARD_ICON_SIZE)
 
         palette_ = palette.Palette(_('Ad-hoc Network %d') % (self._channel, ),
                                    icon=self._palette_icon)
@@ -591,8 +622,12 @@ class SugarAdhocView(EventPulsingIcon):
         self._filtered = name.lower().find(query) == -1
         self._update_color()
 
+    def get_positioning_data(self):
+        return str(type(self)) + str(self._channel)
+
 
 class OlpcMeshView(EventPulsingIcon):
+
     def __init__(self, mesh_mgr, channel):
         EventPulsingIcon.__init__(self, icon_name=_OLPC_MESH_ICON_NAME,
                                   pixel_size=style.STANDARD_ICON_SIZE,
@@ -732,3 +767,6 @@ class OlpcMeshView(EventPulsingIcon):
             signal_name='PropertiesChanged',
             path=device_object_path,
             dbus_interface=network.NM_OLPC_MESH_IFACE)
+
+    def get_positioning_data(self):
+        return str(type(self)) + str(self._channel)
