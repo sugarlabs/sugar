@@ -110,7 +110,7 @@ depends-session +=, sugar-themes (>= $(pkgbranch))
 python-depends-jarabe = sugar3 gwebsockets cairo dbus telepathy xapian
 gir-depends-jarabe = gdkpixbuf-2.0 glib-2.0 gtk-3.0 gtksource-3.0
 gir-depends-jarabe += gstreamer-1.0 wnck-3.0 sugarext-1.0 pango-1.0
-gir-depends-jarabe += gconf-2.0 xkl-1.0 soup-2.4 webkit-3.0
+gir-depends-jarabe += gconf-2.0 xkl-1.0 soup-2.4 webkit2-4.0
 depends-jarabe = $(patsubst %,$(comma) python-%,$(python-depends-jarabe))
 depends-jarabe +=, $(patsubst %,$(comma) gir1.2-%,$(gir-depends-jarabe))
 depends-jarabe +=, metacity, policykit-1
