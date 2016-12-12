@@ -55,10 +55,6 @@ DEB_UPSTREAM_TARBALL_EXTENSION = tar.xz
 # Suppress unneeded auto-resolved build-dependency on python-dev
 CDBS_BUILD_DEPENDS_class_python-autotools_python = python
 
-# Build-depend unversioned on debhelper
-#  TODO: Drop when adopted in cdbs
-CDBS_BUILD_DEPENDS_rules_debhelper_v9 = debhelper
-
 # Needed by upstream build process
 bdeps = libgtk-3-dev, libglib2.0-dev, python-gtk2-dev, libgconf2-dev
 bdeps +=, gettext, intltool, shared-mime-info
