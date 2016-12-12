@@ -53,7 +53,8 @@ DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_U
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.xz
 
 # Suppress unneeded auto-resolved build-dependency on python-dev
-CDBS_BUILD_DEPENDS_class_python-autotools_python = python
+#  * TODO: drop cdbs_python_binary fallback when cdbs 0.4.150 is stable
+CDBS_BUILD_DEPENDS_class_python-sugar_python = $(or $(cdbs_python2_defaultruntime),$(cdbs_python_binary))
 
 # Needed by upstream build process
 bdeps = libgtk-3-dev, libglib2.0-dev, python-gtk2-dev, libgconf2-dev
