@@ -1,3 +1,39 @@
+sugar (0.110.0-1) unstable; urgency=medium
+
+  [ upstream ]
+  * New release(s).
+    Highlights:
+    + Use WebKit2.
+    + Stop use central Jabber server by default.
+
+  [ Jonas Smedegaard ]
+  * Fix suggest/recommend fonts-dejavu-extra (not ttf-dejavu-extra).
+  * Depend on (default-)dbus-session-bus, with fallback on dbus-x11 to
+    ease backporting.
+    Closes: Bug#836394. Thanks to Simon McVittie.
+  * Update copyright info:
+    + Update names and coverage of main authors.
+    + Extend coverage for Debian packaging.
+  * Modernize CDBS use:
+    + Generalize resolving build-dependency on python.
+    + Let CDBS resolve if build is targeted experimental.
+  * Have sugar-session depend on GIR binding upowerglib-1.0.
+  * Have sugar-session depend on GIR binding webkit2-4.0 (not
+    webkit-3.0).
+  * Have python-jarabe recommend libpam-systemd (not systemd), and favor
+    that over consolekit (which is abandoned and thus may risk migration
+    to Stretch).
+  * Declare compliance with Debian Policy 3.9.8.
+  * Drop obsolete transitional package relations:
+    + Stop provide or break sugar-emulator sugar-tools.
+  * Have sugar-session recommend telepathy-salut.
+  * Track only stable 0.110 branch in watch file.
+  * Have git-buildpackage use versioned upstream branch.
+  * Drop patch to fix shell POSIX and quoting: Adopted upstream.
+  * Unfuzz empy patch.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 12 Dec 2016 18:12:38 +0100
+
 sugar (0.106.1-1) unstable; urgency=medium
 
   [ upstream ]

@@ -6,8 +6,9 @@ Uploaders: Jonas Smedegaard <dr@jones.dk>,
  Luke Faraone <luke@faraone.cc>,
  Santiago Ruano Rincón <santiago@debian.org>
 Build-Depends: cdbs (>= 0.4.97~),
- devscripts,
+ licensecheck,
  python,
+ python-dev (>= 2.3.5-7),
  debhelper,
  dh-buildinfo,
  libgtk-3-dev,
@@ -18,7 +19,7 @@ Build-Depends: cdbs (>= 0.4.97~),
  intltool,
  shared-mime-info,
  python-empy
-Standards-Version: 3.9.6
+Standards-Version: 3.9.8
 Vcs-Git: git://anonscm.debian.org/pkg-sugar/sugar
 Vcs-Browser: https://anonscm.debian.org/cgit/pkg-sugar/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
