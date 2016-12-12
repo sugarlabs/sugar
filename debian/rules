@@ -117,7 +117,7 @@ depends-jarabe +=, metacity, policykit-1
 recommends-session = lsb-release, network-manager, modemmanager, ethtool
 recommends-session +=, upower, gvfs, tzdata, fonts-dejavu-core
 recommends-session +=, default-dbus-session-bus | dbus-session-bus | dbus-x11
-recommends-session +=, mobile-broadband-provider-info
+recommends-session +=, mobile-broadband-provider-info, telepathy-salut
 recommends-session +=, $(pkg-fructose)
 recommends-jarabe = python-carquinyol (>= $(pkgbranch))
 recommends-jarabe +=, dbus-x11, network-manager, modemmanager, gconf2
