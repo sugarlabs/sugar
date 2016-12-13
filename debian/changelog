@@ -1,3 +1,13 @@
+sugar (0.110.0-2) unstable; urgency=medium
+
+  * Update package relations:
+    + Relax to recommend/depend unversioned on python-carquinyol: Code
+      virtually unchanged since 0.100.1.
+    + Fix relax to suggest (not recommend) GStreamer 0.10 stuff.
+    + Suggest/recommend gdb-minimal, favored over gdb.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 13 Dec 2016 03:31:59 +0100
+
 sugar (0.110.0-1) unstable; urgency=medium
 
   [ upstream ]
