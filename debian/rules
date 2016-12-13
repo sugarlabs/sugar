@@ -125,8 +125,8 @@ recommends-jarabe +=, avahi-autoipd, openssh-client, xdg-user-dirs
 recommends-jarabe +=, libpam-systemd | consolekit
 suggests-session = gdb, olpc-powerd
 suggests-toolkit = git, ipython, fonts-dejavu-extra
-suggests-fructose = python-elements, csound, gstreamer1.0-plugins-bad
-suggests-fructose +=, gstreamer1.0-plugins-ugly, gstreamer1.0-libav
+suggests-activities = python-elements, csound, gstreamer1.0-plugins-bad
+suggests-activities +=, gstreamer1.0-plugins-ugly, gstreamer1.0-libav
 suggests-fructose +=, python-gst0.10, gstreamer0.10-plugins-base
 suggests-fructose +=, gstreamer0.10-plugins-good
 suggests-session-weak = gir1.2-maliit-1.0, maliit-keyboard
@@ -145,12 +145,12 @@ depends-sucrose = $(pkg-session)
 depends-sucrose +=, python-carquinyol
 depends-sucrose +=, $(pkg-fructose)
 recommends-sucrose = $(suggests-session), $(suggests-toolkit)
-recommends-sucrose +=, $(suggests-fructose)
+recommends-sucrose +=, $(suggests-activities)
 recommends-sucrose +=, python-sugar-toolkit
 recommends-sucrose +=, python-sugar
 recommends-sucrose +=, gtk2-engines-sugar (>= $(pkgbranch))
 recommends-sucrose +=, $(pkg-fructose-deprecated)
-suggests-sucrose = $(suggests-session-weak)
+suggests-sucrose = $(suggests-fructose), $(suggests-session-weak)
 suggests-sucrose +=, $(pkg-fructose-relaxed)
 
 CDBS_BUILD_DEPENDS +=, $(bdeps)
