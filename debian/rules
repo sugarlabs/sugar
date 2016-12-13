@@ -119,7 +119,7 @@ recommends-session +=, upower, gvfs, tzdata, fonts-dejavu-core
 recommends-session +=, default-dbus-session-bus | dbus-session-bus | dbus-x11
 recommends-session +=, mobile-broadband-provider-info, telepathy-salut
 recommends-session +=, $(pkg-fructose)
-recommends-jarabe = python-carquinyol (>= $(pkgbranch))
+recommends-jarabe = python-carquinyol
 recommends-jarabe +=, dbus-x11, network-manager, modemmanager, gconf2
 recommends-jarabe +=, avahi-autoipd, openssh-client, xdg-user-dirs
 recommends-jarabe +=, libpam-systemd | consolekit
@@ -142,7 +142,7 @@ suggests-jarabe-only = $(pkg-session)
 #  * Recommend deprecated Glucose and Fructose parts
 #  * Re-suggest weak parts (contrib/non-free/missing)
 depends-sucrose = $(pkg-session)
-depends-sucrose +=, python-carquinyol (>= $(pkgbranch))
+depends-sucrose +=, python-carquinyol
 depends-sucrose +=, $(pkg-fructose)
 recommends-sucrose = $(suggests-session), $(suggests-toolkit)
 recommends-sucrose +=, $(suggests-fructose)
