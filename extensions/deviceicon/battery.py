@@ -20,9 +20,13 @@ gi.require_version('UPowerGlib', '1.0')
 
 from gi.repository import GLib
 from gi.repository import GObject
+from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import UPowerGlib
 import dbus
+import time
+
+import logging
 
 from sugar3 import profile
 from sugar3.graphics import style
@@ -32,6 +36,7 @@ from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuBox
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
+from jarabe.model.session import get_session_manager
 
 
 _ICON_NAME = 'battery'
@@ -45,7 +50,17 @@ _UP_DEVICE_IFACE = 'org.freedesktop.UPower.Device'
 
 _UP_TYPE_BATTERY = 2
 
-_WARN_MIN_PERCENTAGE = 15
+_settings = None
+_warning_capacity = 15
+
+
+def _settings_get(key):
+    global _settings
+
+    if _settings is None:
+        _settings = Gio.Settings('org.sugarlabs.power')
+
+    return _settings.get_double(key)
 
 
 class DeviceView(TrayIcon):
@@ -84,7 +99,7 @@ class DeviceView(TrayIcon):
 
         elif self._model.props.discharging:
             status = _STATUS_DISCHARGING
-            if current_level <= _WARN_MIN_PERCENTAGE:
+            if current_level <= self._model.warning_capacity:
                 badge_name = 'emblem-warning'
         else:
             status = _STATUS_FULLY_CHARGED
@@ -109,6 +124,7 @@ class BatteryPalette(Palette):
         self._level = 0
         self._time = 0
         self._status = _STATUS_NOT_PRESENT
+        self._warning_capacity = _settings_get('warning-capacity')
 
         self._progress_widget = PaletteMenuBox()
         self.set_content(self._progress_widget)
@@ -147,7 +163,7 @@ class BatteryPalette(Palette):
         elif self._status == _STATUS_CHARGING:
             secondary_text = _('Charging')
         elif self._status == _STATUS_DISCHARGING:
-            if self._level <= _WARN_MIN_PERCENTAGE:
+            if self._level <= self._warning_capacity:
                 secondary_text = _('Very little power remaining')
             else:
                 minutes_remaining = self._time // 60
@@ -187,6 +203,10 @@ class DeviceModel(GObject.GObject):
         self._connect_battery()
         self._fetch_properties_from_upower()
         self._timeout_sid = False
+        self.warning_capacity = _settings_get('warning-capacity')
+        self._minimum_capacity = _settings_get('minimum-capacity')
+        self._grace_time = _settings_get('grace-time')
+        self._grace = time.time()
 
     def _connect_battery(self):
         """Connect to battery signals so we are told of changes."""
@@ -257,8 +277,31 @@ class DeviceModel(GObject.GObject):
 
         self.emit('updated')
         self._timeout_sid = None
+        self.__check_capacity()
         return False
 
+    def __check_capacity(self):
+        if self._state != UPowerGlib.DeviceState.DISCHARGING:
+            return
+
+        if self._level > self.warning_capacity:
+            return
+
+        if self._level > self._minimum_capacity:
+            logging.error('battery under warning, %d%%' % self._level)
+            return
+
+        elapsed = time.time() - self._grace
+        if elapsed < self._grace_time:
+            logging.error('battery under minimum, %d%%, grace %d%%' %
+                          (self._level, elapsed * 100 / self._grace))
+            return
+
+        logging.error('battery under minimum, %d%%, forced shutdown' %
+                      self._level)
+        sm = get_session_manager()
+        sm.shutdown()
+        GObject.timeout_add_seconds(10, sm.shutdown_completed)
 
 def setup(tray):
     bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)

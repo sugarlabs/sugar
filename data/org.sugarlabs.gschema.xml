@@ -198,6 +198,21 @@
             <summary>Power Extreme</summary>
             <description>Extreme power management (disables wireless radio, increases battery life)</description>
         </key>
+        <key name="warning-capacity" type="d">
+            <default>15</default>
+            <summary>Warning Capacity</summary>
+            <description>Warn user on Frame if discharging and battery capacity is below this.</description>
+        </key>
+        <key name="minimum-capacity" type="d">
+            <default>5</default>
+            <summary>Minimum Capacity</summary>
+            <description>Begin forced shutdown if discharging and battery capacity is below this.</description>
+        </key>
+        <key name="grace-time" type="d">
+            <default>90</default>
+            <summary>Grace Time</summary>
+            <description>Defer forced shutdown to at least this many seconds since Sugar was started.</description>
+        </key>
     </schema>
     <schema id="org.sugarlabs.peripherals" path="/org/sugarlabs/peripherals/">
         <child name="keyboard" schema="org.sugarlabs.peripherals.keyboard" />
