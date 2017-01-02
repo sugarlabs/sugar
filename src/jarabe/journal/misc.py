@@ -319,7 +319,7 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
 def _downgrade_option_alert(bundle, metadata):
     alert = ConfirmationAlert()
     alert.props.title = _('Older Version Of %s Activity') % (bundle.get_name())
-    alert.props.msg = _('Do you want to downgrade to version %s') % \
+    alert.props.msg = _('Do you want to downgrade to version %s?') % \
         bundle.get_activity_version()
     alert.connect('response', _downgrade_alert_response_cb, metadata)
     journalwindow.get_journal_window().add_alert(alert)
