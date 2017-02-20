@@ -324,11 +324,6 @@
             <summary>Timestamp of last activity update.</summary>
             <description>A unix timestamp (seconds since epoch) of the last successful activity update.</description>
         </key>
-        <key name="new-aslo-url" type="s">
-            <default>'http://activities-2.sugarlabs.org/update.json'</default>
-            <summary>New ASLO update.json URL.</summary>
-            <description>URL used by the new ASLO updater to download activity data.</description>
-        </key>
     </schema>
     <schema id="org.sugarlabs.extensions" path="/org/sugarlabs/extensions/">
         <child name="aboutcomputer" schema="org.sugarlabs.extensions.aboutcomputer" />
