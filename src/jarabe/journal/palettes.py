@@ -150,11 +150,11 @@ class ObjectPalette(Palette):
             menu_item.connect('activate', self.__detail_activate_cb)
             self.menu.append(menu_item)
             menu_item.show()
-
-        menu_item = MenuItem(_('Erase'), 'list-remove')
-        menu_item.connect('activate', self.__erase_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
+        if not self._journalactivity._editing_mode:
+            menu_item = MenuItem(_('Erase'), 'list-remove')
+            menu_item.connect('activate', self.__erase_activate_cb)
+            self.menu.append(menu_item)
+            menu_item.show()
 
     def __get_uid_list_cb(self):
         return [self._metadata['uid']]
