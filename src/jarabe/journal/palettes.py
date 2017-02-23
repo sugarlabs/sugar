@@ -200,7 +200,11 @@ class ObjectPalette(Palette):
     def __erase_alert_response_cb(self, alert, response_id):
         journalwindow.get_journal_window().remove_alert(alert)
         if response_id is Gtk.ResponseType.OK:
-            model.delete(self._metadata['uid'])
+            uid = self._metadata['uid']
+            list_model = self._journalactivity.get_list_view().get_model()
+            if list_model.is_selected(uid):
+                list_model.set_selected(uid, False)
+            model.delete(uid)
 
     def __detail_activate_cb(self, menu_item):
         self.emit('detail-clicked', self._metadata['uid'])
