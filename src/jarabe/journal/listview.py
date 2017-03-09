@@ -22,7 +22,6 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Pango
-from gi.repository import GdkPixbuf
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon, CellRendererIcon
@@ -211,12 +210,10 @@ class BaseListView(Gtk.Bin):
         model.deleted.connect(self.__model_deleted_cb)
 
     def enable_drag_and_copy(self):
-        self.tree_view.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
-                                       [Gtk.TargetEntry.new(
-                                           'text/uri-list', 0, 0),
-                                        Gtk.TargetEntry.new(
-                                            'journal-object-id', 0, 0)],
-                                       Gdk.DragAction.COPY)
+        self.tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
+                                                [('text/uri-list', 0, 0),
+                                                 ('journal-object-id', 0, 0)],
+                                                Gdk.DragAction.COPY)
 
     def disable_drag_and_copy(self):
         self.tree_view.unset_rows_drag_source()
@@ -747,13 +744,6 @@ class ListView(BaseListView):
         return self._is_dragging
 
     def __drag_begin_cb(self, widget, drag_context):
-        path, _column = self.tree_view.get_cursor()
-        if path is None:
-            return
-
-        row = self.tree_view.get_model()[path]
-        _pixbuf = GdkPixbuf.Pixbuf.new_from_file(row[ListModel.COLUMN_ICON])
-        self.tree_view.drag_source_set_icon_pixbuf(_pixbuf)
         self._is_dragging = True
 
     def __drag_data_get_cb(self, widget, context, selection, info, time):
