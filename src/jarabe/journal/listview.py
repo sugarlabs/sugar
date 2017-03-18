@@ -833,7 +833,7 @@ class CellRendererDetail(CellRendererIcon):
 
         self.props.width = style.GRID_CELL_SIZE
         self.props.height = style.GRID_CELL_SIZE
-        self.props.size = style.SMALL_ICON_SIZE
+        self.props.size = style.GRID_CELL_SIZE
         self.props.icon_name = 'go-right'
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
         self.props.stroke_color = style.COLOR_TRANSPARENT.get_svg()
