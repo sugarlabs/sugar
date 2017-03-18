@@ -17,6 +17,7 @@ import os
 import statvfs
 from gettext import gettext as _
 import logging
+import signal
 
 from gi.repository import Gdk
 from gi.repository import Gtk
@@ -24,6 +25,7 @@ from gi.repository import GObject
 
 from sugar3 import env
 from sugar3 import profile
+from sugar3.graphics.alert import ConfirmationAlert
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
@@ -135,6 +137,16 @@ class CurrentActivityPalette(BasePalette):
         self.menu_box.append_item(menu_item)
         menu_item.show()
 
+        if self._home_activity.get_pid() != 0:
+            separator = PaletteMenuItemSeparator()
+            self.menu_box.append_item(separator)
+            separator.show()
+
+            menu_item = PaletteMenuItem(_('Force Stop'), 'dialog-cancel')
+            menu_item.connect('activate', self.__kill_activate_cb)
+            self.menu_box.append_item(menu_item)
+            menu_item.show()
+
         self.set_content(self.menu_box)
         self.menu_box.show()
 
@@ -157,6 +169,45 @@ class CurrentActivityPalette(BasePalette):
     def __stop_activate_cb(self, menu_item):
         self._home_activity.stop()
         self.emit('done')
+
+    def __kill_activate_cb(self, menu_item):
+        try:
+            os.kill(self._home_activity.get_pid(), 0)
+        except:
+            self.emit('done')
+            return
+        alert_win = Gtk.Window(Gtk.WindowType.POPUP)
+        alert_win.set_decorated(False)
+        alert_win.set_has_resize_grip(False)
+        size = style.GRID_CELL_SIZE + style.LINE_WIDTH
+        alert_win.resize(Gdk.Screen.width(), size)
+
+        alert = ConfirmationAlert()
+        alert.props.title = _('Force Stop')
+        alert.props.msg = _(
+            'Do you really want to force this activity to stop?')
+
+        alert.connect('response', self.__kill_alert_response_cb, alert_win)
+
+        alert_win.add(alert)
+        alert_win.show_all()
+        alert_win.set_position(Gtk.PositionType.TOP)
+        self.emit('done')
+
+    def __kill_alert_response_cb(self, alert, response, alert_win):
+        alert_win.destroy()
+        if response is Gtk.ResponseType.OK:
+            try:
+                self._home_activity.stop()
+            finally:
+                GObject.timeout_add(2000, self.__force_kill_cb, signal.SIGTERM)
+                GObject.timeout_add(4000, self.__force_kill_cb, signal.SIGKILL)
+
+    def __force_kill_cb(self, sig_code):
+        try:
+            os.kill(self._home_activity.get_pid(), sig_code)
+        finally:
+            return False
 
 
 class ActivityPalette(Palette):
