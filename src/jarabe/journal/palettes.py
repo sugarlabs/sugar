@@ -622,16 +622,9 @@ class BatchOperator(GObject.GObject):
             # this is only in the case the operation already started
             # and the user want stop it.
             self._stop_batch_execution()
-        else:
-            GObject.idle_add(self._prepare_batch_execution)
-
-    def _prepare_batch_execution(self):
-        self._object_index = 0
-        # Next, proceed with the objects
-        self._operate_by_uid()
-
-    def _operate_by_uid(self):
-        GObject.idle_add(self._operate_by_uid_internal)
+        elif hasattr(self, '_object_index') == False:
+            self._object_index = 0
+            GObject.idle_add(self._operate_by_uid_internal)
 
     def _operate_by_uid_internal(self):
         # If there is still some uid left, proceed with the operation.
@@ -665,6 +658,7 @@ class BatchOperator(GObject.GObject):
         self._object_index = len(self._uid_list)
 
     def _finish_batch_execution(self):
+        del self._object_index
         self._journalactivity.unfreeze_ui()
         self._journalactivity.remove_alert(self._confirmation_alert)
         self._journalactivity.update_selected_items_ui()
