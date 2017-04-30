@@ -183,7 +183,7 @@ class BaseListView(Gtk.Bin):
         self.tree_view.connect('detail-clicked', self.__detail_clicked_cb)
         self.tree_view.connect('volume-error', self.__volume_error_cb)
         selection = self.tree_view.get_selection()
-        selection.set_mode(Gtk.SelectionMode.NONE)
+        selection.set_mode(Gtk.SelectionMode.SINGLE)
         self.tree_view.props.fixed_height_mode = True
         self._scrolled_window.add(self.tree_view)
         self.tree_view.show()
@@ -728,6 +728,7 @@ class ListView(BaseListView):
         self.tree_view.connect('drag-data-get', self.__drag_data_get_cb)
         self.tree_view.connect('button-release-event',
                                self.__button_release_event_cb)
+        self.tree_view.connect('key-press-event', self.__key_detect_cb)
 
         self.cell_title.connect('edited', self.__cell_title_edited_cb)
         self.cell_title.connect('editing-canceled', self.__editing_canceled_cb)
@@ -742,6 +743,47 @@ class ListView(BaseListView):
         column.props.fixed_width = cell_detail.props.width
         column.pack_start(cell_detail, True)
         self.tree_view.append_column(column)
+
+    def __key_detect_cb(self, tree_view, event):
+        '''
+        Adds keyboard accessibility to the journal.
+        Entries can be scrolled with 'Up'/'Down' arrow keys.
+        Activity can be started/resumed by pressing 'Enter' key.
+        Activity can be renamed by typing anything.
+        Detail View can be opened with 'Right' arrow key.
+        Switching b/w search entry and tree view can done with 'Tab' key.
+        '''
+        keyname = Gdk.keyval_name(event.keyval)
+        keyvalue = event.keyval
+        path, col = self.tree_view.get_cursor()
+
+        if self.tree_view.has_focus():
+            if keyname == 'Up' or keyname == 'Down':
+                column = self.tree_view.get_column(3)
+                self.tree_view.set_cursor_on_cell(path, column, None ,  True)
+
+            if keyname == 'Return':
+                row = self.tree_view.get_model()[path]
+                metadata = model.get(row[ListModel.COLUMN_UID])
+                misc.resume(metadata,
+                            alert_window=journalwindow.get_journal_window())
+
+            if (keyvalue >= 65 and keyvalue <=90) or (keyvalue >= 97 and keyvalue <= 122):
+                row = self.tree_view.get_model()[path]
+                metadata = model.get(row[ListModel.COLUMN_UID])
+                self.cell_title.props.editable = model.is_editable(metadata)
+
+                if self.cell_title.props.editable:
+                    self.emit('title-edit-started')
+
+                column = self.tree_view.get_column(3)
+                tree_view.set_cursor_on_cell(path, column, self.cell_title,
+                                         start_editing=True)
+
+            if keyname == 'Right':
+                tree_iter = self._model.get_iter(path)
+                uid = self._model[tree_iter][ListModel.COLUMN_UID]
+                self.emit('detail-clicked', uid)
 
     def is_dragging(self):
         return self._is_dragging

@@ -374,13 +374,20 @@ class JournalActivity(JournalWindow):
             activity_id=activity_id, project_metadata=self.project_metadata)
 
     def __key_press_event_cb(self, widget, event):
-        #if not self._main_toolbox.search_entry.has_focus():
-        #self._main_toolbox.search_entry.grab_focus()
-
+        '''
+        Grabs keyboard focus to tree view on Up/Down
+        keypress. Focus can be switched b/w search entry
+        and the tree view by the 'Tab' key.
+        '''
         keyname = Gdk.keyval_name(event.keyval)
-        if keyname == 'Escape':
+        if keyname == 'Up' or keyname == 'Down':
+            if not self._list_view.tree_view.has_focus():
+                self._list_view.tree_view.grab_focus()
+
+        if keyname == 'Escape' or keyname == 'Left':
             self._main_toolbox.clear_query()
             self.show_main_view()
+            self._list_view.tree_view.grab_focus()
 
     def __choose_project_cb(self, tree_view, metadata_to_send):
         project_chooser = ObjectChooser(self.get_window())
