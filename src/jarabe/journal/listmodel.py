@@ -15,6 +15,7 @@
 
 import logging
 import time
+import datetime
 
 import json
 from gi.repository import GObject
@@ -198,7 +199,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
             self._cached_row.append(_('Unknown'))
         else:
             self._cached_row.append(
-                util.timestamp_to_elapsed_string(float(creation_time)))
+                datetime.datetime.fromtimestamp(int(creation_time)).strftime('%Y-%m-%d %H:%M:%S'))
 
         try:
             size = int(metadata.get('filesize'))
