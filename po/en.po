@@ -2469,12 +2469,3 @@ msgstr "Restore realized successfully."
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
 msgstr "Clear notifications"
-
-#~ msgid "Value must be an integer."
-#~ msgstr "Value must be an integer."
-
-#~ msgid "Modem Configuration"
-#~ msgstr "Modem Configuration"
-
-#~ msgid "Configure your Web Services"
-#~ msgstr "Configure your Web Services"

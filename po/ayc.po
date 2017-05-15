@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2016-02-02 13:23+0000\n"
-"Last-Translator: EdgarQuispeChambi <equispe7@gmail.com>\n"
+"PO-Revision-Date: 2016-05-24 01:30+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ayc\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1454419431.000000\n"
+"X-POOTLE-MTIME: 1464053410.000000\n"
 
 # "Migrado a GSettings"
 #: ../data/org.sugarlabs.gschema.xml.h:1
@@ -1514,7 +1514,7 @@ msgstr ""
 "    -g chimpu       ist'araña qillqana jichha chanipa katu \n"
 "    -s chimpu       ist'araña qillqana jichha chanipa uchi \n"
 "    -c chimpu   ist'araña qillqana jichha chanipa apaqaña \n"
-"     "
+"    "
 
 # ¿"erase" en las teclar de la pequeña computadora aparece en INGLES o CASTELLANO?
 #: ../src/jarabe/controlpanel/cmd.py:52
@@ -1523,7 +1523,7 @@ msgid ""
 "Hit ctrl+alt+erase on the keyboard to trigger a restart."
 msgstr ""
 "Mayjt'ayatanakama apnaqañatakixa, Sugar wakichata wasitatha qalltayañamawa.\n"
-"Wakichatanaka mayampi qalltañataki, ctrl+alt+erase limt'ma. "
+"Wakichatanaka mayampi qalltañataki, ctrl+alt+erase limt'ma."
 
 #: ../src/jarabe/controlpanel/gui.py:373 ../src/jarabe/journal/palettes.py:194
 #: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
@@ -2221,7 +2221,7 @@ msgstr "Jani chinu q'ipini mantañanakaxa janiwa apaqañjamati."
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] "¿Akïriru %d sata mantaña apaqaña muntati %d?"
+msgstr[0] "¿Akïriru %d sata mantaña apaqaña muntati?"
 msgstr[1] "¿Akïrinakaru %d sata mantañanaka apaqaña muntati?"
 
 # Seguro que no quiso decir k'ipi sino q'ipi.
@@ -2787,167 +2787,3 @@ msgstr "Wali khuspuni tukuyixa wasitatha jakatatayañaxa."
 msgid "Clear notifications"
 msgstr "Yatinuqayawi q'umachaña"
 
-# No pues... PARISA JAKHU significa NUMERO PAR.  Lo que hay que traducir es NUMERO ENTERO. 
-#~ msgid "Value must be an integer."
-#~ msgstr "Jani k'asaqata jakhüñapawa chanixa."
-
-# Oh. Ahora CONFIGURAR es WAKICHAÑA !! Pero me parece pertinente.
-#~ msgid "Modem Configuration"
-#~ msgstr "Módem wakichawi wakichaña"
-
-#~ msgid "Configure your Web Services"
-#~ msgstr "Web Luqtawima askicht'asma"
-
-#  "Error, zona horaria no existe."
-#~ msgid "Error timezone does not exist."
-#~ msgstr "Pantjata, pacha chinuwa chhaqi."
-
-#~ msgid "Turn off the wireless radio to save battery life"
-#~ msgstr "Wayra raryu jiwasa qhanayaña jakañapa ch'amanchañataki"
-
-#~ msgid "Discard network history if you have trouble connecting to the network"
-#~ msgstr "Pantjata mistupana, mayachasïwi sartäwinaka amuyañäni"
-
-#~ msgid "Discard network history"
-#~ msgstr "Mayachasiña saräwinaka qhananchma"
-
-# Crear una conexión en el panel de control.
-#~ msgid "Create a connection in the control panel."
-#~ msgstr "Wakichatanaka thaqañaru maya mayachasiña apsma."
-
-#~ msgid "My Speakers"
-#~ msgstr "Arsurinaka utjirija"
-
-#~ msgid "Unmute"
-#~ msgstr "Aru churaña"
-
-#~ msgid "Mute"
-#~ msgstr "Ch'ujtayaña"
-
-#~ msgid "To apply your changes you have to restart Sugar.\n"
-#~ msgstr "Mayjt'atanaka wakichäwinakampi irnaqañataki akíri wakichata mayampi "
-#~ "qhantayma Azúcar.\n"
-
-#~ msgid "Anyone"
-#~ msgstr "Kawkipirisa"
-
-#~ msgid "My friends"
-#~ msgstr "Mayachasiri masinakaja"
-
-#~ msgid "My class"
-#~ msgstr "Mayachasiña wakichataja"
-
-#~ msgid "<Ctrl>1"
-#~ msgstr "Wakichata <Ctrl>1"
-
-#~ msgid "Update your activities to ensure compatibility with your new software"
-#~ msgstr "Wakichäwinakama machaqachasa uka machaqa software wakichäwimpi mayachma"
-
-#~ msgid "Check now"
-#~ msgstr "Jichha yant'ma"
-
-#~ msgid "Sugar in a window"
-#~ msgstr "Mis'ki wakichawi"
-
-#~ msgid "Software update"
-#~ msgstr "amuyt'awi machaqaptayana"
-
-#~ msgid "Search"
-#~ msgstr "Thaqaña"
-
-# Nombre de usuario de configuración de la red GSM
-#~ msgid "GSM network username configuration"
-#~ msgstr "Wakichata GSM wakichäwina jaqipana sutipa"
-
-#  "Clave personal de desbloqueo (PUK):"
-#~ msgid "Personal Unblocking Key (PUK):"
-#~ msgstr "Qhantayaña sayt'ayata jist'araña (PUK):"
-
-# Url donde se guarda la copia de seguridad.
-#~ msgid "Url where the backup is saved to."
-#~ msgstr "Wakichata URL katuqata apaqata imiri."
-
-# La red GSM configuración de la contraseña
-#~ msgid "GSM network password configuration"
-#~ msgstr "Wakichata GSM wakichäwi qhantayaña jist'arañapa"
-
-#~ msgid "Power Automatic."
-#~ msgstr "Poser sata qhantayiri."
-
-# Número de la red GSM
-#~ msgid "GSM network number"
-#~ msgstr "Wakichata GSM jakhu chimpu"
-
-# GSM de la red telefónica número de configuración
-#~ msgid "GSM network telephone number configuration"
-#~ msgstr "GSM telefónica mayachäwina wakichata wakichäwi jakhu chimpu"
-
-# La red GSM de configuración personal clave de desbloqueo
-#~ msgid "GSM network personal unlock key configuration"
-#~ msgstr "Wakichata GSM sapa jaqitaki wakichäwi qhantayaña jist'arañapa"
-
-#~ msgid "To apply your changes you have to restart sugar.\n"
-#~ msgstr "Mayjt'atanaka wakichäwinakampi irnaqañataki akíri wakichata mayampi "
-#~ "qhantayma Azúcar.\n"
-
-# La red GSM contraseña
-#~ msgid "GSM network password"
-#~ msgstr "Wakichata GSM qhantayaña jist'arañapa"
-
-#  "%(interface)s: %(version)s"
-#, python-format
-#~ msgid "%(interface)s: %(version)s"
-#~ msgstr "%(interface)s: %(version)s mayjt'äwinaka"
-
-# La red GSM PIN
-#~ msgid "GSM network PIN"
-#~ msgstr "Wakichata GSM PIN"
-
-# La red GSM de identificación personal configuración del número de
-#~ msgid "GSM network personal identification number configuration"
-#~ msgstr "Wakichata GSM sapa jaqiru chimpuña wakichäwi jakhu chimpupampi"
-
-# La red GSM APN
-#~ msgid "GSM network APN"
-#~ msgstr "Wakichatanaka GSM APN"
-
-# Revise su Pin / configuración Puk.
-#~ msgid "Check your Pin/Puk configuration."
-#~ msgstr "Jumaru wakisir Pin uñakipma / wakichäwi Puk."
-
-# La red GSM PUK
-#~ msgid "GSM network PUK"
-#~ msgstr "Wakichata GSM PUK"
-
-# URL del servidor de Jabber para su uso.
-#~ msgid "Url of the jabber server to use."
-#~ msgstr "Wakichata URL katuqiri Jabber qhantayiri apnaqañataki."
-
-#  "%s"
-#, python-format
-#~ msgid "%s"
-#~ msgstr "Wakichata %s"
-
-# Nombre de usuario de la red GSM
-#~ msgid "GSM network username"
-#~ msgstr "Wakichata GSM jaqipana sutipa"
-
-#  "%s (%s)"
-#, python-format
-#~ msgid "%s (%s)"
-#~ msgstr "%s (%s) wakichata"
-
-#  "Error en argumento extremo de manejo de energía, use on/off."
-#~ msgid "Error in extreme pm argument, use on/off."
-#~ msgstr "Qhanayiri ch'amanchiri sinti ch'amanchäwi pantajata, on/off limt'ma."
-
-# Directorio de la búsqueda de traducciones
-#~ msgid "Directory to search for translations"
-#~ msgstr "Aru jaqukipatanaka thaqaña wakichata"
-
-# Acceso a la red GSM punto de nombre de la configuración
-#~ msgid "GSM network access point name configuration"
-#~ msgstr "Wakichata GSM sutini wakichatana chiqapa taypiru mantäwi"
-
-#~ msgid "Power Extreme."
-#~ msgstr "Power sata anqäxa qhantayiri."

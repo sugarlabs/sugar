@@ -2,14 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>, 2015-2016
+# revisar
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2016-02-01 12:42+0000\n"
-"Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
+"PO-Revision-Date: 2017-05-06 17:10+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1454330577.000000\n"
+"X-POOTLE-MTIME: 1494090654.000000\n"
 
 # well-spelled: GSettings
 #: ../data/org.sugarlabs.gschema.xml.h:1
@@ -231,7 +231,7 @@ msgid ""
 "List of home views, including the view icon, the favorite icon and the layout"
 msgstr ""
 "La llista de les visualitzacions inicials, que inclouen la icona de "
-"visualització, la icona dels preferits i la disposició "
+"visualització, la icona dels preferits i la disposició"
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
@@ -250,7 +250,7 @@ msgstr "Retard de la vora"
 
 #: ../data/org.sugarlabs.gschema.xml.h:48 ../data/sugar.schemas.in.h:20
 msgid "Delay for the activation of the frame using the edges."
-msgstr "El retard per a l'activació del marc mitjançant les vores. "
+msgstr "El retard per a l'activació del marc mitjançant les vores."
 
 #: ../data/org.sugarlabs.gschema.xml.h:49 ../data/sugar.schemas.in.h:21
 msgid "Corner Delay"
@@ -777,11 +777,11 @@ msgstr "Model de teclat"
 
 #: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
-msgstr "Tecles per canviar la disposició"
+msgstr "Tecl[a/es] per canviar la disposició"
 
 #: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
-msgstr "Disposicions de teclats"
+msgstr "Disposici[ó/ons] de teclats"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:39
@@ -945,7 +945,7 @@ msgid ""
 "different place with different people."
 msgstr ""
 "El coneixement social és un fòrum que us permet connectar amb els "
-"desenvolupadors i parlar de les activitats de Sugar. El fet de canviar de "
+"desenvolupadors i parlar de les activitats de Sugar.  El fet de canviar de "
 "servidor significa que les converses es realitzaran en un lloc diferent amb "
 "gent diferent."
 
@@ -2434,7 +2434,7 @@ msgstr "Convida a %s"
 #: ../src/jarabe/view/launcher.py:159
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr "<b>%s</b> va fallar en iniciar-se."
+msgstr "<b>%s</b> ha fallat en iniciar-se."
 
 #: ../src/jarabe/view/palettes.py:53
 msgid "Starting..."
@@ -2636,48 +2636,3 @@ msgstr "La restauració va finalitzar-se correctament."
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
 msgstr "Neteja les notificacions"
-
-#~ msgid "Value must be an integer."
-#~ msgstr "El valor ha de ser un nombre sencer."
-
-#~ msgid "Modem Configuration"
-#~ msgstr "Configuració del mòdem"
-
-#~ msgid "Configure your Web Services"
-#~ msgstr "Configuració dels vostres serveis web"
-
-#~ msgid "Error timezone does not exist."
-#~ msgstr "Error: aquesta zona horària no existeix."
-
-#~ msgid "My Speakers"
-#~ msgstr "Els meus altaveus"
-
-#~ msgid "Mute"
-#~ msgstr "Silenciar"
-
-#~ msgid "To apply your changes you have to restart Sugar.\n"
-#~ msgstr "Per aplicar els canvis, cal reiniciar el Sugar.\n"
-
-#~ msgid "Anyone"
-#~ msgstr "Tothom"
-
-#~ msgid "My friends"
-#~ msgstr "Amics/gues"
-
-#~ msgid "My class"
-#~ msgstr "La meva classe"
-
-#~ msgid "Update your activities to ensure compatibility with your new software"
-#~ msgstr ""
-#~ "Actualitzi les seves activitats per assegurar compatibilitat amb el nou "
-#~ "programari"
-
-#~ msgid "Check now"
-#~ msgstr "Provar ara"
-
-#, fuzzy
-#~ msgid "Software update"
-#~ msgstr "Actualització de programari"
-
-#~ msgid "Search"
-#~ msgstr "Cerca"

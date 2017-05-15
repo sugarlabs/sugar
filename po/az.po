@@ -1,119 +1,110 @@
-# translation of sugar.po to Yoruba
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
-# Fajuyitan, Sunday <ayo@wazobialinux.com>, 2006.
-# Fajuyitan, Sunday Ayo <ayo@wazobialinux.com>, 2006.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: sugar\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2016-09-24 09:46+0000\n"
-"Last-Translator: Samson <samsongoddy@sugarlabs.org>\n"
-"Language-Team: Yoruba\n"
-"Language: yo\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: az\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1474710381.000000\n"
+"X-Generator: Translate Toolkit 1.11.0\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
-msgstr "Losi GSettings"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:2
 msgid "This key shows whether or not GConf values were migrated to GSettings"
-msgstr "Yi bọtini fihan boya tabi ko GConf iye won losi to GSettings"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
 msgid "Backup URL"
-msgstr "Afẹyinti URL"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:4 ../data/sugar.schemas.in.h:12
 msgid "URL where the backup is saved to."
-msgstr "URL ibi ti awọn afẹyinti ti wa ni fipamọ si."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:5 ../data/sugar.schemas.in.h:31
 msgid "Show Log out"
-msgstr "Fi Wọle jade"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr "Ti o ba ti TÒÓTỌ, Sugar yoo fi a \"Wọle jade\" aṣayan."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:7 ../data/sugar.schemas.in.h:33
 msgid "Show Restart"
-msgstr "show Tun"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:8 ../data/sugar.schemas.in.h:34
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr "Ti o ba ti TÒÓTỌ, Sugar yoo fi a \"Tun\" aṣayan."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
 msgid "Show Shutdown"
-msgstr "show tiipa"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
-msgstr "Ti o ba ti TÒÓTỌ, Sugar yoo fi a \"tiipa\" aṣayan."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
-msgstr "show Forukọsilẹ"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
 msgstr ""
-"Ti o ba ti TÒÓTỌ, Sugar yoo fi a \"Forukọsilẹ\" aṣayan ni awọn ore paleti."
 
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
 msgid "Bundle IDs of protected activities"
-msgstr "Lapapo ID ti ni idaabobo akitiyan"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:14 ../data/sugar.schemas.in.h:64
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
-"Awọn olumulo yoo wa ko le gba ọ laaye lati nu wọnyi akitiyan nipasẹ awọn "
-"akojọ view."
 
 #: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
 msgid "A limit to the number of simultaneously open activities."
-msgstr "A iye to si awọn nọmba ti nigbakannaa ìmọ akitiyan."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:16 ../data/sugar.schemas.in.h:80
 msgid ""
 "This int is used to set a limit to the number of open activities. By default "
 "(0), there is no limit."
 msgstr ""
-"Yi int ti wa ni lo lati ṣeto kan iye to si awọn nọmba ti ìmọ akitiyan. Nipa "
-"aiyipada (0), nibẹ ni ko si iye to."
 
 #: ../data/org.sugarlabs.gschema.xml.h:17 ../data/sugar.schemas.in.h:1
 msgid "User Name"
-msgstr "Orúkọ Òǹlò"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:18 ../data/sugar.schemas.in.h:2
 msgid "User name that is used throughout the desktop."
-msgstr "Orúkọ olumulo ti o ti lo jakejado tabili."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:19 ../data/sugar.schemas.in.h:3
 msgid "Default nick"
-msgstr "Aiyipada nick"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:20 ../data/sugar.schemas.in.h:4
 msgid ""
 "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
 "long name."
 msgstr ""
-"\"Alaabo\" lati beere nick on initialization;\"Eto\" to tun UNIX iroyin gun "
-"orukọ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:21 ../data/sugar.schemas.in.h:5
 msgid "User Color"
-msgstr "olumulo awọ"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:22 ../data/sugar.schemas.in.h:6
 msgid ""
@@ -121,228 +112,218 @@ msgid ""
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
-"Awọ fun awọn XO aami ti o ti lo jakejado tabili. Awọn okun ti wa ni kq ti "
-"awọn ọpọlọ awọ ati ki o fọwọsi awọ, kika ni pe ti rgb awọn awọ. Apere: "
-"#AC32F,#9A5200"
 
 #: ../data/org.sugarlabs.gschema.xml.h:23
 msgid "User Gender"
-msgstr "olumulo iwa"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:24
 msgid "Gender of the Sugar user, either male, female, or unassigned"
-msgstr "Iwa ti awọn Sugar olumulo, boya ọkunrin, obinrin, tabi unassigned"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:25
 msgid "User Birth Timestamp"
-msgstr "olumulo Ìbí akoko ontẹ"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:26
 msgid "Birth timestamp (seconds since the epoch)"
-msgstr "Ibi timestamp (aaya niwon awọn epoch)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:27
 msgid "Group Label"
-msgstr "Group Label"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:28
 msgid "Label associated with age, e.g., '2nd Grade'"
-msgstr "Aami ni nkan ṣe pẹlu ọjọ ori, eg, 'kilasi meji'"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:29
 msgid "Background image path"
-msgstr "Background image ona"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:30
 msgid "Path to the image to be used as a background."
-msgstr "Ona to awọn aworan to ṣee lo bi a lẹhin."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:31
 msgid "Background alpha level"
-msgstr "Background Alpha ipele"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:32
 msgid "The opacity of the background image."
-msgstr "Awọn opacity ti awọn isale image."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:33
 msgid "Mimetype registry"
-msgstr "Mimetype registry"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:34
 msgid "Consists of key-value pairs mimetypes and their corresponding activity"
-msgstr "Oriširiši bọtini-iye orisii mimetypes ati awọn won bamu aṣayan iṣẹ-ṣiṣe"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
-msgstr "iwọn didun Level"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:36 ../data/sugar.schemas.in.h:8
 msgid "Volume level for the sound device."
-msgstr "Iwọn didun ipele fun awọn ohun ẹrọ."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:37 ../data/sugar.schemas.in.h:9
 msgid "Sound Muted"
-msgstr "ohun dákẹjẹẹ"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:38 ../data/sugar.schemas.in.h:10
 msgid "Setting for muting the sound device."
-msgstr "Eto fun muting awọn ohun ẹrọ."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:39
 msgid "Brightness Level"
-msgstr "imọlẹ Ipele"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
-msgstr "Imọlẹ ipele fun awọn kọmputa iboju."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:41
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
 msgid "Timezone"
-msgstr "Timezone"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:42 ../data/sugar.schemas.in.h:14
 msgid "Timezone setting for the system."
-msgstr "Timezone eto fun awọn eto."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr "Home wiwo"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
 "List of home views, including the view icon, the favorite icon and the layout"
 msgstr ""
-"Akojọ ti awọn ile wiwo, pẹlu awọn view aami, awọn ayanfẹ aami ati awọn "
-"ifilelẹ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
-msgstr "Jiju iwara aarin"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:46
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
 msgstr ""
-"Idaduro ni milliseconds laarin iwara awọn imudojuiwọn fun jiju pulsing aami."
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
-msgstr "Edge Idaduro"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:48 ../data/sugar.schemas.in.h:20
 msgid "Delay for the activation of the frame using the edges."
-msgstr "Idaduro fun awọn ibere ti awọn fireemu lilo awọn egbegbe."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:49 ../data/sugar.schemas.in.h:21
 msgid "Corner Delay"
-msgstr "Corner Idaduro"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:50 ../data/sugar.schemas.in.h:22
 msgid "Delay for the activation of the frame using the corners."
-msgstr "Idaduro fun awọn ibere ti awọn fireemu lilo awọn igun."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr "nfa Iwon"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
-msgstr "Iwọn ti awọn fireemu okunfa agbegbe, ni px lati igun/eti."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
-msgstr "Jabber Server"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:54 ../data/sugar.schemas.in.h:24
 msgid "URL of the jabber server to use."
-msgstr "URL ti awọn jabber server lati lo."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:55 ../data/sugar.schemas.in.h:29
 msgid "Publish to Gadget"
-msgstr "Jade lati Gadget"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:56 ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"Ti o ba ti TÒÓTỌ, Sugar yoo ṣe wa searchable fun awọn miiran awọn olumulo ti "
-"awọn Jabber server."
 
 #: ../data/org.sugarlabs.gschema.xml.h:57
 msgid "Social Help Server"
-msgstr "Social Iranlọwọ Server"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:58
 msgid "URL of the social help server to use with protocol."
-msgstr "URL ti awọn awujo iranlọwọ server lati lo pẹlu Ilana."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:59 ../data/sugar.schemas.in.h:25
 msgid "Power Automatic"
-msgstr "Power laifọwọyi"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:60
 #: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:26
 msgid "Automatic power management (increases battery life)"
-msgstr "Laifọwọyi agbara isakoso (mu aye batiri)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:61 ../data/sugar.schemas.in.h:27
 msgid "Power Extreme"
-msgstr "Power iwọn"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:62 ../data/sugar.schemas.in.h:28
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
-msgstr "Awọn iwọn agbara isakoso (disables alailowaya redio, mu aye batiri)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:63 ../data/sugar.schemas.in.h:39
 msgid "Keyboard layouts"
-msgstr "keyboard ipalemo"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:64 ../data/sugar.schemas.in.h:40
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
-"Akojọ ti awọn keyboard ipalemo. Titẹ sii kọọkan yẹ ki o wa ni awọn fọọmu "
-"akọkọ (iyatọ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:65 ../data/sugar.schemas.in.h:41
 msgid "Keyboard options"
-msgstr "keyboard aṣayan"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:66 ../data/sugar.schemas.in.h:42
 msgid "List of keyboard options."
-msgstr "Akojọ ti awọn keyboard awọn aṣayan."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:67 ../data/sugar.schemas.in.h:43
 msgid "Keyboard model"
-msgstr "keyboard awoṣe"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:68 ../data/sugar.schemas.in.h:44
 msgid "The keyboard model to be used"
-msgstr "Awọn keyboard awoṣe to wa ni lo"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:69 ../data/sugar.schemas.in.h:45
 msgid "Default font face"
-msgstr "Aiyipada font oju"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:70 ../data/sugar.schemas.in.h:46
 msgid "Font face that is used throughout the desktop."
-msgstr "Font oju ti o ti lo jakejado tabili."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:71 ../data/sugar.schemas.in.h:47
 msgid "Default font size"
-msgstr "Aiyipada font iwọn"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:72 ../data/sugar.schemas.in.h:48
 msgid "Font size that is used throughout the desktop."
-msgstr "Font iwọn ti o ti lo jakejado tabili."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:73 ../data/sugar.schemas.in.h:61
 msgid "Show Sugar Ad-hoc networks"
-msgstr "Fi Sugar Ad-alátagbà nẹtiwọki"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:74 ../data/sugar.schemas.in.h:62
 msgid ""
@@ -350,257 +331,244 @@ msgid ""
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
-"Ti o ba ti TÒÓTỌ, Sugar yoo fi aiyipada Ad-alátagbà nẹtiwọki fun ikanni 1,6 "
-"ati 11. ti o ba ti Sugar ri ko si \"mọ\" nẹtiwọki nigbati o bẹrẹ, o se "
-"autoconnect si ohun Ad-alátagbà nẹtiwọki."
 
 #: ../data/org.sugarlabs.gschema.xml.h:75
 msgid "Enable Ad-hoc autoconnect"
-msgstr "Jeki Ad-alátagbà autoconnect"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:76
 msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
-msgstr "Ti o ba ti TÒÓTỌ, Sugar yoo autoconnect to Ad-alátagbà nẹtiwọki."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr "Nẹtiwọki GSM olumulo (ti bọ kuro lọwọ ibi/ISINMI)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:78 ../data/sugar.schemas.in.h:50
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr "Nẹtiwọki GSM olumulo iṣeto ni (ti bọ kuro lọwọ ibi/ISINMI)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:79 ../data/sugar.schemas.in.h:51
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr "Nẹtiwọki GSM ọrọigbaniwọle (ti bọ kuro lọwọ ibi/ISINMI)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:80 ../data/sugar.schemas.in.h:52
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr "Nẹtiwọki GSM ọrọigbaniwọle iṣeto ni (ti bọ kuro lọwọibi/ISINMI)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:81 ../data/sugar.schemas.in.h:53
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr "Nẹtiwọki GSM nọmba (ti bọ kuro lọwọibi/ISINMI)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:82 ../data/sugar.schemas.in.h:54
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr "Nẹtiwọki GSM tẹlifoonu nọmba iṣeto ni (ti bọ kuro lọwọibi/ISINMI)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:83 ../data/sugar.schemas.in.h:55
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr "Nẹtiwọki GSM APN (ti bọ kuro lọwọibi/ISINMI)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:84 ../data/sugar.schemas.in.h:56
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
-msgstr "Nẹtiwọki GSM wiwọle ojuami orukọ iṣeto ni (ti bọ kuro lọwọibi/ISINMI)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:85 ../data/sugar.schemas.in.h:57
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr "Nẹtiwọki GSM PIN (ti bọ kuro lọwọibi/ISINMI)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:86 ../data/sugar.schemas.in.h:58
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
-msgstr "Nẹtiwọki GSM ẹni idanimọ nọmba iṣeto ni (ti bọ kuro lọwọibi/ISINMI)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:87 ../data/sugar.schemas.in.h:59
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr "Nẹtiwọki GSM PUK (ti bọ kuro lọwọibi/ISINMI)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:88 ../data/sugar.schemas.in.h:60
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
-msgstr "Nẹtiwọki GSM ẹni Šii bọtini iṣeto ni (ti bọ kuro lọwọibi/ISINMI)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:89
 msgid "TODO: add summary"
-msgstr "Todo: fi Lakotan"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:90
 msgid "TODO: add description"
-msgstr "Todo: fi apejuwe"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:91 ../data/sugar.schemas.in.h:65
 msgid "Pitch value for the speech sugar service"
-msgstr "Ipolowo iye fun awọn ọrọ suga iṣẹ"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:92 ../data/sugar.schemas.in.h:66
 msgid "Pitch value used by the speech service in Sugar"
-msgstr "Ipolowo iye lo nipasẹ awọn ọrọ iṣẹ ni Sugar"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:93 ../data/sugar.schemas.in.h:67
 msgid "Rate value for the speech sugar service"
-msgstr "Rate iye fun awọn ọrọ suga iṣẹ"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:94 ../data/sugar.schemas.in.h:68
 msgid "Rate value used by the speech service in Sugar"
-msgstr "Rate iye lo nipasẹ awọn ọrọ iṣẹ ni Sugar"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:95 ../data/sugar.schemas.in.h:69
 msgid "Activity update backend."
-msgstr "Aṣayan iṣẹ-ṣiṣe imudojuiwọn backend."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:96 ../data/sugar.schemas.in.h:70
 msgid ""
 "Activity update backend module, followed by a period, followed by the class "
 "name."
 msgstr ""
-"Aṣayan iṣẹ-ṣiṣe imudojuiwọn backend module, atẹle nipa akoko kan, atẹle nipa "
-"awọn kilasi orukọ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:97 ../data/sugar.schemas.in.h:71
 msgid "Microformat update URL."
-msgstr "Microformat imudojuiwọn URL."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:98 ../data/sugar.schemas.in.h:72
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
-"URL lo nipasẹ awọn microformat imudojuiwọn backend fun aṣayan iṣẹ-ṣiṣe "
-"imudojuiwọn alaye."
 
 #: ../data/org.sugarlabs.gschema.xml.h:99 ../data/sugar.schemas.in.h:73
 msgid "Automatic update frequency."
-msgstr "Laifọwọyi imudojuiwọn ipo igbohunsafẹfẹ."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:100 ../data/sugar.schemas.in.h:74
 msgid ""
 "Frequency of automatic activity updates, measured in days. 0 means disabled."
 msgstr ""
-"Igbohunsafẹfẹ ti laifọwọyi aṣayan iṣẹ-ṣiṣe imudojuiwọn, won ni ọjọ. 0 tumo "
-"si alaabo."
 
 #: ../data/org.sugarlabs.gschema.xml.h:101 ../data/sugar.schemas.in.h:75
 msgid "Timestamp of last activity update."
-msgstr "Timestamp ti o kẹhin aṣayan iṣẹ-ṣiṣe imudojuiwọn."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:102 ../data/sugar.schemas.in.h:76
 msgid ""
 "A unix timestamp (seconds since epoch) of the last successful activity "
 "update."
 msgstr ""
-"A UNIX timestamp (aaya niwon epoch) ti o kẹhin aseyori aṣayan iṣẹ-ṣiṣe "
-"imudojuiwọn."
 
 #: ../data/org.sugarlabs.gschema.xml.h:103
 msgid "New ASLO update.json URL."
-msgstr "New ASLO update.json URL."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:104
 msgid "URL used by the new ASLO updater to download activity data."
 msgstr ""
-"URL lo nipasẹ awọn titun ASLO updater lati gba lati ayelujara aṣayan iṣẹ-"
-"ṣiṣe data."
 
 #: ../data/org.sugarlabs.gschema.xml.h:105 ../data/sugar.schemas.in.h:77
 msgid "A description of the hardware available to the user."
-msgstr "A apejuwe ti awọn hardware wa si awọn olumulo."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
-msgstr "Yi okun ti han ni awọn iṣakoso nronu, nipa kọmputa apakan."
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
-msgstr "Nipa mi"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:51
 msgid "You must enter a name."
-msgstr "O gbọdọ tẹ orukọ kan."
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:83
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr "ọpọlọ:   awọ=%s hue=%s"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:86
 #, python-format
 msgid "stroke:   %s"
-msgstr "ọpọlọ:   %s"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:88
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr "fọwọsi:    awọ=%s hue=%s"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:90
 #, python-format
 msgid "fill:     %s"
-msgstr "fọwọsi:     %s"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:102
 msgid "Error in specified color modifiers."
-msgstr "Ašiše ni pato awọ modifiers."
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:105
 msgid "Error in specified colors."
-msgstr "Ašiše ni pato awọn awọ."
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/view.py:243
 msgid "Click to change your color:"
-msgstr "Tẹ lati yi awọ:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/view.py:294
 #: ../src/jarabe/intro/window.py:203
 msgid "Select gender:"
-msgstr "Yan iwa:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
-msgstr "Nipa mi Kọmputa"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/model.py:37
 msgid "Not available"
-msgstr "Ko si"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:76
 msgid "Identity"
-msgstr "Identity"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:87
 msgid "Model:"
-msgstr "Awoṣe:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Serial Number:"
-msgstr "Nomba siriali:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:103
 msgid "Software"
-msgstr "Àwo ìdarí kọmpútà"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:112
 msgid "Build:"
-msgstr "Kọ:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:117
 msgid "Sugar:"
-msgstr "Sugar:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:122
 msgid "Firmware:"
-msgstr "Famuwia:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:127
 msgid "Wireless Firmware:"
-msgstr "Alailowaya famuwia:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:134
 #, python-format
 msgid "%d days ago"
-msgstr "%d ọjọ seyin"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:136
 #: ../src/jarabe/journal/journaltoolbox.py:169
 msgid "Today"
-msgstr "Lónìí"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:139
 msgid "Last system update:"
-msgstr "Last eto imudojuiwọn:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:150
 msgid "Copyright and License"
-msgstr "Copyright ati License"
+msgstr ""
 
 #. TRANS: The word "Sugar" should not be translated.
 #: ../extensions/cpsection/aboutcomputer/view.py:169
@@ -610,241 +578,233 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"Sugar ni awọn ayaworan ni wiwo olumulo ti o ti wa ni nwa ni. Sugar wa ni "
-"free software, bo nipasẹ awọn GNU Gbogbogbo ẹya-aṣẹ, ati awọn ti o ba wa "
-"kaabo lati yi o ati/tabi pinpin idaako ti o labẹ awọn ipo ti ṣàpèjúwe ninu "
-"rẹ."
 
 #: ../extensions/cpsection/aboutcomputer/view.py:181
 msgid "Full license:"
-msgstr "Full iwe-ašẹ:"
+msgstr ""
 
 #: ../extensions/cpsection/background/__init__.py:21
 msgid "Background"
-msgstr "Ẹ̀yìn"
+msgstr ""
 
 #: ../extensions/cpsection/background/view.py:48
 msgid "Select a background:"
-msgstr "Yan a lẹhin:"
+msgstr ""
 
 #: ../extensions/cpsection/background/view.py:57
 msgid "Clear background"
-msgstr "Ko ẹ̀yìn"
+msgstr ""
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr "Ọjọ & Time"
+msgstr ""
 
 #: ../extensions/cpsection/datetime/model.py:100
 msgid "Error: timezone does not exist."
-msgstr "Aṣiṣe: timezone ko ni tẹlẹ."
+msgstr ""
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
-msgstr "Fireemu"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:26
 msgid "never"
-msgstr "kò"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "instantaneous"
-msgstr "instantaneous"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:28
 #, python-format
 msgid "%s seconds"
-msgstr "%s aaya"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:52
 msgid "Activation Delay"
-msgstr "si ibere ise Idaduro"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:68
 msgid "Activation Area"
-msgstr "ibere ise Area"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:85
 msgid "Corner"
-msgstr "Igun"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:104
 msgid "Edge"
-msgstr "eti"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:123
 msgid "Size"
-msgstr "iwọn"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:221
 msgid "toolbar size"
-msgstr "bọtini iboju iwọn"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:226
 msgid "exact corner or edge"
-msgstr "gangan igun tabi eti"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:228
 msgid "exact corner"
-msgstr "gangan igun"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:230
 msgid "exact edge"
-msgstr "gangan eti"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:232
 msgid "ignored"
-msgstr "bikita"
+msgstr ""
 
 #. TRANS: px as in pixels
 #: ../extensions/cpsection/frame/view.py:235
 msgid "{}px"
-msgstr "{}px"
+msgstr ""
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:38
 msgid "Keyboard"
-msgstr "keyboard"
+msgstr ""
 
 #: ../extensions/cpsection/keyboard/view.py:240
 msgid "Keyboard Model"
-msgstr "keyboard awoṣe"
+msgstr ""
 
 #: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
-msgstr "Key(s) lati yi akọkọ"
+msgstr ""
 
 #: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
-msgstr "Keyboard Layout(s)"
+msgstr ""
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:39
 msgid "Language"
-msgstr "Èdè"
+msgstr ""
 
 #: ../extensions/cpsection/language/model.py:29
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "Ko le wọle si ~/.i18n. Ṣẹda boṣewa eto."
+msgstr ""
 
 #: ../extensions/cpsection/language/model.py:156
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "Ede fun koodu =%s ko le wa ni pinnu."
+msgstr ""
 
 #: ../extensions/cpsection/language/model.py:179
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "Binu Emi ko sọ '%s'."
+msgstr ""
 
 #: ../extensions/cpsection/language/view.py:75
 msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
-"Fi ede ni awọn ibere ti o fẹ. Ti o ba ti a translation ni ko wa, nigbamii ti "
-"ninu awọn akojọ yoo ṣee lo."
 
 #: ../extensions/cpsection/language/view.py:383
 #, python-format
 msgid "Error writting language configuration (%s)"
-msgstr "Aṣiṣe writting ede iṣeto ni (%s)"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem"
-msgstr "Modẹmu"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
-"Iwọ yoo nilo lati pese awọn wọnyi alaye lati ṣeto soke a mobile "
-"àsopọmọBurọọdubandi to a cellular (3G) nẹtiwọki."
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr "Orílẹ́ède:"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr "Olupese:"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr "Ètò:"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
-msgstr "olumulo:"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
-msgstr "ọrọigbaniwọle:"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:174
 msgid "Number:"
-msgstr "nọmba:"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
-msgstr "Access Point Name (APN):"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
-msgstr "Personal Identity Number (PIN):"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/model.py:162
 #, python-format
 msgid "Plan #%s"
-msgstr "Ètò # %s"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/model.py:292
 #, python-format
 msgid "Provider %s"
-msgstr "Olupese %s"
+msgstr ""
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
 msgid "Network"
-msgstr "Network"
+msgstr ""
 
 #: ../extensions/cpsection/network/model.py:88
 msgid "State is unknown."
-msgstr "Ipinle jẹ aimọ."
+msgstr ""
 
 #: ../extensions/cpsection/network/model.py:104
 msgid "Error in specified radio argument use on/off."
-msgstr "Ašiše ni pato redio ariyanjiyan lo lori / pipa."
+msgstr ""
 
 #: ../extensions/cpsection/network/model.py:197
 msgid "Error in specified argument use 0/1."
-msgstr "Ašiše ni pàtó ariyanjiyan lo 0/1."
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:65
 msgid "Wireless"
-msgstr "alailowaya"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:73
 msgid "The wireless radio may be turned off to save battery life."
-msgstr "Awọn alailowaya redio le ti wa ni paa lati fi batiri aye."
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:86
 msgid "Radio"
-msgstr "Radio"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:103
 msgid ""
 "Discard wireless connections if you have trouble connecting to the network"
-msgstr "Discard asopọ alailowaya ti o ba ti o ba ni wahala pọ si awọn nẹtiwọki"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:113
 msgid "Discard wireless connections"
-msgstr "Àyípadà asopọ alailowaya"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
-msgstr "ifowosowopo"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:137
 msgid ""
@@ -852,13 +812,10 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
-"Awọn olupin ti wa ni ni deede ti ohun ti yara ti o ba wa ni; eniyan lori "
-"kanna server yoo ni anfani lati wo kọọkan miiran, paapaa nigba ti won ba wa "
-"ko loju kanna nẹtiwọki."
 
 #: ../extensions/cpsection/network/view.py:147
 msgid "Server:"
-msgstr "Server:"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:163
 msgid ""
@@ -866,141 +823,134 @@ msgid ""
 "Sugar Activities.  Changing servers means discussions will happen in a "
 "different place with different people."
 msgstr ""
-"Social Help ni a forum o jẹ ki o sopọ pẹlu Difelopa ati ọrọ Sugar akitiyan.  "
-"Iyipada apèsè tumo si awọn ijiroro ti yoo ṣẹlẹ ni kan yatọ si ibi pẹlu o "
-"yatọ si eniyan."
 
 #: ../extensions/cpsection/network/view.py:173
 msgid "Social Help Server:"
-msgstr "Social Iranlọwọ Server:"
+msgstr ""
 
 #: ../extensions/cpsection/power/__init__.py:24
 msgid "Power"
-msgstr "Power"
+msgstr ""
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
-msgstr "Ašiše ni laifọwọyi pm ariyanjiyan, lo lori/pipa."
+msgstr ""
 
 #: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
-msgstr "agbara isakoso"
+msgstr ""
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software Update"
-msgstr "software Update"
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:70
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
-"Software mu tọ aṣiṣe, imukuro aabo vulnerabilities, ki o si pese ẹya ara ẹrọ "
-"titun."
 
 #: ../extensions/cpsection/updater/view.py:84
 msgid "Update in progress..."
-msgstr "Mu ni ilọsiwaju..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:119
 msgid "Checking for updates..."
-msgstr "Yiyewo fun awọn imudojuiwọn..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:121
 msgid "Installing updates..."
-msgstr "Fifi awọn imudojuiwọn..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:150
 #, python-format
 msgid "Checking %s..."
-msgstr "Yiyewo %s..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:152
 msgid "Looking for updates..."
-msgstr "Nwa fun awọn imudojuiwọn..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:154
 #, python-format
 msgid "Downloading %s..."
-msgstr "Gbigba %s..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:156
 #, python-format
 msgid "Updating %s..."
-msgstr "Nmu %s..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:166
 msgid "Your software is up-to-date"
-msgstr "Rẹ software jẹ soke-si-ọjọ"
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:168
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] "O le fi %s imudojuiwọn"
-msgstr[1] "O le fi %s imudojuiwọn"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../extensions/cpsection/updater/view.py:183
 msgid "Can't connect to the activity server"
-msgstr "Ko le sopọ si awọn aṣayan iṣẹ-ṣiṣe server"
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:186
 msgid "Verify your connection to internet and try again, or try again later"
 msgstr ""
-"Daju asopọ rẹ si ayelujara ati gbiyanju lẹẹkansi, tabi gbiyanju lẹẹkansi "
-"nigbamii"
 
 #: ../extensions/cpsection/updater/view.py:206
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] "%s imudojuiwọn ti a ti fi sori ẹrọ"
-msgstr[1] "%s imudojuiwọn ti a ti fi sori ẹrọ"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../extensions/cpsection/updater/view.py:288
 msgid "Install selected"
-msgstr "fi sori ẹrọ ti a ti yan"
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:307
 #, python-format
 msgid "Download size: %s"
-msgstr "Download iwọn: %s"
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:399
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
-msgstr "Lati version %(current)s to %(new)s (Iwon: %(size)s)"
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:406
 #, python-format
 msgid "Version %(version)s (Size: %(size)s)"
-msgstr "Version %(version)s (Iwon:%(size)s)"
+msgstr ""
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:423
 msgid "None"
-msgstr "kò"
+msgstr ""
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:426
 msgid "1 KB"
-msgstr "1 KB"
+msgstr ""
 
 #. TRANS: download size of small updates, e.g. '250 KB'
 #: ../extensions/cpsection/updater/view.py:429
 #, python-format
 msgid "%.0f KB"
-msgstr "%.0f KB"
+msgstr ""
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
 #: ../extensions/cpsection/updater/view.py:432
 #, python-format
 msgid "%.1f MB"
-msgstr "%.1f MB"
+msgstr ""
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Web Services"
-msgstr "Web Services"
+msgstr ""
 
 #: ../extensions/cpsection/webaccount/view.py:65
 #, python-format
@@ -1008,79 +958,77 @@ msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
 msgstr ""
-"Ko si ayelujara iṣẹ ti wa ni sori ẹrọ.\n"
-"jọwọ lọsi %s fun alaye diẹ."
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
-msgstr "mi Audio"
+msgstr ""
 
 #: ../extensions/deviceicon/audio.py:330
 msgid "Speaker"
-msgstr "agbọrọsọ"
+msgstr ""
 
 #: ../extensions/deviceicon/audio.py:331
 msgid "Microphone"
-msgstr "gbohungbohun"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:69
 msgid "My Battery"
-msgstr "mi Batiri"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:151
 msgid "Removed"
-msgstr "kuro"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:154
 msgid "Charging"
-msgstr "gbigba agbara"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:157
 msgid "Very little power remaining"
-msgstr "Gan kekere agbara ti o ku"
+msgstr ""
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
 #: ../extensions/deviceicon/battery.py:164
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(hour)d:%(min).2d ti o ku"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:167
 msgid "Charged"
-msgstr "agbara"
+msgstr ""
 
 #: ../extensions/deviceicon/display.py:187
 msgid "My Display"
-msgstr "mi Ifihan"
+msgstr ""
 
 #: ../extensions/deviceicon/display.py:189
 msgid "Take a screenshot"
-msgstr "Ya a sikirinifoto"
+msgstr ""
 
 #: ../extensions/deviceicon/display.py:211
 msgid "Brightness"
-msgstr "imọlẹ"
+msgstr ""
 
 #: ../extensions/deviceicon/display.py:239
 msgid "Display"
-msgstr "àpapọ"
+msgstr ""
 
 #: ../extensions/deviceicon/frame.py:53
 msgid "Show my keyboard"
-msgstr "Fi mi keyboard"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:48
 #, python-format
 msgid "IP address: %s"
-msgstr "IP adiresi: %s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:80
 #: ../extensions/deviceicon/network.py:297
 #: ../src/jarabe/desktop/networkviews.py:134
 #: ../src/jarabe/desktop/networkviews.py:510
 msgid "Disconnect"
-msgstr "Ge"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:290
@@ -1088,7 +1036,7 @@ msgstr "Ge"
 #: ../src/jarabe/desktop/networkviews.py:552
 #: ../src/jarabe/desktop/networkviews.py:696
 msgid "Connecting..."
-msgstr "Pọ..."
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:110
 #: ../extensions/deviceicon/network.py:181
@@ -1096,50 +1044,50 @@ msgstr "Pọ..."
 #: ../src/jarabe/desktop/networkviews.py:558
 #: ../src/jarabe/desktop/networkviews.py:702
 msgid "Connected"
-msgstr "ti a ti sopọ"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:123
 msgid "No wireless connection"
-msgstr "Ko si isopọ alailokun"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:137
 #: ../extensions/deviceicon/network.py:140
 msgid "Channel"
-msgstr "ikanni"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:138
 #: ../src/jarabe/journal/expandedentry.py:386
 #: ../src/jarabe/journal/listmodel.py:191
 #: ../src/jarabe/journal/listmodel.py:199
 msgid "Unknown"
-msgstr "ko si eniti o"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:156
 msgid "Wired Network"
-msgstr "firanṣẹ Network"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:184
 msgid "Speed"
-msgstr "iyara"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:209
 msgid "Wireless modem"
-msgstr "alailowaya modẹmu"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:278
 msgid "Please wait..."
-msgstr "Jọwọ duro..."
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:282
 #: ../src/jarabe/desktop/networkviews.py:128
 #: ../src/jarabe/desktop/networkviews.py:504
 #: ../src/jarabe/desktop/networkviews.py:647
 msgid "Connect"
-msgstr "So"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:283
 msgid "Disconnected"
-msgstr "ge"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:289
 #: ../src/jarabe/controlpanel/toolbar.py:121
@@ -1150,127 +1098,125 @@ msgstr "ge"
 #: ../src/jarabe/journal/journaltoolbox.py:587
 #: ../src/jarabe/journal/palettes.py:166
 msgid "Cancel"
-msgstr "fagilee"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:327
 msgid "Try connection again"
-msgstr "Gbiyanju asopọ lẹẹkansi"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:330
 #, python-format
 msgid "Error: %s"
-msgstr "Aṣiṣe: %s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:334
 #, python-format
 msgid "Suggestion: %s"
-msgstr "Aba: %s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:344
 #, python-format
 msgid "Connected for %s"
-msgstr "Ti a ti sopọ fun %s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:349
 #: ../extensions/deviceicon/network.py:350
 #, python-format
 msgid "%d KB"
-msgstr "%d KB"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:355
 msgid "Check your PIN/PUK configuration."
-msgstr "Ṣayẹwo rẹ PIN / PUK iṣeto ni."
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:358
 msgid "Check your Access Point Name (APN) configuration"
-msgstr "Ṣayẹwo rẹ Access Point Name (APN) iṣeto ni"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:362
 msgid "Check the Number configuration."
-msgstr "Ṣayẹwo awọn Number iṣeto ni."
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:364
 msgid "Check your configuration."
-msgstr "Ṣayẹwo rẹ iṣeto ni."
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:619
 msgid "Mesh Network"
-msgstr "apapo Network"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:665
 #, python-format
 msgid "Mesh Network %s"
-msgstr "Apapo Network %s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:782
 msgid "No GSM connection available."
-msgstr "Ko si GSM asopọ wa."
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:783
 msgid "Create a connection in My Settings."
-msgstr "Ṣẹda a asopọ ni mi Eto."
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:49
 msgid "Speech"
-msgstr "ọrọ"
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:72
 #: ../extensions/deviceicon/speech.py:147
 #: ../extensions/deviceicon/speech.py:152
 msgid "Say selected text"
-msgstr "Sọ ti a ti yan ọrọ"
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:80
 msgid "Stop playback"
-msgstr "da dun sẹhin"
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:89
 msgid "Pitch"
-msgstr "ipolowo"
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:104
 msgid "Rate"
-msgstr "Rate"
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:142
 msgid "Pause playback"
-msgstr "Sinmi Sisisẹsẹhin"
+msgstr ""
 
 #: ../extensions/deviceicon/touchpad.py:36
 msgid "finger"
-msgstr "ika"
+msgstr ""
 
 #: ../extensions/deviceicon/touchpad.py:36
 msgid "stylus"
-msgstr "stylus"
+msgstr ""
 
 #: ../extensions/deviceicon/touchpad.py:61
 msgid "My touchpad"
-msgstr "mi touchpad"
+msgstr ""
 
 #: ../extensions/deviceicon/volume.py:62 ../src/jarabe/view/palettes.py:210
 msgid "Show contents"
-msgstr "show awọn akoonu ti"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:15
 msgid "Favorites Layout"
-msgstr "ayanfẹ Layout"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Layout of the favorites view."
-msgstr "Ifilelẹ ti awọn ayanfẹ view."
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Favorites resume mode"
-msgstr "Ayanfẹ pada mode"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:18
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
-"Nigbati ni bere mode, tite lori a ayanfẹ aami yoo fa awọn ti o kẹhin titẹsi "
-"fun awọn ti o aṣayan iṣẹ-ṣiṣe lati wa ni ìgbòògùn."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -1278,18 +1224,16 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
-"suga-Iṣakoso-panel: IKILỌ, ri siwaju ju ọkan aṣayan pẹlu kanna orukọ: %s "
-"module:%r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr "suga-Iṣakoso-panel: bọtini = %s ko wa aṣayan"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
 msgid "sugar-control-panel: %s"
-msgstr "suga-Iṣakoso-panel: %s"
+msgstr ""
 
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
@@ -1306,103 +1250,91 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
-"Lilo: suga-Iṣakoso-panel [aṣayan] bọtini [args ...]\n"
-"    Iṣakoso fun awọn suga ayika.\n"
-"    Aw: \n"
-"    -h fi yi iranlọwọ ifiranṣẹ ki o si jade \n"
-"    -l akojö gbogbo awọn wa awọn aṣayan \n"
-"    -h bọtini show alaye nipa yi bọtini \n"
-"    -g bọtini gba awọn lọwọlọwọ iye ti awọn bọtini \n"
-"    -s bọtini ṣeto awọn lọwọlọwọ iye fun awọn bọtini \n"
-"    -c bọtini pa awọn ti isiyi iye fun awọn bọtini \n"
-"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid ""
 "To apply your changes you have to restart Sugar.\n"
 "Hit ctrl+alt+erase on the keyboard to trigger a restart."
 msgstr ""
-"Lati waye awọn ayipada re ti o ni lati tun Sugar. \n"
-" igberohinjade ctrl+alt+erase lori awọn keyboard to nfa ohun kan ti bẹrẹ iṣẹ."
 
 #: ../src/jarabe/controlpanel/gui.py:373 ../src/jarabe/journal/palettes.py:194
 #: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
 #: ../src/jarabe/journal/volumestoolbar.py:304
 msgid "Warning"
-msgstr "ìkìlọ"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:374
 #: ../src/jarabe/controlpanel/sectionview.py:45
 msgid "Changes require restart"
-msgstr "Ayipada beere bẹrẹ"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:379
 msgid "Cancel changes"
-msgstr "fagilee awọn ayipada"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:384
 msgid "Later"
-msgstr "nigbamii"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:388
 msgid "Restart now"
-msgstr "tun bayi"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
 msgid "An activity is not responding."
-msgstr "An aṣayan iṣẹ-ṣiṣe ti a ko ti dáhùn."
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:420 ../src/jarabe/view/buddymenu.py:138
 msgid "You may lose unsaved work if you continue."
-msgstr "O le padanu igbala iṣẹ ti o ba ti o ba tesiwaju."
+msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
 #: ../src/jarabe/journal/journaltoolbox.py:94
 #, python-format
 msgid "Search in %s"
-msgstr "Search ni %s"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
-msgstr "Eto"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:349
 msgid "Done"
-msgstr "ṣe"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
 msgid "Ok"
-msgstr "ok"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:340
 #, python-format
 msgid "Version %s"
-msgstr "Version %s"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:424
 #: ../src/jarabe/journal/listview.py:566 ../src/jarabe/journal/iconview.py:301
 msgid "Clear search"
-msgstr "ko àwárí"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:510
 msgid "No matching activities"
-msgstr "Ko si tuntun akitiyan"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:546
 msgid "Confirm erase"
-msgstr "jẹrisi nu"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:548
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr "Jẹrisi nu: Ṣe o fẹ lati patapata nu %s?"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:552
 #: ../src/jarabe/frame/clipboardmenu.py:65
 #: ../src/jarabe/view/viewsource.py:383
 msgid "Keep"
-msgstr "pa"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:555
 #: ../src/jarabe/desktop/activitieslist.py:625
@@ -1413,86 +1345,86 @@ msgstr "pa"
 #: ../src/jarabe/journal/journaltoolbox.py:812
 #: ../src/jarabe/journal/palettes.py:138 ../src/jarabe/journal/palettes.py:161
 msgid "Erase"
-msgstr "nu"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:641
 msgid "Remove favorite"
-msgstr "yọ ayanfẹ"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:645
 msgid "Make favorite"
-msgstr "ṣe ayanfẹ"
+msgstr ""
 
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:209
 msgid "Freeform"
-msgstr "Freeform"
+msgstr ""
 
 #. TRANS: label for the ring layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:305
 msgid "Ring"
-msgstr "oruka"
+msgstr ""
 
 #. TRANS: label for the spiral layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:469
 msgid "Spiral"
-msgstr "ajija"
+msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:537
 msgid "Box"
-msgstr "apoti"
+msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:580
 msgid "Triangle"
-msgstr "onigun"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
-msgstr "Iforukọ"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
-msgstr "Jọwọ duro, wiwa fun nyin iwe server."
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:387
 msgid "Registration Failed"
-msgstr "Iforukọ kùnà"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:390
 msgid "Registration Successful"
-msgstr "Iforukọ Aseyori"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:391
 msgid "You are now registered with your school server."
-msgstr "Ti o ti wa ni bayi aami-pẹlu rẹ ile-iwe server."
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:680
 msgid "Register"
-msgstr "Forukọsilẹ"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:682
 msgid "Register again"
-msgstr "forukọsilẹ lẹẹkansi"
+msgstr ""
 
 #: ../src/jarabe/desktop/homewindow.py:255
 #: ../src/jarabe/desktop/viewtoolbar.py:73
 #: ../src/jarabe/frame/zoomtoolbar.py:57 ../src/jarabe/model/screenshot.py:63
 #: ../src/jarabe/view/viewhelp.py:76
 msgid "Home"
-msgstr "Home"
+msgstr ""
 
 #: ../src/jarabe/desktop/homewindow.py:262
 #: ../src/jarabe/frame/zoomtoolbar.py:53 ../src/jarabe/model/screenshot.py:61
 #: ../src/jarabe/view/viewhelp.py:73
 msgid "Group"
-msgstr "Group"
+msgstr ""
 
 #: ../src/jarabe/desktop/homewindow.py:269
 #: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Neighborhood"
-msgstr "adugbo"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:92
 #, python-format
@@ -1500,226 +1432,224 @@ msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
-"A alailowaya ìsekóòdù bọtini ni a beere fun \n"
-" ni alailowaya nẹtiwọki ' %s '."
 
 #: ../src/jarabe/desktop/keydialog.py:141
 msgid "Key Type:"
-msgstr "Key Iru:"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:161
 msgid "Authentication Type:"
-msgstr "Ijeri Iru:"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:224
 msgid "WPA & WPA2 Personal"
-msgstr "WPA & WPA2 Personal"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:233
 msgid "Wireless Security:"
-msgstr "Alailowaya Aabo:"
+msgstr ""
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
 #: ../src/jarabe/journal/journaltoolbox.py:659
 #: ../src/jarabe/journal/palettes.py:83 ../src/jarabe/view/palettes.py:98
 msgid "Resume"
-msgstr "aśay"
+msgstr ""
 
 #: ../src/jarabe/desktop/meshbox.py:89
 #: ../src/jarabe/frame/activitiestray.py:208
 msgid "Join"
-msgstr "da"
+msgstr ""
 
 #: ../src/jarabe/desktop/networkviews.py:499
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr "Ad-alátagbà Network %d"
+msgstr ""
 
 #: ../src/jarabe/desktop/networkviews.py:643
 #, python-format
 msgid "Mesh Network %d"
-msgstr "Apapo Network %d"
+msgstr ""
 
 #: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
-msgstr "Ko le sopọ si olupin."
+msgstr ""
 
 #: ../src/jarabe/desktop/schoolserver.py:151
 msgid "The server could not complete the request."
-msgstr "Awọn olupin ko le pari awọn ìbéèrè."
+msgstr ""
 
 #: ../src/jarabe/desktop/viewtoolbar.py:95
 msgid "List view"
-msgstr "akojọ view"
+msgstr ""
 
 #: ../src/jarabe/desktop/viewtoolbar.py:97
 #: ../src/jarabe/desktop/viewtoolbar.py:196
 #: ../src/jarabe/desktop/viewtoolbar.py:210
 #, python-format
 msgid "<Ctrl>%d"
-msgstr "<Ctrl>%d"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:213
 #: ../src/jarabe/frame/activitiestray.py:657
 msgid "Decline"
-msgstr "sile"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:598
 #, python-format
 msgid "%dB"
-msgstr "%d B"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:600
 #, python-format
 msgid "%dKB"
-msgstr "%d KB"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:602
 #, python-format
 msgid "%dMB"
-msgstr "%d MB"
+msgstr ""
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:620
 #, python-format
 msgid "%s of %s"
-msgstr "%s of %s"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:634
 #, python-format
 msgid "Transfer from %s"
-msgstr "Gbigbe lati %s"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:648
 #: ../extensions/cpsection/backup/view.py:324
 msgid "Accept"
-msgstr "gba"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:722
 #: ../src/jarabe/frame/activitiestray.py:736
 #: ../src/jarabe/frame/activitiestray.py:878
 msgid "Dismiss"
-msgstr "yọ"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:750
 msgid "The other participant canceled the file transfer"
-msgstr "Awọn miiran alabaṣe pawonre awọn gbigbe faili"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:800
 #, python-format
 msgid "Transfer to %s"
-msgstr "Gbe to %s"
+msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:54
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr "yọ"
+msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:60
 #: ../src/jarabe/frame/clipboardmenu.py:83
 msgid "Open"
-msgstr "Open"
+msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:88
 msgid "Open with"
-msgstr "Open pẹlu"
+msgstr ""
 
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
 msgid "%s clipping"
-msgstr "%s clipping"
+msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
-msgstr "F1"
+msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
-msgstr "F2"
+msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
-msgstr "F3"
+msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:62 ../src/jarabe/model/screenshot.py:69
 msgid "Activity"
-msgstr "aṣayan iṣẹ-ṣiṣe"
+msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
-msgstr "F4"
+msgstr ""
 
 #: ../src/jarabe/intro/window.py:135
 msgid "Name:"
-msgstr "orukọ:"
+msgstr ""
 
 #: ../src/jarabe/intro/window.py:174
 msgid "Click to change color:"
-msgstr "Tẹ lati yi awọ:"
+msgstr ""
 
 #: ../src/jarabe/intro/window.py:337 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
-msgstr "Padà Sẹ́yìn"
+msgstr ""
 
 #: ../src/jarabe/intro/window.py:352
 msgid "Next"
-msgstr "Itele"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:38
 msgid "Select grade:"
-msgstr "Yan kilasi:"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Preschool"
-msgstr "Preschool"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Kindergarten"
-msgstr "Kindergarten"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "1st Grade"
-msgstr "1st ite"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "2nd Grade"
-msgstr "2nd ite"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "3rd Grade"
-msgstr "3rd ite"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "4th Grade"
-msgstr "4th ite"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "5th Grade"
-msgstr "5th ite"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "6th Grade"
-msgstr "6th ite"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "7th Grade"
-msgstr "7th ite"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "High School"
-msgstr "Ile-iwe giga"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "Adult"
-msgstr "agbalagba"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:153
 #: ../src/jarabe/journal/journaltoolbox.py:584
 #: ../src/jarabe/journal/palettes.py:163
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
-msgstr "Ṣe o fẹ lati patapata nu \"%s\"?"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:296
 #: ../src/jarabe/journal/listmodel.py:185 ../src/jarabe/journal/model.py:794
@@ -1727,47 +1657,47 @@ msgstr "Ṣe o fẹ lati patapata nu \"%s\"?"
 #: ../src/jarabe/journal/volumestoolbar.py:134
 #: ../src/jarabe/journal/iconmodel.py:110
 msgid "Untitled"
-msgstr "ko si orukọ"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:366
 msgid "No preview"
-msgstr "ko si tẹle"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:386
 #, python-format
 msgid "Kind: %s"
-msgstr "Ni irú: %s"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:387
 #, python-format
 msgid "Date: %s"
-msgstr "Ọjọ: %s"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:388
 #, python-format
 msgid "Size: %s"
-msgstr "Iwọn: %s"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:412
 #: ../src/jarabe/journal/misc.py:131
 msgid "No date"
-msgstr "ko si ọjọ"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:421
 msgid "Participants:"
-msgstr "olukopa:"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:459
 msgid "Description:"
-msgstr "Apejuwe:"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:465
 msgid "Tags:"
-msgstr "Tags:"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:470
 msgid "Comments:"
-msgstr "asọye:"
+msgstr ""
 
 #: ../src/jarabe/journal/journalactivity.py:182
 #: ../src/jarabe/journal/journaltoolbox.py:94
@@ -1775,678 +1705,673 @@ msgstr "asọye:"
 #: ../src/jarabe/journal/volumestoolbar.py:349
 #: ../src/jarabe/view/viewhelp.py:79
 msgid "Journal"
-msgstr "iwe irohin"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:103
 msgid "Favorite entries"
-msgstr "ayanfẹ awọn titẹ sii"
+msgstr ""
 
 #. TRANS: Item on a palette that filters by entry type.
 #: ../src/jarabe/journal/journaltoolbox.py:112
 #: ../src/jarabe/journal/journaltoolbox.py:403
 #: ../src/jarabe/journal/journaltoolbox.py:479
 msgid "Anything"
-msgstr "ohunkohun"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:118
 #: ../src/jarabe/journal/journaltoolbox.py:165
 #: ../src/jarabe/journal/journaltoolbox.py:483
 msgid "Anytime"
-msgstr "nigbakugba"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:172
 msgid "Since yesterday"
-msgstr "niwon lana"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:175
 msgid "Past week"
-msgstr "ti o ti kọja ọsẹ"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:178
 msgid "Past month"
-msgstr "ti o ti kọja osu"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:181
 msgid "Past year"
-msgstr "o ti kọja odun"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:521
 #: ../src/jarabe/journal/palettes.py:105
 msgid "Copy to"
-msgstr "da to"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:529
 #: ../src/jarabe/journal/palettes.py:116 ../src/jarabe/view/viewsource.py:379
 msgid "Duplicate"
-msgstr "pidánpidán"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:535
 msgid "Refresh"
-msgstr "Sọ"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:577
 #: ../src/jarabe/journal/palettes.py:156 ../src/jarabe/journal/palettes.py:374
 #: ../src/jarabe/journal/volumestoolbar.py:312
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr "Aṣiṣe nigba ti didakọ awọn Akọsilẹ. %s"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:578
 #: ../src/jarabe/journal/palettes.py:157 ../src/jarabe/journal/palettes.py:375
 #: ../src/jarabe/journal/volumestoolbar.py:313
 msgid "Error"
-msgstr "aṣiṣe"
+msgstr ""
 
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:662
 #: ../src/jarabe/journal/palettes.py:86
 msgid "Start"
-msgstr "ibere"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:682
 #: ../src/jarabe/journal/palettes.py:100 ../src/jarabe/journal/palettes.py:513
 msgid "No activity to start entry"
-msgstr "Ko si aṣayan iṣẹ-ṣiṣe lati bẹrẹ titẹsi"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 msgid "Sort view"
-msgstr "too view"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:711
 msgid "Sort by date modified"
-msgstr "Too nipa ọjọ títúnṣe"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:712
 msgid "Sort by date created"
-msgstr "Too nipa ọjọ da"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:713
 msgid "Sort by size"
-msgstr "Too nipa iwọn"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:778
 msgid "Deselect all"
-msgstr "deselect gbogbo"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:791
 msgid "Select all"
-msgstr "yan gbogbo"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:817
 #, python-format
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
-msgstr[0] "Ṣe o fẹ lati nu %d titẹsi?"
-msgstr[1] "Ṣe o fẹ lati nu %d titẹsi?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:831
 #: ../src/jarabe/journal/palettes.py:378
 msgid "Copy"
-msgstr "Copy"
+msgstr ""
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:882
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr "Ti a ti yan %(selected)d of %(total)d"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:917
 msgid "Select filter"
-msgstr "yan àlẹmọ"
+msgstr ""
 
 #: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
 msgid "Your Journal is empty"
-msgstr "Rẹ Journal ti ṣofo"
+msgstr ""
 
 #: ../src/jarabe/journal/listview.py:476 ../src/jarabe/journal/iconview.py:215
 msgid "Your documents folder is empty"
-msgstr "Iwe aṣẹ rẹ folda ti ṣofo"
+msgstr ""
 
 #: ../src/jarabe/journal/listview.py:478 ../src/jarabe/journal/iconview.py:217
 msgid "The device is empty"
-msgstr "Awọn ẹrọ ti ṣofo"
+msgstr ""
 
 #: ../src/jarabe/journal/listview.py:480 ../src/jarabe/journal/iconview.py:220
 msgid "No matching entries"
-msgstr "Ko si tuntun awọn titẹ sii"
+msgstr ""
 
 #: ../src/jarabe/journal/misc.py:313
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr "Agbalagba Version Of %s aṣayan iṣẹ-ṣiṣe"
+msgstr ""
 
 #: ../src/jarabe/journal/misc.py:314
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr "Ṣe o fẹ lati downgrade to version %s"
+msgstr ""
 
 #: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
-msgstr "Rẹ Journal ti kun"
+msgstr ""
 
 #: ../src/jarabe/journal/modalalert.py:68
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
-"Jọwọ pa diẹ ninu atijọ Journal awọn titẹ sii lati ṣe aaye fun titun eyi."
 
 #: ../src/jarabe/journal/modalalert.py:82
 msgid "Show Journal"
-msgstr "show Journal"
+msgstr ""
 
 #: ../src/jarabe/journal/objectchooser.py:171
 msgid "Choose an object"
-msgstr "Yan ohun"
+msgstr ""
 
 #: ../src/jarabe/journal/objectchooser.py:176
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr "Yan ohun lati ṣii pẹlu %s aṣayan iṣẹ-ṣiṣe"
+msgstr ""
 
 #: ../src/jarabe/journal/objectchooser.py:184
 #: ../src/jarabe/view/viewhelp.py:335 ../src/jarabe/view/viewsource.py:579
 msgid "Close"
-msgstr "Close"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:84
 msgid "Resume with"
-msgstr "pada pẹlu"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:87
 msgid "Start with"
-msgstr "bẹrẹ pẹlu"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:124
 msgid "Send to"
-msgstr "fi si"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:133
 msgid "View Details"
-msgstr "Wo alaye"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:193
 msgid "Entries without a file cannot be sent."
-msgstr "Awọn titẹ sii lai faili kan ko le wa ni rán."
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:272
 #: ../src/jarabe/journal/volumestoolbar.py:214
 msgid "Documents"
-msgstr "awọn iwe aṣẹ"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:363 ../src/jarabe/journal/palettes.py:423
 #: ../src/jarabe/journal/volumestoolbar.py:303
 msgid "Entries without a file cannot be copied."
-msgstr "Awọn titẹ sii lai faili kan ko le wa ni dakọ."
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:383
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] "Ṣe o fẹ lati da %d titẹsi?"
-msgstr[1] "Ṣe o fẹ lati da %d titẹsi?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/jarabe/journal/palettes.py:408
 msgid "Clipboard"
-msgstr "sileti"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:478
 msgid "No friends present"
-msgstr "Ko si ọrẹ bayi"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:483
 msgid "No valid connection found"
-msgstr "Ko si wulo asopọ ri"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:511
 msgid "No activity to resume entry"
-msgstr "Ko si aṣayan iṣẹ-ṣiṣe lati bẹrẹ pada titẹsi"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:580 ../src/jarabe/view/palettes.py:133
 msgid "Stop"
-msgstr "Duro"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:585
 #: ../extensions/cpsection/backup/view.py:212
 #: ../extensions/cpsection/backup/view.py:265
 msgid "Continue"
-msgstr "Tesiwaju"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:622
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr "%(index)d of %(total)d : %(object_title)s"
+msgstr ""
 
 #: ../src/jarabe/journal/volumestoolbar.py:375
 #: ../src/jarabe/view/palettes.py:251 ../src/jarabe/view/palettes.py:317
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr "%(free_space)d MB Free"
+msgstr ""
 
 #: ../src/jarabe/model/desktop.py:85
 #, python-format
 msgid "Favorites view %d"
-msgstr "Ayanfẹ wo %d"
+msgstr ""
 
 #: ../src/jarabe/model/network.py:217
 msgid "The reason for the device state change is unknown."
-msgstr "Awọn idi fun awọn ẹrọ ipinle ayipada jẹ aimọ."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:219
 msgid "The state change is normal."
-msgstr "Ipinle ayipada ni deede."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:221
 msgid "The device is now managed."
-msgstr "Awọn ẹrọ ti wa ni bayi isakoso."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:223
 msgid "The device is no longer managed."
-msgstr "Awọn ẹrọ ti wa ni ko si ohun to isakoso."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:225
 msgid "The device could not be readied for configuration."
-msgstr "Awọn ẹrọ ti ko le wa ni readied fun iṣeto ni."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:227
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
-"IP iṣeto ni ko le wa ni ipamọ (ko si wa adirẹsi, akoko-to, ati be be lo)."
 
 #: ../src/jarabe/model/network.py:230
 msgid "The IP configuration is no longer valid."
-msgstr "Awọn IP iṣeto ni ko si ohun to wulo."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:232
 msgid "Secrets were required, but not provided."
-msgstr "Asiri won beere, sugbon ko pese."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:234
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
-msgstr "The 802.1X awáàyè ge asopọ lati awọn wiwọle ojuami tabi ìfàṣẹsí server."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:237
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr "Iṣeto ni ti awọn 802.1X awáàyè kuna."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:239
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr "The 802.1X awáàyè olodun tabi kuna lairotele."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:241
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr "The 802.1X awáàyè si mu gun ju lati fi jeri."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:243
 msgid "The PPP service failed to start within the allowed time."
-msgstr "The PPP iṣẹ kuna lati bẹrẹ laarin awọn laaye akoko."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:245
 msgid "The PPP service disconnected unexpectedly."
-msgstr "The PPP iṣẹ ge lairotele."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:247
 msgid "The PPP service quit or failed unexpectedly."
-msgstr "The PPP iṣẹ olodun tabi kuna lairotele."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:249
 msgid "The DHCP service failed to start within the allowed time."
-msgstr "Awọn DHCP iṣẹ kuna lati bẹrẹ laarin awọn laaye akoko."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:251
 msgid "The DHCP service reported an unexpected error."
-msgstr "Awọn DHCP iṣẹ royin ohun airotẹlẹ aṣiṣe."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:253
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr "Awọn DHCP iṣẹ olodun tabi kuna lairotele."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:255
 msgid "The shared connection service failed to start."
-msgstr "Awọn ti pín asopọ iṣẹ kuna lati bẹrẹ."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:257
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr "Awọn ti pín asopọ iṣẹ olodun tabi kuna lairotele."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:260
 msgid "The AutoIP service failed to start."
-msgstr "Awọn AutoIP iṣẹ kuna lati bẹrẹ."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:262
 msgid "The AutoIP service reported an unexpected error."
-msgstr "Awọn AutoIP iṣẹ royin ohun airotẹlẹ aṣiṣe."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:264
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr "Awọn AutoIP iṣẹ olodun tabi kuna lairotele."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:266
 msgid "Dialing failed because the line was busy."
-msgstr "Titẹ kuna nitori awọn ila je o nšišẹ."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:268
 msgid "Dialing failed because there was no dial tone."
-msgstr "Ipe ti o kuna nitori o wà nibẹ ko kiakia orin."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:270
 msgid "Dialing failed because there was no carrier."
-msgstr "Ipe ti o kuna nitori o wà nibẹ ko ti ngbe."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:272
 msgid "Dialing timed out."
-msgstr "Ipe ti o akoko jade."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:274
 msgid "Dialing failed."
-msgstr "Ipe ti o kuna."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:276
 msgid "Modem initialization failed."
-msgstr "Modẹmu initialization kuna."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:278
 msgid "Failed to select the specified GSM APN"
-msgstr "Kuna lati yan awọn pàtó kan GSM APN"
+msgstr ""
 
 #: ../src/jarabe/model/network.py:280
 msgid "Not searching for networks."
-msgstr "Ko wiwa fun awọn nẹtiwọki."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:282
 msgid "Network registration was denied."
-msgstr "Network ìforúkọsílẹ ti a sẹ."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:284
 msgid "Network registration timed out."
-msgstr "Network ìforúkọsílẹ akoko jade."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:286
 msgid "Failed to register with the requested GSM network."
-msgstr "Kuna lati forukọsilẹ pẹlu awọn ti beere nẹtiwọki GSM."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:288
 msgid "PIN check failed."
-msgstr "PIN ayẹwo kuna."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:290
 msgid "Necessary firmware for the device may be missing."
-msgstr "Pataki famuwia fun awọn ẹrọ le wa ni sonu."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:292
 msgid "The device was removed."
-msgstr "Awọn ẹrọ ti a kuro."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:294
 msgid "NetworkManager went to sleep."
-msgstr "NetworkManager lọ si sun."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:296
 msgid "The device's active connection was removed or disappeared."
-msgstr "Awọn ẹrọ ká ti nṣiṣe lọwọ asopọ ti a yọ kuro tabi mọ."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:299
 msgid "A user or client requested the disconnection."
-msgstr "A olumulo tabi ni ose beere fun awọn asopọ."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:301
 msgid "The device's carrier/link changed."
-msgstr "Awọn ẹrọ ká ti ngbe/asopọ yi pada."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:303
 msgid "The device's existing connection was assumed."
-msgstr "Awọn ẹrọ ká tẹlẹ asopọ ti a assumed."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:305
 msgid "The supplicant is now available."
-msgstr "Awọn awáàyè ni bayi wa."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:307
 msgid "The modem could not be found."
-msgstr "Modẹmu ko le ṣee ri."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:309
 msgid "The Bluetooth connection failed or timed out."
-msgstr "The Bluetooth asopọ kuna tabi akoko jade."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:311
 msgid "Unused."
-msgstr "Ajeku."
+msgstr ""
 
 #: ../src/jarabe/model/screenshot.py:59 ../src/jarabe/view/viewhelp.py:70
 msgid "Mesh"
-msgstr "apapo"
+msgstr ""
 
 #: ../src/jarabe/model/screenshot.py:72
 msgid "Screenshot"
-msgstr "screenshot"
+msgstr ""
 
 #: ../src/jarabe/model/screenshot.py:74
 #, python-format
 msgid "Screenshot of \"%s\""
-msgstr "Screenshot of \"%s\""
+msgstr ""
 
 #: ../src/jarabe/view/alerts.py:38 ../src/jarabe/view/alerts.py:48
 msgid "Activity launcher"
-msgstr "aṣayan iṣẹ-ṣiṣe nkan jiju"
+msgstr ""
 
 #: ../src/jarabe/view/alerts.py:39
 #, python-format
 msgid "%s is already running. Please stop %s before launching it again."
-msgstr "%s ni tẹlẹ nṣiṣẹ. Jọwọ da %s ṣaaju ki o to gbesita o lẹẹkansi."
+msgstr ""
 
 #: ../src/jarabe/view/alerts.py:49
 msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
 msgstr ""
-"Awọn ti o pọju nọmba ti ìmọ akitiyan ti a ti ami. Jọwọ pa ohun aṣayan iṣẹ-"
-"ṣiṣe ki o to gbesita titun kan."
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
-msgstr "yọ ore"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:76
 msgid "Make friend"
-msgstr "ṣe ore"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:108
 msgid "Shutdown"
-msgstr "Paade"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:113
 msgid "Restart"
-msgstr "Tun"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:119
 msgid "Logout"
-msgstr "logout"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:124
 msgid "My Settings"
-msgstr "mi Eto"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:183
 #, python-format
 msgid "Invite to %s"
-msgstr "Pe to %s"
+msgstr ""
 
 #: ../src/jarabe/view/launcher.py:159
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr "<b>%s</b> kuna lati bẹrẹ."
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:53
 msgid "Starting..."
-msgstr "Ti o bere..."
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:63
 msgid "Activity failed to start"
-msgstr "Aṣayan iṣẹ-ṣiṣe kuna lati bẹrẹ"
+msgstr ""
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:105
 msgid "View Source"
-msgstr "Wo Source"
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
-msgstr "Wo Iranlọwọ"
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
-msgstr "bẹrẹ titun"
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:266
 msgctxt "Volume"
 msgid "Remove"
-msgstr "yọ"
+msgstr ""
 
 #: ../src/jarabe/view/viewhelp.py:304
 msgid "Help Manual"
-msgstr "iranlọwọ Afowoyi"
+msgstr ""
 
 #: ../src/jarabe/view/viewhelp.py:318
 msgid "Social Help"
-msgstr "Social Help"
+msgstr ""
 
 #: ../src/jarabe/view/viewhelp.py:326
 #, python-format
 msgid "Help: %s"
-msgstr "Ran: %s"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:364
 msgid "Instance Source"
-msgstr "apẹẹrẹ Orisun"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:392
 #, python-format
 msgid "Do you want to duplicate %s Activity?"
-msgstr "Ṣe o fẹ lati pidánpidán %s aṣayan iṣẹ-ṣiṣe?"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:394
 msgid "This may take a few minutes"
-msgstr "Eleyi le gba iṣẹju diẹ"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:408
 msgid "Duplicating activity..."
-msgstr "Duplicating aṣayan iṣẹ-ṣiṣe..."
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:447
 msgid "Duplicated"
-msgstr "duplicated"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
-msgstr "Awọn iṣẹ-ṣiṣe ti a ti duplicated"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:462
 msgid "Duplicated activity already exists"
-msgstr "Duplicated aṣayan iṣẹ-ṣiṣe ti tẹlẹ wa"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:463
 msgid "Delete your copy before trying to duplicate the activity again"
 msgstr ""
-"Pa rẹ daakọ ṣaaju ki o to gbiyanju lati pidánpidán awọn iṣẹ-ṣiṣe lẹẹkansi"
 
 #: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
-msgstr "orisun"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:542
 msgid "Activity Bundle Source"
-msgstr "Aṣayan iṣẹ-ṣiṣe lapapo Orisun"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:561
 msgid "Sugar Toolkit Source"
-msgstr "Sugar irinṣẹ Orisun"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:568
 #, python-format
 msgid "View source: %s"
-msgstr "Wo orisun: %s"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:569
 #, python-format
 msgid "View source: %r"
-msgstr "Wo orisun: %r"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:809
 msgid "Please select a file in the left panel."
-msgstr "Jọwọ yan faili kan ninu awọn ti osi nronu."
+msgstr ""
 
 #: ../extensions/cpsection/backup/__init__.py:22
 msgid "Backup"
-msgstr "afẹyinti"
+msgstr ""
 
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171
 msgid "Please connect a device to continue"
-msgstr "Jọwọ so ẹrọ kan lati tesiwaju"
+msgstr ""
 
 #: ../extensions/cpsection/backup/backends/volume.py:69
 #: ../extensions/cpsection/backup/backends/volume.py:178
 msgid "Select your volume"
-msgstr "Yan rẹ iwọn didun"
+msgstr ""
 
 #: ../extensions/cpsection/backup/backends/volume.py:78
 msgid "Not enough space in volume"
-msgstr "Ko ti to aaye ninu iwọn didun"
+msgstr ""
 
 #: ../extensions/cpsection/backup/backends/volume.py:122
 #, python-format
 msgid "Backup from user %s"
-msgstr "Afẹyinti lati olumulo %s"
+msgstr ""
 
 #: ../extensions/cpsection/backup/backends/volume.py:191
 msgid "No checkpoints found in the device"
-msgstr "Ko si checkpoints ri ni awọn ẹrọ"
+msgstr ""
 
 #: ../extensions/cpsection/backup/backends/volume.py:199
 msgid "Select your checkpoint"
-msgstr "Yan rẹ checkpoint"
+msgstr ""
 
 #: ../extensions/cpsection/backup/backends/volume.py:210
 msgid "Not enough space in disk"
-msgstr "Ko ti to aaye ninu disk"
+msgstr ""
 
 #: ../extensions/cpsection/backup/backends/volume.py:329
 msgid "Local Device Backup"
-msgstr "Agbegbe Device Afẹyinti"
+msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:133
 msgid "Save the contents of your Journal"
-msgstr "Fi awọn awọn akoonu ti rẹ Akosile"
+msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:141
 msgid "Restore the contents of your Journal"
-msgstr "Pada sipo awọn awọn akoonu ti rẹ Akosile"
+msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:223
 msgid "Please close all the activities, and start again"
-msgstr "Jọwọ pa gbogbo awọn akitiyan, ki o si bẹrẹ lẹẹkansi"
+msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:229
 msgid "Select where you want create your backup"
-msgstr "Yan ibi ti o fẹ ṣẹda rẹ afẹyinti"
+msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:231
 msgid "Select where you want retrieve your restore"
-msgstr "Yan ibi ti o fẹ gba rẹ mu pada"
+msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:271
 msgid "Retry"
-msgstr "Tun gbiyanju bi"
+msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:290
 msgid "Starting backup..."
-msgstr "Ti o bere afẹyinti..."
+msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:294
 msgid "Starting restore..."
-msgstr "Ti o bere pada..."
+msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:321
 msgid ""
@@ -2454,26 +2379,23 @@ msgid ""
 "will first be emptied of all its content; then the restored content will be "
 "added."
 msgstr ""
-"Mo fẹ lati mu pada awọn akoonu ti mi Journal. Ni ibere lati se eyi, mi "
-"Journal yoo akọkọ wa ni emptied ti gbogbo awọn oniwe-akoonu; ki o si awọn "
-"pada akoonu yoo fi kun."
 
 #: ../extensions/cpsection/backup/view.py:327
 msgid "Confirm"
-msgstr "jẹrisi"
+msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:365
 msgid "Operation started"
-msgstr "isẹ bere"
+msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:377
 msgid "Backup finished successfully"
-msgstr "Afẹyinti pari ni ifijišẹ"
+msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:379
 msgid "Restore realized successfully."
-msgstr "Pada daju ni ifijišẹ."
+msgstr ""
 
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
-msgstr "ko iwifunni"
+msgstr ""

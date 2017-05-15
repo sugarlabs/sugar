@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2016-10-07 15:34+0000\n"
+"PO-Revision-Date: 2017-05-07 03:22+0000\n"
 "Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ur\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1475854484.000000\n"
+"X-POOTLE-MTIME: 1494127349.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -42,7 +42,7 @@ msgstr ""
 # اگر یہ سچ ہے تو، شوگر  "لاگ آؤٹ" کا اختیار دے گا.
 #: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr "اگر یہ سچ ہے تو، شوگر  \"لاگ آؤٹ\" کا اختیار دے گا."
+msgstr "اگر یہ سچ ہے تو، شوگر \"لاگ آؤٹ\" کا اختیار دے گا."
 
 #: ../data/org.sugarlabs.gschema.xml.h:7 ../data/sugar.schemas.in.h:33
 msgid "Show Restart"
@@ -61,7 +61,7 @@ msgstr ""
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
 #, fuzzy
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
-msgstr "اگر یہ سچ ہے تو، شوگر  \"لاگ آؤٹ\" کا اختیار دے گا."
+msgstr "اگر یہ سچ ہے تو، شوگر \"لاگ آؤٹ\" کا اختیار دے گا."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
@@ -113,7 +113,7 @@ msgid ""
 "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
 "long name."
 msgstr ""
-"ابتدا پر نک پوچھنے کو \"غیر فعال کر دیا گیا\"،  UNIX \"نظام\" اکاؤنٹ کے تہت "
+"ابتدا پر نک پوچھنے کو \"غیر فعال کر دیا گیا\"، UNIX \"نظام\" اکاؤنٹ کے تہت "
 "طویل نام کو دوبارہ استعمال کرنے کے لئے."
 
 #: ../data/org.sugarlabs.gschema.xml.h:21 ../data/sugar.schemas.in.h:5
@@ -127,8 +127,8 @@ msgid ""
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
-"XO آئکن  کے لئے رنگ جو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے.  سٹرنگ سٹروک "
-"رنگ اور بھرنے کے رنگ پر مشتمل ہے، فارمیٹ ہے RGB رنگوں کا .مثال کے طور پر : # "
+"XO آئکن  کے لئے رنگ جو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے. سٹرنگ سٹروک رنگ "
+"اور بھرنے کے رنگ پر مشتمل ہے، فارمیٹ ہے RGB رنگوں کا .مثال کے طور پر : # "
 "AC32FF، 9A5200 #"
 
 #: ../data/org.sugarlabs.gschema.xml.h:23
@@ -2589,135 +2589,3 @@ msgstr ""
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
 msgstr ""
-
-# نقص، ٹائم زون موجود نہیں ہے۔
-#~ msgid "Error timezone does not exist."
-#~ msgstr "نقص، ٹائم زون موجود نہیں ہے۔"
-
-# انٹيجر ويليو ہونی چاھيے۔
-#~ msgid "Value must be an integer."
-#~ msgstr "انٹيجر ويليو ہونی چاھيے۔"
-
-# موڈیم کی ترتیب
-#~ msgid "Modem Configuration"
-#~ msgstr "موڈیم کی ترتیب"
-
-# وائرلیس ریڈیو کو بند کر دیں، بیٹری کی زندگی بچانے کے لئے۔
-#~ msgid "Turn off the wireless radio to save battery life"
-#~ msgstr "وائرلیس ریڈیو کو بند کر دیں، بیٹری کی زندگی بچانے کے لئے۔"
-
-# نیٹ ورک کی تاریخ کو ضائع کر دیا جائے، اگر آپ کو نیٹ ورک کے ساتھ منسلک کرنےمیں پریشانی یے۔
-#~ msgid "Discard network history if you have trouble connecting to the network"
-#~ msgstr ""
-#~ "نیٹ ورک کی تاریخ کو ضائع کر دیا جائے، اگر آپ کو نیٹ ورک کے ساتھ منسلک "
-#~ "کرنےمیں پریشانی یے۔"
-
-# نیٹ ورک کی تاریخ ضائع کر دیا جائے
-#~ msgid "Discard network history"
-#~ msgstr "نیٹ ورک کی تاریخ ضائع کر دیا جائے"
-
-# کنٹرول پینل میں ایک کنکشن بنائیں.
-#~ msgid "Create a connection in the control panel."
-#~ msgstr "کنٹرول پینل میں ایک کنکشن بنائیں."
-
-#~ msgid "My Speakers"
-#~ msgstr "ميرے سپيکرز"
-
-#~ msgid "Unmute"
-#~ msgstr "ان ميوٹ"
-
-#~ msgid "Mute"
-#~ msgstr "ميوٹ"
-
-#, fuzzy
-#~ msgid "To apply your changes you have to restart Sugar.\n"
-#~ msgstr "نئی تبديلیاں عمل میں لانے کے لیے آپ کو شوگر پھر شروع کرنا ہو گا۔\n"
-
-#~ msgid "<Ctrl>2"
-#~ msgstr "<Ctrl>2"
-
-#~ msgid "Favorites view"
-#~ msgstr "پسندیدگان نظارہ"
-
-#~ msgid "<Ctrl>1"
-#~ msgstr "<Ctrl>1"
-
-# سافٹ ویئر اپ ڈیٹ
-#~ msgid "Software update"
-#~ msgstr "سافٹ ویئر اپ ڈیٹ"
-
-#, fuzzy
-#~ msgid "Search"
-#~ msgstr "تلاش کریں"
-
-# اضافی ڈائرکٹری جس میں اپ ڈیٹ  ترجمے ہوسکتے ہیں.
-#~ msgid "Additional directories which can contain updated translations."
-#~ msgstr "اضافی ڈائرکٹری جس میں اپ ڈیٹ  ترجمے ہوسکتے ہیں."
-
-# ترجمہ کی تلاش کے لئے ڈائرکٹری
-#~ msgid "Directory to search for translations"
-#~ msgstr "ترجمہ کی تلاش کے لئے ڈائرکٹری"
-
-#~ msgid "Error in extreme pm argument, use on/off."
-#~ msgstr "ایکسٹریم pm برہان میں نقص، آن/آف استعمال کریں۔"
-
-# GSM نیٹ ورک صارف کا نام کی ترتیب
-#~ msgid "GSM network username configuration"
-#~ msgstr "GSM نیٹ ورک صارف کا نام کی ترتیب"
-
-# زاتی ان بلاکینگ کی (PUK)
-#~ msgid "Personal Unblocking Key (PUK):"
-#~ msgstr "زاتی ان بلاکینگ کی (PUK)"
-
-# GSM نیٹ ورک پاس ورڈ کی ترتیب
-#~ msgid "GSM network password configuration"
-#~ msgstr "GSM نیٹ ورک پاس ورڈ کی ترتیب"
-
-# GSM نیٹ ورک نمبر
-#~ msgid "GSM network number"
-#~ msgstr "GSM نیٹ ورک نمبر"
-
-# GSM نیٹ ورک ٹیلی فون نمبر کی ترتیب
-#~ msgid "GSM network telephone number configuration"
-#~ msgstr "GSM نیٹ ورک ٹیلی فون نمبر کی ترتیب"
-
-# GSM نیٹ ورک کی ذاتی کھولنے کی کلید کی ترتیب
-#~ msgid "GSM network personal unlock key configuration"
-#~ msgstr "GSM نیٹ ورک کی ذاتی کھولنے کی کلید کی ترتیب"
-
-# GSM نیٹ ورک پاس ورڈ
-#~ msgid "GSM network password"
-#~ msgstr "GSM نیٹ ورک پاس ورڈ"
-
-# %(interface)s: %(version)s
-#, python-format
-#~ msgid "%(interface)s: %(version)s"
-#~ msgstr "%(interface)s: %(version)s"
-
-# GSM نیٹ ورک PIN
-#~ msgid "GSM network PIN"
-#~ msgstr "GSM نیٹ ورک PIN"
-
-# GSM نیٹ ورک کی ذاتی شناختی نمبر کی ترتیب
-#~ msgid "GSM network personal identification number configuration"
-#~ msgstr "GSM نیٹ ورک کی ذاتی شناختی نمبر کی ترتیب"
-
-# GSM نیٹ ورک APN
-#~ msgid "GSM network APN"
-#~ msgstr "GSM نیٹ ورک APN"
-
-# GSM نیٹ ورک PUN
-#~ msgid "GSM network PUK"
-#~ msgstr "GSM نیٹ ورک PUN"
-
-#, python-format
-#~ msgid "%s"
-#~ msgstr "%s"
-
-# GSM نیٹ ورک صارف کا نام
-#~ msgid "GSM network username"
-#~ msgstr "GSM نیٹ ورک صارف کا نام"
-
-# GSM نیٹ ورک تک رسائی کے نقطہ نام کی ترتیب
-#~ msgid "GSM network access point name configuration"
-#~ msgstr "GSM نیٹ ورک تک رسائی کے نقطہ نام کی ترتیب"

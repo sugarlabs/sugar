@@ -2449,15 +2449,3 @@ msgstr ""
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Anyone"
-#~ msgstr "ಯಾರಾದರೂ"
-
-#, fuzzy
-#~ msgid "Software update"
-#~ msgstr "ತಂತ್ರಾಂಶ ಅಪ್‌ಡೇಟ್‌"
-
-#, fuzzy
-#~ msgid "Search"
-#~ msgstr "ಹುಡುಕು"

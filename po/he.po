@@ -6,114 +6,596 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-30 17:21+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2016-01-30 14:24+0000\n"
+"PO-Revision-Date: 2016-11-25 13:04+0000\n"
+"Last-Translator: Yaron <sh.yaron@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1480079067.000000\n"
 
-#: ../extensions/cpsection/aboutme/__init__.py:24
-#, fuzzy
+#: ../data/org.sugarlabs.gschema.xml.h:1
+msgid "Migrated to GSettings"
+msgstr "נדידה ל־GSettings"
+
+#: ../data/org.sugarlabs.gschema.xml.h:2
+msgid "This key shows whether or not GConf values were migrated to GSettings"
+msgstr "מפתח זה מציג האם ערכי ה־GConf נדדו אל GSettings או לא"
+
+#: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
+msgid "Backup URL"
+msgstr "כתובת גיבוי"
+
+#: ../data/org.sugarlabs.gschema.xml.h:4 ../data/sugar.schemas.in.h:12
+msgid "URL where the backup is saved to."
+msgstr "הכתובת אליה נשמר הגיבוי."
+
+#: ../data/org.sugarlabs.gschema.xml.h:5 ../data/sugar.schemas.in.h:31
+msgid "Show Log out"
+msgstr "הצגת יציאה"
+
+#: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
+msgid "If TRUE, Sugar will show a \"Log out\" option."
+msgstr "אם TRUE, סוכר תציג את האפשרות „יציאה“."
+
+#: ../data/org.sugarlabs.gschema.xml.h:7 ../data/sugar.schemas.in.h:33
+msgid "Show Restart"
+msgstr "הצגת הפעלה מחדש"
+
+#: ../data/org.sugarlabs.gschema.xml.h:8 ../data/sugar.schemas.in.h:34
+msgid "If TRUE, Sugar will show a \"Restart\" option."
+msgstr "אם TRUE, סוכר תציג את האפשרות „הפעלה מחדש“."
+
+#: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
+msgid "Show Shutdown"
+msgstr "הצגת כיבוי"
+
+#: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
+msgid "If TRUE, Sugar will show a \"Shutdown\" option."
+msgstr "אם TRUE, סוכר תציג את האפשרות „כיבוי“."
+
+#: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
+msgid "Show Register"
+msgstr "הצגת הרשמה"
+
+#: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
+msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
+msgstr "אם TRUE, סוכר תציג את האפשרות „הרשמה“ בלוח החברים."
+
+#: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
+msgid "Bundle IDs of protected activities"
+msgstr "אוגדן מזהים של פעילויות מוגנות"
+
+#: ../data/org.sugarlabs.gschema.xml.h:14 ../data/sugar.schemas.in.h:64
+msgid ""
+"Users will not be allowed to erase these activities through the list view."
+msgstr "למשתמשים לא תהיה הרשאה למחוק את הפעילויות האלה דרך תצוגת הרשימה."
+
+#: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
+msgid "A limit to the number of simultaneously open activities."
+msgstr "הגבלה למספר הפעילויות שפתוחות במקביל."
+
+#: ../data/org.sugarlabs.gschema.xml.h:16 ../data/sugar.schemas.in.h:80
+msgid ""
+"This int is used to set a limit to the number of open activities. By default "
+"(0), there is no limit."
+msgstr ""
+"מספר שלם וחיובי זה משמש להגבלת מספר הפעילויות הפתוחות. כבררת מחדל (0), אין "
+"הגבלה."
+
+#: ../data/org.sugarlabs.gschema.xml.h:17 ../data/sugar.schemas.in.h:1
+msgid "User Name"
+msgstr "שם משתמש"
+
+#: ../data/org.sugarlabs.gschema.xml.h:18 ../data/sugar.schemas.in.h:2
+msgid "User name that is used throughout the desktop."
+msgstr "שם המשתמש בו נעשה שימוש בשולחן העבודה."
+
+#: ../data/org.sugarlabs.gschema.xml.h:19 ../data/sugar.schemas.in.h:3
+msgid "Default nick"
+msgstr "כינוי בררת מחדל"
+
+#: ../data/org.sugarlabs.gschema.xml.h:20 ../data/sugar.schemas.in.h:4
+msgid ""
+"\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
+"long name."
+msgstr ""
+"\"disabled\" (מנוטרל) כדי לבקש כינוי עם ההפעלה; \"system\" (מערכת) כדי "
+"להשתמש בשם היוניקסי הארוך של החשבון."
+
+#: ../data/org.sugarlabs.gschema.xml.h:21 ../data/sugar.schemas.in.h:5
+msgid "User Color"
+msgstr "צבע משתמש"
+
+#: ../data/org.sugarlabs.gschema.xml.h:22 ../data/sugar.schemas.in.h:6
+msgid ""
+"Color for the XO icon that is used throughout the desktop. The string is "
+"composed of the stroke color and fill color, format is that of rgb colors. "
+"Example: #AC32FF,#9A5200"
+msgstr ""
+"צבע סמל ה־XO בו נעשה שימוש בשולחן העבודה. המחרוזת מורכבת מצבע התוואי צבע "
+"המילוי, התבנית היא של צבעי rgb. לדוגמה: ‎#AC32FF,#9A5200"
+
+#: ../data/org.sugarlabs.gschema.xml.h:23
+msgid "User Gender"
+msgstr "מגדר המשתמש"
+
+#: ../data/org.sugarlabs.gschema.xml.h:24
+msgid "Gender of the Sugar user, either male, female, or unassigned"
+msgstr "מגדר המשתמש, יכול להיות זכר, נקבה או בלתי מוגדר"
+
+#: ../data/org.sugarlabs.gschema.xml.h:25
+msgid "User Birth Timestamp"
+msgstr "חותמת זמן לידת המשתמש"
+
+#: ../data/org.sugarlabs.gschema.xml.h:26
+msgid "Birth timestamp (seconds since the epoch)"
+msgstr "חותמת זמן הלידה (שניות מאז ראשית זמן יוניקס)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:27
+msgid "Group Label"
+msgstr "תווית קבוצה"
+
+#: ../data/org.sugarlabs.gschema.xml.h:28
+msgid "Label associated with age, e.g., '2nd Grade'"
+msgstr "תווית המשויכת לקבוצת גיל, למשל: ‚כיתה ב׳‘"
+
+#: ../data/org.sugarlabs.gschema.xml.h:29
+msgid "Background image path"
+msgstr "הנתיב לתמונת הרקע"
+
+#: ../data/org.sugarlabs.gschema.xml.h:30
+msgid "Path to the image to be used as a background."
+msgstr "נתיב לתמונה בה יש להשתמש כרקע."
+
+#: ../data/org.sugarlabs.gschema.xml.h:31
+msgid "Background alpha level"
+msgstr "אטימות הרקע"
+
+#: ../data/org.sugarlabs.gschema.xml.h:32
+msgid "The opacity of the background image."
+msgstr "רמת האטימות של תמונת הרקע."
+
+#: ../data/org.sugarlabs.gschema.xml.h:33
+msgid "Mimetype registry"
+msgstr "מנהל רישום טיפוסי Mime"
+
+#: ../data/org.sugarlabs.gschema.xml.h:34
+msgid "Consists of key-value pairs mimetypes and their corresponding activity"
+msgstr "מורכב מצמדים של מפתח-ערך של טיפוסי Mime והפעילות המשויכת להם"
+
+#: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
+msgid "Volume Level"
+msgstr "עצמת שמע"
+
+#: ../data/org.sugarlabs.gschema.xml.h:36 ../data/sugar.schemas.in.h:8
+msgid "Volume level for the sound device."
+msgstr "עצמת הפלט של התקן השמע."
+
+#: ../data/org.sugarlabs.gschema.xml.h:37 ../data/sugar.schemas.in.h:9
+msgid "Sound Muted"
+msgstr "השמע מושתק"
+
+#: ../data/org.sugarlabs.gschema.xml.h:38 ../data/sugar.schemas.in.h:10
+msgid "Setting for muting the sound device."
+msgstr "הגדרה להשתקת התקן השמע."
+
+#: ../data/org.sugarlabs.gschema.xml.h:39
+msgid "Brightness Level"
+msgstr "רמת בהירות"
+
+#: ../data/org.sugarlabs.gschema.xml.h:40
+msgid "Brightness level for the computer screen."
+msgstr "רמת הבהירות של מסך המחשב."
+
+#: ../data/org.sugarlabs.gschema.xml.h:41
+#: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
+msgid "Timezone"
+msgstr "אזור זמן"
+
+#: ../data/org.sugarlabs.gschema.xml.h:42 ../data/sugar.schemas.in.h:14
+msgid "Timezone setting for the system."
+msgstr "הגדרת אזור זמן למערכת."
+
+#: ../data/org.sugarlabs.gschema.xml.h:43
+msgid "Home views"
+msgstr "תצוגות בית"
+
+#: ../data/org.sugarlabs.gschema.xml.h:44
+msgid ""
+"List of home views, including the view icon, the favorite icon and the layout"
+msgstr "רשימת תצוגות בית, לרבות סמל התצוגות, סמל המועדפים והפריסה"
+
+#: ../data/org.sugarlabs.gschema.xml.h:45
+msgid "Launcher animation interval"
+msgstr "משך ההנפשה של המשגר"
+
+#: ../data/org.sugarlabs.gschema.xml.h:46
+msgid ""
+"Delay in milliseconds between animation updates for launcher pulsing icon."
+msgstr "השהיה במילישניות בין עדכוני ההנפשה לסמל הפועם של המשגר."
+
+#: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
+msgid "Edge Delay"
+msgstr "השהיה קצה"
+
+#: ../data/org.sugarlabs.gschema.xml.h:48 ../data/sugar.schemas.in.h:20
+msgid "Delay for the activation of the frame using the edges."
+msgstr "השהיית הפעילות של המסגרת באמצעות הקצוות."
+
+#: ../data/org.sugarlabs.gschema.xml.h:49 ../data/sugar.schemas.in.h:21
+msgid "Corner Delay"
+msgstr "השהיית פינות"
+
+#: ../data/org.sugarlabs.gschema.xml.h:50 ../data/sugar.schemas.in.h:22
+msgid "Delay for the activation of the frame using the corners."
+msgstr "השהיית הפעילות של המסגרת באמצעות הפינות."
+
+#: ../data/org.sugarlabs.gschema.xml.h:51
+msgid "Trigger Size"
+msgstr "גודל המניע"
+
+#: ../data/org.sugarlabs.gschema.xml.h:52
+msgid "Size of the frame trigger area, in px from the corner/edge."
+msgstr "גודל אזור מסגרת המניע, בפיקסלים מהפינה/קצה."
+
+#: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
+msgid "Jabber Server"
+msgstr "שרת Jabber"
+
+#: ../data/org.sugarlabs.gschema.xml.h:54 ../data/sugar.schemas.in.h:24
+msgid "URL of the jabber server to use."
+msgstr "כתובת שרת ה־Jabber לשימוש."
+
+#: ../data/org.sugarlabs.gschema.xml.h:55 ../data/sugar.schemas.in.h:29
+msgid "Publish to Gadget"
+msgstr "פרסום אל Gadget"
+
+#: ../data/org.sugarlabs.gschema.xml.h:56 ../data/sugar.schemas.in.h:30
+msgid ""
+"If TRUE, Sugar will make us searchable for the other users of the Jabber "
+"server."
+msgstr "אם TRUE, סוכר תפיץ את הפרטים שלך בפני משתמשים אחרים בשרת ה־Jabber"
+
+#: ../data/org.sugarlabs.gschema.xml.h:57
+msgid "Social Help Server"
+msgstr "שרת עזרה חברתית"
+
+#: ../data/org.sugarlabs.gschema.xml.h:58
+msgid "URL of the social help server to use with protocol."
+msgstr "כתובת שרת העזרה החברתית לשימוש עם פרוטוקול."
+
+#: ../data/org.sugarlabs.gschema.xml.h:59 ../data/sugar.schemas.in.h:25
+msgid "Power Automatic"
+msgstr "חשמל אוטומטי"
+
+#: ../data/org.sugarlabs.gschema.xml.h:60
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:26
+msgid "Automatic power management (increases battery life)"
+msgstr "ניהול חשמל אוטומטי (מאריך את חיי הסוללה)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:61 ../data/sugar.schemas.in.h:27
+msgid "Power Extreme"
+msgstr "חשמל קיצוני"
+
+#: ../data/org.sugarlabs.gschema.xml.h:62 ../data/sugar.schemas.in.h:28
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr "ניהול חשמל קיצוני (ניתוק רשת אלחוטית, מאריך את חיי הסוללה)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:63 ../data/sugar.schemas.in.h:39
+msgid "Keyboard layouts"
+msgstr "פריסות מקלדת"
+
+#: ../data/org.sugarlabs.gschema.xml.h:64 ../data/sugar.schemas.in.h:40
+msgid ""
+"List of keyboard layouts. Each entry should be in the form layout(variant)"
+msgstr "רשימת פריסות מקלדת. כל רשומה צריכה להיות בצורה פריסה(הגוון)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:65 ../data/sugar.schemas.in.h:41
+msgid "Keyboard options"
+msgstr "אפשרויות מקלדת"
+
+#: ../data/org.sugarlabs.gschema.xml.h:66 ../data/sugar.schemas.in.h:42
+msgid "List of keyboard options."
+msgstr "רשימת אפשרויות מקלדת."
+
+#: ../data/org.sugarlabs.gschema.xml.h:67 ../data/sugar.schemas.in.h:43
+msgid "Keyboard model"
+msgstr "דגם מקלדת"
+
+#: ../data/org.sugarlabs.gschema.xml.h:68 ../data/sugar.schemas.in.h:44
+msgid "The keyboard model to be used"
+msgstr "דגם המקלדת לשימוש"
+
+#: ../data/org.sugarlabs.gschema.xml.h:69 ../data/sugar.schemas.in.h:45
+msgid "Default font face"
+msgstr "גופן בררת המחדל"
+
+#: ../data/org.sugarlabs.gschema.xml.h:70 ../data/sugar.schemas.in.h:46
+msgid "Font face that is used throughout the desktop."
+msgstr "הגופן בו ייעשה שימוש בשולחן העבודה."
+
+#: ../data/org.sugarlabs.gschema.xml.h:71 ../data/sugar.schemas.in.h:47
+msgid "Default font size"
+msgstr "גודל הגופן כבררת מחדל"
+
+#: ../data/org.sugarlabs.gschema.xml.h:72 ../data/sugar.schemas.in.h:48
+msgid "Font size that is used throughout the desktop."
+msgstr "גודל הגופן בו ייעשה שימוש בשולחן העבודה."
+
+#: ../data/org.sugarlabs.gschema.xml.h:73 ../data/sugar.schemas.in.h:61
+msgid "Show Sugar Ad-hoc networks"
+msgstr "הצגת רשתות קצה לקצה של סוכר"
+
+#: ../data/org.sugarlabs.gschema.xml.h:74 ../data/sugar.schemas.in.h:62
+msgid ""
+"If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
+"Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
+"hoc network."
+msgstr ""
+"אם TRUE, סוכר תציג רשתות נקודה לנקודה כבררת מחדל עבור ערוצים 1,6 ו־11. אם "
+"סוכר נתקלת ברשתות „מוכרות“ בעת עלייתה, היא תתחבר לרשת נקודה לנקודה זו."
+
+#: ../data/org.sugarlabs.gschema.xml.h:75
+msgid "Enable Ad-hoc autoconnect"
+msgstr "הפעלת התחברות אוטומטית לרשת נקודה לנקודה"
+
+#: ../data/org.sugarlabs.gschema.xml.h:76
+msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
+msgstr "אם TRUE, סוכר תתחבר לרשתות נקודה לנקודה."
+
+#: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
+msgid "GSM network username (DEPRECATED/UNUSED)"
+msgstr "שם המשתמש לרשת ה־GSM (נזנח/יצא מכלל שימוש)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:78 ../data/sugar.schemas.in.h:50
+msgid "GSM network username configuration (DEPRECATED/UNUSED)"
+msgstr "תצורת שם המשתמש לרשת ה־GSM (נזנח/יצא מכלל שימוש)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:79 ../data/sugar.schemas.in.h:51
+msgid "GSM network password (DEPRECATED/UNUSED)"
+msgstr "הססמה לרשת ה־GSM (נזנח/יצא מכלל שימוש)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:80 ../data/sugar.schemas.in.h:52
+msgid "GSM network password configuration (DEPRECATED/UNUSED)"
+msgstr "תצורת הססמה לרשת ה־GSM (נזנח/יצא מכלל שימוש)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:81 ../data/sugar.schemas.in.h:53
+msgid "GSM network number (DEPRECATED/UNUSED)"
+msgstr "מספר רשת ה־GSM (נזנח/יצא מכלל שימוש)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:82 ../data/sugar.schemas.in.h:54
+msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
+msgstr "תצורת מספר הטלפון של רשת ה־GSM (נזנח/יצא מכלל שימוש)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:83 ../data/sugar.schemas.in.h:55
+msgid "GSM network APN (DEPRECATED/UNUSED)"
+msgstr "נקודת הגישה לרשת ה־GSM (נזנח/יצא מכלל שימוש)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:84 ../data/sugar.schemas.in.h:56
+msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
+msgstr "תצורת שם נקודת הגישה לרשת ה־GSM (נזנח/יצא מכלל שימוש)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:85 ../data/sugar.schemas.in.h:57
+msgid "GSM network PIN (DEPRECATED/UNUSED)"
+msgstr "ה־PIN של רשת ה־GSM (נזנח/יצא מכלל שימוש)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:86 ../data/sugar.schemas.in.h:58
+msgid ""
+"GSM network personal identification number configuration (DEPRECATED/UNUSED)"
+msgstr "תצורת מספר הזיהוי האישי של רשת ה־GSM (נזנח/יצא מכלל שימוש)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:87 ../data/sugar.schemas.in.h:59
+msgid "GSM network PUK (DEPRECATED/UNUSED)"
+msgstr "ה־PUK של רשת ה־GSM (נזנח/יצא מכלל שימוש)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:88 ../data/sugar.schemas.in.h:60
+msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
+msgstr "תצורת מפתח השחרור האישי לרשת ה־GSM (נזנח/לא בשימוש)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:89
+msgid "TODO: add summary"
+msgstr "מטלה: להוסיף תקציר"
+
+#: ../data/org.sugarlabs.gschema.xml.h:90
+msgid "TODO: add description"
+msgstr "מטלה: להוסיף תיאור"
+
+#: ../data/org.sugarlabs.gschema.xml.h:91 ../data/sugar.schemas.in.h:65
+msgid "Pitch value for the speech sugar service"
+msgstr "ערך גובה צליל עבור שירות הדיבור של סוכר"
+
+#: ../data/org.sugarlabs.gschema.xml.h:92 ../data/sugar.schemas.in.h:66
+msgid "Pitch value used by the speech service in Sugar"
+msgstr "ערך גובה הצליל בו נעשה שימוש על ידי שירות הדיבור בסוכר"
+
+#: ../data/org.sugarlabs.gschema.xml.h:93 ../data/sugar.schemas.in.h:67
+msgid "Rate value for the speech sugar service"
+msgstr "ערך הקצב עבור שירות הדיבור של סוכר"
+
+#: ../data/org.sugarlabs.gschema.xml.h:94 ../data/sugar.schemas.in.h:68
+msgid "Rate value used by the speech service in Sugar"
+msgstr "ערך הקצב בו נעשה שימוש על ידי שירות הדיבור בסוכר"
+
+#: ../data/org.sugarlabs.gschema.xml.h:95 ../data/sugar.schemas.in.h:69
+msgid "Activity update backend."
+msgstr "מנגנון עדכון פעילויות."
+
+#: ../data/org.sugarlabs.gschema.xml.h:96 ../data/sugar.schemas.in.h:70
+msgid ""
+"Activity update backend module, followed by a period, followed by the class "
+"name."
+msgstr "מודול מנגנון עדכון פעילויות, לאחריו נקודה, לאחריה שם המחלקה."
+
+#: ../data/org.sugarlabs.gschema.xml.h:97 ../data/sugar.schemas.in.h:71
+msgid "Microformat update URL."
+msgstr "כתובת עדכון Microformat."
+
+#: ../data/org.sugarlabs.gschema.xml.h:98 ../data/sugar.schemas.in.h:72
+msgid ""
+"URL used by the microformat update backend for activity update information."
+msgstr ""
+"הכתובת בה נעשה שימוש על ידי מנגנון העדכון של microformat לנתוני עדכוני "
+"פעילויות."
+
+#: ../data/org.sugarlabs.gschema.xml.h:99 ../data/sugar.schemas.in.h:73
+msgid "Automatic update frequency."
+msgstr "תדירות עדכון אוטומטי"
+
+#: ../data/org.sugarlabs.gschema.xml.h:100 ../data/sugar.schemas.in.h:74
+msgid ""
+"Frequency of automatic activity updates, measured in days. 0 means disabled."
+msgstr "תדירות עדכונים אטומטיים לפעילויות, נמדד בימים. 0 משמעו מנוטרל."
+
+#: ../data/org.sugarlabs.gschema.xml.h:101 ../data/sugar.schemas.in.h:75
+msgid "Timestamp of last activity update."
+msgstr "חותמת הזמן של עדכון הפעילות האחרון."
+
+#: ../data/org.sugarlabs.gschema.xml.h:102 ../data/sugar.schemas.in.h:76
+msgid ""
+"A unix timestamp (seconds since epoch) of the last successful activity "
+"update."
+msgstr ""
+"חותמת זמן של יוניקס (שניות מאז חצות ב־1 בינואר 1970) של עדכון הפעילות "
+"האחרונה שהצליחה."
+
+#: ../data/org.sugarlabs.gschema.xml.h:103
+msgid "New ASLO update.json URL."
+msgstr "כתובת update.json ל־ASLO החדש."
+
+#: ../data/org.sugarlabs.gschema.xml.h:104
+msgid "URL used by the new ASLO updater to download activity data."
+msgstr "הכתובת בה נעשה שימוש על ידי מעדכן ה־ASLO החדש להורדת נתוני פעילויות."
+
+#: ../data/org.sugarlabs.gschema.xml.h:105 ../data/sugar.schemas.in.h:77
+msgid "A description of the hardware available to the user."
+msgstr "תיאור החומרה הזמינה למשתמש."
+
+#: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
+msgid "This string is displayed in the control panel, about computer section."
+msgstr "מחרוזת זו מוצגת בלוח הבקרה, בפרטים על המחשב."
+
+#: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
-msgstr "אודות עצמי"
+msgstr "על עצמי"
 
-#: ../extensions/cpsection/aboutme/model.py:48
+#: ../extensions/cpsection/aboutme/model.py:51
 msgid "You must enter a name."
 msgstr "עליך להקליד שם."
 
-#: ../extensions/cpsection/aboutme/model.py:75
+#: ../extensions/cpsection/aboutme/model.py:83
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr "ציור:   צבע=%s גוון=%s"
+msgstr "קו מתאר:   צבע=%s גוון=%s"
 
-#: ../extensions/cpsection/aboutme/model.py:78
+#: ../extensions/cpsection/aboutme/model.py:86
 #, python-format
 msgid "stroke:   %s"
-msgstr "ציור:   %s"
+msgstr "קו מתאר:   %s"
 
-#: ../extensions/cpsection/aboutme/model.py:80
+#: ../extensions/cpsection/aboutme/model.py:88
 #, python-format
 msgid "fill:     color=%s hue=%s"
 msgstr "מילוי:     צבע=%s גוון=%s"
 
-#: ../extensions/cpsection/aboutme/model.py:82
+#: ../extensions/cpsection/aboutme/model.py:90
 #, python-format
 msgid "fill:     %s"
 msgstr "מילוי:     %s"
 
-#: ../extensions/cpsection/aboutme/model.py:94
-#, fuzzy
+#: ../extensions/cpsection/aboutme/model.py:102
 msgid "Error in specified color modifiers."
-msgstr "אירעה שגיאה בצבעי התבנית שהוזנו."
+msgstr "אירעה שגיאה במשני הצבעים."
 
-#: ../extensions/cpsection/aboutme/model.py:97
+#: ../extensions/cpsection/aboutme/model.py:105
 msgid "Error in specified colors."
 msgstr "אירעה שגיאה בצבעים שהוזנו."
 
-#: ../extensions/cpsection/aboutme/view.py:212
+#: ../extensions/cpsection/aboutme/view.py:243
 msgid "Click to change your color:"
 msgstr "יש ללחוץ כדי לשנות את הצבע:"
+
+#: ../extensions/cpsection/aboutme/view.py:294
+#: ../src/jarabe/intro/window.py:203
+msgid "Select gender:"
+msgstr "בחירת מגדר:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
 msgstr "קצת על המחשב שלי"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:42
+#: ../extensions/cpsection/aboutcomputer/model.py:37
 msgid "Not available"
 msgstr "לא זמין"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:60
+#: ../extensions/cpsection/aboutcomputer/view.py:76
 msgid "Identity"
 msgstr "זהות"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:69
+#: ../extensions/cpsection/aboutcomputer/view.py:87
+msgid "Model:"
+msgstr "דגם:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Serial Number:"
 msgstr "מספר סידורי:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:91
+#: ../extensions/cpsection/aboutcomputer/view.py:103
 msgid "Software"
-msgstr "תוכנה"
+msgstr "תכנה"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:100
+#: ../extensions/cpsection/aboutcomputer/view.py:112
 msgid "Build:"
 msgstr "בנייה:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:115
-#, fuzzy
+#: ../extensions/cpsection/aboutcomputer/view.py:117
 msgid "Sugar:"
-msgstr "שוגר:"
+msgstr "סוכר:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:130
+#: ../extensions/cpsection/aboutcomputer/view.py:122
 msgid "Firmware:"
 msgstr "קושחה:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:145
+#: ../extensions/cpsection/aboutcomputer/view.py:127
 msgid "Wireless Firmware:"
 msgstr "קושחה אלחוטית:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:168
+#: ../extensions/cpsection/aboutcomputer/view.py:134
+#, python-format
+msgid "%d days ago"
+msgstr "לפני %d ימים"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:136
+#: ../src/jarabe/journal/journaltoolbox.py:169
+msgid "Today"
+msgstr "היום"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:139
+msgid "Last system update:"
+msgstr "עדכון המערכת האחרון:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:150
 msgid "Copyright and License"
 msgstr "זכויות יוצרים ורישיון"
 
 #. TRANS: The word "Sugar" should not be translated.
-#: ../extensions/cpsection/aboutcomputer/view.py:187
-#, fuzzy
+#: ../extensions/cpsection/aboutcomputer/view.py:169
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"שוגר (sugar) הוא הממשק הגרפי אשר נמצא מולך. שוגר הוא תוכנה חופשית אשר נמצאת "
-"תחת הרישיון הציבורי הכללי של גנו (GNU GPL). אנחנו מזמינים אותך להשתמש בו, "
-"לשנות אותו ולהפיץ אותו תחת התנאים המתוארים שם."
+"סוכר (sugar) הנו המנשק הגרפי שלפניך. סוכר מוגשת לך במסגרת תכנה חופשית אשר "
+"נמצאת תחת הרישיון הציבורי הכללי של גנו (GNU GPL). אנו מזמינים אותך להשתמש "
+"בה, לשנות אותה ולהפיץ אותה תחת התנאים המתוארים שם."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:199
+#: ../extensions/cpsection/aboutcomputer/view.py:181
 msgid "Full license:"
 msgstr "רישיון מלא:"
 
@@ -121,210 +603,230 @@ msgstr "רישיון מלא:"
 msgid "Background"
 msgstr "רקע"
 
-#: ../extensions/cpsection/background/view.py:39
+#: ../extensions/cpsection/background/view.py:48
 msgid "Select a background:"
-msgstr ""
+msgstr "בחירת רקע:"
 
-#: ../extensions/cpsection/background/view.py:46
+#: ../extensions/cpsection/background/view.py:57
 msgid "Clear background"
-msgstr ""
+msgstr "מחיקת הרקע"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr "תאריך וזמן"
+msgstr "תאריך ושעה"
 
-#: ../extensions/cpsection/datetime/model.py:92
-msgid "Error timezone does not exist."
-msgstr "שגיאה, אזור זמן לא קיים."
-
-#: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:61
-msgid "Timezone"
-msgstr "אזור זמן"
+#: ../extensions/cpsection/datetime/model.py:100
+msgid "Error: timezone does not exist."
+msgstr "שגיאה: אזור הזמן לא קיים."
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
 msgstr "מסגרת"
 
-#: ../extensions/cpsection/frame/model.py:41
-#: ../extensions/cpsection/frame/model.py:66
-msgid "Value must be an integer."
-msgstr "הערך חייב להיות מספר שלם."
-
-#: ../extensions/cpsection/frame/view.py:27
+#: ../extensions/cpsection/frame/view.py:26
 msgid "never"
 msgstr "אף פעם"
 
-#: ../extensions/cpsection/frame/view.py:28
+#: ../extensions/cpsection/frame/view.py:27
 msgid "instantaneous"
 msgstr "מידי"
 
-#: ../extensions/cpsection/frame/view.py:29
+#: ../extensions/cpsection/frame/view.py:28
 #, python-format
 msgid "%s seconds"
 msgstr "%s שניות"
 
-#: ../extensions/cpsection/frame/view.py:54
-#, fuzzy
+#: ../extensions/cpsection/frame/view.py:52
 msgid "Activation Delay"
-msgstr "זמן הפעלה"
+msgstr "השהיית הפעלה"
 
-#: ../extensions/cpsection/frame/view.py:78
+#: ../extensions/cpsection/frame/view.py:68
+msgid "Activation Area"
+msgstr "אזור הפעלה"
+
+#: ../extensions/cpsection/frame/view.py:85
 msgid "Corner"
 msgstr "פינה"
 
-#: ../extensions/cpsection/frame/view.py:114
+#: ../extensions/cpsection/frame/view.py:104
 msgid "Edge"
 msgstr "קצה"
 
+#: ../extensions/cpsection/frame/view.py:123
+msgid "Size"
+msgstr "גודל"
+
+#: ../extensions/cpsection/frame/view.py:221
+msgid "toolbar size"
+msgstr "גודל סרגל הכלים"
+
+#: ../extensions/cpsection/frame/view.py:226
+msgid "exact corner or edge"
+msgstr "פינה או קצה בדיוק"
+
+#: ../extensions/cpsection/frame/view.py:228
+msgid "exact corner"
+msgstr "פינה בדיוק"
+
+#: ../extensions/cpsection/frame/view.py:230
+msgid "exact edge"
+msgstr "קצה בדיוק"
+
+#: ../extensions/cpsection/frame/view.py:232
+msgid "ignored"
+msgstr "התעלמות"
+
+#. TRANS: px as in pixels
+#: ../extensions/cpsection/frame/view.py:235
+msgid "{}px"
+msgstr "{}פיקסלים"
+
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:38
-#, fuzzy
 msgid "Keyboard"
 msgstr "מקלדת"
 
 #: ../extensions/cpsection/keyboard/view.py:240
-#, fuzzy
 msgid "Keyboard Model"
-msgstr "מודל מקלדת"
+msgstr "דגם מקלדת"
 
 #: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
-msgstr ""
+msgstr "מקשים להחלפת פריסה"
 
 #: ../extensions/cpsection/keyboard/view.py:369
-#, fuzzy
 msgid "Keyboard Layout(s)"
-msgstr "פריסת מקלדת"
+msgstr "פריסות מקלדת"
 
 #: ../extensions/cpsection/language/__init__.py:21
-#: ../extensions/cpsection/language/view.py:33
+#: ../extensions/cpsection/language/view.py:39
 msgid "Language"
 msgstr "שפה"
 
-#: ../extensions/cpsection/language/model.py:30
-#, fuzzy
+#: ../extensions/cpsection/language/model.py:29
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "הגישה אל ~/.i18n אינה אפשרית. יש ליצור הגדרות סטנדרטיות. "
+msgstr "אין גישה אל ‎~/.i18n . עליך ליצור הגדרות תקניות."
 
-#: ../extensions/cpsection/language/model.py:129
+#: ../extensions/cpsection/language/model.py:156
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "לא נמצאה שפה המתאימה לקוד=%s."
 
-#: ../extensions/cpsection/language/model.py:152
+#: ../extensions/cpsection/language/model.py:179
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "סליחה, איני דובר '%s'."
+msgstr "סליחה, איני דובר ‚%s‘."
 
-#: ../extensions/cpsection/language/view.py:57
+#: ../extensions/cpsection/language/view.py:75
 msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
+"ניתן להוסיף שפות בסדר המועדף עליך. אם לא קיים תרגום ייעשה שימוש בשפה הבאה "
+"ברשימה."
+
+#: ../extensions/cpsection/language/view.py:383
+#, python-format
+msgid "Error writting language configuration (%s)"
+msgstr "שגיאה בכתיבת תצורת השפה (%s)"
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
-msgid "Modem Configuration"
-msgstr ""
+msgid "Modem"
+msgstr "מודם"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
+"יהיה עליך לספק את הפרטים הבאים כדי להגדיר חיבור פס רחב נייד לרשת סלולרית ("
+"דור שלישי)."
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr ""
+msgstr "מדינה:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr ""
+msgstr "ספק:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr ""
+msgstr "תכנית:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
-#, fuzzy
 msgid "Username:"
 msgstr "שם משתמש:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
-#, fuzzy
 msgid "Password:"
-msgstr "סיסמה:"
+msgstr "ססמה:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:174
-#, fuzzy
 msgid "Number:"
-msgstr "מספור:"
+msgstr "מספר:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:181
-#, fuzzy
 msgid "Access Point Name (APN):"
-msgstr "שם נקודת גישה:"
+msgstr "שם נקודת גישה (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
-msgstr ""
+msgstr "מספר זהות אישי (PIN):"
 
-#: ../extensions/cpsection/modemconfiguration/model.py:161
+#: ../extensions/cpsection/modemconfiguration/model.py:162
 #, python-format
 msgid "Plan #%s"
-msgstr ""
+msgstr "תכנית מס׳ %s"
 
-#: ../extensions/cpsection/modemconfiguration/model.py:291
+#: ../extensions/cpsection/modemconfiguration/model.py:292
 #, python-format
 msgid "Provider %s"
-msgstr ""
+msgstr "ספק %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
 msgid "Network"
 msgstr "רשת"
 
-#: ../extensions/cpsection/network/model.py:73
+#: ../extensions/cpsection/network/model.py:88
 msgid "State is unknown."
 msgstr "מצב אינו ידוע."
 
-#: ../extensions/cpsection/network/model.py:101
-#, fuzzy
+#: ../extensions/cpsection/network/model.py:104
 msgid "Error in specified radio argument use on/off."
-msgstr "ערך שגוי לפרמטר רדיו. השתמש ב on/off."
+msgstr "ערך שגוי לפרמטר רדיו, יש להשתמש ב־on/off."
 
-#: ../extensions/cpsection/network/model.py:152
-#, fuzzy
+#: ../extensions/cpsection/network/model.py:197
 msgid "Error in specified argument use 0/1."
-msgstr "ערך שגוי לפרמטר. השתמש ב 0/1."
+msgstr "ערך בארגומנט שצוין. יש להשתמש ב־0/1."
 
-#: ../extensions/cpsection/network/view.py:68
+#: ../extensions/cpsection/network/view.py:65
 msgid "Wireless"
 msgstr "רשת אלחוטית"
 
-#: ../extensions/cpsection/network/view.py:77
-msgid "Turn off the wireless radio to save battery life"
-msgstr "כדאי לכבות את הרשת האלחוטית כדי להאריך את חיי הסוללה"
+#: ../extensions/cpsection/network/view.py:73
+msgid "The wireless radio may be turned off to save battery life."
+msgstr "ניתן לכבות את הרדיו האלחוטי כדי לחסוך בחיי סוללה."
 
-#: ../extensions/cpsection/network/view.py:90
-#, fuzzy
+#: ../extensions/cpsection/network/view.py:86
 msgid "Radio"
 msgstr "רדיו"
 
-#: ../extensions/cpsection/network/view.py:106
-#, fuzzy
-msgid "Discard network history if you have trouble connecting to the network"
-msgstr "אם יש לך בעיות התחברות לרשת כדאי לנקות את ההיסטוריה של חיבורי הרשת"
+#: ../extensions/cpsection/network/view.py:103
+msgid ""
+"Discard wireless connections if you have trouble connecting to the network"
+msgstr "כדאי לנטרל חיבורים אלחוטיים אם מופיע קושי בהתחברות לרשת"
 
-#: ../extensions/cpsection/network/view.py:115
-#, fuzzy
-msgid "Discard network history"
-msgstr "ניקוי היסטוריה של חיבורי הרשת"
+#: ../extensions/cpsection/network/view.py:113
+msgid "Discard wireless connections"
+msgstr "נטרול חיבורים אלחוטיים"
 
-#: ../extensions/cpsection/network/view.py:131
+#: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
 msgstr "שיתוף פעולה"
 
-#: ../extensions/cpsection/network/view.py:139
+#: ../extensions/cpsection/network/view.py:137
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
@@ -333,713 +835,417 @@ msgstr ""
 "השרת דומה לחדר שבו אתם נמצאים; אנשים המחוברים לאותו שרת יכולים לראות זה את "
 "זה, אפילו אם הם לא על אותה רשת."
 
-#: ../extensions/cpsection/network/view.py:149
+#: ../extensions/cpsection/network/view.py:147
 msgid "Server:"
 msgstr "שרת:"
 
-#: ../extensions/cpsection/power/__init__.py:21
-#, fuzzy
+#: ../extensions/cpsection/network/view.py:163
+msgid ""
+"Social Help is a forum that lets you connect with developers and discuss "
+"Sugar Activities.  Changing servers means discussions will happen in a "
+"different place with different people."
+msgstr ""
+"עזרה חברתית הוא פורום שמאפשר לך להתחבר למתכנתים ולדון בפעילויות של סוכר.  "
+"שינוי השרתים יוביל לדיון במקום אחר עם אנשים אחרים."
+
+#: ../extensions/cpsection/network/view.py:173
+msgid "Social Help Server:"
+msgstr "שרת עזרה חברתית:"
+
+#: ../extensions/cpsection/power/__init__.py:24
 msgid "Power"
 msgstr "חשמל"
 
 #: ../extensions/cpsection/power/model.py:90
-#, fuzzy
 msgid "Error in automatic pm argument, use on/off."
-msgstr "שגיאה בפרמטר ניהול חשמל אוטומטי, השתמש ב on/off."
+msgstr "שגיאה בפרמטר ניהול חשמל אוטומטי, יש להשתמש ב־on/off."
 
 #: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "ניהול חשמל"
 
-#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:5
-msgid "Automatic power management (increases battery life)"
-msgstr "ניהול חשמל אוטומטי (מאריך את חיי הסוללה)"
-
 #: ../extensions/cpsection/updater/__init__.py:21
-#, fuzzy
 msgid "Software Update"
-msgstr "עדכון תוכנה"
+msgstr "עדכון תכנה"
 
-#: ../extensions/cpsection/updater/view.py:65
+#: ../extensions/cpsection/updater/view.py:70
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
-msgstr ""
+msgstr "עדכוני תכנה מתקנים שגיאות, מצמצמים סיכוני אבטחה ומספקים תכונות חדשות."
 
-#: ../extensions/cpsection/updater/view.py:79
+#: ../extensions/cpsection/updater/view.py:84
 msgid "Update in progress..."
-msgstr ""
+msgstr "מתבצע עדכון…"
 
-#: ../extensions/cpsection/updater/view.py:106
-#, fuzzy
+#: ../extensions/cpsection/updater/view.py:119
 msgid "Checking for updates..."
-msgstr "מחפש עדכונים…"
+msgstr "מתבצע חיפוש אחר עדכונים…"
 
-#: ../extensions/cpsection/updater/view.py:108
+#: ../extensions/cpsection/updater/view.py:121
 msgid "Installing updates..."
-msgstr ""
+msgstr "העדכונים מותקנים…"
 
-#: ../extensions/cpsection/updater/view.py:137
-#, python-format
-#, python-format, fuzzy
+#: ../extensions/cpsection/updater/view.py:150
+#, python-format, python-format
 msgid "Checking %s..."
-msgstr "%s בודק את..."
+msgstr "%s נבדק…"
 
-#: ../extensions/cpsection/updater/view.py:139
-#, fuzzy
+#: ../extensions/cpsection/updater/view.py:152
 msgid "Looking for updates..."
-msgstr "מחפש עדכונים…"
+msgstr "מתבצע חיפוש אחר עדכונים…"
 
-#: ../extensions/cpsection/updater/view.py:141
-#, python-format
-#, python-format, fuzzy
+#: ../extensions/cpsection/updater/view.py:154
+#, python-format, python-format
 msgid "Downloading %s..."
-msgstr "%s מתקבל..."
+msgstr "%s מתקבל…"
 
-#: ../extensions/cpsection/updater/view.py:143
-#, python-format
-#, python-format, fuzzy
+#: ../extensions/cpsection/updater/view.py:156
+#, python-format, python-format
 msgid "Updating %s..."
-msgstr "%s מעדכן את..."
+msgstr "%s מתעדכן…"
 
-#: ../extensions/cpsection/updater/view.py:153
-#, fuzzy
+#: ../extensions/cpsection/updater/view.py:166
 msgid "Your software is up-to-date"
-msgstr "המערכת מעודכנת"
+msgstr "התכנה שלך עדכנית"
 
-#: ../extensions/cpsection/updater/view.py:155
+#: ../extensions/cpsection/updater/view.py:168
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ניתן להתקין עדכון אחד"
+msgstr[1] "ניתן להתקין %s עדכונים"
 
-#: ../extensions/cpsection/updater/view.py:184
+#: ../extensions/cpsection/updater/view.py:183
+msgid "Can't connect to the activity server"
+msgstr "לא ניתן להתחבר לשרת הפעילות"
+
+#: ../extensions/cpsection/updater/view.py:186
+msgid "Verify your connection to internet and try again, or try again later"
+msgstr "נא לוודא שהחיבור שלך לאינטרנט תקין ואז לנסות שוב."
+
+#: ../extensions/cpsection/updater/view.py:206
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "עדכון אחד הותקן"
+msgstr[1] "%s עדכונים הותקנו"
 
-#: ../extensions/cpsection/updater/view.py:266
+#: ../extensions/cpsection/updater/view.py:288
 msgid "Install selected"
-msgstr ""
+msgstr "התקנת הנבחרים"
 
-#: ../extensions/cpsection/updater/view.py:284
+#: ../extensions/cpsection/updater/view.py:307
 #, python-format
 msgid "Download size: %s"
-msgstr ""
+msgstr "גודל ההורדה: %s"
 
-#: ../extensions/cpsection/updater/view.py:373
+#: ../extensions/cpsection/updater/view.py:399
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
-msgstr ""
+msgstr "מגרסה %(current)s לגרסה %(new)s (גודל: %(size)s)"
 
-#: ../extensions/cpsection/updater/view.py:380
-#, python-format
-msgid "Version %(version)s (Size: %(size)s)"
-msgstr ""
-
-#. TRANS: download size is 0
-#: ../extensions/cpsection/updater/view.py:397
-#, fuzzy
-msgid "None"
-msgstr "סיום"
-
-#. TRANS: download size of very small updates
-#: ../extensions/cpsection/updater/view.py:400
-msgid "1 KB"
-msgstr ""
-
-#. TRANS: download size of small updates, e.g. '250 KB'
-#: ../extensions/cpsection/updater/view.py:403
-#, python-format
-msgid "%.0f KB"
-msgstr ""
-
-#. TRANS: download size of updates, e.g. '2.3 MB'
 #: ../extensions/cpsection/updater/view.py:406
 #, python-format
+msgid "Version %(version)s (Size: %(size)s)"
+msgstr "גרסה %(version)s (גודל: %(size)s)"
+
+#. TRANS: download size is 0
+#: ../extensions/cpsection/updater/view.py:423
+msgid "None"
+msgstr "אין"
+
+#. TRANS: download size of very small updates
+#: ../extensions/cpsection/updater/view.py:426
+msgid "1 KB"
+msgstr "ק״ב אחד"
+
+#. TRANS: download size of small updates, e.g. '250 KB'
+#: ../extensions/cpsection/updater/view.py:429
+#, python-format
+msgid "%.0f KB"
+msgstr "%.0f ק״ב"
+
+#. TRANS: download size of updates, e.g. '2.3 MB'
+#: ../extensions/cpsection/updater/view.py:432
+#, python-format
 msgid "%.1f MB"
-msgstr ""
+msgstr "%.1f מ״ב"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
-msgid "Configure your Web Services"
-msgstr ""
+msgid "Web Services"
+msgstr "שירותי אינטרנט"
 
-#: ../extensions/cpsection/webaccount/view.py:42
+#: ../extensions/cpsection/webaccount/view.py:65
 #, python-format
 msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
 msgstr ""
+"לא מותקנים שירותי אינטרנט.\n"
+"נא לבקר אצל %s לפרטים נוספים."
 
-#: ../extensions/deviceicon/battery.py:71
+#: ../extensions/deviceicon/audio.py:69
+msgid "My Audio"
+msgstr "השמע שלי"
+
+#: ../extensions/deviceicon/audio.py:330
+msgid "Speaker"
+msgstr "רמקול"
+
+#: ../extensions/deviceicon/audio.py:331
+msgid "Microphone"
+msgstr "מיקרופון"
+
+#: ../extensions/deviceicon/battery.py:69
 msgid "My Battery"
 msgstr "הסוללה שלי"
 
-#: ../extensions/deviceicon/battery.py:153
+#: ../extensions/deviceicon/battery.py:151
 msgid "Removed"
-msgstr "נמחק"
+msgstr "הוסרה"
 
-#: ../extensions/deviceicon/battery.py:156
+#: ../extensions/deviceicon/battery.py:154
 msgid "Charging"
 msgstr "בטעינה"
 
-#: ../extensions/deviceicon/battery.py:159
+#: ../extensions/deviceicon/battery.py:157
 msgid "Very little power remaining"
 msgstr "סוללה חלשה מאוד"
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
-#: ../extensions/deviceicon/battery.py:166
+#: ../extensions/deviceicon/battery.py:164
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "נותרו %(hour)d:%(min).2d"
 
-#: ../extensions/deviceicon/battery.py:169
+#: ../extensions/deviceicon/battery.py:167
 msgid "Charged"
 msgstr "הסוללה מלאה"
 
-#: ../extensions/deviceicon/frame.py:56
-msgid "Show my keyboard"
-msgstr ""
+#: ../extensions/deviceicon/display.py:187
+msgid "My Display"
+msgstr "התצוגה שלי"
 
-#: ../extensions/deviceicon/network.py:50
+#: ../extensions/deviceicon/display.py:189
+msgid "Take a screenshot"
+msgstr "צילום המסך"
+
+#: ../extensions/deviceicon/display.py:211
+msgid "Brightness"
+msgstr "בהירות"
+
+#: ../extensions/deviceicon/display.py:239
+msgid "Display"
+msgstr "תצוגה"
+
+#: ../extensions/deviceicon/frame.py:53
+msgid "Show my keyboard"
+msgstr "הצגת המקלדת שלי"
+
+#: ../extensions/deviceicon/network.py:48
 #, python-format
 msgid "IP address: %s"
-msgstr "כתובת IP: %s"
+msgstr "כתובת IP:‏ %s"
 
-#: ../extensions/deviceicon/network.py:82
-#: ../extensions/deviceicon/network.py:298
-#: ../src/jarabe/desktop/networkviews.py:135
-#: ../src/jarabe/desktop/networkviews.py:509
-#, fuzzy
+#: ../extensions/deviceicon/network.py:80
+#: ../extensions/deviceicon/network.py:297
+#: ../src/jarabe/desktop/networkviews.py:134
+#: ../src/jarabe/desktop/networkviews.py:510
 msgid "Disconnect"
-msgstr "התנתק"
+msgstr "ניתוק"
 
-#: ../extensions/deviceicon/network.py:107
+#: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:290
-#: ../src/jarabe/desktop/networkviews.py:251
-#: ../src/jarabe/desktop/networkviews.py:551
-#: ../src/jarabe/desktop/networkviews.py:693
+#: ../src/jarabe/desktop/networkviews.py:250
+#: ../src/jarabe/desktop/networkviews.py:552
+#: ../src/jarabe/desktop/networkviews.py:696
 msgid "Connecting..."
 msgstr "מתחבר..."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:112
-#: ../extensions/deviceicon/network.py:180
-#: ../src/jarabe/desktop/networkviews.py:258
-#: ../src/jarabe/desktop/networkviews.py:557
-#: ../src/jarabe/desktop/networkviews.py:699
+#: ../extensions/deviceicon/network.py:110
+#: ../extensions/deviceicon/network.py:181
+#: ../src/jarabe/desktop/networkviews.py:257
+#: ../src/jarabe/desktop/networkviews.py:558
+#: ../src/jarabe/desktop/networkviews.py:702
 msgid "Connected"
 msgstr "מחובר"
 
-#: ../extensions/deviceicon/network.py:125
+#: ../extensions/deviceicon/network.py:123
 msgid "No wireless connection"
-msgstr ""
+msgstr "אין חיבור אלחוטי"
 
-#: ../extensions/deviceicon/network.py:139
+#: ../extensions/deviceicon/network.py:137
+#: ../extensions/deviceicon/network.py:140
 msgid "Channel"
 msgstr "ערוץ"
 
-#: ../extensions/deviceicon/network.py:154
-msgid "Wired Network"
-msgstr "רשת קוית"
+#: ../extensions/deviceicon/network.py:138
+#: ../src/jarabe/journal/expandedentry.py:386
+#: ../src/jarabe/journal/listmodel.py:191
+#: ../src/jarabe/journal/listmodel.py:199
+msgid "Unknown"
+msgstr "לא ידוע"
 
-#: ../extensions/deviceicon/network.py:183
+#: ../extensions/deviceicon/network.py:156
+msgid "Wired Network"
+msgstr "רשת קווית"
+
+#: ../extensions/deviceicon/network.py:184
 msgid "Speed"
 msgstr "מהירות"
 
-#: ../extensions/deviceicon/network.py:208
+#: ../extensions/deviceicon/network.py:209
 msgid "Wireless modem"
-msgstr ""
+msgstr "מודם אלחוטי"
 
-#: ../extensions/deviceicon/network.py:276
-#, fuzzy
+#: ../extensions/deviceicon/network.py:278
 msgid "Please wait..."
-msgstr "אנא המתן..."
-
-#: ../extensions/deviceicon/network.py:281
-#: ../src/jarabe/desktop/networkviews.py:129
-#: ../src/jarabe/desktop/networkviews.py:503
-#: ../src/jarabe/desktop/networkviews.py:644
-#, fuzzy
-msgid "Connect"
-msgstr "התחבר"
+msgstr "נא להמתין…"
 
 #: ../extensions/deviceicon/network.py:282
-#, fuzzy
+#: ../src/jarabe/desktop/networkviews.py:128
+#: ../src/jarabe/desktop/networkviews.py:504
+#: ../src/jarabe/desktop/networkviews.py:647
+msgid "Connect"
+msgstr "התחברות"
+
+#: ../extensions/deviceicon/network.py:283
 msgid "Disconnected"
 msgstr "מנותק"
 
 #: ../extensions/deviceicon/network.py:289
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/keydialog.py:101
-#: ../src/jarabe/frame/activitiestray.py:625
-#: ../src/jarabe/frame/activitiestray.py:746
-#: ../src/jarabe/frame/activitiestray.py:778
-#: ../src/jarabe/journal/expandedentry.py:159
-#: ../src/jarabe/journal/journaltoolbox.py:480
-#: ../src/jarabe/journal/palettes.py:159
-#, fuzzy
+#: ../src/jarabe/frame/activitiestray.py:693
+#: ../src/jarabe/frame/activitiestray.py:815
+#: ../src/jarabe/frame/activitiestray.py:848
+#: ../src/jarabe/journal/expandedentry.py:157
+#: ../src/jarabe/journal/journaltoolbox.py:587
+#: ../src/jarabe/journal/palettes.py:166
 msgid "Cancel"
 msgstr "ביטול"
 
-#: ../extensions/deviceicon/network.py:328
+#: ../extensions/deviceicon/network.py:327
 msgid "Try connection again"
-msgstr ""
+msgstr "לנסות להתחבר שוב"
 
-#: ../extensions/deviceicon/network.py:331
-#, python-format
-#, python-format, fuzzy
+#: ../extensions/deviceicon/network.py:330
+#, python-format, python-format
 msgid "Error: %s"
 msgstr "שגיאה: %s"
 
-#: ../extensions/deviceicon/network.py:335
-#, python-format
-#, python-format, fuzzy
+#: ../extensions/deviceicon/network.py:334
+#, python-format, python-format
 msgid "Suggestion: %s"
-msgstr "הצעות: %s"
+msgstr "הצעה: %s"
 
 #: ../extensions/deviceicon/network.py:344
 #, python-format
 msgid "Connected for %s"
-msgstr ""
+msgstr "החיבור קיים במשך %s"
 
+#: ../extensions/deviceicon/network.py:349
 #: ../extensions/deviceicon/network.py:350
-#: ../extensions/deviceicon/network.py:351
 #, python-format
 msgid "%d KB"
-msgstr ""
+msgstr "%d ק״ב"
 
-#: ../extensions/deviceicon/network.py:356
+#: ../extensions/deviceicon/network.py:355
 msgid "Check your PIN/PUK configuration."
-msgstr ""
+msgstr "נא לבדוק את תצורת ה־PIN/PUK שלך."
 
-#: ../extensions/deviceicon/network.py:359
+#: ../extensions/deviceicon/network.py:358
 msgid "Check your Access Point Name (APN) configuration"
-msgstr ""
+msgstr "נא לבדוק את תצורת נקודת הגישה (APN) שלך"
 
-#: ../extensions/deviceicon/network.py:363
+#: ../extensions/deviceicon/network.py:362
 msgid "Check the Number configuration."
-msgstr ""
+msgstr "נא לבדוק את תצורת המספר."
 
-#: ../extensions/deviceicon/network.py:365
+#: ../extensions/deviceicon/network.py:364
 msgid "Check your configuration."
-msgstr ""
+msgstr "נא לבדוק את התצורה שלך."
 
-#: ../extensions/deviceicon/network.py:621
-#, fuzzy
+#: ../extensions/deviceicon/network.py:619
 msgid "Mesh Network"
-msgstr "רשת מְבֻזָּרת"
+msgstr "רשת מבוזרת"
 
-#: ../extensions/deviceicon/network.py:668
+#: ../extensions/deviceicon/network.py:665
 #, python-format
-#, fuzzy
 msgid "Mesh Network %s"
-msgstr "רשת מְבֻזָּרת %s"
+msgstr "רשת מבוזרת %s"
 
-#: ../extensions/deviceicon/network.py:788
+#: ../extensions/deviceicon/network.py:782
 msgid "No GSM connection available."
-msgstr ""
+msgstr "לא קיים חיבור GSM."
 
-#: ../extensions/deviceicon/network.py:789
-msgid "Create a connection in the control panel."
-msgstr ""
+#: ../extensions/deviceicon/network.py:783
+msgid "Create a connection in My Settings."
+msgstr "יש ליצור חיבור בהגדרת שלי."
 
-#: ../extensions/deviceicon/speech.py:52
+#: ../extensions/deviceicon/speech.py:49
 msgid "Speech"
-msgstr ""
+msgstr "דיבור"
 
-#: ../extensions/deviceicon/speech.py:76
-#: ../extensions/deviceicon/speech.py:150
-#: ../extensions/deviceicon/speech.py:155
+#: ../extensions/deviceicon/speech.py:72
+#: ../extensions/deviceicon/speech.py:147
+#: ../extensions/deviceicon/speech.py:152
 msgid "Say selected text"
-msgstr ""
+msgstr "לומר את המשפט הנבחר"
 
-#: ../extensions/deviceicon/speech.py:83
+#: ../extensions/deviceicon/speech.py:80
 msgid "Stop playback"
-msgstr ""
+msgstr "עצירת ההשמעה"
 
-#: ../extensions/deviceicon/speech.py:92
+#: ../extensions/deviceicon/speech.py:89
 msgid "Pitch"
-msgstr ""
+msgstr "גובה"
 
-#: ../extensions/deviceicon/speech.py:107
+#: ../extensions/deviceicon/speech.py:104
 msgid "Rate"
-msgstr ""
+msgstr "קצב"
 
-#: ../extensions/deviceicon/speech.py:145
+#: ../extensions/deviceicon/speech.py:142
 msgid "Pause playback"
-msgstr ""
+msgstr "השהיית נגינה"
 
-#: ../extensions/deviceicon/speaker.py:61
-msgid "My Speakers"
-msgstr "הרמקולים שלי"
-
-#: ../extensions/deviceicon/speaker.py:136
-msgid "Unmute"
-msgstr "ביטול השתקה"
-
-#: ../extensions/deviceicon/speaker.py:139
-msgid "Mute"
-msgstr "השתק"
-
-#: ../extensions/deviceicon/touchpad.py:38
+#: ../extensions/deviceicon/touchpad.py:36
 msgid "finger"
-msgstr ""
+msgstr "אצבע"
 
-#: ../extensions/deviceicon/touchpad.py:38
+#: ../extensions/deviceicon/touchpad.py:36
 msgid "stylus"
-msgstr ""
+msgstr "עט מגע"
 
-#: ../extensions/deviceicon/touchpad.py:64
+#: ../extensions/deviceicon/touchpad.py:61
 msgid "My touchpad"
-msgstr ""
+msgstr "משטח המגע שלי"
 
-#: ../extensions/deviceicon/volume.py:72 ../src/jarabe/view/palettes.py:184
-#, fuzzy
+#: ../extensions/deviceicon/volume.py:62 ../src/jarabe/view/palettes.py:210
 msgid "Show contents"
-msgstr "הצג תוכן"
-
-#: ../extensions/globalkey/screenshot.py:61
-#, fuzzy
-msgid "Mesh"
-msgstr "רשת מְבֻזָּרת"
-
-#: ../extensions/globalkey/screenshot.py:63
-#: ../src/jarabe/desktop/homewindow.py:221
-#: ../src/jarabe/frame/zoomtoolbar.py:53
-msgid "Group"
-msgstr "קבוצה"
-
-#: ../extensions/globalkey/screenshot.py:65
-#: ../src/jarabe/desktop/homewindow.py:214
-#: ../src/jarabe/desktop/viewtoolbar.py:73
-#: ../src/jarabe/frame/zoomtoolbar.py:57
-msgid "Home"
-msgstr "בית"
-
-#: ../extensions/globalkey/screenshot.py:71
-#: ../src/jarabe/frame/zoomtoolbar.py:62
-msgid "Activity"
-msgstr "פעילות"
-
-#: ../extensions/globalkey/screenshot.py:74
-msgid "Screenshot"
-msgstr "צילום מסך"
-
-#: ../extensions/globalkey/screenshot.py:76
-#, python-format
-msgid "Screenshot of \"%s\""
-msgstr "צילום מסך של \"%s\""
-
-#: ../data/sugar.schemas.in.h:1
-msgid ""
-"\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
-"long name."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:2
-msgid ""
-"A unix timestamp (seconds since epoch) of the last successful activity "
-"update."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:3
-msgid ""
-"Activity update backend module, followed by a period, followed by the class "
-"name."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:4
-msgid "Activity update backend."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:6
-msgid "Automatic update frequency."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:7
-msgid "Backup URL"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:8
-msgid "Bundle IDs of protected activities"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:9
-msgid ""
-"Color for the XO icon that is used throughout the desktop. The string is "
-"composed of the stroke color and fill color, format is that of rgb colors. "
-"Example: #AC32FF,#9A5200"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:10
-msgid "Corner Delay"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:11
-msgid "Default font face"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:12
-msgid "Default font size"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:13
-msgid "Default nick"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:14
-msgid "Delay for the activation of the frame using the corners."
-msgstr ""
+msgstr "הצגת תוכן"
 
 #: ../data/sugar.schemas.in.h:15
-msgid "Delay for the activation of the frame using the edges."
-msgstr ""
+msgid "Favorites Layout"
+msgstr "פריסת מועדפים"
 
 #: ../data/sugar.schemas.in.h:16
-msgid "Edge Delay"
-msgstr ""
+msgid "Layout of the favorites view."
+msgstr "פריסת תצוגת המועדפים."
 
 #: ../data/sugar.schemas.in.h:17
-#, fuzzy
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr "ניהול חשמל קיצוני (ניתוק רשת אלחוטית, מאריך את חיי הסוללה)"
+msgid "Favorites resume mode"
+msgstr "מצב המשך במועדפים"
 
 #: ../data/sugar.schemas.in.h:18
-msgid "Favorites Layout"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:19
-msgid "Favorites resume mode"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:20
-msgid "Font face that is used throughout the desktop."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:21
-msgid "Font size that is used throughout the desktop."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:22
-msgid ""
-"Frequency of automatic activity updates, measured in days. 0 means disabled."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:23
-msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:24
-msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:25
-msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:26
-msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:27
-msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:28
-msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:29
-msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:30
-msgid ""
-"GSM network personal identification number configuration (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:31
-msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:32
-msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:33
-msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:34
-msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:35
-msgid ""
-"If TRUE, Sugar will make us searchable for the other users of the Jabber "
-"server."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:36
-msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:37
-msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:38
-msgid ""
-"If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
-"Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
-"hoc network."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:39
-msgid "Jabber Server"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:40
-#, fuzzy
-msgid "Keyboard layouts"
-msgstr "פריסת מקלדת"
-
-#: ../data/sugar.schemas.in.h:41
-#, fuzzy
-msgid "Keyboard model"
-msgstr "מודל מקלדת"
-
-#: ../data/sugar.schemas.in.h:42
-msgid "Keyboard options"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:43
-msgid "Layout of the favorites view."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:44
-msgid ""
-"List of keyboard layouts. Each entry should be in the form layout(variant)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:45
-msgid "List of keyboard options."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:46
-msgid "Microformat update URL."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:47
-msgid "Pitch value for the speech sugar service"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:48
-msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:49
-msgid "Power Automatic"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:50
-msgid "Power Extreme"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:51
-msgid "Publish to Gadget"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:52
-msgid "Rate value for the speech sugar service"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:53
-msgid "Rate value used by the speech service in Sugar"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:54
-msgid "Setting for muting the sound device."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:55
-msgid "Show Log out"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:56
-msgid "Show Restart"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:57
-msgid "Show Sugar Ad-hoc networks"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:58
-msgid "Sound Muted"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:59
-msgid "The keyboard model to be used"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:60
-msgid "Timestamp of last activity update."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:62
-msgid "Timezone setting for the system."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:63
-msgid "URL of the jabber server to use."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:64
-msgid ""
-"URL used by the microformat update backend for activity update information."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:65
-msgid "URL where the backup is saved to."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:66
-msgid "User Color"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:67
-#, fuzzy
-msgid "User Name"
-msgstr "שם משתמש"
-
-#: ../data/sugar.schemas.in.h:68
-msgid "User name that is used throughout the desktop."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:69
-msgid ""
-"Users will not be allowed to erase these activities through the list view."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:70
-msgid "Volume Level"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:71
-msgid "Volume level for the sound device."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:72
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
+"כאשר המצב מכוון להמשך, לחיצה על סמל מועדף תרגום לרשומה האחרונה של הפעילות "
+"הזאת להמשיך."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -1075,988 +1281,1159 @@ msgid ""
 msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
-msgid "To apply your changes you have to restart Sugar.\n"
-msgstr "כדי שהשינויים יכנסו לתוקף יש לאתחל את הממשק הגרפי.\n"
+msgid ""
+"To apply your changes you have to restart Sugar.\n"
+"Hit ctrl+alt+erase on the keyboard to trigger a restart."
+msgstr ""
+"כדי להחיל את השינויים שלך עליך להפעיל מחדש את סוכר.\n"
+"יש ללחוץ על ctrl+alt+erase במקלדת כדי להניע הפעלה מחדש."
 
-#: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:187
-#: ../src/jarabe/journal/palettes.py:350 ../src/jarabe/journal/palettes.py:410
-#: ../src/jarabe/journal/volumestoolbar.py:302
-#, fuzzy
+#: ../src/jarabe/controlpanel/gui.py:373 ../src/jarabe/journal/palettes.py:194
+#: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
+#: ../src/jarabe/journal/volumestoolbar.py:304
 msgid "Warning"
 msgstr "אזהרה"
 
-#: ../src/jarabe/controlpanel/gui.py:324
-#: ../src/jarabe/controlpanel/sectionview.py:41
-#, fuzzy
+#: ../src/jarabe/controlpanel/gui.py:374
+#: ../src/jarabe/controlpanel/sectionview.py:45
 msgid "Changes require restart"
 msgstr "שינויים דורשים הפעלה מחדש"
 
-#: ../src/jarabe/controlpanel/gui.py:328
-#, fuzzy
+#: ../src/jarabe/controlpanel/gui.py:379
 msgid "Cancel changes"
 msgstr "ביטול שינויים"
 
-#: ../src/jarabe/controlpanel/gui.py:333
-#, fuzzy
+#: ../src/jarabe/controlpanel/gui.py:384
 msgid "Later"
 msgstr "אחר כך"
 
-#: ../src/jarabe/controlpanel/gui.py:337
-#, fuzzy
+#: ../src/jarabe/controlpanel/gui.py:388
 msgid "Restart now"
-msgstr "הפעל מחדש עכשיו"
+msgstr "הפעלה מחדש עכשיו"
+
+#: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
+msgid "An activity is not responding."
+msgstr "פעילות אינה מגיבה."
+
+#: ../src/jarabe/controlpanel/gui.py:420 ../src/jarabe/view/buddymenu.py:138
+msgid "You may lose unsaved work if you continue."
+msgstr "עבודה שלא שמרת עשויה להימחק אם הפעולה תמשיך."
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
-#: ../src/jarabe/journal/journaltoolbox.py:89
+#: ../src/jarabe/journal/journaltoolbox.py:94
 #, python-format
 msgid "Search in %s"
-msgstr ""
+msgstr "חיפוש בתוך %s"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
-msgstr ""
+msgstr "הגדרות"
 
-#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:211
-#, fuzzy
+#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:349
 msgid "Done"
 msgstr "סיום"
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
-#: ../src/jarabe/desktop/favoritesview.py:374
-#: ../src/jarabe/desktop/keydialog.py:105
-#, fuzzy
 msgid "Ok"
-msgstr "אישור"
+msgstr "בסדר"
 
-#: ../src/jarabe/desktop/activitieslist.py:282
-#, python-format
-#, python-format, fuzzy
+#: ../src/jarabe/desktop/activitieslist.py:340
+#, python-format, python-format
 msgid "Version %s"
-msgstr "גירסה %s"
+msgstr "גרסה %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:385
-#: ../src/jarabe/journal/listview.py:475 ../src/jarabe/journal/iconview.py:299
-#, fuzzy
+#: ../src/jarabe/desktop/activitieslist.py:424
+#: ../src/jarabe/journal/listview.py:566 ../src/jarabe/journal/iconview.py:301
 msgid "Clear search"
-msgstr "ניקוי מחרוזת חיפוש"
+msgstr "פינוי מחרוזת חיפוש"
 
-#: ../src/jarabe/desktop/activitieslist.py:469
+#: ../src/jarabe/desktop/activitieslist.py:510
 msgid "No matching activities"
-msgstr ""
+msgstr "אין פעילויות תואמות"
 
-#: ../src/jarabe/desktop/activitieslist.py:505
-#, fuzzy
+#: ../src/jarabe/desktop/activitieslist.py:546
 msgid "Confirm erase"
 msgstr "אישור מחיקה"
 
-#: ../src/jarabe/desktop/activitieslist.py:507
+#: ../src/jarabe/desktop/activitieslist.py:548
 #, python-format
-#, fuzzy
 msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr "אישור מחיקה: האם ברצונך למחוק לתמיד את %s?"
+msgstr "אישור מחיקה: למחוק לצמיתות את %s?"
 
-#: ../src/jarabe/desktop/activitieslist.py:511
+#: ../src/jarabe/desktop/activitieslist.py:552
 #: ../src/jarabe/frame/clipboardmenu.py:65
-#: ../src/jarabe/view/viewsource.py:288
-#, fuzzy
+#: ../src/jarabe/view/viewsource.py:383
 msgid "Keep"
-msgstr "שמור"
+msgstr "להשאיר"
 
-#: ../src/jarabe/desktop/activitieslist.py:514
-#: ../src/jarabe/desktop/activitieslist.py:578
-#: ../src/jarabe/journal/expandedentry.py:153
-#: ../src/jarabe/journal/journaltoolbox.py:443
-#: ../src/jarabe/journal/journaltoolbox.py:475
-#: ../src/jarabe/journal/journaltoolbox.py:689
-#: ../src/jarabe/journal/journaltoolbox.py:695
-#: ../src/jarabe/journal/palettes.py:132 ../src/jarabe/journal/palettes.py:154
-#, fuzzy
+#: ../src/jarabe/desktop/activitieslist.py:555
+#: ../src/jarabe/desktop/activitieslist.py:625
+#: ../src/jarabe/journal/expandedentry.py:151
+#: ../src/jarabe/journal/journaltoolbox.py:545
+#: ../src/jarabe/journal/journaltoolbox.py:582
+#: ../src/jarabe/journal/journaltoolbox.py:806
+#: ../src/jarabe/journal/journaltoolbox.py:812
+#: ../src/jarabe/journal/palettes.py:138 ../src/jarabe/journal/palettes.py:161
 msgid "Erase"
-msgstr "מחיקה"
+msgstr "למחוק"
 
-#: ../src/jarabe/desktop/activitieslist.py:594
-#, fuzzy
+#: ../src/jarabe/desktop/activitieslist.py:641
 msgid "Remove favorite"
-msgstr "הורד מהמועדפים"
+msgstr "הסרה מהמועדפים"
 
-#: ../src/jarabe/desktop/activitieslist.py:598
-#, fuzzy
+#: ../src/jarabe/desktop/activitieslist.py:645
 msgid "Make favorite"
-msgstr "הוסף למועדפים"
+msgstr "הוספה למועדפים"
 
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:199
+#: ../src/jarabe/desktop/favoriteslayout.py:209
 msgid "Freeform"
-msgstr ""
+msgstr "צורה חופשית"
 
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:295
+#: ../src/jarabe/desktop/favoriteslayout.py:305
 msgid "Ring"
-msgstr ""
+msgstr "טבעת"
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:459
-#, fuzzy
+#: ../src/jarabe/desktop/favoriteslayout.py:469
 msgid "Spiral"
-msgstr "ספירלות"
+msgstr "ספירלה"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:527
+#: ../src/jarabe/desktop/favoriteslayout.py:537
 msgid "Box"
-msgstr ""
+msgstr "תיבה"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:570
+#: ../src/jarabe/desktop/favoriteslayout.py:580
 msgid "Triangle"
-msgstr ""
+msgstr "משולש"
 
-#: ../src/jarabe/desktop/favoritesview.py:365
-#, fuzzy
+#: ../src/jarabe/desktop/favoritesview.py:376
+msgid "Registration"
+msgstr "הרשמה"
+
+#: ../src/jarabe/desktop/favoritesview.py:377
+msgid "Please wait, searching for your school server."
+msgstr "נא להמתין, מתבצע חיפוש אחר שרת בית הספר שלך."
+
+#: ../src/jarabe/desktop/favoritesview.py:387
 msgid "Registration Failed"
 msgstr "ההרשמה נכשלה"
 
-#: ../src/jarabe/desktop/favoritesview.py:368
-#, fuzzy
+#: ../src/jarabe/desktop/favoritesview.py:390
 msgid "Registration Successful"
 msgstr "ההרשמה הצליחה"
 
-#: ../src/jarabe/desktop/favoritesview.py:369
+#: ../src/jarabe/desktop/favoritesview.py:391
 msgid "You are now registered with your school server."
-msgstr ""
+msgstr "נרשמת בהצלחה לשרת בית הספר שלך."
 
-#: ../src/jarabe/desktop/favoritesview.py:653
-#, fuzzy
+#: ../src/jarabe/desktop/favoritesview.py:680
 msgid "Register"
 msgstr "הרשמה"
 
-#: ../src/jarabe/desktop/favoritesview.py:656
-#: ../src/jarabe/desktop/favoritesview.py:672
+#: ../src/jarabe/desktop/favoritesview.py:682
 msgid "Register again"
-msgstr ""
+msgstr "להירשם שוב"
 
-#: ../src/jarabe/desktop/homewindow.py:228
+#: ../src/jarabe/desktop/homewindow.py:255
+#: ../src/jarabe/desktop/viewtoolbar.py:73
+#: ../src/jarabe/frame/zoomtoolbar.py:57 ../src/jarabe/model/screenshot.py:63
+#: ../src/jarabe/view/viewhelp.py:76
+msgid "Home"
+msgstr "בית"
+
+#: ../src/jarabe/desktop/homewindow.py:262
+#: ../src/jarabe/frame/zoomtoolbar.py:53 ../src/jarabe/model/screenshot.py:61
+#: ../src/jarabe/view/viewhelp.py:73
+msgid "Group"
+msgstr "קבוצה"
+
+#: ../src/jarabe/desktop/homewindow.py:269
 #: ../src/jarabe/frame/zoomtoolbar.py:49
-#, fuzzy
 msgid "Neighborhood"
-msgstr "סביבה"
+msgstr "שכונה"
 
-#: ../src/jarabe/desktop/keydialog.py:94
+#: ../src/jarabe/desktop/keydialog.py:92
 #, python-format
 msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
+"נדרש מפתח הצפנה אלחוטי לטובת\n"
+" הרשת האלחוטית ‚%s‘."
 
-#: ../src/jarabe/desktop/keydialog.py:150
+#: ../src/jarabe/desktop/keydialog.py:141
 msgid "Key Type:"
-msgstr ""
+msgstr "סוג המפתח:"
 
-#: ../src/jarabe/desktop/keydialog.py:170
-#, fuzzy
+#: ../src/jarabe/desktop/keydialog.py:161
 msgid "Authentication Type:"
-msgstr "סוג אימות:"
+msgstr "סוג האימות:"
+
+#: ../src/jarabe/desktop/keydialog.py:224
+msgid "WPA & WPA2 Personal"
+msgstr "WPA ו־WPA2 אישי"
 
 #: ../src/jarabe/desktop/keydialog.py:233
-msgid "WPA & WPA2 Personal"
-msgstr ""
-
-#: ../src/jarabe/desktop/keydialog.py:242
 msgid "Wireless Security:"
-msgstr ""
+msgstr "אבטחה אלחוטית:"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:548
-#: ../src/jarabe/journal/palettes.py:77 ../src/jarabe/view/palettes.py:96
-#, fuzzy
+#: ../src/jarabe/journal/journaltoolbox.py:659
+#: ../src/jarabe/journal/palettes.py:83 ../src/jarabe/view/palettes.py:98
 msgid "Resume"
-msgstr "חדֵּש"
+msgstr "חידוש"
 
 #: ../src/jarabe/desktop/meshbox.py:89
-#: ../src/jarabe/frame/activitiestray.py:190
-#, fuzzy
+#: ../src/jarabe/frame/activitiestray.py:208
 msgid "Join"
 msgstr "הצטרפות"
 
-#: ../src/jarabe/desktop/networkviews.py:497
+#: ../src/jarabe/desktop/networkviews.py:499
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr ""
+msgstr "רשת נקודה לנקודה %d"
 
-#: ../src/jarabe/desktop/networkviews.py:639
+#: ../src/jarabe/desktop/networkviews.py:643
 #, python-format
 msgid "Mesh Network %d"
-msgstr "רשת מְבֻזָּרת %d"
+msgstr "רשת מבוזרת %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:144
-#, fuzzy
 msgid "Cannot connect to the server."
-msgstr "התחברות לשרת נכשלה."
+msgstr "לא ניתן להתחבר לשרת."
 
 #: ../src/jarabe/desktop/schoolserver.py:151
-#, fuzzy
 msgid "The server could not complete the request."
-msgstr "השרת נכשל במילוי הבקשה."
+msgstr "לשרת לא הייתה אפשרות להשלים את הבקשה."
 
 #: ../src/jarabe/desktop/viewtoolbar.py:95
-#, fuzzy
 msgid "List view"
 msgstr "תצוגת רשימה"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:97
-#: ../src/jarabe/desktop/viewtoolbar.py:195
-#: ../src/jarabe/desktop/viewtoolbar.py:209
+#: ../src/jarabe/desktop/viewtoolbar.py:196
+#: ../src/jarabe/desktop/viewtoolbar.py:210
 #, python-format
 msgid "<Ctrl>%d"
 msgstr "<Ctrl>%d"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:208
-#, python-format
-msgid "Favorites view %d"
-msgstr "תצוגת מעודפים %d"
-
-#: ../src/jarabe/frame/activitiestray.py:195
-#: ../src/jarabe/frame/activitiestray.py:593
-#, fuzzy
+#: ../src/jarabe/frame/activitiestray.py:213
+#: ../src/jarabe/frame/activitiestray.py:657
 msgid "Decline"
-msgstr "לדחות"
+msgstr "דחייה"
 
-#: ../src/jarabe/frame/activitiestray.py:534
+#: ../src/jarabe/frame/activitiestray.py:598
 #, python-format
 msgid "%dB"
-msgstr ""
+msgstr "%d ב׳"
 
-#: ../src/jarabe/frame/activitiestray.py:536
+#: ../src/jarabe/frame/activitiestray.py:600
 #, python-format
 msgid "%dKB"
-msgstr ""
+msgstr "%d ק״ב"
 
-#: ../src/jarabe/frame/activitiestray.py:538
+#: ../src/jarabe/frame/activitiestray.py:602
 #, python-format
 msgid "%dMB"
-msgstr ""
+msgstr "%d מ״ב"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
-#: ../src/jarabe/frame/activitiestray.py:556
+#: ../src/jarabe/frame/activitiestray.py:620
 #, python-format
 msgid "%s of %s"
-msgstr ""
+msgstr "%s מתוך %s"
 
-#: ../src/jarabe/frame/activitiestray.py:570
+#: ../src/jarabe/frame/activitiestray.py:634
 #, python-format
 msgid "Transfer from %s"
-msgstr ""
+msgstr "העברה מ־%s"
 
-#: ../src/jarabe/frame/activitiestray.py:585
+#: ../src/jarabe/frame/activitiestray.py:648
+#: ../extensions/cpsection/backup/view.py:324
 msgid "Accept"
-msgstr ""
+msgstr "קבלה"
 
-#: ../src/jarabe/frame/activitiestray.py:653
-#: ../src/jarabe/frame/activitiestray.py:666
-#: ../src/jarabe/frame/activitiestray.py:807
-#, fuzzy
+#: ../src/jarabe/frame/activitiestray.py:722
+#: ../src/jarabe/frame/activitiestray.py:736
+#: ../src/jarabe/frame/activitiestray.py:878
 msgid "Dismiss"
-msgstr "שחרר"
+msgstr "התעלמות"
 
-#: ../src/jarabe/frame/activitiestray.py:680
+#: ../src/jarabe/frame/activitiestray.py:750
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "הצד השני ביטל את העברת הקבצים"
 
-#: ../src/jarabe/frame/activitiestray.py:730
+#: ../src/jarabe/frame/activitiestray.py:800
 #, python-format
 msgid "Transfer to %s"
-msgstr ""
+msgstr "העברה אל %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:54
-#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr "מחק"
+msgstr "הסרה"
 
 #: ../src/jarabe/frame/clipboardmenu.py:60
 #: ../src/jarabe/frame/clipboardmenu.py:83
-#, fuzzy
 msgid "Open"
-msgstr "פתח"
+msgstr "פתיחה"
 
 #: ../src/jarabe/frame/clipboardmenu.py:88
-#, fuzzy
 msgid "Open with"
 msgstr "פתיחה באמצעות"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
 msgid "%s clipping"
-msgstr ""
+msgstr "חיתוך %s"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
-msgstr ""
+msgstr "F1"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
-msgstr ""
+msgstr "F3"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:62 ../src/jarabe/model/screenshot.py:69
+msgid "Activity"
+msgstr "פעילות"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
-msgstr ""
+msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:106
+#: ../src/jarabe/intro/window.py:135
 msgid "Name:"
 msgstr "שם:"
 
-#: ../src/jarabe/intro/window.py:136
+#: ../src/jarabe/intro/window.py:174
 msgid "Click to change color:"
 msgstr "לחץ כדי לשנות צבע"
 
-#: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:95
-#, fuzzy
+#: ../src/jarabe/intro/window.py:337 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
-msgstr "חזור"
+msgstr "חזרה"
 
-#: ../src/jarabe/intro/window.py:214
-#, fuzzy
+#: ../src/jarabe/intro/window.py:352
 msgid "Next"
 msgstr "הבא"
 
-#: ../src/jarabe/journal/expandedentry.py:155
-#: ../src/jarabe/journal/journaltoolbox.py:477
-#: ../src/jarabe/journal/palettes.py:156
+#: ../src/jarabe/intro/agepicker.py:38
+msgid "Select grade:"
+msgstr "בחירת רמה:"
+
+#: ../src/jarabe/intro/agepicker.py:39
+msgid "Preschool"
+msgstr "טרום טרום חובה"
+
+#: ../src/jarabe/intro/agepicker.py:39
+msgid "Kindergarten"
+msgstr "גן חובה"
+
+#: ../src/jarabe/intro/agepicker.py:39
+msgid "1st Grade"
+msgstr "כיתה א׳"
+
+#: ../src/jarabe/intro/agepicker.py:40
+msgid "2nd Grade"
+msgstr "כיתה ב׳"
+
+#: ../src/jarabe/intro/agepicker.py:40
+msgid "3rd Grade"
+msgstr "כיתה ג׳"
+
+#: ../src/jarabe/intro/agepicker.py:40
+msgid "4th Grade"
+msgstr "כיתה ד׳"
+
+#: ../src/jarabe/intro/agepicker.py:41
+msgid "5th Grade"
+msgstr "כיתה ה"
+
+#: ../src/jarabe/intro/agepicker.py:41
+msgid "6th Grade"
+msgstr "כיתה ו׳"
+
+#: ../src/jarabe/intro/agepicker.py:41
+msgid "7th Grade"
+msgstr "כיתה ז׳"
+
+#: ../src/jarabe/intro/agepicker.py:42
+msgid "High School"
+msgstr "תיכון"
+
+#: ../src/jarabe/intro/agepicker.py:42
+msgid "Adult"
+msgstr "בגיר"
+
+#: ../src/jarabe/journal/expandedentry.py:153
+#: ../src/jarabe/journal/journaltoolbox.py:584
+#: ../src/jarabe/journal/palettes.py:163
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
-msgstr ""
+msgstr "למחוק את „%s“ לצמיתות?"
 
 #: ../src/jarabe/journal/expandedentry.py:296
-#: ../src/jarabe/journal/listmodel.py:159 ../src/jarabe/journal/model.py:721
-#: ../src/jarabe/journal/palettes.py:70 ../src/jarabe/journal/palettes.py:597
-#: ../src/jarabe/journal/volumestoolbar.py:131
+#: ../src/jarabe/journal/listmodel.py:185 ../src/jarabe/journal/model.py:794
+#: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/journal/palettes.py:621
+#: ../src/jarabe/journal/volumestoolbar.py:134
 #: ../src/jarabe/journal/iconmodel.py:110
-#, fuzzy
 msgid "Untitled"
 msgstr "ללא כותרת"
 
-#: ../src/jarabe/journal/expandedentry.py:367
-#, fuzzy
+#: ../src/jarabe/journal/expandedentry.py:366
 msgid "No preview"
 msgstr "אין תצוגה מקדימה"
 
-#: ../src/jarabe/journal/expandedentry.py:382
+#: ../src/jarabe/journal/expandedentry.py:386
 #, python-format
 msgid "Kind: %s"
-msgstr ""
+msgstr "סוג: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:382
-#: ../src/jarabe/journal/listmodel.py:165
-#: ../src/jarabe/journal/listmodel.py:173
-msgid "Unknown"
-msgstr ""
-
-#: ../src/jarabe/journal/expandedentry.py:383
-#, python-format
-#, python-format, fuzzy
+#: ../src/jarabe/journal/expandedentry.py:387
+#, python-format, python-format
 msgid "Date: %s"
 msgstr "תאריך: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:384
-#, python-format
-#, python-format, fuzzy
+#: ../src/jarabe/journal/expandedentry.py:388
+#, python-format, python-format
 msgid "Size: %s"
 msgstr "גודל: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:411
-#: ../src/jarabe/journal/misc.py:109
-#, fuzzy
+#: ../src/jarabe/journal/expandedentry.py:412
+#: ../src/jarabe/journal/misc.py:131
 msgid "No date"
 msgstr "אין תאריך"
 
-#: ../src/jarabe/journal/expandedentry.py:420
+#: ../src/jarabe/journal/expandedentry.py:421
 msgid "Participants:"
-msgstr ""
+msgstr "משתתפים:"
 
-#: ../src/jarabe/journal/expandedentry.py:458
-#, fuzzy
+#: ../src/jarabe/journal/expandedentry.py:459
 msgid "Description:"
 msgstr "תיאור:"
 
-#: ../src/jarabe/journal/expandedentry.py:464
-#, fuzzy
+#: ../src/jarabe/journal/expandedentry.py:465
 msgid "Tags:"
 msgstr "תגיות:"
 
-#: ../src/jarabe/journal/expandedentry.py:469
+#: ../src/jarabe/journal/expandedentry.py:470
 msgid "Comments:"
-msgstr ""
+msgstr "הערות:"
 
-#: ../src/jarabe/journal/journalactivity.py:140
-#: ../src/jarabe/journal/journaltoolbox.py:89
-#: ../src/jarabe/journal/palettes.py:248
-#: ../src/jarabe/journal/volumestoolbar.py:363
+#: ../src/jarabe/journal/journalactivity.py:182
+#: ../src/jarabe/journal/journaltoolbox.py:94
+#: ../src/jarabe/journal/palettes.py:260
+#: ../src/jarabe/journal/volumestoolbar.py:349
+#: ../src/jarabe/view/viewhelp.py:79
 msgid "Journal"
 msgstr "יומן"
 
-#: ../src/jarabe/journal/journaltoolbox.py:98
+#: ../src/jarabe/journal/journaltoolbox.py:103
 msgid "Favorite entries"
-msgstr ""
+msgstr "רשומות מועדפות"
 
-#: ../src/jarabe/journal/journaltoolbox.py:134
-msgid "Anytime"
-msgstr ""
-
-#: ../src/jarabe/journal/journaltoolbox.py:136
-#, fuzzy
-msgid "Today"
-msgstr "היום"
-
-#: ../src/jarabe/journal/journaltoolbox.py:138
-msgid "Since yesterday"
-msgstr ""
-
-#. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:140
-msgid "Past week"
-msgstr ""
-
-#. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:142
-msgid "Past month"
-msgstr ""
-
-#. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:144
-msgid "Past year"
-msgstr ""
-
-#: ../src/jarabe/journal/journaltoolbox.py:151
-msgid "Anyone"
-msgstr ""
-
-#: ../src/jarabe/journal/journaltoolbox.py:153
-msgid "My friends"
-msgstr ""
-
-#: ../src/jarabe/journal/journaltoolbox.py:154
-msgid "My class"
-msgstr ""
-
-#: ../src/jarabe/journal/journaltoolbox.py:327
+#. TRANS: Item on a palette that filters by entry type.
+#: ../src/jarabe/journal/journaltoolbox.py:112
+#: ../src/jarabe/journal/journaltoolbox.py:403
+#: ../src/jarabe/journal/journaltoolbox.py:479
 msgid "Anything"
-msgstr ""
+msgstr "הכול"
 
-#: ../src/jarabe/journal/journaltoolbox.py:419
-#: ../src/jarabe/journal/palettes.py:99
-#, fuzzy
+#: ../src/jarabe/journal/journaltoolbox.py:118
+#: ../src/jarabe/journal/journaltoolbox.py:165
+#: ../src/jarabe/journal/journaltoolbox.py:483
+msgid "Anytime"
+msgstr "בכל זמן שהוא"
+
+#: ../src/jarabe/journal/journaltoolbox.py:172
+msgid "Since yesterday"
+msgstr "מאז אתמול"
+
+#: ../src/jarabe/journal/journaltoolbox.py:175
+msgid "Past week"
+msgstr "בשבוע שחלף"
+
+#: ../src/jarabe/journal/journaltoolbox.py:178
+msgid "Past month"
+msgstr "בחודש שחלף"
+
+#: ../src/jarabe/journal/journaltoolbox.py:181
+msgid "Past year"
+msgstr "בשנה שחלפה"
+
+#: ../src/jarabe/journal/journaltoolbox.py:521
+#: ../src/jarabe/journal/palettes.py:105
 msgid "Copy to"
-msgstr "העתק אל"
+msgstr "העתקה אל"
 
-#: ../src/jarabe/journal/journaltoolbox.py:427
-#: ../src/jarabe/journal/palettes.py:110 ../src/jarabe/view/viewsource.py:282
-#, fuzzy
+#: ../src/jarabe/journal/journaltoolbox.py:529
+#: ../src/jarabe/journal/palettes.py:116 ../src/jarabe/view/viewsource.py:379
 msgid "Duplicate"
-msgstr "שכפל"
+msgstr "שכפול"
 
-#: ../src/jarabe/journal/journaltoolbox.py:433
+#: ../src/jarabe/journal/journaltoolbox.py:535
 msgid "Refresh"
-msgstr ""
+msgstr "רענון"
 
-#: ../src/jarabe/journal/journaltoolbox.py:470
-#: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
-#: ../src/jarabe/journal/volumestoolbar.py:310
+#: ../src/jarabe/journal/journaltoolbox.py:577
+#: ../src/jarabe/journal/palettes.py:156 ../src/jarabe/journal/palettes.py:374
+#: ../src/jarabe/journal/volumestoolbar.py:312
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr ""
+msgstr "שגיאה בעת העתקת הרשומה. %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:471
-#: ../src/jarabe/journal/palettes.py:150 ../src/jarabe/journal/palettes.py:361
-#: ../src/jarabe/journal/volumestoolbar.py:311
+#: ../src/jarabe/journal/journaltoolbox.py:578
+#: ../src/jarabe/journal/palettes.py:157 ../src/jarabe/journal/palettes.py:375
+#: ../src/jarabe/journal/volumestoolbar.py:313
 msgid "Error"
 msgstr "שגיאה"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:551
-#: ../src/jarabe/journal/palettes.py:80
-#, fuzzy
+#: ../src/jarabe/journal/journaltoolbox.py:662
+#: ../src/jarabe/journal/palettes.py:86
 msgid "Start"
-msgstr "התחל"
+msgstr "התחלה"
 
-#: ../src/jarabe/journal/journaltoolbox.py:579
+#: ../src/jarabe/journal/journaltoolbox.py:682
+#: ../src/jarabe/journal/palettes.py:100 ../src/jarabe/journal/palettes.py:513
+msgid "No activity to start entry"
+msgstr "אין פעילות להתחלת הרשומה"
+
+#: ../src/jarabe/journal/journaltoolbox.py:700
+msgid "Sort view"
+msgstr "סידור התצוגה"
+
+#: ../src/jarabe/journal/journaltoolbox.py:711
 msgid "Sort by date modified"
-msgstr ""
+msgstr "סידור לפי תאריך השינוי"
 
-#: ../src/jarabe/journal/journaltoolbox.py:580
+#: ../src/jarabe/journal/journaltoolbox.py:712
 msgid "Sort by date created"
-msgstr ""
+msgstr "סידור לפי תאריך היצירה"
 
-#: ../src/jarabe/journal/journaltoolbox.py:581
-#, fuzzy
+#: ../src/jarabe/journal/journaltoolbox.py:713
 msgid "Sort by size"
 msgstr "סידור לפי גודל"
 
-#: ../src/jarabe/journal/journaltoolbox.py:590
-msgid "Sort view"
-msgstr ""
-
-#: ../src/jarabe/journal/journaltoolbox.py:661
+#: ../src/jarabe/journal/journaltoolbox.py:778
 msgid "Deselect all"
-msgstr ""
+msgstr "ביטול בחירת הכול"
 
-#: ../src/jarabe/journal/journaltoolbox.py:674
+#: ../src/jarabe/journal/journaltoolbox.py:791
 msgid "Select all"
-msgstr ""
+msgstr "בחירת הכול"
 
-#: ../src/jarabe/journal/journaltoolbox.py:700
+#: ../src/jarabe/journal/journaltoolbox.py:817
 #, python-format
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "למחוק רשומה אחת?"
+msgstr[1] "למחוק %d רשומות?"
 
-#: ../src/jarabe/journal/journaltoolbox.py:714
-#: ../src/jarabe/journal/palettes.py:364
+#: ../src/jarabe/journal/journaltoolbox.py:831
+#: ../src/jarabe/journal/palettes.py:378
 msgid "Copy"
-msgstr ""
+msgstr "העתקה"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
-#: ../src/jarabe/journal/journaltoolbox.py:759
+#: ../src/jarabe/journal/journaltoolbox.py:882
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr ""
+msgstr "נבחרו %(selected)d מתוך %(total)d"
 
-#: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
-#, fuzzy
+#: ../src/jarabe/journal/journaltoolbox.py:917
+msgid "Select filter"
+msgstr "בחירת מסנן"
+
+#: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
 msgid "Your Journal is empty"
-msgstr "יומנך מלא"
+msgstr "היומן שלך מלא"
 
-#: ../src/jarabe/journal/listview.py:390 ../src/jarabe/journal/iconview.py:214
+#: ../src/jarabe/journal/listview.py:476 ../src/jarabe/journal/iconview.py:215
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "תיקיית המסמכים שלך ריקה"
 
-#: ../src/jarabe/journal/listview.py:392 ../src/jarabe/journal/iconview.py:216
+#: ../src/jarabe/journal/listview.py:478 ../src/jarabe/journal/iconview.py:217
 msgid "The device is empty"
-msgstr ""
+msgstr "ההתקן ריק"
 
-#: ../src/jarabe/journal/listview.py:394 ../src/jarabe/journal/iconview.py:218
+#: ../src/jarabe/journal/listview.py:480 ../src/jarabe/journal/iconview.py:220
 msgid "No matching entries"
-msgstr ""
+msgstr "אין רשומות תואמות"
 
-#: ../src/jarabe/journal/misc.py:252
+#: ../src/jarabe/journal/misc.py:313
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr ""
+msgstr "גרסה ישנה יותר של הפעילות %s"
 
-#: ../src/jarabe/journal/misc.py:253
+#: ../src/jarabe/journal/misc.py:314
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr ""
+msgstr "האם בכל זאת לשנמך לגרסה %s"
 
-#: ../src/jarabe/journal/modalalert.py:65
+#: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
-msgstr "יומנך מלא"
+msgstr "היומן שלך מלא"
 
-#: ../src/jarabe/journal/modalalert.py:70
+#: ../src/jarabe/journal/modalalert.py:68
 msgid "Please delete some old Journal entries to make space for new ones."
-msgstr ""
+msgstr "נא למחוק רשומות ישנות מהיומן כדי לפנות מקום לחדשות."
 
-#: ../src/jarabe/journal/modalalert.py:84
+#: ../src/jarabe/journal/modalalert.py:82
 msgid "Show Journal"
-msgstr ""
+msgstr "הצגת היומן"
 
-#: ../src/jarabe/journal/objectchooser.py:170
+#: ../src/jarabe/journal/objectchooser.py:171
 msgid "Choose an object"
-msgstr ""
+msgstr "בחירת פריט"
 
-#: ../src/jarabe/journal/objectchooser.py:175
+#: ../src/jarabe/journal/objectchooser.py:176
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr ""
+msgstr "נא לבחור בפריט לפתיחה עם הפעילות %s"
 
-#: ../src/jarabe/journal/objectchooser.py:183
-#: ../src/jarabe/view/viewsource.py:418
+#: ../src/jarabe/journal/objectchooser.py:184
+#: ../src/jarabe/view/viewhelp.py:335 ../src/jarabe/view/viewsource.py:579
 msgid "Close"
-msgstr "סגור"
+msgstr "סגירה"
 
-#: ../src/jarabe/journal/palettes.py:78
+#: ../src/jarabe/journal/palettes.py:84
 msgid "Resume with"
-msgstr ""
+msgstr "להמשיך עם"
 
-#: ../src/jarabe/journal/palettes.py:81
+#: ../src/jarabe/journal/palettes.py:87
 msgid "Start with"
-msgstr ""
+msgstr "להתחיל עם"
 
-#: ../src/jarabe/journal/palettes.py:94 ../src/jarabe/journal/palettes.py:489
-msgid "No activity to start entry"
-msgstr ""
-
-#: ../src/jarabe/journal/palettes.py:118
+#: ../src/jarabe/journal/palettes.py:124
 msgid "Send to"
-msgstr ""
+msgstr "לשלוח אל"
 
-#: ../src/jarabe/journal/palettes.py:127
-#, fuzzy
+#: ../src/jarabe/journal/palettes.py:133
 msgid "View Details"
 msgstr "הצגת פרטים"
 
-#: ../src/jarabe/journal/palettes.py:186
+#: ../src/jarabe/journal/palettes.py:193
 msgid "Entries without a file cannot be sent."
-msgstr ""
+msgstr "לא ניתן לשלוח רשומות ללא קובץ."
 
-#: ../src/jarabe/journal/palettes.py:260
-#: ../src/jarabe/journal/volumestoolbar.py:211
-#, fuzzy
+#: ../src/jarabe/journal/palettes.py:272
+#: ../src/jarabe/journal/volumestoolbar.py:214
 msgid "Documents"
 msgstr "מסמכים"
 
-#: ../src/jarabe/journal/palettes.py:349 ../src/jarabe/journal/palettes.py:409
-#: ../src/jarabe/journal/volumestoolbar.py:301
+#: ../src/jarabe/journal/palettes.py:363 ../src/jarabe/journal/palettes.py:423
+#: ../src/jarabe/journal/volumestoolbar.py:303
 msgid "Entries without a file cannot be copied."
-msgstr ""
+msgstr "לא ניתן להעתיק רשומות ללא קובץ."
 
-#: ../src/jarabe/journal/palettes.py:369
+#: ../src/jarabe/journal/palettes.py:383
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "להעתיק רשומה אחת?"
+msgstr[1] "להעתיק %d רשומות?"
 
-#: ../src/jarabe/journal/palettes.py:394
+#: ../src/jarabe/journal/palettes.py:408
 msgid "Clipboard"
-msgstr ""
+msgstr "לוח גזירים"
 
-#: ../src/jarabe/journal/palettes.py:454
+#: ../src/jarabe/journal/palettes.py:478
 msgid "No friends present"
-msgstr ""
+msgstr "לא קיימים חברים"
 
-#: ../src/jarabe/journal/palettes.py:459
+#: ../src/jarabe/journal/palettes.py:483
 msgid "No valid connection found"
-msgstr ""
+msgstr "לא נמצא חיבור תקף"
 
-#: ../src/jarabe/journal/palettes.py:487
+#: ../src/jarabe/journal/palettes.py:511
 msgid "No activity to resume entry"
-msgstr ""
+msgstr "אין פעילות להמשך הרשומה"
 
-#: ../src/jarabe/journal/palettes.py:556 ../src/jarabe/view/palettes.py:110
-#, fuzzy
+#: ../src/jarabe/journal/palettes.py:580 ../src/jarabe/view/palettes.py:133
 msgid "Stop"
-msgstr "עצור"
+msgstr "לעצור"
 
-#: ../src/jarabe/journal/palettes.py:561
+#: ../src/jarabe/journal/palettes.py:585
+#: ../extensions/cpsection/backup/view.py:212
+#: ../extensions/cpsection/backup/view.py:265
 msgid "Continue"
-msgstr ""
+msgstr "להמשיך"
 
-#: ../src/jarabe/journal/palettes.py:598
+#: ../src/jarabe/journal/palettes.py:622
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr ""
+msgstr "%(index)d מתוך %(total)d ‏: %(object_title)s"
 
-#: ../src/jarabe/journal/volumestoolbar.py:386
-#: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
+#: ../src/jarabe/journal/volumestoolbar.py:375
+#: ../src/jarabe/view/palettes.py:251 ../src/jarabe/view/palettes.py:317
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr ""
+msgstr "%(free_space)d מ״ב פנויים"
 
-#: ../src/jarabe/model/network.py:214
+#: ../src/jarabe/model/desktop.py:85
+#, python-format
+msgid "Favorites view %d"
+msgstr "תצוגת מעודפים %d"
+
+#: ../src/jarabe/model/network.py:217
 msgid "The reason for the device state change is unknown."
-msgstr ""
+msgstr "הסיבה לשינוי מצב ההתקן אינו ידוע."
 
-#: ../src/jarabe/model/network.py:216
+#: ../src/jarabe/model/network.py:219
 msgid "The state change is normal."
-msgstr ""
+msgstr "שינוי המצב הוא רגיל."
 
-#: ../src/jarabe/model/network.py:218
+#: ../src/jarabe/model/network.py:221
 msgid "The device is now managed."
-msgstr ""
+msgstr "ההתקן מנוהל כעת."
 
-#: ../src/jarabe/model/network.py:220
+#: ../src/jarabe/model/network.py:223
 msgid "The device is no longer managed."
-msgstr ""
+msgstr "ההתקן לא מנוהל עוד."
 
-#: ../src/jarabe/model/network.py:222
+#: ../src/jarabe/model/network.py:225
 msgid "The device could not be readied for configuration."
-msgstr ""
-
-#: ../src/jarabe/model/network.py:224
-msgid ""
-"IP configuration could not be reserved (no available address, timeout, etc)."
-msgstr ""
+msgstr "אי אפשר להכין את ההתקן לתצורה."
 
 #: ../src/jarabe/model/network.py:227
+msgid ""
+"IP configuration could not be reserved (no available address, timeout, etc)."
+msgstr "לא ניתן לשמור את תצורת ה־IP (אין כתובת זמינה, תום זמן מוקצב וכן הלאה)."
+
+#: ../src/jarabe/model/network.py:230
 msgid "The IP configuration is no longer valid."
-msgstr ""
+msgstr "תצורת ה־IP אינה תקפה עוד."
 
-#: ../src/jarabe/model/network.py:229
+#: ../src/jarabe/model/network.py:232
 msgid "Secrets were required, but not provided."
-msgstr ""
+msgstr "נדרשים סודות אך הם לא סופקו."
 
-#: ../src/jarabe/model/network.py:231
+#: ../src/jarabe/model/network.py:234
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
-msgstr ""
+msgstr "המאמת של 802.11X התנתק מנקודת הגישה או משרת האימות."
 
-#: ../src/jarabe/model/network.py:234
+#: ../src/jarabe/model/network.py:237
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr ""
+msgstr "תצורת המאמת של 802.11X נכשלה."
 
-#: ../src/jarabe/model/network.py:236
+#: ../src/jarabe/model/network.py:239
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr ""
+msgstr "המאמת של 802.11X נסגר או נכשל במפתיע."
 
-#: ../src/jarabe/model/network.py:238
+#: ../src/jarabe/model/network.py:241
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr ""
+msgstr "למאמת של 802.11X לקח זמן רב מדי לבצע אימות."
 
-#: ../src/jarabe/model/network.py:240
+#: ../src/jarabe/model/network.py:243
 msgid "The PPP service failed to start within the allowed time."
-msgstr ""
+msgstr "שירות ה־PPP לא הצליח לעלות בזמן בו הוא מורשה לכך."
 
-#: ../src/jarabe/model/network.py:242
+#: ../src/jarabe/model/network.py:245
 msgid "The PPP service disconnected unexpectedly."
-msgstr ""
+msgstr "שירות ה־PPP התנתק באופן בלתי צפוי."
 
-#: ../src/jarabe/model/network.py:244
+#: ../src/jarabe/model/network.py:247
 msgid "The PPP service quit or failed unexpectedly."
-msgstr ""
+msgstr "שירות ה־PPP נסגר או נכשל במפתיע."
 
-#: ../src/jarabe/model/network.py:246
+#: ../src/jarabe/model/network.py:249
 msgid "The DHCP service failed to start within the allowed time."
-msgstr ""
+msgstr "שירות ה־DHCP לא הצליח לעלות בזמן בו הוא מורשה לכך."
 
-#: ../src/jarabe/model/network.py:248
+#: ../src/jarabe/model/network.py:251
 msgid "The DHCP service reported an unexpected error."
-msgstr ""
+msgstr "שירות ה־DHCP דיווח על שגיאה בלתי מוכרת."
 
-#: ../src/jarabe/model/network.py:250
+#: ../src/jarabe/model/network.py:253
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr ""
+msgstr "שירות ה־DHCP נסגר או נכשל במפתיע."
 
-#: ../src/jarabe/model/network.py:252
+#: ../src/jarabe/model/network.py:255
 msgid "The shared connection service failed to start."
-msgstr ""
-
-#: ../src/jarabe/model/network.py:254
-msgid "The shared connection service quit or failed unexpectedly."
-msgstr ""
+msgstr "עליית שירות החיבור השיתופי נכשלה."
 
 #: ../src/jarabe/model/network.py:257
+msgid "The shared connection service quit or failed unexpectedly."
+msgstr "שירות החיבור השיתופי נסגר או נכשל במפתיע."
+
+#: ../src/jarabe/model/network.py:260
 msgid "The AutoIP service failed to start."
-msgstr ""
+msgstr "עליית שירות ה־AutoIP נכשלה."
 
-#: ../src/jarabe/model/network.py:259
+#: ../src/jarabe/model/network.py:262
 msgid "The AutoIP service reported an unexpected error."
-msgstr ""
+msgstr "שירות ה־AutoIP דיווח על שגיאה בלתי מוכרת."
 
-#: ../src/jarabe/model/network.py:261
+#: ../src/jarabe/model/network.py:264
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr ""
+msgstr "שירות ה־AutoIP נסגר או כשל במפתיע."
 
-#: ../src/jarabe/model/network.py:263
+#: ../src/jarabe/model/network.py:266
 msgid "Dialing failed because the line was busy."
-msgstr ""
+msgstr "החיוג נכשל כיוון שהקו היה תפוס."
 
-#: ../src/jarabe/model/network.py:265
+#: ../src/jarabe/model/network.py:268
 msgid "Dialing failed because there was no dial tone."
-msgstr ""
+msgstr "החיוג נכשל כיוון שלא היה צליל חיוג."
 
-#: ../src/jarabe/model/network.py:267
+#: ../src/jarabe/model/network.py:270
 msgid "Dialing failed because there was no carrier."
-msgstr ""
+msgstr "החיוג נכשל כיוון שלא צוינה ספקית."
 
-#: ../src/jarabe/model/network.py:269
+#: ../src/jarabe/model/network.py:272
 msgid "Dialing timed out."
-msgstr ""
+msgstr "הזמן שהוקצה לחיוג תם."
 
-#: ../src/jarabe/model/network.py:271
+#: ../src/jarabe/model/network.py:274
 msgid "Dialing failed."
-msgstr ""
+msgstr "החיוג נכשל."
 
-#: ../src/jarabe/model/network.py:273
+#: ../src/jarabe/model/network.py:276
 msgid "Modem initialization failed."
-msgstr ""
+msgstr "הפעלת המודם נכשלה."
 
-#: ../src/jarabe/model/network.py:275
+#: ../src/jarabe/model/network.py:278
 msgid "Failed to select the specified GSM APN"
-msgstr ""
+msgstr "בחירת נקודת הגישה של ה־GSM שצוינה נכשלה"
 
-#: ../src/jarabe/model/network.py:277
+#: ../src/jarabe/model/network.py:280
 msgid "Not searching for networks."
-msgstr ""
+msgstr "לא מתבצע חיפוש אחר רשתות."
 
-#: ../src/jarabe/model/network.py:279
+#: ../src/jarabe/model/network.py:282
 msgid "Network registration was denied."
-msgstr ""
+msgstr "הרישום לרשת נדחה."
 
-#: ../src/jarabe/model/network.py:281
+#: ../src/jarabe/model/network.py:284
 msgid "Network registration timed out."
-msgstr ""
+msgstr "זמן ההרשמה לרשת תם."
 
-#: ../src/jarabe/model/network.py:283
+#: ../src/jarabe/model/network.py:286
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "הרישום ברשת ה־GSM המבוקשת כשל."
 
-#: ../src/jarabe/model/network.py:285
+#: ../src/jarabe/model/network.py:288
 msgid "PIN check failed."
-msgstr ""
+msgstr "בדיקת ה־PIN כשלה."
 
-#: ../src/jarabe/model/network.py:287
+#: ../src/jarabe/model/network.py:290
 msgid "Necessary firmware for the device may be missing."
-msgstr ""
+msgstr "יתכן שהקושחה הנדרשת להתקן חסרה."
 
-#: ../src/jarabe/model/network.py:289
+#: ../src/jarabe/model/network.py:292
 msgid "The device was removed."
-msgstr ""
+msgstr "ההתקן הוסר."
 
-#: ../src/jarabe/model/network.py:291
+#: ../src/jarabe/model/network.py:294
 msgid "NetworkManager went to sleep."
-msgstr ""
-
-#: ../src/jarabe/model/network.py:293
-msgid "The device's active connection was removed or disappeared."
-msgstr ""
+msgstr "מנהל הרשת הלך לישון."
 
 #: ../src/jarabe/model/network.py:296
+msgid "The device's active connection was removed or disappeared."
+msgstr "החיבור הפעיל של ההתקן הוסר או נעלם."
+
+#: ../src/jarabe/model/network.py:299
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "משתמש או לקוח דרשו את הניתוק."
 
-#: ../src/jarabe/model/network.py:298
+#: ../src/jarabe/model/network.py:301
 msgid "The device's carrier/link changed."
-msgstr ""
+msgstr "הספקית/הקישור של ההתקן השתנו."
 
-#: ../src/jarabe/model/network.py:300
+#: ../src/jarabe/model/network.py:303
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "התבצעה הנחה על סמך החיבור הקיים של ההתקן."
 
-#: ../src/jarabe/model/network.py:302
+#: ../src/jarabe/model/network.py:305
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "המאמת זמין כעת."
 
-#: ../src/jarabe/model/network.py:304
+#: ../src/jarabe/model/network.py:307
 msgid "The modem could not be found."
-msgstr ""
+msgstr "לא ניתן למצוא את המודם."
 
-#: ../src/jarabe/model/network.py:306
+#: ../src/jarabe/model/network.py:309
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "חיבור ה־Bluetooth כשל או שהזמן שהוקצב לו תם."
 
-#: ../src/jarabe/model/network.py:308
+#: ../src/jarabe/model/network.py:311
 msgid "Unused."
+msgstr "לא בשימוש."
+
+#: ../src/jarabe/model/screenshot.py:59 ../src/jarabe/view/viewhelp.py:70
+msgid "Mesh"
+msgstr "רשת מבוזרת"
+
+#: ../src/jarabe/model/screenshot.py:72
+msgid "Screenshot"
+msgstr "צילום מסך"
+
+#: ../src/jarabe/model/screenshot.py:74
+#, python-format
+msgid "Screenshot of \"%s\""
+msgstr "צילום מסך של „%s“"
+
+#: ../src/jarabe/view/alerts.py:38 ../src/jarabe/view/alerts.py:48
+msgid "Activity launcher"
+msgstr "משגר פעילויות"
+
+#: ../src/jarabe/view/alerts.py:39
+#, python-format
+msgid "%s is already running. Please stop %s before launching it again."
+msgstr "%s כבר פעיל. נא לעצור את %s בטרם הפעלה מחדש."
+
+#: ../src/jarabe/view/alerts.py:49
+msgid ""
+"The maximum number of open activities has been reached. Please close an "
+"activity before launching a new one."
 msgstr ""
+"מספר הפעילויות הפתוחות המרבי הושג. נא לסגור פעילות כלשהי לפני טעינת אחת חדשה."
 
-#: ../src/jarabe/view/buddymenu.py:72
-#, fuzzy
+#: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
-msgstr "מחק חבר/ה"
+msgstr "הסרת חבר/ה"
 
-#: ../src/jarabe/view/buddymenu.py:75
-#, fuzzy
+#: ../src/jarabe/view/buddymenu.py:76
 msgid "Make friend"
-msgstr "הפוך לחבר/ה"
+msgstr "הוספת חבר/ה"
 
-#: ../src/jarabe/view/buddymenu.py:91
-#, fuzzy
+#: ../src/jarabe/view/buddymenu.py:108
 msgid "Shutdown"
 msgstr "כיבוי"
 
-#: ../src/jarabe/view/buddymenu.py:98
-#, fuzzy
+#: ../src/jarabe/view/buddymenu.py:113
 msgid "Restart"
 msgstr "הפעלה מחדש"
 
-#: ../src/jarabe/view/buddymenu.py:104
-#, fuzzy
+#: ../src/jarabe/view/buddymenu.py:119
 msgid "Logout"
-msgstr "התנתקות"
+msgstr "יציאה"
 
-#: ../src/jarabe/view/buddymenu.py:109
+#: ../src/jarabe/view/buddymenu.py:124
 msgid "My Settings"
-msgstr ""
+msgstr "ההגדרות שלי"
 
-#: ../src/jarabe/view/buddymenu.py:149
+#: ../src/jarabe/view/buddymenu.py:183
 #, python-format
 msgid "Invite to %s"
-msgstr ""
+msgstr "הזמנה אל %s"
 
-#: ../src/jarabe/view/launcher.py:144
+#: ../src/jarabe/view/launcher.py:159
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr ""
+msgstr "ההפעלה של <b>%s</b> נכשלה."
 
-#: ../src/jarabe/view/palettes.py:51
-#, fuzzy
+#: ../src/jarabe/view/palettes.py:53
 msgid "Starting..."
-msgstr "מתחיל..."
+msgstr "מופעל…"
 
-#: ../src/jarabe/view/palettes.py:61
+#: ../src/jarabe/view/palettes.py:63
 msgid "Activity failed to start"
-msgstr ""
+msgstr "התחלת הפעילות כשלה"
 
 #. TODO: share-with, keep
-#: ../src/jarabe/view/palettes.py:102
-#, fuzzy
+#: ../src/jarabe/view/palettes.py:105
 msgid "View Source"
-msgstr "צפה בקוד המקור"
+msgstr "הצגת המקור"
 
-#: ../src/jarabe/view/palettes.py:153
+#: ../src/jarabe/view/palettes.py:112
+msgid "View Help"
+msgstr "הצגת עזרה"
+
+#: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
-msgstr ""
+msgstr "להתחיל חדש"
 
-#: ../src/jarabe/view/palettes.py:241
-#, fuzzy
+#: ../src/jarabe/view/palettes.py:266
 msgctxt "Volume"
 msgid "Remove"
-msgstr "מחק"
+msgstr "הסרה"
 
-#: ../src/jarabe/view/viewsource.py:271
+#: ../src/jarabe/view/viewhelp.py:304
+msgid "Help Manual"
+msgstr "מדריך עזרה"
+
+#: ../src/jarabe/view/viewhelp.py:318
+msgid "Social Help"
+msgstr "עזרה חברתית"
+
+#: ../src/jarabe/view/viewhelp.py:326
+#, python-format
+msgid "Help: %s"
+msgstr "עזרה: %s"
+
+#: ../src/jarabe/view/viewsource.py:364
 msgid "Instance Source"
-msgstr ""
+msgstr "מקור העותק"
 
-#: ../src/jarabe/view/viewsource.py:320
-#, fuzzy
+#: ../src/jarabe/view/viewsource.py:392
+#, python-format
+msgid "Do you want to duplicate %s Activity?"
+msgstr "לשכפל את הפעילות %s?"
+
+#: ../src/jarabe/view/viewsource.py:394
+msgid "This may take a few minutes"
+msgstr "פעולה זו עשויה לארוך מספר דקות"
+
+#: ../src/jarabe/view/viewsource.py:408
+msgid "Duplicating activity..."
+msgstr "הפעילות משוכפלת…"
+
+#: ../src/jarabe/view/viewsource.py:447
+msgid "Duplicated"
+msgstr "שוכפלה"
+
+#: ../src/jarabe/view/viewsource.py:448
+msgid "The activity has been duplicated"
+msgstr "הפעילות שוכפלה"
+
+#: ../src/jarabe/view/viewsource.py:462
+msgid "Duplicated activity already exists"
+msgstr "הפעילות המשוכפלת כבר קיימת"
+
+#: ../src/jarabe/view/viewsource.py:463
+msgid "Delete your copy before trying to duplicate the activity again"
+msgstr "נא למחוק את העותק שלך לפני ניסיון שכפול חוזר"
+
+#: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
 msgstr "מקור"
 
-#: ../src/jarabe/view/viewsource.py:382
+#: ../src/jarabe/view/viewsource.py:542
 msgid "Activity Bundle Source"
-msgstr ""
+msgstr "מקור מאגד פעילויות"
 
-#: ../src/jarabe/view/viewsource.py:401
+#: ../src/jarabe/view/viewsource.py:561
 msgid "Sugar Toolkit Source"
-msgstr ""
+msgstr "מקור כלי עבודה של סוכר"
 
-#: ../src/jarabe/view/viewsource.py:408
+#: ../src/jarabe/view/viewsource.py:568
 #, python-format
-#, fuzzy
 msgid "View source: %s"
-msgstr "צפה בקוד המקור: %s"
+msgstr "צפייה במקור: %s"
 
-#: ../src/jarabe/view/viewsource.py:409
-#, python-format
-#, python-format, fuzzy
+#: ../src/jarabe/view/viewsource.py:569
+#, python-format, python-format
 msgid "View source: %r"
-msgstr "צפה בקוד המקור: %r"
+msgstr "צפייה במקור: %r"
 
-#, fuzzy
-#~ msgid "Update your activities to ensure compatibility with your new software"
-#~ msgstr "עדכון הפעילויות מודה תאימות עם התוכנה החדשה שלך."
+#: ../src/jarabe/view/viewsource.py:809
+msgid "Please select a file in the left panel."
+msgstr "נא לבחור קובץ בחלונית הימנית."
 
-#, fuzzy
-#~ msgid "Check now"
-#~ msgstr "בדוק עכשיו"
+#: ../extensions/cpsection/backup/__init__.py:22
+msgid "Backup"
+msgstr "גיבוי"
 
-#, fuzzy
-#~ msgid "Software update"
-#~ msgstr "עדכון תוכנה"
+#: ../extensions/cpsection/backup/backends/volume.py:61
+#: ../extensions/cpsection/backup/backends/volume.py:171
+msgid "Please connect a device to continue"
+msgstr "נא לחבר התקן כדי להמשיך"
 
-#, fuzzy
-#~ msgid "Search"
-#~ msgstr "חיפוש"
+#: ../extensions/cpsection/backup/backends/volume.py:69
+#: ../extensions/cpsection/backup/backends/volume.py:178
+msgid "Select your volume"
+msgstr "בחירת עצמת השמע שלך"
 
-#, fuzzy
-#~ msgid "Error in extreme pm argument, use on/off."
-#~ msgstr "שגיאה בפרמטר ניהול חשמל קיצוני, השתמש ב on/off."
+#: ../extensions/cpsection/backup/backends/volume.py:78
+msgid "Not enough space in volume"
+msgstr "אין מספיק שטח בכרך"
+
+#: ../extensions/cpsection/backup/backends/volume.py:122
+#, python-format
+msgid "Backup from user %s"
+msgstr "גיבוי מהמשתמש %s"
+
+#: ../extensions/cpsection/backup/backends/volume.py:191
+msgid "No checkpoints found in the device"
+msgstr "לא נמצאו נקודות שחזור בהתקן זה"
+
+#: ../extensions/cpsection/backup/backends/volume.py:199
+msgid "Select your checkpoint"
+msgstr "בחירת נקודת השחזור שלך"
+
+#: ../extensions/cpsection/backup/backends/volume.py:210
+msgid "Not enough space in disk"
+msgstr "אין די מקום בכונן"
+
+#: ../extensions/cpsection/backup/backends/volume.py:329
+msgid "Local Device Backup"
+msgstr "גיבוי להתקן מקומי"
+
+#: ../extensions/cpsection/backup/view.py:133
+msgid "Save the contents of your Journal"
+msgstr "שמירת תוכן היומן שלך"
+
+#: ../extensions/cpsection/backup/view.py:141
+msgid "Restore the contents of your Journal"
+msgstr "שחזור תוכן היומן שלך"
+
+#: ../extensions/cpsection/backup/view.py:223
+msgid "Please close all the activities, and start again"
+msgstr "נא לסגור את כל הפעילויות ולהתחיל שוב"
+
+#: ../extensions/cpsection/backup/view.py:229
+msgid "Select where you want create your backup"
+msgstr "נא לבחור היכן למקם את הגיבוי שלך"
+
+#: ../extensions/cpsection/backup/view.py:231
+msgid "Select where you want retrieve your restore"
+msgstr "נא לבחור איפה ברצונך לקבל את השחזור שלך"
+
+#: ../extensions/cpsection/backup/view.py:271
+msgid "Retry"
+msgstr "ניסיון חוזר"
+
+#: ../extensions/cpsection/backup/view.py:290
+msgid "Starting backup..."
+msgstr "הגיבוי מתחילׂ…"
+
+#: ../extensions/cpsection/backup/view.py:294
+msgid "Starting restore..."
+msgstr "השחזור מתחיל…"
+
+#: ../extensions/cpsection/backup/view.py:321
+msgid ""
+"I want to restore the content of my Journal. In order to do this, my Journal "
+"will first be emptied of all its content; then the restored content will be "
+"added."
+msgstr ""
+"ברצוני לשחזר את התוכן של היומן שלי. כדי לעשות זאת, יש לרוקן את היומן שלי מכל "
+"התוכן תחילה ואז יתווסף התוכן המשוחזר."
+
+#: ../extensions/cpsection/backup/view.py:327
+msgid "Confirm"
+msgstr "אישור"
+
+#: ../extensions/cpsection/backup/view.py:365
+msgid "Operation started"
+msgstr "הפעולה התחילה"
+
+#: ../extensions/cpsection/backup/view.py:377
+msgid "Backup finished successfully"
+msgstr "הגיבוי הסתיים בהצלחה"
+
+#: ../extensions/cpsection/backup/view.py:379
+msgid "Restore realized successfully."
+msgstr "השחזור הופעל בהצלחה."
+
+#: ../src/jarabe/frame/notification.py:62
+msgid "Clear notifications"
+msgstr "פינוי ההתרעות"

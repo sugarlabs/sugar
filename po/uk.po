@@ -2,24 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2016-03-07 18:04+0000\n"
+"PO-Revision-Date: 2017-02-26 00:56+0000\n"
 "Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: uk\n"
@@ -29,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1457373844.000000\n"
+"X-POOTLE-MTIME: 1488070568.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -65,7 +53,7 @@ msgstr "Якщо TRUE, Sugar показуватиме опцію \"Переза�
 
 #: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
 msgid "Show Shutdown"
-msgstr "Показувати Вимкнення"
+msgstr "Показувати вимкнення"
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
@@ -73,17 +61,15 @@ msgstr "Якщо TRUE, Sugar показуватиме опцію \"Вимкну�
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
-msgstr "Показати Реєстрацію"
+msgstr "Показати реєстрацію"
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
-#, fuzzy
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
-msgstr "Якщо TRUE, Sugar показуватиме опцію \"Зареєструвати\" у вікні приятеля."
+msgstr "Якщо TRUE, Sugar показуватиме пункт «Зареєструвати» у вікні приятеля."
 
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
-#, fuzzy
 msgid "Bundle IDs of protected activities"
-msgstr "Збирати ID захищених робіт"
+msgstr "Збирати ідентифікатори захищених вправ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:14 ../data/sugar.schemas.in.h:64
 msgid ""
@@ -156,7 +142,7 @@ msgstr "Підпис групи"
 
 #: ../data/org.sugarlabs.gschema.xml.h:28
 msgid "Label associated with age, e.g., '2nd Grade'"
-msgstr "Підпис, пов'язаний з віком, наприклад, \"2-й клас\""
+msgstr "Підпис, пов'язаний з віком, наприклад, «2-й клас»"
 
 #: ../data/org.sugarlabs.gschema.xml.h:29
 msgid "Background image path"
@@ -176,11 +162,11 @@ msgstr "Непрозорість зображення для тла."
 
 #: ../data/org.sugarlabs.gschema.xml.h:33
 msgid "Mimetype registry"
-msgstr ""
+msgstr "Реєстр типів MIME"
 
 #: ../data/org.sugarlabs.gschema.xml.h:34
 msgid "Consists of key-value pairs mimetypes and their corresponding activity"
-msgstr ""
+msgstr "Складається з пар ключ-значення типів MIME і відповідних дій"
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
@@ -217,45 +203,49 @@ msgstr "Параметри часового пояса для системи."
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr ""
+msgstr "Панелі домівки"
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
 "List of home views, including the view icon, the favorite icon and the layout"
 msgstr ""
+"Список панелей домівки з піктограмами панелі, піктограмами списку вибраних "
+"та компонуваннями"
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
-msgstr ""
+msgstr "Інтервал анімації засобу запуску"
 
 #: ../data/org.sugarlabs.gschema.xml.h:46
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
 msgstr ""
+"Затримка у мілісекундах між оновленнями анімації для анімованої піктограми "
+"засобу запуску."
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
-msgstr ""
+msgstr "Затримка для країв"
 
 #: ../data/org.sugarlabs.gschema.xml.h:48 ../data/sugar.schemas.in.h:20
 msgid "Delay for the activation of the frame using the edges."
-msgstr ""
+msgstr "Затримка активації фрейма, якщо використано краї екрана."
 
 #: ../data/org.sugarlabs.gschema.xml.h:49 ../data/sugar.schemas.in.h:21
 msgid "Corner Delay"
-msgstr ""
+msgstr "Затримка для кутів"
 
 #: ../data/org.sugarlabs.gschema.xml.h:50 ../data/sugar.schemas.in.h:22
 msgid "Delay for the activation of the frame using the corners."
-msgstr ""
+msgstr "Затримка активації фрейма, якщо використано кути екрана."
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr ""
+msgstr "Розмір перемикача"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
-msgstr ""
+msgstr "Розмір області перемикача фреймів, у пікселях від кута або краю."
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
@@ -274,15 +264,16 @@ msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
+"Якщо має значення TRUE, Sugar надасть змогу іншим користувачам шукати наш "
+"запис на сервері Jabber."
 
 #: ../data/org.sugarlabs.gschema.xml.h:57
-#, fuzzy
 msgid "Social Help Server"
-msgstr "Сервер допомоги громади:"
+msgstr "Сервер допомоги громади"
 
 #: ../data/org.sugarlabs.gschema.xml.h:58
 msgid "URL of the social help server to use with protocol."
-msgstr ""
+msgstr "Сервер допомоги громади, яким слід користуватися для протоколу."
 
 #: ../data/org.sugarlabs.gschema.xml.h:59 ../data/sugar.schemas.in.h:25
 msgid "Power Automatic"
@@ -348,7 +339,7 @@ msgstr "Розмір шрифту, що використовується на р
 
 #: ../data/org.sugarlabs.gschema.xml.h:73 ../data/sugar.schemas.in.h:61
 msgid "Show Sugar Ad-hoc networks"
-msgstr ""
+msgstr "Показувати ситуативні мережі Sugar"
 
 #: ../data/org.sugarlabs.gschema.xml.h:74 ../data/sugar.schemas.in.h:62
 msgid ""
@@ -356,106 +347,121 @@ msgid ""
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
+"Якщо має значення TRUE, Sugar показуватиме типові ситуативні мережі для "
+"каналів 1,6 і 11. Якщо Sugar не вдасться виявити «відомих» мереж» під час "
+"запуску, програма встановить автоматичне з’єднання із ситуативною мережею."
 
 #: ../data/org.sugarlabs.gschema.xml.h:75
 msgid "Enable Ad-hoc autoconnect"
-msgstr ""
+msgstr "Дозволити ситуативне автоз’єднання"
 
 #: ../data/org.sugarlabs.gschema.xml.h:76
 msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
 msgstr ""
+"Якщо має значення TRUE, Sugar автоматично встановлюватиме з’єднання із "
+"ситуативними мережами."
 
 #: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Ім’я користувача у мережі GSM (ЗАСТАРІЛЕ/НЕ ВИКОРИСТОВУЄТЬСЯ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:78 ../data/sugar.schemas.in.h:50
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Налаштування імені користувача у мережі GSM (ЗАСТАРІЛЕ/НЕ ВИКОРИСТОВУЄТЬСЯ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:79 ../data/sugar.schemas.in.h:51
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Пароль у мережі GSM (ЗАСТАРІЛЕ/НЕ ВИКОРИСТОВУЄТЬСЯ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:80 ../data/sugar.schemas.in.h:52
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Налаштування пароля у мережі GSM (ЗАСТАРІЛЕ/НЕ ВИКОРИСТОВУЄТЬСЯ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:81 ../data/sugar.schemas.in.h:53
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Номер у мережі GSM (ЗАСТАРІЛЕ/НЕ ВИКОРИСТОВУЄТЬСЯ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:82 ../data/sugar.schemas.in.h:54
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Налаштування номера телефону у мережі GSM (ЗАСТАРІЛЕ/НЕ ВИКОРИСТОВУЄТЬСЯ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:83 ../data/sugar.schemas.in.h:55
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "APN у мережі GSM (ЗАСТАРІЛЕ/НЕ ВИКОРИСТОВУЄТЬСЯ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:84 ../data/sugar.schemas.in.h:56
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Налаштування назви точки доступу у мережі GSM (ЗАСТАРІЛЕ/НЕ ВИКОРИСТОВУЄТЬСЯ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:85 ../data/sugar.schemas.in.h:57
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "PIN-код у мережі GSM (ЗАСТАРІЛЕ/НЕ ВИКОРИСТОВУЄТЬСЯ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:86 ../data/sugar.schemas.in.h:58
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Налаштування особистого ідентифікаційного номера (PIN) у мережі GSM "
+"(ЗАСТАРІЛЕ/НЕ ВИКОРИСТОВУЄТЬСЯ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:87 ../data/sugar.schemas.in.h:59
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "PUK у мережі GSM (ЗАСТАРІЛЕ/НЕ ВИКОРИСТОВУЄТЬСЯ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:88 ../data/sugar.schemas.in.h:60
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Налаштування особистого ключа розблокування (PUK) у мережі GSM (ЗАСТАРІЛЕ/НЕ "
+"ВИКОРИСТОВУЄТЬСЯ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:89
 msgid "TODO: add summary"
-msgstr ""
+msgstr "ЗАВДАННЯ: додати резюме"
 
 #: ../data/org.sugarlabs.gschema.xml.h:90
 msgid "TODO: add description"
-msgstr ""
+msgstr "ЗАВДАННЯ: додати опис"
 
 #: ../data/org.sugarlabs.gschema.xml.h:91 ../data/sugar.schemas.in.h:65
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "Значення тону для служби синтезу мовлення Sugar"
 
 #: ../data/org.sugarlabs.gschema.xml.h:92 ../data/sugar.schemas.in.h:66
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "Значення тону, яке використовуватиметься службою синтезу мовлення Sugar"
 
 #: ../data/org.sugarlabs.gschema.xml.h:93 ../data/sugar.schemas.in.h:67
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Значення швидкості для служби синтезу мовлення Sugar"
 
 #: ../data/org.sugarlabs.gschema.xml.h:94 ../data/sugar.schemas.in.h:68
 msgid "Rate value used by the speech service in Sugar"
 msgstr ""
+"Значення швидкості, яке використовуватиметься службою синтезу мовлення Sugar"
 
 #: ../data/org.sugarlabs.gschema.xml.h:95 ../data/sugar.schemas.in.h:69
 msgid "Activity update backend."
-msgstr ""
+msgstr "Модуль оновлення просторів дій."
 
 #: ../data/org.sugarlabs.gschema.xml.h:96 ../data/sugar.schemas.in.h:70
 msgid ""
 "Activity update backend module, followed by a period, followed by the class "
 "name."
-msgstr ""
+msgstr "Модуль оновлення просторів дій, потім крапка і назва класу."
 
 #: ../data/org.sugarlabs.gschema.xml.h:97 ../data/sugar.schemas.in.h:71
 msgid "Microformat update URL."
-msgstr ""
+msgstr "Адреса оновлення мікроформатів."
 
 #: ../data/org.sugarlabs.gschema.xml.h:98 ../data/sugar.schemas.in.h:72
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
+"Адреса, яка використовуватиметься модулем оновлення мікроформатів для "
+"оновлення даних щодо просторів дій."
 
 #: ../data/org.sugarlabs.gschema.xml.h:99 ../data/sugar.schemas.in.h:73
 msgid "Automatic update frequency."
@@ -480,19 +486,21 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:103
 msgid "New ASLO update.json URL."
-msgstr ""
+msgstr "Адреса update.json для нового ASLO."
 
 #: ../data/org.sugarlabs.gschema.xml.h:104
 msgid "URL used by the new ASLO updater to download activity data."
 msgstr ""
+"Адреса, яка використовується новим засобом оновлення ASLO для отримання "
+"даних вправ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:105 ../data/sugar.schemas.in.h:77
 msgid "A description of the hardware available to the user."
-msgstr ""
+msgstr "Опис апаратного забезпечення, яке доступне користувачеві."
 
 #: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
-msgstr ""
+msgstr "Цей рядок буде показано на панелі керування у розділі щодо комп’ютера."
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
@@ -510,25 +518,25 @@ msgstr "лінія:   колір=%s тон=%s"
 #: ../extensions/cpsection/aboutme/model.py:86
 #, python-format
 msgid "stroke:   %s"
-msgstr ""
+msgstr "лінія:   %s"
 
 #: ../extensions/cpsection/aboutme/model.py:88
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr ""
+msgstr "заповненняl:     колір=%s відтінок=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:90
 #, python-format
 msgid "fill:     %s"
-msgstr ""
+msgstr "заповнення:     %s"
 
 #: ../extensions/cpsection/aboutme/model.py:102
 msgid "Error in specified color modifiers."
-msgstr ""
+msgstr "Помилка у вказаних модифікаторах кольору."
 
 #: ../extensions/cpsection/aboutme/model.py:105
 msgid "Error in specified colors."
-msgstr ""
+msgstr "Помилка у вказаних кольорах."
 
 #: ../extensions/cpsection/aboutme/view.py:243
 msgid "Click to change your color:"
@@ -561,19 +569,19 @@ msgstr "Серійний номер:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:103
 msgid "Software"
-msgstr ""
+msgstr "Програмне забезпечення"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:112
 msgid "Build:"
-msgstr ""
+msgstr "Модифікація:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:117
 msgid "Sugar:"
-msgstr ""
+msgstr "Sugar:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:122
 msgid "Firmware:"
-msgstr ""
+msgstr "Мікропрограма:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:127
 msgid "Wireless Firmware:"
@@ -624,41 +632,40 @@ msgstr "Виберіть тло:"
 
 #: ../extensions/cpsection/background/view.py:57
 msgid "Clear background"
-msgstr ""
+msgstr "Спорожнити тло"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr ""
+msgstr "Дата і час"
 
 #: ../extensions/cpsection/datetime/model.py:100
 msgid "Error: timezone does not exist."
-msgstr ""
+msgstr "Помилка: такого часового поясу не існує."
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
-msgstr ""
+msgstr "Фрейм"
 
 #: ../extensions/cpsection/frame/view.py:26
 msgid "never"
-msgstr ""
+msgstr "ніколи"
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "instantaneous"
-msgstr ""
+msgstr "негайно"
 
 #: ../extensions/cpsection/frame/view.py:28
 #, python-format
 msgid "%s seconds"
-msgstr ""
+msgstr "%s секунд"
 
 #: ../extensions/cpsection/frame/view.py:52
 msgid "Activation Delay"
 msgstr "Активацію відкладено"
 
 #: ../extensions/cpsection/frame/view.py:68
-#, fuzzy
 msgid "Activation Area"
-msgstr "Активацію відкладено"
+msgstr "Область активації"
 
 #: ../extensions/cpsection/frame/view.py:85
 msgid "Corner"
@@ -670,32 +677,32 @@ msgstr "Сторона"
 
 #: ../extensions/cpsection/frame/view.py:123
 msgid "Size"
-msgstr ""
+msgstr "Розмір"
 
 #: ../extensions/cpsection/frame/view.py:221
 msgid "toolbar size"
-msgstr ""
+msgstr "розмір панелі інструментів"
 
 #: ../extensions/cpsection/frame/view.py:226
 msgid "exact corner or edge"
-msgstr ""
+msgstr "лише сам кут або край"
 
 #: ../extensions/cpsection/frame/view.py:228
 msgid "exact corner"
-msgstr ""
+msgstr "лише кут"
 
 #: ../extensions/cpsection/frame/view.py:230
 msgid "exact edge"
-msgstr ""
+msgstr "лише край"
 
 #: ../extensions/cpsection/frame/view.py:232
 msgid "ignored"
-msgstr ""
+msgstr "ігнороване"
 
 #. TRANS: px as in pixels
 #: ../extensions/cpsection/frame/view.py:235
 msgid "{}px"
-msgstr ""
+msgstr "{} пк"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:38
@@ -726,49 +733,53 @@ msgstr "Немає доступу до ~/.i18n. Створіть стандар�
 #: ../extensions/cpsection/language/model.py:156
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr ""
+msgstr "Не вдалося визначити мову для коду %s."
 
 #: ../extensions/cpsection/language/model.py:179
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr ""
+msgstr "Вибачте, не можу розмовляти мовою «%s»."
 
 #: ../extensions/cpsection/language/view.py:75
 msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
+"Додайте мови у бажаному порядку. Якщо переклад виявиться недоступним, буде "
+"використано наступну мову у списку."
 
 #: ../extensions/cpsection/language/view.py:383
 #, python-format
 msgid "Error writting language configuration (%s)"
-msgstr ""
+msgstr "Помилка під час спроби записати налаштування мов (%s)"
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem"
-msgstr ""
+msgstr "Модем"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
+"Щоб налаштувати широкосмугове мобільне з’єднання із стільниковою мережею (3G)"
+", вам слід надати вказані нижче дані."
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr ""
+msgstr "Країна:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr ""
+msgstr "Надавач послуг:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr ""
+msgstr "План:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
-msgstr ""
+msgstr "Користувач:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
@@ -808,35 +819,41 @@ msgstr "Стан невідомий."
 #: ../extensions/cpsection/network/model.py:104
 msgid "Error in specified radio argument use on/off."
 msgstr ""
+"Помилка у визначенні параметра вибору з варіантів. Мало бути увімкн. або "
+"вимкн."
 
 #: ../extensions/cpsection/network/model.py:197
 msgid "Error in specified argument use 0/1."
-msgstr ""
+msgstr "Помилка у визначенні параметра. Мало бути 0 або 1."
 
 #: ../extensions/cpsection/network/view.py:65
 msgid "Wireless"
-msgstr ""
+msgstr "Бездротовий"
 
 #: ../extensions/cpsection/network/view.py:73
 msgid "The wireless radio may be turned off to save battery life."
 msgstr ""
+"Можна вимкнути бездротовий радіозв’язок для заощадження енергії в "
+"акумуляторі."
 
 #: ../extensions/cpsection/network/view.py:86
 msgid "Radio"
-msgstr ""
+msgstr "Радіо"
 
 #: ../extensions/cpsection/network/view.py:103
 msgid ""
 "Discard wireless connections if you have trouble connecting to the network"
 msgstr ""
+"Відкиньте бездротові з’єднання, якщо у вас виникають проблеми зі "
+"встановленням зв’язку з мережею"
 
 #: ../extensions/cpsection/network/view.py:113
 msgid "Discard wireless connections"
-msgstr ""
+msgstr "Відкидати бездротові з’єднання"
 
 #: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
-msgstr ""
+msgstr "Співпраця"
 
 #: ../extensions/cpsection/network/view.py:137
 msgid ""
@@ -844,10 +861,13 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
+"Сервер є еквівалентом кімнати, у якій ви перебуваєте. Люди на одному сервері "
+"можуть бачити записи один одного, навіть якщо вони не працюють у одній "
+"мережі."
 
 #: ../extensions/cpsection/network/view.py:147
 msgid "Server:"
-msgstr ""
+msgstr "Сервер:"
 
 #: ../extensions/cpsection/network/view.py:163
 msgid ""
@@ -856,7 +876,7 @@ msgid ""
 "different place with different people."
 msgstr ""
 "Допомога громади - це форум, що дозволяє зв'язатись з розробниками і "
-"обговорити Заняття Sugar. Зміна серверів означає, що обговорення "
+"обговорити Заняття Sugar.  Зміна серверів означає, що обговорення "
 "відбуватиметься в іншому місці з іншими людьми."
 
 #: ../extensions/cpsection/network/view.py:173
@@ -899,43 +919,42 @@ msgstr "Перевірка наявності оновлень..."
 
 #: ../extensions/cpsection/updater/view.py:121
 msgid "Installing updates..."
-msgstr ""
+msgstr "Встановлюємо оновлення…"
 
 #: ../extensions/cpsection/updater/view.py:150
 #, python-format
 msgid "Checking %s..."
-msgstr ""
+msgstr "Перевіряємо %s…"
 
 #: ../extensions/cpsection/updater/view.py:152
-#, fuzzy
 msgid "Looking for updates..."
-msgstr "Перевірка наявності оновлень..."
+msgstr "Шукаємо оновлення…"
 
 #: ../extensions/cpsection/updater/view.py:154
 #, python-format
 msgid "Downloading %s..."
-msgstr ""
+msgstr "Отримуємо %s…"
 
 #: ../extensions/cpsection/updater/view.py:156
 #, python-format
 msgid "Updating %s..."
-msgstr ""
+msgstr "Оновлюємо %s…"
 
 #: ../extensions/cpsection/updater/view.py:166
 msgid "Your software is up-to-date"
-msgstr ""
+msgstr "Програмне забезпечення не потребує оновлення"
 
 #: ../extensions/cpsection/updater/view.py:168
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Ви можете встановити %s оновлення"
+msgstr[1] "Ви можете встановити %s оновлення"
+msgstr[2] "Ви можете встановити %s оновлень"
 
 #: ../extensions/cpsection/updater/view.py:183
 msgid "Can't connect to the activity server"
-msgstr ""
+msgstr "Не вдалося встановити з’єднання із сервером вправ"
 
 #: ../extensions/cpsection/updater/view.py:186
 msgid "Verify your connection to internet and try again, or try again later"
@@ -989,11 +1008,11 @@ msgstr "%.0f КБ"
 #: ../extensions/cpsection/updater/view.py:432
 #, python-format
 msgid "%.1f MB"
-msgstr ""
+msgstr "%.1f МБ"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Web Services"
-msgstr ""
+msgstr "Вебслужби"
 
 #: ../extensions/cpsection/webaccount/view.py:65
 #, python-format
@@ -1001,31 +1020,32 @@ msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
 msgstr ""
+"Не встановлено жодної вебслужби.\n"
+"Будь ласка, відвідайте %s, щоб дізнатися більше."
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
-msgstr ""
+msgstr "Звук"
 
 #: ../extensions/deviceicon/audio.py:330
 msgid "Speaker"
-msgstr ""
+msgstr "Гучномовець"
 
 #: ../extensions/deviceicon/audio.py:331
 msgid "Microphone"
-msgstr ""
+msgstr "Мікрофон"
 
 #: ../extensions/deviceicon/battery.py:69
 msgid "My Battery"
-msgstr ""
+msgstr "Акумулятор"
 
 #: ../extensions/deviceicon/battery.py:151
-#, fuzzy
 msgid "Removed"
-msgstr "Вилучити"
+msgstr "Вилучено"
 
 #: ../extensions/deviceicon/battery.py:154
 msgid "Charging"
-msgstr ""
+msgstr "Заряджання"
 
 #: ../extensions/deviceicon/battery.py:157
 msgid "Very little power remaining"
@@ -1055,12 +1075,10 @@ msgid "Brightness"
 msgstr "Яскравість"
 
 #: ../extensions/deviceicon/display.py:239
-#, fuzzy
 msgid "Display"
 msgstr "Дисплей"
 
 #: ../extensions/deviceicon/frame.py:53
-#, fuzzy
 msgid "Show my keyboard"
 msgstr "Показати клавіатуру"
 
@@ -1073,9 +1091,8 @@ msgstr "IP адреса: %s"
 #: ../extensions/deviceicon/network.py:297
 #: ../src/jarabe/desktop/networkviews.py:134
 #: ../src/jarabe/desktop/networkviews.py:510
-#, fuzzy
 msgid "Disconnect"
-msgstr "Роз'єднано"
+msgstr "Від’єднати"
 
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:290
@@ -1083,44 +1100,43 @@ msgstr "Роз'єднано"
 #: ../src/jarabe/desktop/networkviews.py:552
 #: ../src/jarabe/desktop/networkviews.py:696
 msgid "Connecting..."
-msgstr ""
+msgstr "Встановлюємо з’єднання…"
 
 #: ../extensions/deviceicon/network.py:110
 #: ../extensions/deviceicon/network.py:181
 #: ../src/jarabe/desktop/networkviews.py:257
 #: ../src/jarabe/desktop/networkviews.py:558
 #: ../src/jarabe/desktop/networkviews.py:702
-#, fuzzy
 msgid "Connected"
-msgstr "З'єднати"
+msgstr "З’єднано"
 
 #: ../extensions/deviceicon/network.py:123
 msgid "No wireless connection"
-msgstr ""
+msgstr "Немає бездротового з’єднання"
 
 #: ../extensions/deviceicon/network.py:137
 #: ../extensions/deviceicon/network.py:140
 msgid "Channel"
-msgstr ""
+msgstr "Канал"
 
 #: ../extensions/deviceicon/network.py:138
 #: ../src/jarabe/journal/expandedentry.py:386
 #: ../src/jarabe/journal/listmodel.py:191
 #: ../src/jarabe/journal/listmodel.py:199
 msgid "Unknown"
-msgstr ""
+msgstr "Невідомий"
 
 #: ../extensions/deviceicon/network.py:156
 msgid "Wired Network"
-msgstr ""
+msgstr "Дротова мережа"
 
 #: ../extensions/deviceicon/network.py:184
 msgid "Speed"
-msgstr ""
+msgstr "Швидкість"
 
 #: ../extensions/deviceicon/network.py:209
 msgid "Wireless modem"
-msgstr ""
+msgstr "Бездротовий модем"
 
 #: ../extensions/deviceicon/network.py:278
 msgid "Please wait..."
@@ -1163,10 +1179,9 @@ msgid "Suggestion: %s"
 msgstr "Порада: %s"
 
 #: ../extensions/deviceicon/network.py:344
-#, python-format
-#, fuzzy, python-format
+#, python-format, python-format
 msgid "Connected for %s"
-msgstr "З'єднано для %s"
+msgstr "З'єднано %s"
 
 #: ../extensions/deviceicon/network.py:349
 #: ../extensions/deviceicon/network.py:350
@@ -1176,37 +1191,36 @@ msgstr "%d КБ"
 
 #: ../extensions/deviceicon/network.py:355
 msgid "Check your PIN/PUK configuration."
-msgstr ""
+msgstr "Перевірте налаштування PIN/PUK."
 
 #: ../extensions/deviceicon/network.py:358
 msgid "Check your Access Point Name (APN) configuration"
-msgstr ""
+msgstr "Перевірте налаштування назви точки доступу"
 
 #: ../extensions/deviceicon/network.py:362
 msgid "Check the Number configuration."
-msgstr ""
+msgstr "Перевірте налаштування номера."
 
 #: ../extensions/deviceicon/network.py:364
 msgid "Check your configuration."
-msgstr ""
+msgstr "Перевірте налаштування."
 
 #: ../extensions/deviceicon/network.py:619
 msgid "Mesh Network"
-msgstr ""
+msgstr "Mesh-мережа"
 
 #: ../extensions/deviceicon/network.py:665
 #, python-format
 msgid "Mesh Network %s"
-msgstr ""
+msgstr "Mesh-мережа %s"
 
 #: ../extensions/deviceicon/network.py:782
 msgid "No GSM connection available."
-msgstr ""
+msgstr "Немає доступу до з’єднання GSM."
 
 #: ../extensions/deviceicon/network.py:783
-#, fuzzy
 msgid "Create a connection in My Settings."
-msgstr "Створити з'єднання в Параметрах."
+msgstr "Створити з'єднання у «Параметрах»."
 
 #: ../extensions/deviceicon/speech.py:49
 msgid "Speech"
@@ -1244,29 +1258,31 @@ msgstr "Стило"
 
 #: ../extensions/deviceicon/touchpad.py:61
 msgid "My touchpad"
-msgstr ""
+msgstr "Сенсорна панель"
 
 #: ../extensions/deviceicon/volume.py:62 ../src/jarabe/view/palettes.py:210
 msgid "Show contents"
-msgstr ""
+msgstr "Показати вміст"
 
 #: ../data/sugar.schemas.in.h:15
 msgid "Favorites Layout"
-msgstr ""
+msgstr "Компонування «Вибраного»"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Layout of the favorites view."
-msgstr ""
+msgstr "Компонування списку вибраних записів."
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Favorites resume mode"
-msgstr ""
+msgstr "Режим відновлення «Вибраного»"
 
 #: ../data/sugar.schemas.in.h:18
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
+"У режимі відновлення натискання піктограми «Вибране» призведе до відновлення "
+"роботи останнього запису відповідної діяльності."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -1274,6 +1290,8 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
+"sugar-control-panel: ПОПЕРЕДЖЕННЯ: декілька варіантів із однією назвою: "
+"модуль %s: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -1344,54 +1362,55 @@ msgstr "Перезапустити зараз"
 
 #: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
 msgid "An activity is not responding."
-msgstr ""
+msgstr "Простір дій не відповідає."
 
 #: ../src/jarabe/controlpanel/gui.py:420 ../src/jarabe/view/buddymenu.py:138
 msgid "You may lose unsaved work if you continue."
 msgstr ""
+"Якщо ви продовжите виконання дії, незбережені результати роботи може бути "
+"втрачено."
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
 #: ../src/jarabe/journal/journaltoolbox.py:94
 #, python-format
 msgid "Search in %s"
-msgstr ""
+msgstr "Шукати у %s"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
-msgstr ""
+msgstr "Параметри"
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:349
-#, fuzzy
 msgid "Done"
-msgstr "Немає"
+msgstr "Виконано"
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
 msgid "Ok"
-msgstr ""
+msgstr "Гаразд"
 
 #: ../src/jarabe/desktop/activitieslist.py:340
 #, python-format
 msgid "Version %s"
-msgstr ""
+msgstr "Версія %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:424
 #: ../src/jarabe/journal/listview.py:566 ../src/jarabe/journal/iconview.py:301
 msgid "Clear search"
-msgstr ""
+msgstr "Спорожнити пошук"
 
 #: ../src/jarabe/desktop/activitieslist.py:510
 msgid "No matching activities"
-msgstr ""
+msgstr "Відповідних просторів дій не знайдено"
 
 #: ../src/jarabe/desktop/activitieslist.py:546
 msgid "Confirm erase"
-msgstr ""
+msgstr "Підтвердження вилучення"
 
 #: ../src/jarabe/desktop/activitieslist.py:548
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr ""
+msgstr "Підтвердьте вилучення: ви справді хочете остаточно вилучити %s?"
 
 #: ../src/jarabe/desktop/activitieslist.py:552
 #: ../src/jarabe/frame/clipboardmenu.py:65
@@ -1445,44 +1464,44 @@ msgstr "Трикутник"
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
-msgstr ""
+msgstr "Реєстрація"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
-msgstr ""
+msgstr "Будь ласка, зачекайте: шукаємо ваш шкільний сервер."
 
 #: ../src/jarabe/desktop/favoritesview.py:387
 msgid "Registration Failed"
-msgstr ""
+msgstr "Не вдалося зареєструватися"
 
 #: ../src/jarabe/desktop/favoritesview.py:390
 msgid "Registration Successful"
-msgstr ""
+msgstr "Успішна реєстрація"
 
 #: ../src/jarabe/desktop/favoritesview.py:391
 msgid "You are now registered with your school server."
-msgstr ""
+msgstr "Тепер вас зареєстровано на шкільному сервері."
 
 #: ../src/jarabe/desktop/favoritesview.py:680
 msgid "Register"
-msgstr ""
+msgstr "Зареєструватися"
 
 #: ../src/jarabe/desktop/favoritesview.py:682
 msgid "Register again"
-msgstr ""
+msgstr "Зареєструватися ще раз"
 
 #: ../src/jarabe/desktop/homewindow.py:255
 #: ../src/jarabe/desktop/viewtoolbar.py:73
 #: ../src/jarabe/frame/zoomtoolbar.py:57 ../src/jarabe/model/screenshot.py:63
 #: ../src/jarabe/view/viewhelp.py:76
 msgid "Home"
-msgstr ""
+msgstr "Домівка"
 
 #: ../src/jarabe/desktop/homewindow.py:262
 #: ../src/jarabe/frame/zoomtoolbar.py:53 ../src/jarabe/model/screenshot.py:61
 #: ../src/jarabe/view/viewhelp.py:73
 msgid "Group"
-msgstr ""
+msgstr "Група"
 
 #: ../src/jarabe/desktop/homewindow.py:269
 #: ../src/jarabe/frame/zoomtoolbar.py:49
@@ -1495,18 +1514,20 @@ msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
+"Потрібен ключ шифрування даних бездротової мережі\n"
+" до мережі «%s»."
 
 #: ../src/jarabe/desktop/keydialog.py:141
 msgid "Key Type:"
-msgstr ""
+msgstr "Тип ключа:"
 
 #: ../src/jarabe/desktop/keydialog.py:161
 msgid "Authentication Type:"
-msgstr ""
+msgstr "Тип розпізнавання:"
 
 #: ../src/jarabe/desktop/keydialog.py:224
 msgid "WPA & WPA2 Personal"
-msgstr ""
+msgstr "Особистий WPA і WPA2"
 
 #: ../src/jarabe/desktop/keydialog.py:233
 msgid "Wireless Security:"
@@ -1527,46 +1548,46 @@ msgstr "Приєднатись"
 #: ../src/jarabe/desktop/networkviews.py:499
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr ""
+msgstr "Ситуативна мережа %d"
 
 #: ../src/jarabe/desktop/networkviews.py:643
 #, python-format
 msgid "Mesh Network %d"
-msgstr ""
+msgstr "Mesh-мережа %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
-msgstr ""
+msgstr "Не вдалося встановити з’єднання із сервером."
 
 #: ../src/jarabe/desktop/schoolserver.py:151
 msgid "The server could not complete the request."
-msgstr ""
+msgstr "Серверу не вдалося виконати запит."
 
 #: ../src/jarabe/desktop/viewtoolbar.py:95
 msgid "List view"
-msgstr ""
+msgstr "Список"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:97
 #: ../src/jarabe/desktop/viewtoolbar.py:196
 #: ../src/jarabe/desktop/viewtoolbar.py:210
 #, python-format
 msgid "<Ctrl>%d"
-msgstr ""
+msgstr "<Ctrl>%d"
 
 #: ../src/jarabe/frame/activitiestray.py:213
 #: ../src/jarabe/frame/activitiestray.py:657
 msgid "Decline"
-msgstr ""
+msgstr "Зниження"
 
 #: ../src/jarabe/frame/activitiestray.py:598
-#, fuzzy, python-format
+#, python-format
 msgid "%dB"
-msgstr "%dМБ"
+msgstr "%d Б"
 
 #: ../src/jarabe/frame/activitiestray.py:600
-#, fuzzy, python-format
+#, python-format
 msgid "%dKB"
-msgstr "%d КБ"
+msgstr "%d кБ"
 
 #: ../src/jarabe/frame/activitiestray.py:602
 #, python-format
@@ -1616,20 +1637,20 @@ msgstr "Відкрити"
 
 #: ../src/jarabe/frame/clipboardmenu.py:88
 msgid "Open with"
-msgstr ""
+msgstr "Відкрити за допомогою"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
 msgid "%s clipping"
-msgstr ""
+msgstr "%s з буфера"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
-msgstr ""
+msgstr "F1"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
@@ -1669,39 +1690,39 @@ msgstr "Дошкільник"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Kindergarten"
-msgstr ""
+msgstr "Дитсадок"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "1st Grade"
-msgstr ""
+msgstr "1-й клас"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "2nd Grade"
-msgstr ""
+msgstr "2-й клас"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "3rd Grade"
-msgstr ""
+msgstr "3-й клас"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "4th Grade"
-msgstr ""
+msgstr "4-й клас"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "5th Grade"
-msgstr ""
+msgstr "5-й клас"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "6th Grade"
-msgstr ""
+msgstr "6-й клас"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "7th Grade"
-msgstr ""
+msgstr "7-й клас"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "High School"
-msgstr ""
+msgstr "Старша школа"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "Adult"
@@ -1752,15 +1773,15 @@ msgstr "Учасники:"
 
 #: ../src/jarabe/journal/expandedentry.py:459
 msgid "Description:"
-msgstr ""
+msgstr "Опис:"
 
 #: ../src/jarabe/journal/expandedentry.py:465
 msgid "Tags:"
-msgstr ""
+msgstr "Мітки:"
 
 #: ../src/jarabe/journal/expandedentry.py:470
 msgid "Comments:"
-msgstr ""
+msgstr "Коментарі:"
 
 #: ../src/jarabe/journal/journalactivity.py:182
 #: ../src/jarabe/journal/journaltoolbox.py:94
@@ -1768,28 +1789,28 @@ msgstr ""
 #: ../src/jarabe/journal/volumestoolbar.py:349
 #: ../src/jarabe/view/viewhelp.py:79
 msgid "Journal"
-msgstr ""
+msgstr "Журнал"
 
 #: ../src/jarabe/journal/journaltoolbox.py:103
 msgid "Favorite entries"
-msgstr ""
+msgstr "Вибрані запис"
 
 #. TRANS: Item on a palette that filters by entry type.
 #: ../src/jarabe/journal/journaltoolbox.py:112
 #: ../src/jarabe/journal/journaltoolbox.py:403
 #: ../src/jarabe/journal/journaltoolbox.py:479
 msgid "Anything"
-msgstr ""
+msgstr "Будь-що"
 
 #: ../src/jarabe/journal/journaltoolbox.py:118
 #: ../src/jarabe/journal/journaltoolbox.py:165
 #: ../src/jarabe/journal/journaltoolbox.py:483
 msgid "Anytime"
-msgstr ""
+msgstr "Будь-коли"
 
 #: ../src/jarabe/journal/journaltoolbox.py:172
 msgid "Since yesterday"
-msgstr ""
+msgstr "З учора"
 
 #: ../src/jarabe/journal/journaltoolbox.py:175
 msgid "Past week"
@@ -1838,52 +1859,51 @@ msgstr "Почати"
 
 #: ../src/jarabe/journal/journaltoolbox.py:682
 #: ../src/jarabe/journal/palettes.py:100 ../src/jarabe/journal/palettes.py:513
-#, fuzzy
 msgid "No activity to start entry"
-msgstr "Немає занять для відновлення елемента"
+msgstr "Немає простору дій для запуску запису"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 msgid "Sort view"
-msgstr ""
+msgstr "Упорядковування"
 
 #: ../src/jarabe/journal/journaltoolbox.py:711
 msgid "Sort by date modified"
-msgstr ""
+msgstr "Упорядкувати за часом зміни"
 
 #: ../src/jarabe/journal/journaltoolbox.py:712
 msgid "Sort by date created"
-msgstr ""
+msgstr "Упорядкувати за часом створення"
 
 #: ../src/jarabe/journal/journaltoolbox.py:713
 msgid "Sort by size"
-msgstr ""
+msgstr "Упорядкувати за розміром"
 
 #: ../src/jarabe/journal/journaltoolbox.py:778
 msgid "Deselect all"
-msgstr ""
+msgstr "Зняти позначення з усіх"
 
 #: ../src/jarabe/journal/journaltoolbox.py:791
 msgid "Select all"
-msgstr ""
+msgstr "Позначити усі"
 
 #: ../src/jarabe/journal/journaltoolbox.py:817
-#, fuzzy, python-format
+#, python-format
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
-msgstr[0] "Бажаєте скопіювати %d елемент?"
-msgstr[1] "Бажаєте скопіювати %d елементи?"
-msgstr[2] "Бажаєте скопіювати %d елементів?"
+msgstr[0] "Бажаєте стерти %d елемент?"
+msgstr[1] "Бажаєте стерти %d елементи?"
+msgstr[2] "Бажаєте стерти %d елементів?"
 
 #: ../src/jarabe/journal/journaltoolbox.py:831
 #: ../src/jarabe/journal/palettes.py:378
 msgid "Copy"
-msgstr ""
+msgstr "Копіювати"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:882
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr ""
+msgstr "Вибрано %(selected)d з %(total)d"
 
 #: ../src/jarabe/journal/journaltoolbox.py:917
 msgid "Select filter"
@@ -1926,42 +1946,41 @@ msgstr ""
 
 #: ../src/jarabe/journal/modalalert.py:82
 msgid "Show Journal"
-msgstr ""
+msgstr "Показати журнал"
 
 #: ../src/jarabe/journal/objectchooser.py:171
 msgid "Choose an object"
-msgstr ""
+msgstr "Виберіть об’єкт"
 
 #: ../src/jarabe/journal/objectchooser.py:176
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr ""
+msgstr "Виберіть об’єкт для відкриття за допомогою простору дій %s"
 
 #: ../src/jarabe/journal/objectchooser.py:184
 #: ../src/jarabe/view/viewhelp.py:335 ../src/jarabe/view/viewsource.py:579
 msgid "Close"
-msgstr ""
+msgstr "Закрити"
 
 #: ../src/jarabe/journal/palettes.py:84
 msgid "Resume with"
-msgstr ""
+msgstr "Відновити за допомогою"
 
 #: ../src/jarabe/journal/palettes.py:87
 msgid "Start with"
-msgstr ""
+msgstr "Запустити за допомогою"
 
 #: ../src/jarabe/journal/palettes.py:124
 msgid "Send to"
-msgstr ""
+msgstr "Надіслати"
 
 #: ../src/jarabe/journal/palettes.py:133
 msgid "View Details"
-msgstr ""
+msgstr "Переглянути подробиці"
 
 #: ../src/jarabe/journal/palettes.py:193
-#, fuzzy
 msgid "Entries without a file cannot be sent."
-msgstr "Елементи без файлу не можна скопіювати."
+msgstr "Записи без файлів не можна надсилати."
 
 #: ../src/jarabe/journal/palettes.py:272
 #: ../src/jarabe/journal/volumestoolbar.py:214
@@ -2010,47 +2029,49 @@ msgstr "Продовжити"
 #: ../src/jarabe/journal/palettes.py:622
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr ""
+msgstr "%(index)d з %(total)d : %(object_title)s"
 
 #: ../src/jarabe/journal/volumestoolbar.py:375
 #: ../src/jarabe/view/palettes.py:251 ../src/jarabe/view/palettes.py:317
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr ""
+msgstr "Вільно %(free_space)d МБ"
 
 #: ../src/jarabe/model/desktop.py:85
 #, python-format
 msgid "Favorites view %d"
-msgstr ""
+msgstr "Вибране %d"
 
 #: ../src/jarabe/model/network.py:217
 msgid "The reason for the device state change is unknown."
-msgstr ""
+msgstr "Причина зміни стану пристрою є невідомою."
 
 #: ../src/jarabe/model/network.py:219
 msgid "The state change is normal."
-msgstr ""
+msgstr "Зміна стану є нормальною."
 
 #: ../src/jarabe/model/network.py:221
 msgid "The device is now managed."
-msgstr ""
+msgstr "Тепер пристрій є керованим."
 
 #: ../src/jarabe/model/network.py:223
 msgid "The device is no longer managed."
-msgstr ""
+msgstr "Тепер пристрій не є керованим."
 
 #: ../src/jarabe/model/network.py:225
 msgid "The device could not be readied for configuration."
-msgstr ""
+msgstr "Не вдалося приготувати пристрій для налаштовування."
 
 #: ../src/jarabe/model/network.py:227
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
+"Не вдалося зарезервувати налаштування IP (немає доступної адреси, часу "
+"очікування тощо)."
 
 #: ../src/jarabe/model/network.py:230
 msgid "The IP configuration is no longer valid."
-msgstr ""
+msgstr "Налаштування IP вже не є чинними."
 
 #: ../src/jarabe/model/network.py:232
 msgid "Secrets were required, but not provided."
@@ -2061,83 +2082,88 @@ msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
+"Клієнт мережі 802.1X від’єднався від точки доступу або сервера розпізнавання."
 
 #: ../src/jarabe/model/network.py:237
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr ""
+msgstr "Не вдалося налаштувати клієнт мережі 802.1X."
 
 #: ../src/jarabe/model/network.py:239
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr ""
+msgstr "Клієнт мережі 802.1X несподівано завершив або перервав роботу."
 
 #: ../src/jarabe/model/network.py:241
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr ""
+msgstr "Процедура розпізнавання клієнта мережі 802.1X тривала надто довго."
 
 #: ../src/jarabe/model/network.py:243
 msgid "The PPP service failed to start within the allowed time."
-msgstr ""
+msgstr "Не вдалося запустити службу PPP протягом дозволеного часу."
 
 #: ../src/jarabe/model/network.py:245
 msgid "The PPP service disconnected unexpectedly."
 msgstr "Служба PPP неочікувано від'єдналась."
 
 #: ../src/jarabe/model/network.py:247
-#, fuzzy
 msgid "The PPP service quit or failed unexpectedly."
-msgstr "Служба PPP неочікувано від'єдналась."
+msgstr "Служба PPP неочікувано завершила або перервала роботу."
 
 #: ../src/jarabe/model/network.py:249
 msgid "The DHCP service failed to start within the allowed time."
-msgstr ""
+msgstr "Протягом встановленого часу не вдалося запустити службу DHCP."
 
 #: ../src/jarabe/model/network.py:251
 msgid "The DHCP service reported an unexpected error."
-msgstr ""
+msgstr "Службою DHCP повідомлення про неочікувану помилку."
 
 #: ../src/jarabe/model/network.py:253
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Служба DHCP неочікувано завершила або перервала роботу."
 
 #: ../src/jarabe/model/network.py:255
 msgid "The shared connection service failed to start."
-msgstr ""
+msgstr "Не вдалося запустити службу спільного використання з’єднання."
 
 #: ../src/jarabe/model/network.py:257
 msgid "The shared connection service quit or failed unexpectedly."
 msgstr ""
+"Служба спільного використання з’єднання неочікувано завершила або перервала "
+"роботу."
 
 #: ../src/jarabe/model/network.py:260
 msgid "The AutoIP service failed to start."
-msgstr ""
+msgstr "Не вдалося запустити службу автоматичного визначення IP."
 
 #: ../src/jarabe/model/network.py:262
 msgid "The AutoIP service reported an unexpected error."
 msgstr ""
+"Службою автоматичного визначення IP повідомлено про неочікувану помилку."
 
 #: ../src/jarabe/model/network.py:264
 msgid "The AutoIP service quit or failed unexpectedly."
 msgstr ""
+"Служба автоматичного визначення IP неочікувано завершила або перервала "
+"роботу."
 
 #: ../src/jarabe/model/network.py:266
 msgid "Dialing failed because the line was busy."
-msgstr ""
+msgstr "Не вдалося набрати номер, оскільки лінію було зайнято."
 
 #: ../src/jarabe/model/network.py:268
 msgid "Dialing failed because there was no dial tone."
-msgstr ""
+msgstr "Не вдалося набрати номер, оскільки не отримано тонального виклику."
 
 #: ../src/jarabe/model/network.py:270
 msgid "Dialing failed because there was no carrier."
-msgstr ""
+msgstr "Не вдалося набрати номер, оскільки немає сигналу."
 
 #: ../src/jarabe/model/network.py:272
 msgid "Dialing timed out."
-msgstr ""
+msgstr "Перевищено час очікування на завершення набирання номера."
 
 #: ../src/jarabe/model/network.py:274
 msgid "Dialing failed."
-msgstr ""
+msgstr "Не вдалося набрати номер."
 
 #: ../src/jarabe/model/network.py:276
 msgid "Modem initialization failed."
@@ -2161,7 +2187,7 @@ msgstr "Перевищено час очікування на реєстраці
 
 #: ../src/jarabe/model/network.py:286
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "Не вдалося зареєструватися у бажаній мережі GSM."
 
 #: ../src/jarabe/model/network.py:288
 msgid "PIN check failed."
@@ -2185,48 +2211,50 @@ msgstr "Активне з’єднання з пристроєм вилучен�
 
 #: ../src/jarabe/model/network.py:299
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "Користувач або клієнт надіслали запит щодо розірвання з’єднання."
 
 #: ../src/jarabe/model/network.py:301
 msgid "The device's carrier/link changed."
-msgstr ""
+msgstr "Носій сигналу або зв’язок пристрою було змінено."
 
 #: ../src/jarabe/model/network.py:303
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "Використано наявне з’єднання пристрою."
 
 #: ../src/jarabe/model/network.py:305
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "Тепер клієнт мережі є доступним."
 
 #: ../src/jarabe/model/network.py:307
 msgid "The modem could not be found."
-msgstr ""
+msgstr "Не вдалося знайти модем."
 
 #: ../src/jarabe/model/network.py:309
 msgid "The Bluetooth connection failed or timed out."
 msgstr ""
+"Не вдалося встановити з’єднання Bluetooth або з’єднання розірвано через "
+"перевищення часу очікування."
 
 #: ../src/jarabe/model/network.py:311
 msgid "Unused."
-msgstr ""
+msgstr "Не використовується."
 
 #: ../src/jarabe/model/screenshot.py:59 ../src/jarabe/view/viewhelp.py:70
 msgid "Mesh"
-msgstr ""
+msgstr "Сітка"
 
 #: ../src/jarabe/model/screenshot.py:72
 msgid "Screenshot"
-msgstr ""
+msgstr "Знімок вікна"
 
 #: ../src/jarabe/model/screenshot.py:74
 #, python-format
 msgid "Screenshot of \"%s\""
-msgstr ""
+msgstr "Знімок вікна «%s»"
 
 #: ../src/jarabe/view/alerts.py:38 ../src/jarabe/view/alerts.py:48
 msgid "Activity launcher"
-msgstr ""
+msgstr "Засіб запуску просторів дій"
 
 #: ../src/jarabe/view/alerts.py:39
 #, python-format
@@ -2238,14 +2266,16 @@ msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
 msgstr ""
+"Перевищено максимальну можливу кількість відкритих просторів дій. Будь "
+"ласка, закрийте якийсь із просторів дій, щоб запустити новий."
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
-msgstr ""
+msgstr "Вилучити запис друга"
 
 #: ../src/jarabe/view/buddymenu.py:76
 msgid "Make friend"
-msgstr ""
+msgstr "Створити запис друга"
 
 #: ../src/jarabe/view/buddymenu.py:108
 msgid "Shutdown"
@@ -2271,24 +2301,24 @@ msgstr "Запросити до %s"
 #: ../src/jarabe/view/launcher.py:159
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr ""
+msgstr "Не вдалося запустити <b>%s</b>."
 
 #: ../src/jarabe/view/palettes.py:53
 msgid "Starting..."
-msgstr ""
+msgstr "Запускаємо…"
 
 #: ../src/jarabe/view/palettes.py:63
 msgid "Activity failed to start"
-msgstr ""
+msgstr "Не вдалося запустити простір дій"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:105
 msgid "View Source"
-msgstr ""
+msgstr "Переглянути початковий код"
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
-msgstr ""
+msgstr "Переглянути довідку"
 
 #: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
@@ -2301,7 +2331,7 @@ msgstr "Вилучити"
 
 #: ../src/jarabe/view/viewhelp.py:304
 msgid "Help Manual"
-msgstr ""
+msgstr "Довідковий підручник"
 
 #: ../src/jarabe/view/viewhelp.py:318
 msgid "Social Help"
@@ -2310,41 +2340,40 @@ msgstr "Допомога громади"
 #: ../src/jarabe/view/viewhelp.py:326
 #, python-format
 msgid "Help: %s"
-msgstr ""
+msgstr "Довідка: %s"
 
 #: ../src/jarabe/view/viewsource.py:364
 msgid "Instance Source"
-msgstr ""
+msgstr "Початковий код екземпляра"
 
 #: ../src/jarabe/view/viewsource.py:392
 #, python-format
 msgid "Do you want to duplicate %s Activity?"
-msgstr ""
+msgstr "Хочете здублювати простір дій %s?"
 
 #: ../src/jarabe/view/viewsource.py:394
 msgid "This may take a few minutes"
-msgstr ""
+msgstr "Виконання дії може тривати декілька хвилин"
 
 #: ../src/jarabe/view/viewsource.py:408
 msgid "Duplicating activity..."
-msgstr ""
+msgstr "Дублюємо простір дій…"
 
 #: ../src/jarabe/view/viewsource.py:447
-#, fuzzy
 msgid "Duplicated"
-msgstr "Дублювати"
+msgstr "Здубльовано"
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
-msgstr ""
+msgstr "Простір дій здубльовано"
 
 #: ../src/jarabe/view/viewsource.py:462
 msgid "Duplicated activity already exists"
-msgstr ""
+msgstr "Дублікат простору дій вже існує"
 
 #: ../src/jarabe/view/viewsource.py:463
 msgid "Delete your copy before trying to duplicate the activity again"
-msgstr ""
+msgstr "Вилучте вашу копію, перш ніж створювати ще один дублікат простору дій"
 
 #: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
@@ -2352,39 +2381,39 @@ msgstr "Сирці"
 
 #: ../src/jarabe/view/viewsource.py:542
 msgid "Activity Bundle Source"
-msgstr ""
+msgstr "Джерело пакунка простору дій"
 
 #: ../src/jarabe/view/viewsource.py:561
 msgid "Sugar Toolkit Source"
-msgstr ""
+msgstr "Джерело набору інструментів Sugar"
 
 #: ../src/jarabe/view/viewsource.py:568
 #, python-format
 msgid "View source: %s"
-msgstr ""
+msgstr "Початковий код: %s"
 
 #: ../src/jarabe/view/viewsource.py:569
 #, python-format
 msgid "View source: %r"
-msgstr ""
+msgstr "Початковий код: %r"
 
 #: ../src/jarabe/view/viewsource.py:809
 msgid "Please select a file in the left panel."
-msgstr ""
+msgstr "Будь ласка, виберіть файл на лівій панелі."
 
 #: ../extensions/cpsection/backup/__init__.py:22
 msgid "Backup"
-msgstr ""
+msgstr "Резервне копіювання"
 
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171
 msgid "Please connect a device to continue"
-msgstr ""
+msgstr "Будь ласка, під’єднайте пристрій для продовження дії"
 
 #: ../extensions/cpsection/backup/backends/volume.py:69
 #: ../extensions/cpsection/backup/backends/volume.py:178
 msgid "Select your volume"
-msgstr ""
+msgstr "Виберіть том"
 
 #: ../extensions/cpsection/backup/backends/volume.py:78
 msgid "Not enough space in volume"
@@ -2393,15 +2422,15 @@ msgstr "На томі не вистачає місця"
 #: ../extensions/cpsection/backup/backends/volume.py:122
 #, python-format
 msgid "Backup from user %s"
-msgstr ""
+msgstr "Резервна копія від користувача %s"
 
 #: ../extensions/cpsection/backup/backends/volume.py:191
 msgid "No checkpoints found in the device"
-msgstr ""
+msgstr "На пристрої не знайдено контрольних точок"
 
 #: ../extensions/cpsection/backup/backends/volume.py:199
 msgid "Select your checkpoint"
-msgstr ""
+msgstr "Виберіть контрольну точку"
 
 #: ../extensions/cpsection/backup/backends/volume.py:210
 msgid "Not enough space in disk"
@@ -2409,35 +2438,35 @@ msgstr "Недостатньо місця на диску"
 
 #: ../extensions/cpsection/backup/backends/volume.py:329
 msgid "Local Device Backup"
-msgstr ""
+msgstr "Резервна копія локального пристрою"
 
 #: ../extensions/cpsection/backup/view.py:133
 msgid "Save the contents of your Journal"
-msgstr ""
+msgstr "Зберегти вміст вашого журналу"
 
 #: ../extensions/cpsection/backup/view.py:141
 msgid "Restore the contents of your Journal"
-msgstr ""
+msgstr "Відновити вміст вашого журналу"
 
 #: ../extensions/cpsection/backup/view.py:223
 msgid "Please close all the activities, and start again"
-msgstr ""
+msgstr "Будь ласка, закрийте усі простори дій і повторіть спробу"
 
 #: ../extensions/cpsection/backup/view.py:229
 msgid "Select where you want create your backup"
-msgstr ""
+msgstr "Виберіть місце, де слід зберегти резервну копію"
 
 #: ../extensions/cpsection/backup/view.py:231
 msgid "Select where you want retrieve your restore"
-msgstr ""
+msgstr "Виберіть, звідки слід взяти дані для відновлення"
 
 #: ../extensions/cpsection/backup/view.py:271
 msgid "Retry"
-msgstr ""
+msgstr "Повторити спробу"
 
 #: ../extensions/cpsection/backup/view.py:290
 msgid "Starting backup..."
-msgstr ""
+msgstr "Розпочинаємо резервне копіювання…"
 
 #: ../extensions/cpsection/backup/view.py:294
 msgid "Starting restore..."
