@@ -1,0 +1,2464 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-01-30 14:24+0000\n"
+"PO-Revision-Date: 2017-03-26 14:28+0000\n"
+"Last-Translator: MartínOesterreich <martin.otte80@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: gug\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1490538508.000000\n"
+
+#: ../data/org.sugarlabs.gschema.xml.h:1
+msgid "Migrated to GSettings"
+msgstr "Oho GSettingspe"
+
+#: ../data/org.sugarlabs.gschema.xml.h:2
+msgid "This key shows whether or not GConf values were migrated to GSettings"
+msgstr "Ko ñe'ẽ ñemi ohechauka la ñemohenda oñekambiapa GConf GSettingspe"
+
+#: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
+msgid "Backup URL"
+msgstr "URL Oñeñongatu jeyva"
+
+#: ../data/org.sugarlabs.gschema.xml.h:4 ../data/sugar.schemas.in.h:12
+msgid "URL where the backup is saved to."
+msgstr "URL oñeñongatuha pe oñeñongatuvaekue."
+
+#: ../data/org.sugarlabs.gschema.xml.h:5 ../data/sugar.schemas.in.h:31
+msgid "Show Log out"
+msgstr "Jechauka Mba'apo ñemboty"
+
+#: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
+msgid "If TRUE, Sugar will show a \"Log out\" option."
+msgstr "Ha'ẽro TRUE, Sugar ohechaukáta peteĩ \"Mba'apo paha\" jeporavo."
+
+#: ../data/org.sugarlabs.gschema.xml.h:7 ../data/sugar.schemas.in.h:33
+msgid "Show Restart"
+msgstr "Techauka ñepyrũjey"
+
+#: ../data/org.sugarlabs.gschema.xml.h:8 ../data/sugar.schemas.in.h:34
+msgid "If TRUE, Sugar will show a \"Restart\" option."
+msgstr "Ha'ẽro TRUE, Sugar ohechaukáta peteĩ \"ñepyrũjey tembiapo\" jeporavo."
+
+#: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
+msgid "Show Shutdown"
+msgstr "Techauka mbogue"
+
+#: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
+msgid "If TRUE, Sugar will show a \"Shutdown\" option."
+msgstr "Ha'ẽro TRUE, Sugar ohechaukata peteĩ \"Mba'apo Paha\" poravo."
+
+#: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
+msgid "Show Register"
+msgstr "Techauka moiha"
+
+#: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
+msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
+msgstr "Ha'ẽro TRUE, oseta peteĩ jeporavo \"Moiha\" tenda ta'anga mbytepegua."
+
+#: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
+msgid "Bundle IDs of protected activities"
+msgstr "Bundle IDs tembiapokuera ñangareko"
+
+#: ../data/org.sugarlabs.gschema.xml.h:14 ../data/sugar.schemas.in.h:64
+msgid ""
+"Users will not be allowed to erase these activities through the list view."
+msgstr "Puruha ndojehejamo'ãi eipe'a hendagui tembiapokuera jahechaja rupive."
+
+#: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
+msgid "A limit to the number of simultaneously open activities."
+msgstr "Peteĩ paha tembiapokuera mboty'o."
+
+#: ../data/org.sugarlabs.gschema.xml.h:16 ../data/sugar.schemas.in.h:80
+msgid ""
+"This int is used to set a limit to the number of open activities. By default "
+"(0), there is no limit."
+msgstr ""
+"Ko enterovea ojeipuru oñemoi hagua peteĩ paha tembiapokuéra mboty'o. Ha'e (0)"
+", nomoiva peteĩ paha."
+
+#: ../data/org.sugarlabs.gschema.xml.h:17 ../data/sugar.schemas.in.h:1
+msgid "User Name"
+msgstr "Puruha Rera"
+
+#: ../data/org.sugarlabs.gschema.xml.h:18 ../data/sugar.schemas.in.h:2
+msgid "User name that is used throughout the desktop."
+msgstr "Puruha rera ojeipuruva escritorio pe."
+
+#: ../data/org.sugarlabs.gschema.xml.h:19 ../data/sugar.schemas.in.h:3
+msgid "Default nick"
+msgstr "Ambue tera"
+
+#: ../data/org.sugarlabs.gschema.xml.h:20 ../data/sugar.schemas.in.h:4
+msgid ""
+"\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
+"long name."
+msgstr ""
+"\"disabled\" ñembogue eporandu hag̃ua ambue tera ñepyru; \"system\" eipuru "
+"jey hag̃ua tera pukuveva UNIX."
+
+#: ../data/org.sugarlabs.gschema.xml.h:21 ../data/sugar.schemas.in.h:5
+msgid "User Color"
+msgstr "Sa'y nderehegua"
+
+#: ../data/org.sugarlabs.gschema.xml.h:22 ../data/sugar.schemas.in.h:6
+msgid ""
+"Color for the XO icon that is used throughout the desktop. The string is "
+"composed of the stroke color and fill color, format is that of rgb colors. "
+"Example: #AC32FF,#9A5200"
+msgstr ""
+"Sa'y ícono XO peguarã ojeipuru oiva jepuruhape. Oiva ipypé mbytere ha sa'y ñ"
+"emyanyhe sa'yinpegua, oiva ha'e sa'yikuera RGB. Techapyrã: #AC32FF,#9A5200"
+
+#: ../data/org.sugarlabs.gschema.xml.h:23
+msgid "User Gender"
+msgstr "Género oipuruva"
+
+#: ../data/org.sugarlabs.gschema.xml.h:24
+msgid "Gender of the Sugar user, either male, female, or unassigned"
+msgstr "Género oipuruva sugar, kuimba'e, kuña o ndojehechakaiva"
+
+#: ../data/org.sugarlabs.gschema.xml.h:25
+msgid "User Birth Timestamp"
+msgstr "Ara﻿ Ñesẽ oipuruva"
+
+#: ../data/org.sugarlabs.gschema.xml.h:26
+msgid "Birth timestamp (seconds since the epoch)"
+msgstr "Ñese(mokõihape guive epoch)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:27
+msgid "Group Label"
+msgstr "Aty téra"
+
+#: ../data/org.sugarlabs.gschema.xml.h:28
+msgid "Label associated with age, e.g., '2nd Grade'"
+msgstr "Tera oiva yvendi, techapyrã '2nd Kokatu'"
+
+#: ../data/org.sugarlabs.gschema.xml.h:29
+msgid "Background image path"
+msgstr "Tape ra'anga tuguape"
+
+#: ../data/org.sugarlabs.gschema.xml.h:30
+msgid "Path to the image to be used as a background."
+msgstr "Path ta'anga jepuruva mo'ãha ryguepype."
+
+#: ../data/org.sugarlabs.gschema.xml.h:31
+msgid "Background alpha level"
+msgstr "Jojakue alpha ta'angagua mo'ãha ruguepype"
+
+#: ../data/org.sugarlabs.gschema.xml.h:32
+msgid "The opacity of the background image."
+msgstr "Hesaka'ỹva, mo'ãha hyguepypegua."
+
+#: ../data/org.sugarlabs.gschema.xml.h:33
+msgid "Mimetype registry"
+msgstr "Ñemohenda mime"
+
+#: ../data/org.sugarlabs.gschema.xml.h:34
+msgid "Consists of key-value pairs mimetypes and their corresponding activity"
+msgstr "Oguereko kõi- ñe'ẽ-ñemi mimes rehegua ha tembiapokuera ha'etepe"
+
+#: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
+msgid "Volume Level"
+msgstr "Yvatekue tuichakue"
+
+#: ../data/org.sugarlabs.gschema.xml.h:36 ../data/sugar.schemas.in.h:8
+msgid "Volume level for the sound device."
+msgstr "Yvatekue tuichakue mba'e púpe guara."
+
+#: ../data/org.sugarlabs.gschema.xml.h:37 ../data/sugar.schemas.in.h:9
+msgid "Sound Muted"
+msgstr "Pu quirirĩ"
+
+#: ../data/org.sugarlabs.gschema.xml.h:38 ../data/sugar.schemas.in.h:10
+msgid "Setting for muting the sound device."
+msgstr "Jepuruha oñemokirirĩ hag̃ua mba'e ipúva."
+
+#: ../data/org.sugarlabs.gschema.xml.h:39
+msgid "Brightness Level"
+msgstr "Mba'eicha eipota overa"
+
+#: ../data/org.sugarlabs.gschema.xml.h:40
+msgid "Brightness level for the computer screen."
+msgstr "Peicha overa nde ovetã ehechaha ejapova."
+
+#: ../data/org.sugarlabs.gschema.xml.h:41
+#: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
+msgid "Timezone"
+msgstr "Tenda aravo"
+
+#: ../data/org.sugarlabs.gschema.xml.h:42 ../data/sugar.schemas.in.h:14
+msgid "Timezone setting for the system."
+msgstr "Eiporavo ara tendare eikuaa hag̃ua ary."
+
+#: ../data/org.sugarlabs.gschema.xml.h:43
+msgid "Home views"
+msgstr "Ñepyrupe jehechava"
+
+#: ../data/org.sugarlabs.gschema.xml.h:44
+msgid ""
+"List of home views, including the view icon, the favorite icon and the layout"
+msgstr ""
+"Ape ehecha tembiapokuera eipuruva nde rogape, oi iconos, ha mbaeichapa ikatu "
+"rehecha"
+
+#: ../data/org.sugarlabs.gschema.xml.h:45
+msgid "Launcher animation interval"
+msgstr "Pa'û pe vy'akuera remimbore."
+
+#: ../data/org.sugarlabs.gschema.xml.h:46
+msgid ""
+"Delay in milliseconds between animation updates for launcher pulsing icon."
+msgstr ""
+"Takykuépe pe mili-mokõihakuera mbytépe ko mbopyahu pe vy'akuera remimbore."
+
+#: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
+msgid "Edge Delay"
+msgstr "Otardaro pe tembe"
+
+#: ../data/org.sugarlabs.gschema.xml.h:48 ../data/sugar.schemas.in.h:20
+msgid "Delay for the activation of the frame using the edges."
+msgstr "Ñembotapykue ojemyendy hag̃ua tembekuera ojeipuruva."
+
+#: ../data/org.sugarlabs.gschema.xml.h:49 ../data/sugar.schemas.in.h:21
+msgid "Corner Delay"
+msgstr "Ñembotapykue ñemopevo hape"
+
+#: ../data/org.sugarlabs.gschema.xml.h:50 ../data/sugar.schemas.in.h:22
+msgid "Delay for the activation of the frame using the corners."
+msgstr "Ñembotapykue ojemohenda ojepuruva tembere."
+
+#: ../data/org.sugarlabs.gschema.xml.h:51
+msgid "Trigger Size"
+msgstr "Tuichakue pe mbokapuha."
+
+#: ../data/org.sugarlabs.gschema.xml.h:52
+msgid "Size of the frame trigger area, in px from the corner/edge."
+msgstr "Tuichakue pe ape ra'ã remoag̃ehagua, pe píxeles omoapẽvogui."
+
+#: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
+msgid "Jabber Server"
+msgstr "Pytỹvoha Jabber"
+
+#: ../data/org.sugarlabs.gschema.xml.h:54 ../data/sugar.schemas.in.h:24
+msgid "URL of the jabber server to use."
+msgstr "URL pytỹvoha jabber jepuru hag̃uã."
+
+#: ../data/org.sugarlabs.gschema.xml.h:55 ../data/sugar.schemas.in.h:29
+msgid "Publish to Gadget"
+msgstr "Mboja'oñomirũ Gadget pe"
+
+#: ../data/org.sugarlabs.gschema.xml.h:56 ../data/sugar.schemas.in.h:30
+msgid ""
+"If TRUE, Sugar will make us searchable for the other users of the Jabber "
+"server."
+msgstr ""
+"Ha'ẽro TRUE, Sugar ojapota ambue puruhakuéra oheja hag̃ua pytỹvoha Jabber."
+
+#: ../data/org.sugarlabs.gschema.xml.h:57
+msgid "Social Help Server"
+msgstr "Ape ikatu etopa mba'e eikuaaỹva ha eporandu ambuepe"
+
+#: ../data/org.sugarlabs.gschema.xml.h:58
+msgid "URL of the social help server to use with protocol."
+msgstr "URL etopaha mba'e eikuaỹva iñepỹrũ va'ẽrã oĩhaicha."
+
+#: ../data/org.sugarlabs.gschema.xml.h:59 ../data/sugar.schemas.in.h:25
+msgid "Power Automatic"
+msgstr "Jeipuru energia ku'erã"
+
+#: ../data/org.sugarlabs.gschema.xml.h:60
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:26
+msgid "Automatic power management (increases battery life)"
+msgstr "Jeipuru energia ku'erã (emoi bateria rekove)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:61 ../data/sugar.schemas.in.h:27
+msgid "Power Extreme"
+msgstr "Jeipuruitere Energia"
+
+#: ../data/org.sugarlabs.gschema.xml.h:62 ../data/sugar.schemas.in.h:28
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr "Jeipuruiterei bateria (rembosako'i WIFI, emoi bateria rekove)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:63 ../data/sugar.schemas.in.h:39
+msgid "Keyboard layouts"
+msgstr "Ñemboja'o tecladokuéra"
+
+#: ../data/org.sugarlabs.gschema.xml.h:64 ../data/sugar.schemas.in.h:40
+msgid ""
+"List of keyboard layouts. Each entry should be in the form layout(variant)"
+msgstr "Ñemboja'o tecladokuéra. Oikevante ha'e vae'era ñemboja'o(moambue)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:65 ../data/sugar.schemas.in.h:41
+msgid "Keyboard options"
+msgstr "Teclado ikatuva reipuru"
+
+#: ../data/org.sugarlabs.gschema.xml.h:66 ../data/sugar.schemas.in.h:42
+msgid "List of keyboard options."
+msgstr "Mba'ekuéra teclado ikatuva reipuru."
+
+#: ../data/org.sugarlabs.gschema.xml.h:67 ../data/sugar.schemas.in.h:43
+msgid "Keyboard model"
+msgstr "Hechauka teclado rehegua"
+
+#: ../data/org.sugarlabs.gschema.xml.h:68 ../data/sugar.schemas.in.h:44
+msgid "The keyboard model to be used"
+msgstr "Hechauka teclado rehegua ojeipurutava"
+
+#: ../data/org.sugarlabs.gschema.xml.h:69 ../data/sugar.schemas.in.h:45
+msgid "Default font face"
+msgstr "Jehaichauka oĩvoiva"
+
+#: ../data/org.sugarlabs.gschema.xml.h:70 ../data/sugar.schemas.in.h:46
+msgid "Font face that is used throughout the desktop."
+msgstr "Jehaichauka ojeipuruva escritoriope."
+
+#: ../data/org.sugarlabs.gschema.xml.h:71 ../data/sugar.schemas.in.h:47
+msgid "Default font size"
+msgstr "Tuichakue jehaipyre oivãvoi"
+
+#: ../data/org.sugarlabs.gschema.xml.h:72 ../data/sugar.schemas.in.h:48
+msgid "Font size that is used throughout the desktop."
+msgstr "Taí Tuichakue ojepuruva kuatiahárape."
+
+#: ../data/org.sugarlabs.gschema.xml.h:73 ../data/sugar.schemas.in.h:61
+msgid "Show Sugar Ad-hoc networks"
+msgstr "Jehechauka ñuhã ha'etéva Sugar"
+
+#: ../data/org.sugarlabs.gschema.xml.h:74 ../data/sugar.schemas.in.h:62
+msgid ""
+"If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
+"Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
+"hoc network."
+msgstr ""
+"Ha'ẽro TRUE, Sugar ohechaukata ñuhã ad-hoc ojejapova tenda 1,6 ha 11. Néi "
+"Sugar ndohechai \"ñuhã\" ojekuaava oñepyrũro, oñembojoaju autoconnect to "
+"an Ad-hoc network."
+
+#: ../data/org.sugarlabs.gschema.xml.h:75
+msgid "Enable Ad-hoc autoconnect"
+msgstr "Ojeheja ojepuru hag̃ua auto aconexion redespe Ad-hoc"
+
+#: ../data/org.sugarlabs.gschema.xml.h:76
+msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
+msgstr "Ha'ẽro TRUE, Sugar oñembogueta ñuhãgui Ad-hoc."
+
+#: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
+msgid "GSM network username (DEPRECATED/UNUSED)"
+msgstr "Tera ñuhã GSM mba'eva (DOIKOIVA/NDOJEIPURUIVA)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:78 ../data/sugar.schemas.in.h:50
+msgid "GSM network username configuration (DEPRECATED/UNUSED)"
+msgstr "Ñembopyahu téra puruha ñuhã GSM (NDOIKOIVA/NDOJEIPURUIVA)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:79 ../data/sugar.schemas.in.h:51
+msgid "GSM network password (DEPRECATED/UNUSED)"
+msgstr "Tai ñemi ñuhã GSM (NDOIKOIVA/NDOJEIPURUIVA)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:80 ../data/sugar.schemas.in.h:52
+msgid "GSM network password configuration (DEPRECATED/UNUSED)"
+msgstr "Emoambue nde jehai ndentereikuaava GSM (NDOIKOIVA/NDOJEIPURUIVA)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:81 ../data/sugar.schemas.in.h:53
+msgid "GSM network number (DEPRECATED/UNUSED)"
+msgstr "Papaha nderembiapore GSM (NDOIKOIVA/NDOJEIPURUIVA)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:82 ../data/sugar.schemas.in.h:54
+msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
+msgstr "Emoambue papapy pymbyry nde rembiapo GSM (NDOIKOIVA/NDOJEIPURUIVA)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:83 ../data/sugar.schemas.in.h:55
+msgid "GSM network APN (DEPRECATED/UNUSED)"
+msgstr "APN nde rembiapo GSM (NDOIKOIVA/NDOJEPURUIVA)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:84 ../data/sugar.schemas.in.h:56
+msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
+msgstr "GSM Jejapo pyahu téra pa'ũ ñuhã GSM (NDOIKOIVA/NDOJEPURUIVA)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:85 ../data/sugar.schemas.in.h:57
+msgid "GSM network PIN (DEPRECATED/UNUSED)"
+msgstr "PIN ñuhã GSM (NDOIKOIVA/NDOJEPURUIVA)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:86 ../data/sugar.schemas.in.h:58
+msgid ""
+"GSM network personal identification number configuration (DEPRECATED/UNUSED)"
+msgstr ""
+"Ñemyatyroha papahakuéra nemba'eteetéva nde rembiapogui GSM "
+"(NDOIKOIVA/NDOJEPURUIVA)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:87 ../data/sugar.schemas.in.h:59
+msgid "GSM network PUK (DEPRECATED/UNUSED)"
+msgstr "PUK nde rembiapogui GSM (NDOIKOIVA/NDOJEIPURUIVA)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:88 ../data/sugar.schemas.in.h:60
+msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
+msgstr ""
+"GSM ñembyatyroha ndentereikuava nde rembiapogui (NDOIKOIVA/NDOJEPURUIVA)"
+
+#: ../data/org.sugarlabs.gschema.xml.h:89
+msgid "TODO: add summary"
+msgstr "ENTEROVETEA: Emoĩ sumario"
+
+#: ../data/org.sugarlabs.gschema.xml.h:90
+msgid "TODO: add description"
+msgstr "ENTEROVETEA: Emoñe'ẽ pe mba'e"
+
+#: ../data/org.sugarlabs.gschema.xml.h:91 ../data/sugar.schemas.in.h:65
+msgid "Pitch value for the speech sugar service"
+msgstr "Tera ryru tono ñe'ẽgua ﻿tekuaivore ne'ẽgui Asuka guarã"
+
+#: ../data/org.sugarlabs.gschema.xml.h:92 ../data/sugar.schemas.in.h:66
+msgid "Pitch value used by the speech service in Sugar"
+msgstr "Tera ryru tono ñe'engua tekuaivore ñe'ẽ Asukaigui"
+
+#: ../data/org.sugarlabs.gschema.xml.h:93 ../data/sugar.schemas.in.h:67
+msgid "Rate value for the speech sugar service"
+msgstr "Pya'ekue sugar ñe'ẽ jepuruha"
+
+#: ../data/org.sugarlabs.gschema.xml.h:94 ../data/sugar.schemas.in.h:68
+msgid "Rate value used by the speech service in Sugar"
+msgstr "Pya'ekue ojepuruva ñepytyvõ Sugar ñe'ẽme"
+
+#: ../data/org.sugarlabs.gschema.xml.h:95 ../data/sugar.schemas.in.h:69
+msgid "Activity update backend."
+msgstr "Backend tembiapoha ñembopyahuha."
+
+#: ../data/org.sugarlabs.gschema.xml.h:96 ../data/sugar.schemas.in.h:70
+msgid ""
+"Activity update backend module, followed by a period, followed by the class "
+"name."
+msgstr ""
+"Backend tembiapo ñemobopyahuha renda, ára uperiregua, tera uperiregua "
+"tembiapo rehegua."
+
+#: ../data/org.sugarlabs.gschema.xml.h:97 ../data/sugar.schemas.in.h:71
+msgid "Microformat update URL."
+msgstr "URL ñembopyahu michive reteha."
+
+#: ../data/org.sugarlabs.gschema.xml.h:98 ../data/sugar.schemas.in.h:72
+msgid ""
+"URL used by the microformat update backend for activity update information."
+msgstr ""
+"URL michive reteha ojepuruva henda backend rehegua tembiapo ñembopyahuha "
+"heivarehe."
+
+#: ../data/org.sugarlabs.gschema.xml.h:99 ../data/sugar.schemas.in.h:73
+msgid "Automatic update frequency."
+msgstr "Frecuencia ñembopyahu ha'eñova."
+
+#: ../data/org.sugarlabs.gschema.xml.h:100 ../data/sugar.schemas.in.h:74
+msgid ""
+"Frequency of automatic activity updates, measured in days. 0 means disabled."
+msgstr ""
+"Frecuencia tembiapo oñemopyahúva ha'eñova, ta'ã ára rupive. 0 terã he'iva "
+"ndeve ndoikoiveha."
+
+#: ../data/org.sugarlabs.gschema.xml.h:101 ../data/sugar.schemas.in.h:75
+msgid "Timestamp of last activity update."
+msgstr "Aravo rechakauha tembiapo oñembohuahuva'ekue paha."
+
+#: ../data/org.sugarlabs.gschema.xml.h:102 ../data/sugar.schemas.in.h:76
+msgid ""
+"A unix timestamp (seconds since epoch) of the last successful activity "
+"update."
+msgstr ""
+"Peteĩ aravo unix techauka (aravo'i oñepyrũha guive) ñemobopyhu paha oikova "
+"tembiapo rehe."
+
+#: ../data/org.sugarlabs.gschema.xml.h:103
+msgid "New ASLO update.json URL."
+msgstr "URL update.json rehe ASLO pyahure."
+
+#: ../data/org.sugarlabs.gschema.xml.h:104
+msgid "URL used by the new ASLO updater to download activity data."
+msgstr "URL ojeipuruva ASLO pyahure mboguejy amoarangue kuera tembiapokuerehe."
+
+#: ../data/org.sugarlabs.gschema.xml.h:105 ../data/sugar.schemas.in.h:77
+msgid "A description of the hardware available to the user."
+msgstr "Peteĩ ñemombe'upaite hardware ikatuva ojapo."
+
+#: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
+msgid "This string is displayed in the control panel, about computer section."
+msgstr "Ko moñe'era che ajuste kuéra, osẽpe che computadóra rehegua."
+
+#: ../extensions/cpsection/aboutme/__init__.py:23
+msgid "About Me"
+msgstr "Che rehegua"
+
+#: ../extensions/cpsection/aboutme/model.py:51
+msgid "You must enter a name."
+msgstr "Emoi arã peteĩ téra."
+
+#: ../extensions/cpsection/aboutme/model.py:83
+#, python-format
+msgid "stroke:   color=%s hue=%s"
+msgstr "hembe'y:   sa'y=%s sa'y ambuevýva=%s"
+
+#: ../extensions/cpsection/aboutme/model.py:86
+#, python-format
+msgid "stroke:   %s"
+msgstr "tembe'y:   %s"
+
+#: ../extensions/cpsection/aboutme/model.py:88
+#, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr "henyhe:     sa'y=%s sa'y ambuevýva=%s"
+
+#: ../extensions/cpsection/aboutme/model.py:90
+#, python-format
+msgid "fill:     %s"
+msgstr "henyhẽ:    %s"
+
+#: ../extensions/cpsection/aboutme/model.py:102
+msgid "Error in specified color modifiers."
+msgstr "Jejavy ñemoambueha sa'y rehegua kuera."
+
+#: ../extensions/cpsection/aboutme/model.py:105
+msgid "Error in specified colors."
+msgstr "Jejavy sa'y kuérape."
+
+#: ../extensions/cpsection/aboutme/view.py:243
+msgid "Click to change your color:"
+msgstr "Click remoambue haguã nde sa'y:"
+
+#: ../extensions/cpsection/aboutme/view.py:294
+#: ../src/jarabe/intro/window.py:203
+msgid "Select gender:"
+msgstr "Poravo juehegua:"
+
+#: ../extensions/cpsection/aboutcomputer/__init__.py:21
+msgid "About my Computer"
+msgstr "Che kombutadora rehe"
+
+#: ../extensions/cpsection/aboutcomputer/model.py:37
+msgid "Not available"
+msgstr "Ndo jepurukuaái"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:76
+msgid "Identity"
+msgstr "Rekotee"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:87
+msgid "Model:"
+msgstr "Moha'anga:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:91
+msgid "Serial Number:"
+msgstr "Ñemohenda papaha:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:103
+msgid "Software"
+msgstr "Tembiapo"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:112
+msgid "Build:"
+msgstr "Jogapo:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:117
+msgid "Sugar:"
+msgstr "Asuka:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:122
+msgid "Firmware:"
+msgstr "Firmware:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:127
+msgid "Wireless Firmware:"
+msgstr "Firmware de la red inimbo hatãyva:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:134
+#, python-format
+msgid "%d days ago"
+msgstr "%d árakuera tapykuepe"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:136
+#: ../src/jarabe/journal/journaltoolbox.py:169
+msgid "Today"
+msgstr "Ko ára"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:139
+msgid "Last system update:"
+msgstr "Paha ñembopyahu sistema:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:150
+msgid "Copyright and License"
+msgstr "Apohãra mba'eva"
+
+#. TRANS: The word "Sugar" should not be translated.
+#: ../extensions/cpsection/aboutcomputer/view.py:169
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"Sugar, ha'e interfaz puruha ohechava. Sugar ha'e software libre, ojejuhu "
+"licencia GNU guype, ha oĩ pepyrũ oñemyengovia ha ome'ẽ haihague, umi mba'e "
+"oñe'ẽva hese."
+
+#: ../extensions/cpsection/aboutcomputer/view.py:181
+msgid "Full license:"
+msgstr "Tejague haipa:"
+
+#: ../extensions/cpsection/background/__init__.py:21
+msgid "Background"
+msgstr "Ta'agua tyepypegua"
+
+#: ../extensions/cpsection/background/view.py:48
+msgid "Select a background:"
+msgstr "Poravo tugua:."
+
+#: ../extensions/cpsection/background/view.py:57
+msgid "Clear background"
+msgstr "Ñemopotĩ ta'aga tyepypegua"
+
+#: ../extensions/cpsection/datetime/__init__.py:21
+msgid "Date & Time"
+msgstr "Ara ha Aravó"
+
+#: ../extensions/cpsection/datetime/model.py:100
+msgid "Error: timezone does not exist."
+msgstr "Oĩ vaí: ndaipori aravo."
+
+#: ../extensions/cpsection/frame/__init__.py:21
+msgid "Frame"
+msgstr "Hembe'y reta"
+
+#: ../extensions/cpsection/frame/view.py:26
+msgid "never"
+msgstr "araka'eve"
+
+#: ../extensions/cpsection/frame/view.py:27
+msgid "instantaneous"
+msgstr "ko'ag̃aite"
+
+#: ../extensions/cpsection/frame/view.py:28
+#, python-format
+msgid "%s seconds"
+msgstr "%s ara voive"
+
+#: ../extensions/cpsection/frame/view.py:52
+msgid "Activation Delay"
+msgstr "Aravo guevi jepuruhag̃ua"
+
+#: ../extensions/cpsection/frame/view.py:68
+msgid "Activation Area"
+msgstr "Aravo guevi jepuruhag̃ua"
+
+#: ../extensions/cpsection/frame/view.py:85
+msgid "Corner"
+msgstr "Omoapevõ"
+
+#: ../extensions/cpsection/frame/view.py:104
+msgid "Edge"
+msgstr "Tembe"
+
+#: ../extensions/cpsection/frame/view.py:123
+msgid "Size"
+msgstr "Tuichakue."
+
+#: ../extensions/cpsection/frame/view.py:221
+msgid "toolbar size"
+msgstr "Tuichakue pe pehengue."
+
+#: ../extensions/cpsection/frame/view.py:226
+msgid "exact corner or edge"
+msgstr "Omoapẽvo terã tembe ete."
+
+#: ../extensions/cpsection/frame/view.py:228
+msgid "exact corner"
+msgstr "Omoapẽvo ete."
+
+#: ../extensions/cpsection/frame/view.py:230
+msgid "exact edge"
+msgstr "Tembe ete."
+
+#: ../extensions/cpsection/frame/view.py:232
+msgid "ignored"
+msgstr "Kuaa'ỹpapyre."
+
+#. TRANS: px as in pixels
+#: ../extensions/cpsection/frame/view.py:235
+msgid "{}px"
+msgstr "{}Píxeles."
+
+#: ../extensions/cpsection/keyboard/__init__.py:21
+#: ../extensions/cpsection/keyboard/view.py:38
+msgid "Keyboard"
+msgstr "Jehaiha."
+
+#: ../extensions/cpsection/keyboard/view.py:240
+msgid "Keyboard Model"
+msgstr "Jehaiha moha'anga"
+
+#: ../extensions/cpsection/keyboard/view.py:301
+msgid "Key(s) to change layout"
+msgstr "Jehaihakuéra(s) emoambue hag̃ua ta'ãngahai"
+
+#: ../extensions/cpsection/keyboard/view.py:369
+msgid "Keyboard Layout(s)"
+msgstr "Ta'ãngahai(s) jehaiharehegua"
+
+#: ../extensions/cpsection/language/__init__.py:21
+#: ../extensions/cpsection/language/view.py:39
+msgid "Language"
+msgstr "Ñe'ẽ"
+
+#: ../extensions/cpsection/language/model.py:29
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr "Ndaikatui jehasa ~/.i18n. Jejapo ñembopyahu ambue tetãgãua estándar."
+
+#: ../extensions/cpsection/language/model.py:156
+#, python-format
+msgid "Language for code=%s could not be determined."
+msgstr "Nẽ'ẽ ñemiha=%s ndaikatui ojejuhu."
+
+#: ../extensions/cpsection/language/model.py:179
+#, python-format
+msgid "Sorry I do not speak '%s'."
+msgstr "Ambysy, che na ñe'ẽ kuaai '%s'."
+
+#: ../extensions/cpsection/language/view.py:75
+msgid ""
+"Add languages in the order you prefer. If a translation is not available, "
+"the next in the list will be used."
+msgstr ""
+"Embojoapy ñe'ẽnguera eipuruseveva. Néi he'iseva ambue ñe'epe oĩva ojeipuru "
+"hag̃uaicha, Ojepuruta ambue mba'e."
+
+#: ../extensions/cpsection/language/view.py:383
+#, python-format
+msgid "Error writting language configuration (%s)"
+msgstr "Jejavy ñongatupe ta'anga ñe'ẽgui (%s)."
+
+#: ../extensions/cpsection/modemconfiguration/__init__.py:21
+msgid "Modem"
+msgstr "Módem."
+
+#: ../extensions/cpsection/modemconfiguration/view.py:94
+msgid ""
+"You will need to provide the following information to set up a mobile "
+"broadband connection to a cellular (3G) network."
+msgstr ""
+"Eikotevẽta ereko ñemorandu upei embopyahu hag̃ua banda ancha (3G) ñuhã "
+"pymbyry popegua."
+
+#: ../extensions/cpsection/modemconfiguration/view.py:117
+msgid "Country:"
+msgstr "Tetã:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:118
+msgid "Provider:"
+msgstr "Guerekoha:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:119
+msgid "Plan:"
+msgstr "Tape:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:160
+msgid "Username:"
+msgstr "Oipurúva téra:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:167
+msgid "Password:"
+msgstr "Ndeño reikuaa va:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:174
+msgid "Number:"
+msgstr "Papaha:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:181
+msgid "Access Point Name (APN):"
+msgstr "Neĩ téra kytã (APN):"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:188
+msgid "Personal Identity Number (PIN):"
+msgstr "Rekotee téra papaha(PIN):"
+
+#: ../extensions/cpsection/modemconfiguration/model.py:162
+#, python-format
+msgid "Plan #%s"
+msgstr "Tape #%s"
+
+#: ../extensions/cpsection/modemconfiguration/model.py:292
+#, python-format
+msgid "Provider %s"
+msgstr "Mbyja´oha %s"
+
+#: ../extensions/cpsection/network/__init__.py:21
+#: ../extensions/cpsection/network/view.py:30
+msgid "Network"
+msgstr "Red"
+
+#: ../extensions/cpsection/network/model.py:88
+msgid "State is unknown."
+msgstr "Ipapyre jekuaa'ỹva."
+
+#: ../extensions/cpsection/network/model.py:104
+msgid "Error in specified radio argument use on/off."
+msgstr "Jejavy myesakã mbyryguĩ oikoéva reipuro on/off."
+
+#: ../extensions/cpsection/network/model.py:197
+msgid "Error in specified argument use 0/1."
+msgstr "Jejavy oikoéva myesakãpe reipuru 0/1."
+
+#: ../extensions/cpsection/network/view.py:65
+msgid "Wireless"
+msgstr "Ndojehecháiva"
+
+#: ../extensions/cpsection/network/view.py:73
+msgid "The wireless radio may be turned off to save battery life."
+msgstr "Oñembojoaju opa tetãre oñembogueva'era oikove hag̃ua ndeve nde xo."
+
+#: ../extensions/cpsection/network/view.py:86
+msgid "Radio"
+msgstr "Ñehenduha"
+
+#: ../extensions/cpsection/network/view.py:103
+msgid ""
+"Discard wireless connections if you have trouble connecting to the network"
+msgstr ""
+"Emohemby oñembojuajuva inimbo hatã'yva néi ndeikaturõ eñembojuaju red rehe"
+
+#: ../extensions/cpsection/network/view.py:113
+msgid "Discard wireless connections"
+msgstr "Reipea conexiones inálambricas"
+
+#: ../extensions/cpsection/network/view.py:129
+msgid "Collaboration"
+msgstr "Ñepytyvo"
+
+#: ../extensions/cpsection/network/view.py:137
+msgid ""
+"The server is the equivalent of what room you are in; people on the same "
+"server will be able to see each other, even when they aren't on the same "
+"network."
+msgstr ""
+"Ñemyatuvoha ha'e irundyha ha'e hina; avakuera ha'e je'y omyatyvova oikatu "
+"ohecha opavave, avei ndaiporivo peteĩ red pe."
+
+#: ../extensions/cpsection/network/view.py:147
+msgid "Server:"
+msgstr "Pytyvõha:"
+
+#: ../extensions/cpsection/network/view.py:163
+msgid ""
+"Social Help is a forum that lets you connect with developers and discuss "
+"Sugar Activities.  Changing servers means discussions will happen in a "
+"different place with different people."
+msgstr ""
+"Ñepytyvo nembojuajuva ambue Sugar tembiapo.  Ñemboambue heise oikotaha "
+"opaiteva he'ita oikuaava."
+
+#: ../extensions/cpsection/network/view.py:173
+msgid "Social Help Server:"
+msgstr "Social Ñepytyvo:"
+
+#: ../extensions/cpsection/power/__init__.py:24
+msgid "Power"
+msgstr "Ku'erã"
+
+#: ../extensions/cpsection/power/model.py:90
+msgid "Error in automatic pm argument, use on/off."
+msgstr "Ojeiporavo vai omboguataha xo, eipuru oñemyendiha ha oñembogueha."
+
+#: ../extensions/cpsection/power/view.py:45
+msgid "Power management"
+msgstr "Amboguata ku'erã"
+
+#: ../extensions/cpsection/updater/__init__.py:21
+msgid "Software Update"
+msgstr "Ñembopyahu software"
+
+#: ../extensions/cpsection/updater/view.py:70
+msgid ""
+"Software updates correct errors, eliminate security vulnerabilities, and "
+"provide new features."
+msgstr "Software kuéra ombopyahuha oipe'a ivaiva, ha omoĩ mba'e ipyahuvéva."
+
+#: ../extensions/cpsection/updater/view.py:84
+msgid "Update in progress..."
+msgstr "Ñembopyahu ojejapóva hina..."
+
+#: ../extensions/cpsection/updater/view.py:119
+msgid "Checking for updates..."
+msgstr "Jeheka mba'e pyahu..."
+
+#: ../extensions/cpsection/updater/view.py:121
+msgid "Installing updates..."
+msgstr "Ñemyatyvo mba'e pyahu..."
+
+#: ../extensions/cpsection/updater/view.py:150
+#, python-format
+msgid "Checking %s..."
+msgstr "Ha'ã %s..."
+
+#: ../extensions/cpsection/updater/view.py:152
+msgid "Looking for updates..."
+msgstr "Jeheka mba'e pyahu..."
+
+#: ../extensions/cpsection/updater/view.py:154
+#, python-format
+msgid "Downloading %s..."
+msgstr "Ñemboguejy %s..."
+
+#: ../extensions/cpsection/updater/view.py:156
+#, python-format
+msgid "Updating %s..."
+msgstr "Ñembo pyahupa %s..."
+
+#: ../extensions/cpsection/updater/view.py:166
+msgid "Your software is up-to-date"
+msgstr "Nde software ipyahúma"
+
+#: ../extensions/cpsection/updater/view.py:168
+#, python-format
+msgid "You can install %s update"
+msgid_plural "You can install %s updates"
+msgstr[0] "Ikatu remoĩ %s ñembopyahu"
+msgstr[1] "Remoĩ kuaa %s ñembopyahu kuéra"
+
+#: ../extensions/cpsection/updater/view.py:183
+msgid "Can't connect to the activity server"
+msgstr "Ndaikatui oñembojoapy mba'apokuéra pytyvõhandive"
+
+#: ../extensions/cpsection/updater/view.py:186
+msgid "Verify your connection to internet and try again, or try again later"
+msgstr "Ehechajey nde joapy internet rehegua, ha eñeha'ã jey uperire"
+
+#: ../extensions/cpsection/updater/view.py:206
+#, python-format
+msgid "%s update was installed"
+msgid_plural "%s updates were installed"
+msgstr[0] "%s oñemoĩmbama ñembopyahukuéra"
+msgstr[1] "%s oñemoimbama ñembopyahukuéra"
+
+#: ../extensions/cpsection/updater/view.py:288
+msgid "Install selected"
+msgstr "Ñemoi poravopapyre"
+
+#: ../extensions/cpsection/updater/view.py:307
+#, python-format
+msgid "Download size: %s"
+msgstr "Mboguejy tuichakue: %s"
+
+#: ../extensions/cpsection/updater/view.py:399
+#, python-format
+msgid "From version %(current)s to %(new)s (Size: %(size)s)"
+msgstr "Moha'anga guive %(current)s gotyo %(new)s (Size: %(size)s)"
+
+#: ../extensions/cpsection/updater/view.py:406
+#, python-format
+msgid "Version %(version)s (Size: %(size)s)"
+msgstr "Moha'anga %(version)s (Tuichakue: %(size)s)"
+
+#. TRANS: download size is 0
+#: ../extensions/cpsection/updater/view.py:423
+msgid "None"
+msgstr "Ni peteĩ"
+
+#. TRANS: download size of very small updates
+#: ../extensions/cpsection/updater/view.py:426
+msgid "1 KB"
+msgstr "1 KB"
+
+#. TRANS: download size of small updates, e.g. '250 KB'
+#: ../extensions/cpsection/updater/view.py:429
+#, python-format
+msgid "%.0f KB"
+msgstr "%.0f KB"
+
+#. TRANS: download size of updates, e.g. '2.3 MB'
+#: ../extensions/cpsection/updater/view.py:432
+#, python-format
+msgid "%.1f MB"
+msgstr "%.1f MB"
+
+#: ../extensions/cpsection/webaccount/__init__.py:24
+msgid "Web Services"
+msgstr "Tekuaivorekuera Web."
+
+#: ../extensions/cpsection/webaccount/view.py:65
+#, python-format
+msgid ""
+"No web services are installed.\n"
+"Please visit %s for more details."
+msgstr ""
+"Ndaipori rembiapo web oñemoipyre.\n"
+"Eique %s eikuaa hag̃ua mba'epa oiko."
+
+#: ../extensions/deviceicon/audio.py:69
+msgid "My Audio"
+msgstr "Che mba'erendu"
+
+#: ../extensions/deviceicon/audio.py:330
+msgid "Speaker"
+msgstr "Ompohatãvéva"
+
+#: ../extensions/deviceicon/audio.py:331
+msgid "Microphone"
+msgstr "Ñe'ẽha"
+
+#: ../extensions/deviceicon/battery.py:69
+msgid "My Battery"
+msgstr "Xo ñemboikoha"
+
+#: ../extensions/deviceicon/battery.py:151
+msgid "Removed"
+msgstr "Jeipe'apyre"
+
+#: ../extensions/deviceicon/battery.py:154
+msgid "Charging"
+msgstr "Jehupi"
+
+#: ../extensions/deviceicon/battery.py:157
+msgid "Very little power remaining"
+msgstr "Opyta sa'ima momyiha ñongatuha"
+
+#. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
+#. only translate the word "remaining"
+#: ../extensions/deviceicon/battery.py:164
+#, python-format
+msgid "%(hour)d:%(min).2d remaining"
+msgstr "%(hour)d:%(min).2d"
+
+#: ../extensions/deviceicon/battery.py:167
+msgid "Charged"
+msgstr "Hupi paha"
+
+#: ../extensions/deviceicon/display.py:187
+msgid "My Display"
+msgstr "Che xo rehechaha"
+
+#: ../extensions/deviceicon/display.py:189
+msgid "Take a screenshot"
+msgstr "Ta'anga oñeñongatúva"
+
+#: ../extensions/deviceicon/display.py:211
+msgid "Brightness"
+msgstr "Omimbi"
+
+#: ../extensions/deviceicon/display.py:239
+msgid "Display"
+msgstr "Ta'anga kuéra jehechauka"
+
+#: ../extensions/deviceicon/frame.py:53
+msgid "Show my keyboard"
+msgstr "Ehechauka che jehaiharã"
+
+#: ../extensions/deviceicon/network.py:48
+#, python-format
+msgid "IP address: %s"
+msgstr "Jehoha IP: %s"
+
+#: ../extensions/deviceicon/network.py:80
+#: ../extensions/deviceicon/network.py:297
+#: ../src/jarabe/desktop/networkviews.py:134
+#: ../src/jarabe/desktop/networkviews.py:510
+msgid "Disconnect"
+msgstr "Hekýi"
+
+#: ../extensions/deviceicon/network.py:106
+#: ../extensions/deviceicon/network.py:290
+#: ../src/jarabe/desktop/networkviews.py:250
+#: ../src/jarabe/desktop/networkviews.py:552
+#: ../src/jarabe/desktop/networkviews.py:696
+msgid "Connecting..."
+msgstr "Oñembojoapy hina..."
+
+#: ../extensions/deviceicon/network.py:110
+#: ../extensions/deviceicon/network.py:181
+#: ../src/jarabe/desktop/networkviews.py:257
+#: ../src/jarabe/desktop/networkviews.py:558
+#: ../src/jarabe/desktop/networkviews.py:702
+msgid "Connected"
+msgstr "Mbojoapypapyre"
+
+#: ../extensions/deviceicon/network.py:123
+msgid "No wireless connection"
+msgstr "Ndaipori peteĩ joapy jehecháva"
+
+#: ../extensions/deviceicon/network.py:137
+#: ../extensions/deviceicon/network.py:140
+msgid "Channel"
+msgstr "Mbosyryha"
+
+#: ../extensions/deviceicon/network.py:138
+#: ../src/jarabe/journal/expandedentry.py:386
+#: ../src/jarabe/journal/listmodel.py:191
+#: ../src/jarabe/journal/listmodel.py:199
+msgid "Unknown"
+msgstr "Ndojeikuaái"
+
+#: ../extensions/deviceicon/network.py:156
+msgid "Wired Network"
+msgstr "Red Cableada"
+
+#: ../extensions/deviceicon/network.py:184
+msgid "Speed"
+msgstr "Pya'ekue"
+
+#: ../extensions/deviceicon/network.py:209
+msgid "Wireless modem"
+msgstr "Módem ndojehecháiva"
+
+#: ../extensions/deviceicon/network.py:278
+msgid "Please wait..."
+msgstr "Ikatu eha'arõ..."
+
+#: ../extensions/deviceicon/network.py:282
+#: ../src/jarabe/desktop/networkviews.py:128
+#: ../src/jarabe/desktop/networkviews.py:504
+#: ../src/jarabe/desktop/networkviews.py:647
+msgid "Connect"
+msgstr "Mbojoapy"
+
+#: ../extensions/deviceicon/network.py:283
+msgid "Disconnected"
+msgstr "Hekýipapyre"
+
+#: ../extensions/deviceicon/network.py:289
+#: ../src/jarabe/controlpanel/toolbar.py:121
+#: ../src/jarabe/frame/activitiestray.py:693
+#: ../src/jarabe/frame/activitiestray.py:815
+#: ../src/jarabe/frame/activitiestray.py:848
+#: ../src/jarabe/journal/expandedentry.py:157
+#: ../src/jarabe/journal/journaltoolbox.py:587
+#: ../src/jarabe/journal/palettes.py:166
+msgid "Cancel"
+msgstr "Ehejarei"
+
+#: ../extensions/deviceicon/network.py:327
+msgid "Try connection again"
+msgstr "Eñeha'ã ko'ag̃a jey"
+
+#: ../extensions/deviceicon/network.py:330
+#, python-format
+msgid "Error: %s"
+msgstr "Ndaikatui: %s"
+
+#: ../extensions/deviceicon/network.py:334
+#, python-format
+msgid "Suggestion: %s"
+msgstr "Mba'eicha ikatu: %s"
+
+#: ../extensions/deviceicon/network.py:344
+#, python-format
+msgid "Connected for %s"
+msgstr "Eĩ a %s"
+
+#: ../extensions/deviceicon/network.py:349
+#: ../extensions/deviceicon/network.py:350
+#, python-format
+msgid "%d KB"
+msgstr "%d KB"
+
+#: ../extensions/deviceicon/network.py:355
+msgid "Check your PIN/PUK configuration."
+msgstr "Ejesareko oĩporãpa nde PIN/PUK."
+
+#: ../extensions/deviceicon/network.py:358
+msgid "Check your Access Point Name (APN) configuration"
+msgstr "Ejesareko oĩ porãpa tera eihápe (APN)"
+
+#: ../extensions/deviceicon/network.py:362
+msgid "Check the Number configuration."
+msgstr "Ejesareko oĩporãpa papaha."
+
+#: ../extensions/deviceicon/network.py:364
+msgid "Check your configuration."
+msgstr "Ejesareko oĩporãpa oikohag̃ueicha."
+
+#: ../extensions/deviceicon/network.py:619
+msgid "Mesh Network"
+msgstr "Ñuhã Malla"
+
+#: ../extensions/deviceicon/network.py:665
+#, python-format
+msgid "Mesh Network %s"
+msgstr "Ñuha Malla %s"
+
+#: ../extensions/deviceicon/network.py:782
+msgid "No GSM connection available."
+msgstr "Ndaikatui embojuaju GSM ndive."
+
+#: ../extensions/deviceicon/network.py:783
+msgid "Create a connection in My Settings."
+msgstr "Ejapo ñembojoajuha ape."
+
+#: ../extensions/deviceicon/speech.py:49
+msgid "Speech"
+msgstr "Ere"
+
+#: ../extensions/deviceicon/speech.py:72
+#: ../extensions/deviceicon/speech.py:147
+#: ../extensions/deviceicon/speech.py:152
+msgid "Say selected text"
+msgstr "Omoñe'ẽ ehaivaekue eipotáva"
+
+#: ../extensions/deviceicon/speech.py:80
+msgid "Stop playback"
+msgstr "Ejoko ne'ẽ ñongatupy"
+
+#: ../extensions/deviceicon/speech.py:89
+msgid "Pitch"
+msgstr "Pu"
+
+#: ../extensions/deviceicon/speech.py:104
+msgid "Rate"
+msgstr "Pya'ekue"
+
+#: ../extensions/deviceicon/speech.py:142
+msgid "Pause playback"
+msgstr "Embopyta ñekarãi"
+
+#: ../extensions/deviceicon/touchpad.py:36
+msgid "finger"
+msgstr "kua"
+
+#: ../extensions/deviceicon/touchpad.py:36
+msgid "stylus"
+msgstr "háicha"
+
+#: ../extensions/deviceicon/touchpad.py:61
+msgid "My touchpad"
+msgstr "Che ape pokokuaarã"
+
+#: ../extensions/deviceicon/volume.py:62 ../src/jarabe/view/palettes.py:210
+msgid "Show contents"
+msgstr "Jehechauka japopapyre"
+
+#: ../data/sugar.schemas.in.h:15
+msgid "Favorites Layout"
+msgstr "Ta'ãngahai jehayhúveva"
+
+#: ../data/sugar.schemas.in.h:16
+msgid "Layout of the favorites view."
+msgstr "Oñemohenda tembiapo kuéra jehayhuvéva."
+
+#: ../data/sugar.schemas.in.h:17
+msgid "Favorites resume mode"
+msgstr "Kokatu jere jehauhuvéva"
+
+#: ../data/sugar.schemas.in.h:18
+msgid ""
+"When in resume mode, clicking on a favorite icon will cause the last entry "
+"for that activity to be resumed."
+msgstr ""
+"Jajevyjeyvo jaike va'era heihape, ejapo click jehayhuvéva jaike hagua "
+"pahague jeikeha rembiapo."
+
+#: ../src/jarabe/controlpanel/cmd.py:28
+#, python-format
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
+msgstr "sugar-control-panel: ÑEMOMARANDU, oĩma koichagua tera: %s pehengue: %r"
+
+#: ../src/jarabe/controlpanel/cmd.py:30
+#, python-format
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr "sugar-control-panel: aikutu akue=%s ndaha'ei petei poravokuaa noikoi"
+
+#: ../src/jarabe/controlpanel/cmd.py:31
+#, python-format
+msgid "sugar-control-panel: %s"
+msgstr "sugar-control-panel: %s"
+
+#. TRANS: Translators, there's a empty line at the end of this string,
+#. which must appear in the translated string (msgstr) as well.
+#: ../src/jarabe/controlpanel/cmd.py:38
+msgid ""
+"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
+"    Control for the sugar environment. \n"
+"    Options: \n"
+"    -h           show this help message and exit \n"
+"    -l           list all the available options \n"
+"    -h key       show information about this key \n"
+"    -g key       get the current value of the key \n"
+"    -s key       set the current value for the key \n"
+"    -c key       clear the current value for the key \n"
+"    "
+msgstr ""
+"Jeporu: sugar-control-panel [ opción ] clave [ args ... ] \n"
+"    Control para el ambiente de sugar. \n"
+"    Opciones: \n"
+"    -h               muestra este mensaje de ayuda y sale \n"
+"    -l                enumera todas las opciones disponibles \n"
+"    -h clave       muestra la información sobre esta clave \n"
+"    -g clave       obtiene el valor actual de la clave \n"
+"    -s clave       establece el valor actual de la clave \n"
+"    -c clave       vaciar el valor actual de la clave \n"
+"    "
+
+#: ../src/jarabe/controlpanel/cmd.py:52
+msgid ""
+"To apply your changes you have to restart Sugar.\n"
+"Hit ctrl+alt+erase on the keyboard to trigger a restart."
+msgstr ""
+"Ikatuhaguaicha eipuru nde mba'e pyahu emoñepyrujeyvaera Sugar.\n"
+"Epoko ctl+alt+borrar jehaihápe ikatuhaguaicha emoñepyru."
+
+#: ../src/jarabe/controlpanel/gui.py:373 ../src/jarabe/journal/palettes.py:194
+#: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
+#: ../src/jarabe/journal/volumestoolbar.py:304
+msgid "Warning"
+msgstr "Ñemomarandu"
+
+#: ../src/jarabe/controlpanel/gui.py:374
+#: ../src/jarabe/controlpanel/sectionview.py:45
+msgid "Changes require restart"
+msgstr "Ñemoambuekuéra oikotevẽ oñepyrũjeý"
+
+#: ../src/jarabe/controlpanel/gui.py:379
+msgid "Cancel changes"
+msgstr "Eheja ñemoambuekuéra"
+
+#: ../src/jarabe/controlpanel/gui.py:384
+msgid "Later"
+msgstr "Upéi"
+
+#: ../src/jarabe/controlpanel/gui.py:388
+msgid "Restart now"
+msgstr "Reñepyrujey ko'ãnga"
+
+#: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
+msgid "An activity is not responding."
+msgstr "Peteĩ jeporu ndo mbojováiri."
+
+#: ../src/jarabe/controlpanel/gui.py:420 ../src/jarabe/view/buddymenu.py:138
+msgid "You may lose unsaved work if you continue."
+msgstr "Heẽ ojapo mante ikatu mokañy tembiapokuera ndo ñeñongatuivaekue."
+
+#: ../src/jarabe/controlpanel/toolbar.py:56
+#: ../src/jarabe/desktop/viewtoolbar.py:129
+#: ../src/jarabe/journal/journaltoolbox.py:94
+#, python-format
+msgid "Search in %s"
+msgstr "Eheka ipype %s"
+
+#: ../src/jarabe/controlpanel/toolbar.py:56
+msgid "Settings"
+msgstr "Ñemyatyroha"
+
+#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:349
+msgid "Done"
+msgstr "Ojejapova"
+
+#: ../src/jarabe/controlpanel/toolbar.py:127
+msgid "Ok"
+msgstr "Neĩ"
+
+#: ../src/jarabe/desktop/activitieslist.py:340
+#, python-format
+msgid "Version %s"
+msgstr "Versión %s"
+
+#: ../src/jarabe/desktop/activitieslist.py:424
+#: ../src/jarabe/journal/listview.py:566 ../src/jarabe/journal/iconview.py:301
+msgid "Clear search"
+msgstr "Ñemopotĩ ojehekava`ekue"
+
+#: ../src/jarabe/desktop/activitieslist.py:510
+msgid "No matching activities"
+msgstr "Ndaipori tembiapo ojojava"
+
+#: ../src/jarabe/desktop/activitieslist.py:546
+msgid "Confirm erase"
+msgstr "Moañetẽ ñembogueva"
+
+#: ../src/jarabe/desktop/activitieslist.py:548
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr "Moañete ñembogueva: ¿Remboguese opyta hag̃uaicha%s?"
+
+#: ../src/jarabe/desktop/activitieslist.py:552
+#: ../src/jarabe/frame/clipboardmenu.py:65
+#: ../src/jarabe/view/viewsource.py:383
+msgid "Keep"
+msgstr "Ñongatu"
+
+#: ../src/jarabe/desktop/activitieslist.py:555
+#: ../src/jarabe/desktop/activitieslist.py:625
+#: ../src/jarabe/journal/expandedentry.py:151
+#: ../src/jarabe/journal/journaltoolbox.py:545
+#: ../src/jarabe/journal/journaltoolbox.py:582
+#: ../src/jarabe/journal/journaltoolbox.py:806
+#: ../src/jarabe/journal/journaltoolbox.py:812
+#: ../src/jarabe/journal/palettes.py:138 ../src/jarabe/journal/palettes.py:161
+msgid "Erase"
+msgstr "Mbogue"
+
+#: ../src/jarabe/desktop/activitieslist.py:641
+msgid "Remove favorite"
+msgstr "Eipe'a reipuruveva apytegui"
+
+#: ../src/jarabe/desktop/activitieslist.py:645
+msgid "Make favorite"
+msgstr "Emoĩ reipuruveva apytepe"
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:209
+msgid "Freeform"
+msgstr "Ejapo reipotahaicha"
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:305
+msgid "Ring"
+msgstr "Kuãirũ"
+
+#. TRANS: label for the spiral layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:469
+msgid "Spiral"
+msgstr "Kytasyrykusuvi"
+
+#. TRANS: label for the box layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:537
+msgid "Box"
+msgstr "Ryru"
+
+#. TRANS: label for the box layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:580
+msgid "Triangle"
+msgstr "Takamby Mbohapyva"
+
+#: ../src/jarabe/desktop/favoritesview.py:376
+msgid "Registration"
+msgstr "Eñemoĩ téra ryrupe"
+
+#: ../src/jarabe/desktop/favoritesview.py:377
+msgid "Please wait, searching for your school server."
+msgstr "Eha'arõ, ojeheka ñembojoaju mbo'ehaore."
+
+#: ../src/jarabe/desktop/favoritesview.py:387
+msgid "Registration Failed"
+msgstr "Rejavy téra ryrupe"
+
+#: ../src/jarabe/desktop/favoritesview.py:390
+msgid "Registration Successful"
+msgstr "Téra ryru osẽ porãmba"
+
+#: ../src/jarabe/desktop/favoritesview.py:391
+msgid "You are now registered with your school server."
+msgstr "Ko'ãnga reiméma nde mbo'ehaó pytyvõpe."
+
+#: ../src/jarabe/desktop/favoritesview.py:680
+msgid "Register"
+msgstr "Téra Ryru"
+
+#: ../src/jarabe/desktop/favoritesview.py:682
+msgid "Register again"
+msgstr "Eñemoijey téra ryrupe"
+
+#: ../src/jarabe/desktop/homewindow.py:255
+#: ../src/jarabe/desktop/viewtoolbar.py:73
+#: ../src/jarabe/frame/zoomtoolbar.py:57 ../src/jarabe/model/screenshot.py:63
+#: ../src/jarabe/view/viewhelp.py:76
+msgid "Home"
+msgstr "Óga"
+
+#: ../src/jarabe/desktop/homewindow.py:262
+#: ../src/jarabe/frame/zoomtoolbar.py:53 ../src/jarabe/model/screenshot.py:61
+#: ../src/jarabe/view/viewhelp.py:73
+msgid "Group"
+msgstr "Aty"
+
+#: ../src/jarabe/desktop/homewindow.py:269
+#: ../src/jarabe/frame/zoomtoolbar.py:49
+msgid "Neighborhood"
+msgstr "Óga jere"
+
+#: ../src/jarabe/desktop/keydialog.py:92
+#, python-format
+msgid ""
+"A wireless encryption key is required for\n"
+" the wireless network '%s'."
+msgstr ""
+"Emoĩva'erã ne remiñemi oñeikotevẽva\n"
+"tetã ombojojuhape '%s'."
+
+#: ../src/jarabe/desktop/keydialog.py:141
+msgid "Key Type:"
+msgstr "Mba'eichagua papaha ñemi:"
+
+#: ../src/jarabe/desktop/keydialog.py:161
+msgid "Authentication Type:"
+msgstr "Mba'eichagua mba'e jepuru:"
+
+#: ../src/jarabe/desktop/keydialog.py:224
+msgid "WPA & WPA2 Personal"
+msgstr "WPA y WPA2 Personal"
+
+#: ../src/jarabe/desktop/keydialog.py:233
+msgid "Wireless Security:"
+msgstr "Ñe'anguhave'ỹ Isa'ỹva:"
+
+#. TRANS: Action label for resuming an activity.
+#: ../src/jarabe/desktop/meshbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:659
+#: ../src/jarabe/journal/palettes.py:83 ../src/jarabe/view/palettes.py:98
+msgid "Resume"
+msgstr "Eñepyrũ jey"
+
+#: ../src/jarabe/desktop/meshbox.py:89
+#: ../src/jarabe/frame/activitiestray.py:208
+msgid "Join"
+msgstr "Ñembojoaju"
+
+#: ../src/jarabe/desktop/networkviews.py:499
+#, python-format
+msgid "Ad-hoc Network %d"
+msgstr "Kyha peteĩchagua%d"
+
+#: ../src/jarabe/desktop/networkviews.py:643
+#, python-format
+msgid "Mesh Network %d"
+msgstr "Red Malla %d"
+
+#: ../src/jarabe/desktop/schoolserver.py:144
+msgid "Cannot connect to the server."
+msgstr "Ndaikatúi oñembojoaju pytyvõre."
+
+#: ../src/jarabe/desktop/schoolserver.py:151
+msgid "The server could not complete the request."
+msgstr "Pe pytyvoha ndaikatui ojapo pe ereva chupe."
+
+#: ../src/jarabe/desktop/viewtoolbar.py:95
+msgid "List view"
+msgstr "Jehecha tysýipe"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:97
+#: ../src/jarabe/desktop/viewtoolbar.py:196
+#: ../src/jarabe/desktop/viewtoolbar.py:210
+#, python-format
+msgid "<Ctrl>%d"
+msgstr "<Ctrl>%d"
+
+#: ../src/jarabe/frame/activitiestray.py:213
+#: ../src/jarabe/frame/activitiestray.py:657
+msgid "Decline"
+msgstr "Mbotove"
+
+#: ../src/jarabe/frame/activitiestray.py:598
+#, python-format
+msgid "%dB"
+msgstr "%d B"
+
+#: ../src/jarabe/frame/activitiestray.py:600
+#, python-format
+msgid "%dKB"
+msgstr "%d KB"
+
+#: ../src/jarabe/frame/activitiestray.py:602
+#, python-format
+msgid "%dMB"
+msgstr "%d MB"
+
+#. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
+#: ../src/jarabe/frame/activitiestray.py:620
+#, python-format
+msgid "%s of %s"
+msgstr "%s , %s gui"
+
+#: ../src/jarabe/frame/activitiestray.py:634
+#, python-format
+msgid "Transfer from %s"
+msgstr "Ñembohasa %s guive"
+
+#: ../src/jarabe/frame/activitiestray.py:648
+#: ../extensions/cpsection/backup/view.py:324
+msgid "Accept"
+msgstr "Neĩ"
+
+#: ../src/jarabe/frame/activitiestray.py:722
+#: ../src/jarabe/frame/activitiestray.py:736
+#: ../src/jarabe/frame/activitiestray.py:878
+msgid "Dismiss"
+msgstr "Emboyke"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+msgid "The other participant canceled the file transfer"
+msgstr "Nde angirũ ndombohasaveima ndeve hembiapo"
+
+#: ../src/jarabe/frame/activitiestray.py:800
+#, python-format
+msgid "Transfer to %s"
+msgstr "Ñembohasa %s"
+
+#: ../src/jarabe/frame/clipboardmenu.py:54
+msgctxt "Clipboard"
+msgid "Remove"
+msgstr "Jeipe'a"
+
+#: ../src/jarabe/frame/clipboardmenu.py:60
+#: ../src/jarabe/frame/clipboardmenu.py:83
+msgid "Open"
+msgstr "Mboty'o"
+
+#: ../src/jarabe/frame/clipboardmenu.py:88
+msgid "Open with"
+msgstr "Mboty'o ndive"
+
+#: ../src/jarabe/frame/clipboardobject.py:50
+#, python-format
+msgid "%s clipping"
+msgstr "%s ñeikytĩ"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:50
+msgid "F1"
+msgstr "F1"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:54
+msgid "F2"
+msgstr "F2"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:58
+msgid "F3"
+msgstr "F3"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:62 ../src/jarabe/model/screenshot.py:69
+msgid "Activity"
+msgstr "Tembiapo"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:63
+msgid "F4"
+msgstr "F4"
+
+#: ../src/jarabe/intro/window.py:135
+msgid "Name:"
+msgstr "Téra:"
+
+#: ../src/jarabe/intro/window.py:174
+msgid "Click to change color:"
+msgstr "Eikutu emoambue hag̃ua sa'y:"
+
+#: ../src/jarabe/intro/window.py:337 ../src/jarabe/journal/detailview.py:95
+msgid "Back"
+msgstr "Tapykuépe"
+
+#: ../src/jarabe/intro/window.py:352
+msgid "Next"
+msgstr "Uperiregua"
+
+#: ../src/jarabe/intro/agepicker.py:38
+msgid "Select grade:"
+msgstr "Emoĩ mbo'esyry:"
+
+#: ../src/jarabe/intro/agepicker.py:39
+msgid "Preschool"
+msgstr "Mbo'esyry mboyve"
+
+#: ../src/jarabe/intro/agepicker.py:39
+msgid "Kindergarten"
+msgstr "Mbo'ehao mboyveha"
+
+#: ../src/jarabe/intro/agepicker.py:39
+msgid "1st Grade"
+msgstr "Mbo'esyry teĩ"
+
+#: ../src/jarabe/intro/agepicker.py:40
+msgid "2nd Grade"
+msgstr "Mbo'esyry mokoĩ"
+
+#: ../src/jarabe/intro/agepicker.py:40
+msgid "3rd Grade"
+msgstr "Mbo'esyry mbohapy"
+
+#: ../src/jarabe/intro/agepicker.py:40
+msgid "4th Grade"
+msgstr "Mbo'esyry irundy"
+
+#: ../src/jarabe/intro/agepicker.py:41
+msgid "5th Grade"
+msgstr "Mbo'esyry po"
+
+#: ../src/jarabe/intro/agepicker.py:41
+msgid "6th Grade"
+msgstr "Mbo'esyry poteĩ"
+
+#: ../src/jarabe/intro/agepicker.py:41
+msgid "7th Grade"
+msgstr "Mbo'esyry pokoĩ"
+
+#: ../src/jarabe/intro/agepicker.py:42
+msgid "High School"
+msgstr "Mbo'ehao moĩkoihapegua"
+
+#: ../src/jarabe/intro/agepicker.py:42
+msgid "Adult"
+msgstr "Kakuaagua"
+
+#: ../src/jarabe/journal/expandedentry.py:153
+#: ../src/jarabe/journal/journaltoolbox.py:584
+#: ../src/jarabe/journal/palettes.py:163
+#, python-format
+msgid "Do you want to permanently erase \"%s\"?"
+msgstr "Emboguese opyta haguãicha \"%s\"?"
+
+#: ../src/jarabe/journal/expandedentry.py:296
+#: ../src/jarabe/journal/listmodel.py:185 ../src/jarabe/journal/model.py:794
+#: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/journal/palettes.py:621
+#: ../src/jarabe/journal/volumestoolbar.py:134
+#: ../src/jarabe/journal/iconmodel.py:110
+msgid "Untitled"
+msgstr "Nda hérai"
+
+#: ../src/jarabe/journal/expandedentry.py:366
+msgid "No preview"
+msgstr "Ndoguerekoi hechapyre"
+
+#: ../src/jarabe/journal/expandedentry.py:386
+#, python-format
+msgid "Kind: %s"
+msgstr "Mba’ereko: %s"
+
+#: ../src/jarabe/journal/expandedentry.py:387
+#, python-format
+msgid "Date: %s"
+msgstr "Arange: %s"
+
+#: ../src/jarabe/journal/expandedentry.py:388
+#, python-format
+msgid "Size: %s"
+msgstr "Jakatuha: %s"
+
+#: ../src/jarabe/journal/expandedentry.py:412
+#: ../src/jarabe/journal/misc.py:131
+msgid "No date"
+msgstr "Arange'ỹ"
+
+#: ../src/jarabe/journal/expandedentry.py:421
+msgid "Participants:"
+msgstr "Oikéva:"
+
+#: ../src/jarabe/journal/expandedentry.py:459
+msgid "Description:"
+msgstr "Ñemombe'upaite:"
+
+#: ../src/jarabe/journal/expandedentry.py:465
+msgid "Tags:"
+msgstr "Ñemohenda:"
+
+#: ../src/jarabe/journal/expandedentry.py:470
+msgid "Comments:"
+msgstr "Jehai’aty arandu:"
+
+#: ../src/jarabe/journal/journalactivity.py:182
+#: ../src/jarabe/journal/journaltoolbox.py:94
+#: ../src/jarabe/journal/palettes.py:260
+#: ../src/jarabe/journal/volumestoolbar.py:349
+#: ../src/jarabe/view/viewhelp.py:79
+msgid "Journal"
+msgstr "Tembiapokuera ryru"
+
+#: ../src/jarabe/journal/journaltoolbox.py:103
+msgid "Favorite entries"
+msgstr "Jeikeha mba’e aguerohorýva"
+
+#. TRANS: Item on a palette that filters by entry type.
+#: ../src/jarabe/journal/journaltoolbox.py:112
+#: ../src/jarabe/journal/journaltoolbox.py:403
+#: ../src/jarabe/journal/journaltoolbox.py:479
+msgid "Anything"
+msgstr "Oimeraẽva"
+
+#: ../src/jarabe/journal/journaltoolbox.py:118
+#: ../src/jarabe/journal/journaltoolbox.py:165
+#: ../src/jarabe/journal/journaltoolbox.py:483
+msgid "Anytime"
+msgstr "Oimeraẽ sapy'a"
+
+#: ../src/jarabe/journal/journaltoolbox.py:172
+msgid "Since yesterday"
+msgstr "Kuehe guive"
+
+#: ../src/jarabe/journal/journaltoolbox.py:175
+msgid "Past week"
+msgstr "Pahague Ara"
+
+#: ../src/jarabe/journal/journaltoolbox.py:178
+msgid "Past month"
+msgstr "Jasy Ipaha"
+
+#: ../src/jarabe/journal/journaltoolbox.py:181
+msgid "Past year"
+msgstr "Ary Pahague"
+
+#: ../src/jarabe/journal/journaltoolbox.py:521
+#: ../src/jarabe/journal/palettes.py:105
+msgid "Copy to"
+msgstr "Eguerova péichaite"
+
+#: ../src/jarabe/journal/journaltoolbox.py:529
+#: ../src/jarabe/journal/palettes.py:116 ../src/jarabe/view/viewsource.py:379
+msgid "Duplicate"
+msgstr "Momokõi"
+
+#: ../src/jarabe/journal/journaltoolbox.py:535
+msgid "Refresh"
+msgstr "Mbopiro`y"
+
+#: ../src/jarabe/journal/journaltoolbox.py:577
+#: ../src/jarabe/journal/palettes.py:156 ../src/jarabe/journal/palettes.py:374
+#: ../src/jarabe/journal/volumestoolbar.py:312
+#, python-format
+msgid "Error while copying the entry. %s"
+msgstr "Ojavy oguerova jave pe ojeikeha. %s"
+
+#: ../src/jarabe/journal/journaltoolbox.py:578
+#: ../src/jarabe/journal/palettes.py:157 ../src/jarabe/journal/palettes.py:375
+#: ../src/jarabe/journal/volumestoolbar.py:313
+msgid "Error"
+msgstr "Jejavy"
+
+#. TRANS: Action label for starting an entry.
+#: ../src/jarabe/journal/journaltoolbox.py:662
+#: ../src/jarabe/journal/palettes.py:86
+msgid "Start"
+msgstr "Remoñepyrũ"
+
+#: ../src/jarabe/journal/journaltoolbox.py:682
+#: ../src/jarabe/journal/palettes.py:100 ../src/jarabe/journal/palettes.py:513
+msgid "No activity to start entry"
+msgstr "Ndojetopai peteĩ rembiapo oñepyrũ hag̃ua jeike ha"
+
+#: ../src/jarabe/journal/journaltoolbox.py:700
+msgid "Sort view"
+msgstr "Emohenda hechapyre"
+
+#: ../src/jarabe/journal/journaltoolbox.py:711
+msgid "Sort by date modified"
+msgstr "Emohenda arange ojejapo jeyvare"
+
+#: ../src/jarabe/journal/journaltoolbox.py:712
+msgid "Sort by date created"
+msgstr "Emohenda arange ojejapova'ekuepe"
+
+#: ../src/jarabe/journal/journaltoolbox.py:713
+msgid "Sort by size"
+msgstr "Emohenda jakatuharehe"
+
+#: ../src/jarabe/journal/journaltoolbox.py:778
+msgid "Deselect all"
+msgstr "Jeipe'a opakatu"
+
+#: ../src/jarabe/journal/journaltoolbox.py:791
+msgid "Select all"
+msgstr "Ñemoĩ mbaite"
+
+#: ../src/jarabe/journal/journaltoolbox.py:817
+#, python-format
+msgid "Do you want to erase %d entry?"
+msgid_plural "Do you want to erase %d entries?"
+msgstr[0] "¿Reipota oñembogue %d jeikeha?"
+msgstr[1] "¿Reipota oñembogue %d jeikeha kuéra?"
+
+#: ../src/jarabe/journal/journaltoolbox.py:831
+#: ../src/jarabe/journal/palettes.py:378
+msgid "Copy"
+msgstr "Embohasa péichaite"
+
+#. TRANS: Do not translate %(selected)d and %(total)d.
+#: ../src/jarabe/journal/journaltoolbox.py:882
+#, python-format
+msgid "Selected %(selected)d of %(total)d"
+msgstr "Ojeipuru %(selected)d koãakuera apytei %(total)d"
+
+#: ../src/jarabe/journal/journaltoolbox.py:917
+msgid "Select filter"
+msgstr "Eiporavo jeiporavoha"
+
+#: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
+msgid "Your Journal is empty"
+msgstr "Tembiapokuera ryru inandi"
+
+#: ../src/jarabe/journal/listview.py:476 ../src/jarabe/journal/iconview.py:215
+msgid "Your documents folder is empty"
+msgstr "Nde tembiapokuera ryru inandi"
+
+#: ../src/jarabe/journal/listview.py:478 ../src/jarabe/journal/iconview.py:217
+msgid "The device is empty"
+msgstr "Nde mba'eryru inandi"
+
+#: ../src/jarabe/journal/listview.py:480 ../src/jarabe/journal/iconview.py:220
+msgid "No matching entries"
+msgstr "Ndojejuhui ehekaba"
+
+#: ../src/jarabe/journal/misc.py:313
+#, python-format
+msgid "Older Version Of %s Activity"
+msgstr "Tembiapo itujaveva %s"
+
+#: ../src/jarabe/journal/misc.py:314
+#, python-format
+msgid "Do you want to downgrade to version %s"
+msgstr "Emoĩse tembiapo itujavéva %s"
+
+#: ../src/jarabe/journal/modalalert.py:63
+msgid "Your Journal is full"
+msgstr "Nde rembiapo renda henyhe"
+
+#: ../src/jarabe/journal/modalalert.py:68
+msgid "Please delete some old Journal entries to make space for new ones."
+msgstr ""
+"Eipe'a jeike tuja nde rembiapo renda gui ikatu hag̃ua eñongatu ipyahuva."
+
+#: ../src/jarabe/journal/modalalert.py:82
+msgid "Show Journal"
+msgstr "Ehecha tembiapo ryru"
+
+#: ../src/jarabe/journal/objectchooser.py:171
+msgid "Choose an object"
+msgstr "Eiporavo peteĩ mba'e"
+
+#: ../src/jarabe/journal/objectchooser.py:176
+#, python-format
+msgid "Choose an object to open with %s activity"
+msgstr "Eiporavo peteĩ mba'e eipe'a hag̃ua %s"
+
+#: ../src/jarabe/journal/objectchooser.py:184
+#: ../src/jarabe/view/viewhelp.py:335 ../src/jarabe/view/viewsource.py:579
+msgid "Close"
+msgstr "Emboty"
+
+#: ../src/jarabe/journal/palettes.py:84
+msgid "Resume with"
+msgstr "Reñepyrũjey"
+
+#: ../src/jarabe/journal/palettes.py:87
+msgid "Start with"
+msgstr "Eñepyrũ"
+
+#: ../src/jarabe/journal/palettes.py:124
+msgid "Send to"
+msgstr "Emondo"
+
+#: ../src/jarabe/journal/palettes.py:133
+msgid "View Details"
+msgstr "Ehecha heseguava"
+
+#: ../src/jarabe/journal/palettes.py:193
+msgid "Entries without a file cannot be sent."
+msgstr "Umi ñemoingue jepuruva ndaikatui ojahai."
+
+#: ../src/jarabe/journal/palettes.py:272
+#: ../src/jarabe/journal/volumestoolbar.py:214
+msgid "Documents"
+msgstr "Kuatia'arandu"
+
+#: ../src/jarabe/journal/palettes.py:363 ../src/jarabe/journal/palettes.py:423
+#: ../src/jarabe/journal/volumestoolbar.py:303
+msgid "Entries without a file cannot be copied."
+msgstr "Ndaikatui ojejapo tekora'ã tembiapo'ỹre."
+
+#: ../src/jarabe/journal/palettes.py:383
+#, python-format
+msgid "Do you want to copy %d entry?"
+msgid_plural "Do you want to copy %d entries?"
+msgstr[0] "Ejapose tekora'ã ñemoingeha %d pegua?"
+msgstr[1] "Embohasase %d ñemoingehápe?"
+
+#: ../src/jarabe/journal/palettes.py:408
+msgid "Clipboard"
+msgstr "Kutia ojeypuru'ỹva ryru"
+
+#: ../src/jarabe/journal/palettes.py:478
+msgid "No friends present"
+msgstr "Ndaipori ni peteĩ angiru ko'ag̃a"
+
+#: ../src/jarabe/journal/palettes.py:483
+msgid "No valid connection found"
+msgstr "Ndojejuhui ni peteĩ joapy oikova"
+
+#: ../src/jarabe/journal/palettes.py:511
+msgid "No activity to resume entry"
+msgstr "Ndojejuhui peteĩ tembiapo ojejapo jey hag̃ua ojejaposeva"
+
+#: ../src/jarabe/journal/palettes.py:580 ../src/jarabe/view/palettes.py:133
+msgid "Stop"
+msgstr "Pyta"
+
+#: ../src/jarabe/journal/palettes.py:585
+#: ../extensions/cpsection/backup/view.py:212
+#: ../extensions/cpsection/backup/view.py:265
+msgid "Continue"
+msgstr "Japo mante"
+
+#: ../src/jarabe/journal/palettes.py:622
+#, python-format
+msgid "%(index)d of %(total)d : %(object_title)s"
+msgstr "%(index)d de %(total)d : %(object_title)s"
+
+#: ../src/jarabe/journal/volumestoolbar.py:375
+#: ../src/jarabe/view/palettes.py:251 ../src/jarabe/view/palettes.py:317
+#, python-format
+msgid "%(free_space)d MB Free"
+msgstr "%(free_space)d MB libres"
+
+#: ../src/jarabe/model/desktop.py:85
+#, python-format
+msgid "Favorites view %d"
+msgstr "Jehecha Jehayhúveva %d"
+
+#: ../src/jarabe/model/network.py:217
+msgid "The reason for the device state change is unknown."
+msgstr "Pe kuaaha ñemoambueguarã ĩpapyre jepuruha ndojeikuaáiva."
+
+#: ../src/jarabe/model/network.py:219
+msgid "The state change is normal."
+msgstr "Pe ñemoambue ĩpapyre hekopetépe."
+
+#: ../src/jarabe/model/network.py:221
+msgid "The device is now managed."
+msgstr "Jepuruha oĩ moangapyhypapyre."
+
+#: ../src/jarabe/model/network.py:223
+msgid "The device is no longer managed."
+msgstr "Mba'eryru ndojeipuruveima hina."
+
+#: ../src/jarabe/model/network.py:225
+msgid "The device could not be readied for configuration."
+msgstr "Pe jepuruha ndaikatúi oñembosako'i oñembopyahuhag̃ua."
+
+#: ../src/jarabe/model/network.py:227
+msgid ""
+"IP configuration could not be reserved (no available address, timeout, etc)."
+msgstr ""
+"Moambue IP ndaikutúi oñeñongatu (ndaipori tape oñembojoajuhag̃ua, ha "
+"ndoikatuvéima ojejapo)."
+
+#: ../src/jarabe/model/network.py:230
+msgid "The IP configuration is no longer valid."
+msgstr "Moambue IP ndovalevéima."
+
+#: ../src/jarabe/model/network.py:232
+msgid "Secrets were required, but not provided."
+msgstr "Taí ñemiva tekotẽve, ndoikatúi mba'eve oñeme'ẽ."
+
+#: ../src/jarabe/model/network.py:234
+msgid ""
+"The 802.1X supplicant disconnected from the access point or authentication "
+"server."
+msgstr "802.1X ojehekýi joapygui."
+
+#: ../src/jarabe/model/network.py:237
+msgid "Configuration of the 802.1X supplicant failed."
+msgstr "Ñemohenda puruha 802.1X javypapyre."
+
+#: ../src/jarabe/model/network.py:239
+msgid "The 802.1X supplicant quit or failed unexpectedly."
+msgstr "Puruha 802.1X osẽ terã ojavy ñeha'arõyre."
+
+#: ../src/jarabe/model/network.py:241
+msgid "The 802.1X supplicant took too long to authenticate."
+msgstr "Puruha 802.1X ho'u heta ára moañetẽguarã."
+
+#: ../src/jarabe/model/network.py:243
+msgid "The PPP service failed to start within the allowed time."
+msgstr "Tekuaivore PPP javy'akue oñepyru ára oikatuva."
+
+#: ../src/jarabe/model/network.py:245
+msgid "The PPP service disconnected unexpectedly."
+msgstr "Pe ñepytyvõ PPP ogue ha'eño."
+
+#: ../src/jarabe/model/network.py:247
+msgid "The PPP service quit or failed unexpectedly."
+msgstr "Pe ñepytyvo PPP oheja tembiapo ha ndoikoivei."
+
+#: ../src/jarabe/model/network.py:249
+msgid "The DHCP service failed to start within the allowed time."
+msgstr "Pe ñepytyvõ DHCP ndoikoi oñepyru hag̃ua aravope."
+
+#: ../src/jarabe/model/network.py:251
+msgid "The DHCP service reported an unexpected error."
+msgstr "Pe ñepytyvõ DHCP ohechauka peteĩ mba'e ndoikoiva."
+
+#: ../src/jarabe/model/network.py:253
+msgid "The DHCP service quit or failed unexpectedly."
+msgstr "Pe ñepytyvõ DHCP osẽ terã ojavy sapy'ante."
+
+#: ../src/jarabe/model/network.py:255
+msgid "The shared connection service failed to start."
+msgstr "Pe ñepytyvõ ndaikatui oñekonecta ha ogue oñepyrũvo."
+
+#: ../src/jarabe/model/network.py:257
+msgid "The shared connection service quit or failed unexpectedly."
+msgstr "Embojoajuha opa tetãrẽ nde angirũndive ndoikovei."
+
+#: ../src/jarabe/model/network.py:260
+msgid "The AutoIP service failed to start."
+msgstr "Pe ñepytyvõ AutoIP ndoikoi oñepyruhápe."
+
+#: ../src/jarabe/model/network.py:262
+msgid "The AutoIP service reported an unexpected error."
+msgstr "Pe ñepytyvõ AutoIP ohechauka ndoikoiha."
+
+#: ../src/jarabe/model/network.py:264
+msgid "The AutoIP service quit or failed unexpectedly."
+msgstr "Pe jeipuruha AutoIP oheja hembiapo."
+
+#: ../src/jarabe/model/network.py:266
+msgid "Dialing failed because the line was busy."
+msgstr "Conexion ojavy ndaipori linea ojeipuruhagua."
+
+#: ../src/jarabe/model/network.py:268
+msgid "Dialing failed because there was no dial tone."
+msgstr "Conexión javyva ndaipori ñehenduva ñehenoi."
+
+#: ../src/jarabe/model/network.py:270
+msgid "Dialing failed because there was no carrier."
+msgstr "Conexión javyva ndaiporiva tenondepe."
+
+#: ../src/jarabe/model/network.py:272
+msgid "Dialing timed out."
+msgstr "Henoi ndaikatui ára rehegua."
+
+#: ../src/jarabe/model/network.py:274
+msgid "Dialing failed."
+msgstr "Henoi javy."
+
+#: ../src/jarabe/model/network.py:276
+msgid "Modem initialization failed."
+msgstr "Javy ñepyruha modem."
+
+#: ../src/jarabe/model/network.py:278
+msgid "Failed to select the specified GSM APN"
+msgstr "Javy jeiporavópe kytã jeikeha GSM APN"
+
+#: ../src/jarabe/model/network.py:280
+msgid "Not searching for networks."
+msgstr "Ndojehekai redes."
+
+#: ../src/jarabe/model/network.py:282
+msgid "Network registration was denied."
+msgstr "Tera ryru en la red mbotoveva."
+
+#: ../src/jarabe/model/network.py:284
+msgid "Network registration timed out."
+msgstr "Tera ryru en la red ndaikatui."
+
+#: ../src/jarabe/model/network.py:286
+msgid "Failed to register with the requested GSM network."
+msgstr "Javy tera ryru con la red GSM jerure ha angeko."
+
+#: ../src/jarabe/model/network.py:288
+msgid "PIN check failed."
+msgstr "Ñemaña de PIN javyva."
+
+#: ../src/jarabe/model/network.py:290
+msgid "Necessary firmware for the device may be missing."
+msgstr "Firmware ñeikoteveva mbayru hag̃ua oikatu jejavy."
+
+#: ../src/jarabe/model/network.py:292
+msgid "The device was removed."
+msgstr "Nde mba'e ryru ojeipe'a."
+
+#: ../src/jarabe/model/network.py:294
+msgid "NetworkManager went to sleep."
+msgstr "NetworkManager ojemonge."
+
+#: ../src/jarabe/model/network.py:296
+msgid "The device's active connection was removed or disappeared."
+msgstr "Oñembojuajuha nde mbayrundive ojeipe'a yrõ ndojetopai."
+
+#: ../src/jarabe/model/network.py:299
+msgid "A user or client requested the disconnection."
+msgstr "Ojejerure ojeipe'a hag̃ua joaju."
+
+#: ../src/jarabe/model/network.py:301
+msgid "The device's carrier/link changed."
+msgstr "Ojerova nde xo ombojoajuha tape."
+
+#: ../src/jarabe/model/network.py:303
+msgid "The device's existing connection was assumed."
+msgstr "Nde mbayru emoĩva nde xore oikoma."
+
+#: ../src/jarabe/model/network.py:305
+msgid "The supplicant is now available."
+msgstr "Ombojoajuva opa tetãre ndaikatui ko'ag̃a."
+
+#: ../src/jarabe/model/network.py:307
+msgid "The modem could not be found."
+msgstr "Ndaikatui ojetopa modem."
+
+#: ../src/jarabe/model/network.py:309
+msgid "The Bluetooth connection failed or timed out."
+msgstr "Ndaikatui oñembojoaju Bluetoothre, hetama oñeha'ãrõ."
+
+#: ../src/jarabe/model/network.py:311
+msgid "Unused."
+msgstr "Ndojeipurui."
+
+#: ../src/jarabe/model/screenshot.py:59 ../src/jarabe/view/viewhelp.py:70
+msgid "Mesh"
+msgstr "Malla"
+
+#: ../src/jarabe/model/screenshot.py:72
+msgid "Screenshot"
+msgstr "Eñongatu ta'anga nde XO pe ohechaukavae"
+
+#: ../src/jarabe/model/screenshot.py:74
+#, python-format
+msgid "Screenshot of \"%s\""
+msgstr "Ojagarra tenda akue \"%s\""
+
+#: ../src/jarabe/view/alerts.py:38 ../src/jarabe/view/alerts.py:48
+msgid "Activity launcher"
+msgstr "Tembiapo omoñepyrũha"
+
+#: ../src/jarabe/view/alerts.py:39
+#, python-format
+msgid "%s is already running. Please stop %s before launching it again."
+msgstr "%s oikoma hina. Ikaturõ epyta %s eipurujey mboyve."
+
+#: ../src/jarabe/view/alerts.py:49
+msgid ""
+"The maximum number of open activities has been reached. Please close an "
+"activity before launching a new one."
+msgstr ""
+"Papapy hetavéva tembiapo oguahẽ hu'ame. Emboty peteĩ tembiapo ikatuhaguãicha "
+"eipuru ambue rembiapo."
+
+#: ../src/jarabe/view/buddymenu.py:73
+msgid "Remove friend"
+msgstr "Eipe'a angirũ"
+
+#: ../src/jarabe/view/buddymenu.py:76
+msgid "Make friend"
+msgstr "Joaju angirũ"
+
+#: ../src/jarabe/view/buddymenu.py:108
+msgid "Shutdown"
+msgstr "Embogue"
+
+#: ../src/jarabe/view/buddymenu.py:113
+msgid "Restart"
+msgstr "Actividad"
+
+#: ../src/jarabe/view/buddymenu.py:119
+msgid "Logout"
+msgstr "Esẽ"
+
+#: ../src/jarabe/view/buddymenu.py:124
+msgid "My Settings"
+msgstr "Che ajapovaekue"
+
+#: ../src/jarabe/view/buddymenu.py:183
+#, python-format
+msgid "Invite to %s"
+msgstr "Ehenói %s"
+
+#: ../src/jarabe/view/launcher.py:159
+#, python-format
+msgid "<b>%s</b> failed to start."
+msgstr "<b>%s</b> ojavy oñepyrũhape."
+
+#: ../src/jarabe/view/palettes.py:53
+msgid "Starting..."
+msgstr "Eñepyrũhina..."
+
+#: ../src/jarabe/view/palettes.py:63
+msgid "Activity failed to start"
+msgstr "Tembiapo ojavy oñepyrũhape"
+
+#. TODO: share-with, keep
+#: ../src/jarabe/view/palettes.py:105
+msgid "View Source"
+msgstr "Ehecha apytu'ũ"
+
+#: ../src/jarabe/view/palettes.py:112
+msgid "View Help"
+msgstr "Ehecha ñepytyvõ"
+
+#: ../src/jarabe/view/palettes.py:179
+msgid "Start new"
+msgstr "Eñepyrũ jey"
+
+#: ../src/jarabe/view/palettes.py:266
+msgctxt "Volume"
+msgid "Remove"
+msgstr "Eipe'a"
+
+#: ../src/jarabe/view/viewhelp.py:304
+msgid "Help Manual"
+msgstr "Kuatia nemopytyvõkuaava"
+
+#: ../src/jarabe/view/viewhelp.py:318
+msgid "Social Help"
+msgstr "Ñemopytyvõ opaitepeguarã"
+
+#: ../src/jarabe/view/viewhelp.py:326
+#, python-format
+msgid "Help: %s"
+msgstr "Ñepytyvõ: %s"
+
+#: ../src/jarabe/view/viewsource.py:364
+msgid "Instance Source"
+msgstr "Apytu'ũ tembiapopegua"
+
+#: ../src/jarabe/view/viewsource.py:392
+#, python-format
+msgid "Do you want to duplicate %s Activity?"
+msgstr "¿Oipota momokõi ko tembiapo %s?."
+
+#: ../src/jarabe/view/viewsource.py:394
+msgid "This may take a few minutes"
+msgstr "Koa ikatu japyhy iomeraẽ aravo'i."
+
+#: ../src/jarabe/view/viewsource.py:408
+msgid "Duplicating activity..."
+msgstr "Momokõipapyre tembiapo..."
+
+#: ../src/jarabe/view/viewsource.py:447
+msgid "Duplicated"
+msgstr "Momokoi."
+
+#: ../src/jarabe/view/viewsource.py:448
+msgid "The activity has been duplicated"
+msgstr "Pe tembiapo oyemomokõi."
+
+#: ../src/jarabe/view/viewsource.py:462
+msgid "Duplicated activity already exists"
+msgstr "Pe tembiapo momokõipapyre oima."
+
+#: ../src/jarabe/view/viewsource.py:463
+msgid "Delete your copy before trying to duplicate the activity again"
+msgstr "Remoyke nde haijevypapyre ñeha'ã mboyve momokõi jevy."
+
+#: ../src/jarabe/view/viewsource.py:478
+msgid "Source"
+msgstr "Apytu'ũ"
+
+#: ../src/jarabe/view/viewsource.py:542
+msgid "Activity Bundle Source"
+msgstr "Tembiapo jekuapy ñepyrũha"
+
+#: ../src/jarabe/view/viewsource.py:561
+msgid "Sugar Toolkit Source"
+msgstr "Apytu'ũ Sugar Toolkit"
+
+#: ../src/jarabe/view/viewsource.py:568
+#, python-format
+msgid "View source: %s"
+msgstr "Ehecha apytu'ũ: %s"
+
+#: ../src/jarabe/view/viewsource.py:569
+#, python-format
+msgid "View source: %r"
+msgstr "Ehecha apytu'ũ: %r"
+
+#: ../src/jarabe/view/viewsource.py:809
+msgid "Please select a file in the left panel."
+msgstr "Itatúramo eiporavó nde ñongatuha tenda asúpe."
+
+#: ../extensions/cpsection/backup/__init__.py:22
+msgid "Backup"
+msgstr "Tekora'ã"
+
+#: ../extensions/cpsection/backup/backends/volume.py:61
+#: ../extensions/cpsection/backup/backends/volume.py:171
+msgid "Please connect a device to continue"
+msgstr "Ikatupa embojoaju peteĩ mba'e ehasa hag̃ua"
+
+#: ../extensions/cpsection/backup/backends/volume.py:69
+#: ../extensions/cpsection/backup/backends/volume.py:178
+msgid "Select your volume"
+msgstr "Eiporavo moõpa reñonguatuta"
+
+#: ../extensions/cpsection/backup/backends/volume.py:78
+msgid "Not enough space in volume"
+msgstr "Ndaipori tenda eñonguatusehape"
+
+#: ../extensions/cpsection/backup/backends/volume.py:122
+#, python-format
+msgid "Backup from user %s"
+msgstr "Tekora'ã ñe'anguhave'ỹ teko %s"
+
+#: ../extensions/cpsection/backup/backends/volume.py:191
+msgid "No checkpoints found in the device"
+msgstr "Ndojetopái rekopiakuéra ñe'anguhave'ỹ jepuruhápe"
+
+#: ../extensions/cpsection/backup/backends/volume.py:199
+msgid "Select your checkpoint"
+msgstr "Eiporavo tembiapo eñongatu porã hag̃ua"
+
+#: ../extensions/cpsection/backup/backends/volume.py:210
+msgid "Not enough space in disk"
+msgstr "Ndaipori tenda diskope"
+
+#: ../extensions/cpsection/backup/backends/volume.py:329
+msgid "Local Device Backup"
+msgstr "Jepuruha oga pe gua ojehai hagua"
+
+#: ../extensions/cpsection/backup/view.py:133
+msgid "Save the contents of your Journal"
+msgstr "Eñongatu tembiapokuera ryrupe"
+
+#: ../extensions/cpsection/backup/view.py:141
+msgid "Restore the contents of your Journal"
+msgstr "Ñemyatyrõ tembiapo ryrupe oĩva"
+
+#: ../extensions/cpsection/backup/view.py:223
+msgid "Please close all the activities, and start again"
+msgstr "Ikatu rembotypa enterove tembiapokuera ha reñepyrũ jey"
+
+#: ../extensions/cpsection/backup/view.py:229
+msgid "Select where you want create your backup"
+msgstr "Eiporavo moõpa eñongatuse jehaipyre"
+
+#: ../extensions/cpsection/backup/view.py:231
+msgid "Select where you want retrieve your restore"
+msgstr "Jeiporavo moõgui jejapojeý tekora'ã ñe'anguhave'ỹ"
+
+#: ../extensions/cpsection/backup/view.py:271
+msgid "Retry"
+msgstr "Rejapojey"
+
+#: ../extensions/cpsection/backup/view.py:290
+msgid "Starting backup..."
+msgstr "Oñepyrũ hina tekora'ã..."
+
+#: ../extensions/cpsection/backup/view.py:294
+msgid "Starting restore..."
+msgstr "Oñepyrũ jejapojeý..."
+
+#: ../extensions/cpsection/backup/view.py:321
+msgid ""
+"I want to restore the content of my Journal. In order to do this, my Journal "
+"will first be emptied of all its content; then the restored content will be "
+"added."
+msgstr ""
+"Amopotĩse che tembiapokuéra ryru aguerekohaguaicha che rembiapokuéra jey. "
+"Ikatuhaguaicha pea oiko oñemotĩta tembiapokuéra ryru ha jaguerojeyta "
+"tembiapo."
+
+#: ../extensions/cpsection/backup/view.py:327
+msgid "Confirm"
+msgstr "Moañete"
+
+#: ../extensions/cpsection/backup/view.py:365
+msgid "Operation started"
+msgstr "Apo eñepyrũma"
+
+#: ../extensions/cpsection/backup/view.py:377
+msgid "Backup finished successfully"
+msgstr "Tekora'ã opa porã"
+
+#: ../extensions/cpsection/backup/view.py:379
+msgid "Restore realized successfully."
+msgstr "Tembiapokuéra oñemoiporãmba jey."
+
+#: ../src/jarabe/frame/notification.py:62
+msgid "Clear notifications"
+msgstr "Mopoti las notificaciones"

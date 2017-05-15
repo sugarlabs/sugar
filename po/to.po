@@ -2416,16 +2416,3 @@ msgstr ""
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
 msgstr ""
-
-#~ msgid "Mute"
-#~ msgstr "Fakalongolongo"
-
-#~ msgid "<Ctrl>2"
-#~ msgstr "<Ctrl>2"
-
-#~ msgid "<Ctrl>1"
-#~ msgstr "<Ctrl>1"
-
-#, fuzzy
-#~ msgid "Software update"
-#~ msgstr "'Aputeiti e Software"

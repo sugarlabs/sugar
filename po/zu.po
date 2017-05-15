@@ -2440,11 +2440,3 @@ msgstr ""
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Unmute"
-#~ msgstr "Susa ukuthula"
-
-#, fuzzy
-#~ msgid "Mute"
-#~ msgstr "Thulisa"

@@ -7,15 +7,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2013-08-21 06:56+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2017-05-06 18:00+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: Sugar Labs\n"
 "Language: rw\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1) ;\n"
-"X-Generator: Pootle 2.0.5\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1494093630.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -54,8 +55,9 @@ msgid "Show Shutdown"
 msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
+#, fuzzy
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
-msgstr ""
+msgstr "If TRUE, Sugar irerekana amahitamo yo \"Kuvamo\"."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
@@ -615,8 +617,9 @@ msgid "Date & Time"
 msgstr "Itariki n'igihe"
 
 #: ../extensions/cpsection/datetime/model.py:100
+#, fuzzy
 msgid "Error: timezone does not exist."
-msgstr ""
+msgstr "Ikosa timezone ntiribaho."
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
@@ -640,8 +643,9 @@ msgid "Activation Delay"
 msgstr "Gutinda kwa activation"
 
 #: ../extensions/cpsection/frame/view.py:68
+#, fuzzy
 msgid "Activation Area"
-msgstr ""
+msgstr "Gutinda kwa activation"
 
 #: ../extensions/cpsection/frame/view.py:85
 msgid "Corner"
@@ -1308,7 +1312,7 @@ msgstr "Icyitonderwa"
 #: ../src/jarabe/controlpanel/gui.py:374
 #: ../src/jarabe/controlpanel/sectionview.py:45
 msgid "Changes require restart"
-msgstr "impinduka zikenera  kongera gutangira"
+msgstr "impinduka zikenera kongera gutangira"
 
 #: ../src/jarabe/controlpanel/gui.py:379
 msgid "Cancel changes"
@@ -2319,8 +2323,9 @@ msgid "Duplicating activity..."
 msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:447
+#, fuzzy
 msgid "Duplicated"
-msgstr ""
+msgstr "Subiramo"
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
@@ -2458,72 +2463,3 @@ msgstr ""
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
 msgstr ""
-
-#~ msgid "Error timezone does not exist."
-#~ msgstr "Ikosa timezone ntiribaho."
-
-#~ msgid "Value must be an integer."
-#~ msgstr "umubare ugomba kuba udafite undi mubare inyuma yakitso."
-
-#~ msgid "Modem Configuration"
-#~ msgstr "Gutunganya Modem"
-
-#~ msgid "Turn off the wireless radio to save battery life"
-#~ msgstr "Zimya wireless radio kugirango ubike umuriro"
-
-#~ msgid "Discard network history if you have trouble connecting to the network"
-#~ msgstr "Kuraho uko rezo zakurikiranye niba ufite ikibazo cyo kujya kuri rezo"
-
-#~ msgid "Discard network history"
-#~ msgstr "Kuraho uko rezo zakurikiranye"
-
-#~ msgid "Create a connection in the control panel."
-#~ msgstr "Kora ihuza muri control panel."
-
-#~ msgid "My Speakers"
-#~ msgstr "Imizindaro Yanjye"
-
-#~ msgid "Unmute"
-#~ msgstr "Subizaho ijwi"
-
-#~ msgid "Mute"
-#~ msgstr "Kuraho ijwi"
-
-#~ msgid "To apply your changes you have to restart Sugar.\n"
-#~ msgstr "Kugirango ibyahinduwe bikore ugomba kongera gutangira Sugar.\n"
-
-#~ msgid "Anyone"
-#~ msgstr "Uwo ariwe wese"
-
-#~ msgid "My friends"
-#~ msgstr "Inshuti zanjye"
-
-#~ msgid "My class"
-#~ msgstr "Ishuri ryanjye"
-
-#~ msgid "<Ctrl>1"
-#~ msgstr "<Ctrl>1"
-
-#~ msgid "Update your activities to ensure compatibility with your new software"
-#~ msgstr "Hindura ibikorwa byawe kugirango bihuze na progaramu nshya yawe"
-
-#~ msgid "Check now"
-#~ msgstr "Genzura ubu"
-
-#~ msgid "Sugar in a window"
-#~ msgstr "Sugar mu idirishya"
-
-#~ msgid "Software update"
-#~ msgstr "Ishyirwa ku gihe rya software"
-
-#~ msgid "Search"
-#~ msgstr "Shaka"
-
-#~ msgid "Additional directories which can contain updated translations."
-#~ msgstr "Ububiko bwinyongera bushobora kugira ubusemuro bugezweho."
-
-#~ msgid "Directory to search for translations"
-#~ msgstr "Umuyoboro w'ishakiro ry'ubusemuro"
-
-#~ msgid "Error in extreme pm argument, use on/off."
-#~ msgstr "Ikosa muri extreme pm argument, use on/of."

@@ -2477,6 +2477,3 @@ msgstr "Pada daju ni ifijišẹ."
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
 msgstr "ko iwifunni"
-
-#~ msgid "Search"
-#~ msgstr "Wádìí"
