@@ -37,6 +37,18 @@
 	</long>
       </locale>
     </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/journal/save_as</key>
+      <applyto>/desktop/sugar/journal/save_as</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Save-As Alert</short>
+        <long>If TRUE, Sugar will show a Save-As alert on activity close.
+        </long>
+      </locale>
+    </schema>
 
     <schema>
       <key>/schemas/desktop/sugar/sound/volume</key>
