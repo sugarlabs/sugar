@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-05-06 17:18+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"PO-Revision-Date: 2017-05-13 18:12+0000\n"
+"Last-Translator: boput <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <LL@li.org>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1494091090.000000\n"
+"X-POOTLE-MTIME: 1494699125.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -28,11 +28,11 @@ msgstr "Pokazuje jesu ili nisu GConf postavke preseljene u GSettings"
 
 #: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
 msgid "Backup URL"
-msgstr "URL za osiguranje (sigurnosne kopije)"
+msgstr "URL za osiguranje, sigurnosne kopije"
 
 #: ../data/org.sugarlabs.gschema.xml.h:4 ../data/sugar.schemas.in.h:12
 msgid "URL where the backup is saved to."
-msgstr "URL gdje je sačuvano osiguranje (sigurnosne kopije)"
+msgstr "URL gdje je sačuvano osiguranje."
 
 #: ../data/org.sugarlabs.gschema.xml.h:5 ../data/sugar.schemas.in.h:31
 msgid "Show Log out"
@@ -40,7 +40,7 @@ msgstr "Pokaži odjavu"
 
 #: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr "Ako je TRUE, Sugar će pokazati opciju \"Odjava\""
+msgstr "Ako je TRUE, Sugar će pokazati opciju „Odjava“."
 
 #: ../data/org.sugarlabs.gschema.xml.h:7 ../data/sugar.schemas.in.h:33
 msgid "Show Restart"
@@ -48,7 +48,7 @@ msgstr "Pokaži isključivanje"
 
 #: ../data/org.sugarlabs.gschema.xml.h:8 ../data/sugar.schemas.in.h:34
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr "Ako je TRUE, Sugar će pokazati opciju \"Ponovno pokretanje\""
+msgstr "Ako je TRUE, Sugar će pokazati opciju „Ponovno pokretanje“."
 
 #: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
 msgid "Show Shutdown"
@@ -56,7 +56,7 @@ msgstr "Isključivanje"
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
-msgstr "Ako je TRUE, Sugar će pokazati opciju \"Isključivanje\"."
+msgstr "Ako je TRUE, Sugar će pokazati opciju „Isključivanje“."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
@@ -64,7 +64,7 @@ msgstr "Pokaži „Prijava“"
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
-msgstr "Ako je TRUE, Sugar će pokazati opciju \"Prijava\"."
+msgstr "Ako je TRUE, Sugar će pokazati opciju „Prijava“."
 
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
 msgid "Bundle IDs of protected activities"
