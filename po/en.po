@@ -1909,8 +1909,8 @@ msgstr "Older Version Of %s Activity"
 
 #: ../src/jarabe/journal/misc.py:314
 #, python-format
-msgid "Do you want to downgrade to version %s"
-msgstr "Do you want to downgrade to version %s"
+msgid "Do you want to downgrade to version %s?"
+msgstr "Do you want to downgrade to version %s?"
 
 #: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
