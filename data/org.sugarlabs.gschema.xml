@@ -186,6 +186,11 @@
             <summary>Social Help Server</summary>
             <description>URL of the social help server to use with protocol.</description>
         </key>
+        <key name="tubes-supported" type="b">
+            <default>false</default>
+            <summary>Telepathy Tubes Support</summary>
+            <description>If true, (deprecated) telepathy tubes will be offered to activities</description>
+        </key>
     </schema>
     <schema id="org.sugarlabs.power" path="/org/sugarlabs/power/">
         <key name="automatic" type="b">
