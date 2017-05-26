@@ -93,7 +93,7 @@ class Frame(object):
             self.__notification_cancelled_cb)
 
     def is_visible(self):
-        return self.current_position != 0.0
+        return self.current_position > 0.05
 
     visible = property(is_visible, None)
 
