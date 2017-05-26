@@ -469,7 +469,9 @@ class DocumentButton(RadioToolButton):
             self.get_toplevel().add_alert(alert)
 
     def __alert_response_cb(self, alert, response_id):
-        self.get_toplevel().remove_alert(alert)
+        toplevel = self.get_toplevel()
+        if hasattr(toplevel, 'remove_alert'):
+            toplevel.remove_alert(alert)
 
     def __keep_in_journal_cb(self, menu_item):
         mime_type = mime.get_from_file_name(self._document_path)
