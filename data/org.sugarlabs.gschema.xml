@@ -114,6 +114,11 @@
             <summary>Mimetype registry</summary>
             <description>Consists of key-value pairs mimetypes and their corresponding activity</description>
         </key>
+        <key name="save-as" type="b">
+            <default>false</default>
+            <summary>Save-As Alert</summary>
+            <description>show a save-as alert on activity stop</description>
+        </key>
     </schema>
     <schema id="org.sugarlabs.sound" path="/org/sugarlabs/sound/">
         <key name="volume" type="i">
