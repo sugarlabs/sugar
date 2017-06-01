@@ -1,3 +1,16 @@
 #!/bin/sh
-read value < /sys/class/dmi/id/product_serial
-echo "$value"
+A=/sys/class/dmi/id/product_serial
+B=/ofw/mfg-data/SN
+C=/proc/device-tree/mfg-data/SN
+if [ -e $A ]; then
+    read value < $A
+    echo "$value"
+elif [ -e $B ]; then
+    read value < $B
+    echo "$value"
+elif [ -e $C ]; then
+    read value < $C
+    echo "$value"
+else
+    echo unknown
+fi
