@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2016-05-17 19:59+0000\n"
+"PO-Revision-Date: 2017-05-31 22:05+0000\n"
 "Last-Translator: Mohomodou  <mh@bollag-areal.ch>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: son\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1463515192.000000\n"
+"X-POOTLE-MTIME: 1496268328.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -190,7 +190,7 @@ msgstr "Gaayay alkadar"
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
-msgstr ""
+msgstr "Ordinater diji gaayay alkadar."
 
 #: ../data/org.sugarlabs.gschema.xml.h:41
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
@@ -199,11 +199,11 @@ msgstr "Waati ganda"
 
 #: ../data/org.sugarlabs.gschema.xml.h:42 ../data/sugar.schemas.in.h:14
 msgid "Timezone setting for the system."
-msgstr ""
+msgstr "Waati ganda kayandiyan dabariɲaŋoo se."
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr ""
+msgstr "Gunari beerey"
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
@@ -237,7 +237,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr ""
+msgstr "Dirandi doo azzaati"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
@@ -245,15 +245,15 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
-msgstr ""
+msgstr "Jabber feršikaw"
 
 #: ../data/org.sugarlabs.gschema.xml.h:54 ../data/sugar.schemas.in.h:24
 msgid "URL of the jabber server to use."
-msgstr ""
+msgstr "Goy-se Jabber feršikaw URL."
 
 #: ../data/org.sugarlabs.gschema.xml.h:55 ../data/sugar.schemas.in.h:29
 msgid "Publish to Gadget"
-msgstr ""
+msgstr "Wallafi Gadget here"
 
 #: ../data/org.sugarlabs.gschema.xml.h:56 ../data/sugar.schemas.in.h:30
 msgid ""
@@ -263,7 +263,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:57
 msgid "Social Help Server"
-msgstr ""
+msgstr "Social Help faaba feršikaw"
 
 #: ../data/org.sugarlabs.gschema.xml.h:58
 msgid "URL of the social help server to use with protocol."

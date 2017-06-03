@@ -1,22 +1,22 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the sugar package.
 # Božidar Putanec <bozidarp@yahoo.com>, 2017.
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-05-13 18:12+0000\n"
-"Last-Translator: boput <bozidarp@yahoo.com>\n"
+"PO-Revision-Date: 2017-05-16 15:29-0700\n"
+"Last-Translator: Božidar Putanec <bozidarp@yahoo.com>\n"
 "Language-Team: Croatian <LL@li.org>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1494699125.000000\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 2.0.1\n"
+"X-POOTLE-MTIME: 1494961441.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -40,31 +40,31 @@ msgstr "Pokaži odjavu"
 
 #: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr "Ako je TRUE, Sugar će pokazati opciju „Odjava“."
+msgstr "Ako je ISTINA, Sugar će pokazati opciju „Odjava“."
 
 #: ../data/org.sugarlabs.gschema.xml.h:7 ../data/sugar.schemas.in.h:33
 msgid "Show Restart"
-msgstr "Pokaži isključivanje"
+msgstr "Pokaži Ponovno pokretanje"
 
 #: ../data/org.sugarlabs.gschema.xml.h:8 ../data/sugar.schemas.in.h:34
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr "Ako je TRUE, Sugar će pokazati opciju „Ponovno pokretanje“."
+msgstr "Ako je ISTINA, Sugar će pokazati opciju „Ponovno pokretanje“."
 
 #: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
 msgid "Show Shutdown"
-msgstr "Isključivanje"
+msgstr "Pokaži Isključivanje"
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
-msgstr "Ako je TRUE, Sugar će pokazati opciju „Isključivanje“."
+msgstr "Ako je ISTINA, Sugar će pokazati opciju „Isključivanje“."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
-msgstr "Pokaži „Prijava“"
+msgstr "Pokaži Prijava"
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
-msgstr "Ako je TRUE, Sugar će pokazati opciju „Prijava“."
+msgstr "Ako je ISTINA, Sugar će pokazati opciju „Prijava“ na paleti prijatelja."
 
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
 msgid "Bundle IDs of protected activities"
@@ -73,7 +73,7 @@ msgstr "Paket identifikatora zaštićenih aktivnosti"
 #: ../data/org.sugarlabs.gschema.xml.h:14 ../data/sugar.schemas.in.h:64
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
-msgstr "Korisnicima neće biti dopušteno izbrisati te aktivnosti u popisu."
+msgstr "Korisnicima neće biti dopušteno izbrisati te aktivnosti iz popisu."
 
 #: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
 msgid "A limit to the number of simultaneously open activities."
@@ -93,7 +93,7 @@ msgstr "Ime korisnika"
 
 #: ../data/org.sugarlabs.gschema.xml.h:18 ../data/sugar.schemas.in.h:2
 msgid "User name that is used throughout the desktop."
-msgstr "Korisničko ime koje se rabi po cijeloj radnoj površini računala"
+msgstr "Korisničko ime koje se rabi po cijeloj radnoj površini računala."
 
 #: ../data/org.sugarlabs.gschema.xml.h:19 ../data/sugar.schemas.in.h:3
 msgid "Default nick"
@@ -117,7 +117,7 @@ msgid ""
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
-"Boja XO ikone koja predstavlja korisnika na cijeloj Sugar radnoj površini. "
+"Boja XO ikone koja predstavlja korisnika po cijeloj Sugar radnoj površini. "
 "Sastoji se of boje za crte i boje za ispunu, a zadane su u formatu za RGB "
 "boje. Primjer: #AC32FF,#9A5200"
 
@@ -127,7 +127,7 @@ msgstr "Spol"
 
 #: ../data/org.sugarlabs.gschema.xml.h:24
 msgid "Gender of the Sugar user, either male, female, or unassigned"
-msgstr "Korisnik Sugar-a je ženskog, muškog spola ili neodređen"
+msgstr "Korisnik Sugar-a je ženskog ili muškog spola, ili je neodređen"
 
 #: ../data/org.sugarlabs.gschema.xml.h:25
 msgid "User Birth Timestamp"
@@ -151,7 +151,7 @@ msgstr "Putanja do slike za pozadinu"
 
 #: ../data/org.sugarlabs.gschema.xml.h:30
 msgid "Path to the image to be used as a background."
-msgstr "Putanja do slike koju želite rabiti kao pozadinu"
+msgstr "Putanja do slike koju želite rabiti kao pozadinu."
 
 #: ../data/org.sugarlabs.gschema.xml.h:31
 msgid "Background alpha level"
@@ -159,7 +159,7 @@ msgstr "Alfa razina pozadine"
 
 #: ../data/org.sugarlabs.gschema.xml.h:32
 msgid "The opacity of the background image."
-msgstr "Neprozirnost slike pozadine"
+msgstr "Neprozirnost slike pozadine."
 
 #: ../data/org.sugarlabs.gschema.xml.h:33
 msgid "Mimetype registry"
@@ -191,7 +191,7 @@ msgstr "Svjetlina"
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
-msgstr "Svjetlina zaslona računala"
+msgstr "Svjetlina zaslona računala."
 
 #: ../data/org.sugarlabs.gschema.xml.h:41
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
@@ -200,7 +200,7 @@ msgstr "Vremenska zona"
 
 #: ../data/org.sugarlabs.gschema.xml.h:42 ../data/sugar.schemas.in.h:14
 msgid "Timezone setting for the system."
-msgstr "Postavka vremenske zone za sustav"
+msgstr "Postavka vremenske zone za sustav."
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
@@ -219,8 +219,8 @@ msgstr "Interval animacije pokretača"
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
 msgstr ""
-"Odgoda u milisekundama između animacije nadogradnja za pulsirajuću ikonu"
-" pokretača."
+"Odgoda u milisekundama između animacije nadogradnja za pulsirajuću ikonu "
+"pokretača."
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
@@ -228,33 +228,31 @@ msgstr "Odgoda za rubove"
 
 #: ../data/org.sugarlabs.gschema.xml.h:48 ../data/sugar.schemas.in.h:20
 msgid "Delay for the activation of the frame using the edges."
-msgstr "Odgoda pojavljivanja okvira rabeći rubove za aktivaciju."
+msgstr "Odgoda pojave okvira kad se za aktiviranje koriste rubovi zaslona."
 
 #: ../data/org.sugarlabs.gschema.xml.h:49 ../data/sugar.schemas.in.h:21
 msgid "Corner Delay"
-msgstr "Odgoda za ćoškove"
+msgstr "Odgoda za kutove"
 
 #: ../data/org.sugarlabs.gschema.xml.h:50 ../data/sugar.schemas.in.h:22
 msgid "Delay for the activation of the frame using the corners."
-msgstr "Odgoda pojavljivanja okvira rabeći ćoškove za aktivaciju."
+msgstr "Odgoda pojave okvira kad se za aktiviranje koriste kutovi zaslona."
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr "Dimenzija okidača"
+msgstr "Širina otvarača"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
-msgstr ""
-"Širina područja u kojem se aktivira pojavljivanje okvira; u px od ćoška ili"
-" ruba."
+msgstr "Širina područja u kojem se aktivira okvir; u px od kuta ili ruba."
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
-msgstr "Poslužitelj Blebetanja, Jabber server"
+msgstr "Poslužitelj jabber"
 
 #: ../data/org.sugarlabs.gschema.xml.h:54 ../data/sugar.schemas.in.h:24
 msgid "URL of the jabber server to use."
-msgstr "URL adresa Blebetavca, jabber servera."
+msgstr "URL adresa jabber poslužitelja."
 
 #: ../data/org.sugarlabs.gschema.xml.h:55 ../data/sugar.schemas.in.h:29
 msgid "Publish to Gadget"
@@ -265,7 +263,7 @@ msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"Ukoliko je TRUE, Sugar će i nas učiniti vidljivim ostalim korisnicima "
+"Ukoliko je ISTINA, Sugar će i nas učiniti vidljivim ostalim korisnicima "
 "Jabber poslužitelja, tj. moći će nas tražiti i naći."
 
 #: ../data/org.sugarlabs.gschema.xml.h:57
@@ -293,8 +291,8 @@ msgstr "Ekstremno ušteda energije"
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
-"Ekstremna ušteda energije (isključuje bežični radio, a time se produžuje"
-" trajanje baterije)"
+"Ekstremna ušteda energije (isključuje bežični radio, a time se produžuje "
+"trajanje baterije)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:63 ../data/sugar.schemas.in.h:39
 msgid "Keyboard layouts"
@@ -348,7 +346,7 @@ msgid ""
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
-"Ako je TRUE, Sugar će početno pokazati ad hoc mreže na kanalima 1, 6 i 11. "
+"Ako je ISTINA, Sugar će početno pokazati ad hoc mreže na kanalima 1, 6 i 11. "
 "Ako ne vidi neku „poznatu“ mrežu tijekom pokretanja, Sugar će se automatski "
 "spojiti na ad hoc mrežu."
 
@@ -358,7 +356,7 @@ msgstr "Omogućeno automatsko spajanje na ad hoc mrežu"
 
 #: ../data/org.sugarlabs.gschema.xml.h:76
 msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
-msgstr "Ako je TRUE, Sugar će se automatski spojiti na ad hoc mrežu."
+msgstr "Ako je ISTINA, Sugar će se automatski spojiti na ad hoc mrežu."
 
 #: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
 msgid "GSM network username (DEPRECATED/UNUSED)"
@@ -382,8 +380,7 @@ msgstr "Broj GSM mreže (ZASTARJELO/NE KORISTI SE)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:82 ../data/sugar.schemas.in.h:54
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr ""
-"Konfiguracija telefonskog broja na GSM mreži (ZASTARJELO/NE KORISTI SE)"
+msgstr "Konfiguracija telefonskog broja na GSM mreži (ZASTARJELO/NE KORISTI SE)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:83 ../data/sugar.schemas.in.h:55
 msgid "GSM network APN (DEPRECATED/UNUSED)"
@@ -422,7 +419,7 @@ msgstr "TODO: dodati opis"
 
 #: ../data/org.sugarlabs.gschema.xml.h:91 ../data/sugar.schemas.in.h:65
 msgid "Pitch value for the speech sugar service"
-msgstr "Visina tona za sugar govornu uslugu"
+msgstr "Visina tona za sugarovu govornu uslugu"
 
 #: ../data/org.sugarlabs.gschema.xml.h:92 ../data/sugar.schemas.in.h:66
 msgid "Pitch value used by the speech service in Sugar"
@@ -430,7 +427,7 @@ msgstr "Visina tona u Sugar-ovoj govornoj usluzi"
 
 #: ../data/org.sugarlabs.gschema.xml.h:93 ../data/sugar.schemas.in.h:67
 msgid "Rate value for the speech sugar service"
-msgstr "Tempo govora sugar govorne usluge"
+msgstr "Tempo govora sugarove govorne usluge"
 
 #: ../data/org.sugarlabs.gschema.xml.h:94 ../data/sugar.schemas.in.h:68
 msgid "Rate value used by the speech service in Sugar"
@@ -438,26 +435,26 @@ msgstr "Tempo govora u Sugar-ovoj govornoj usluzi"
 
 #: ../data/org.sugarlabs.gschema.xml.h:95 ../data/sugar.schemas.in.h:69
 msgid "Activity update backend."
-msgstr "Aktualiziranje aktivnosti na backend-u."
+msgstr "Aktualiziranje aktivnosti na hardveru."
 
 #: ../data/org.sugarlabs.gschema.xml.h:96 ../data/sugar.schemas.in.h:70
 msgid ""
 "Activity update backend module, followed by a period, followed by the class "
 "name."
 msgstr ""
-"Backend modul za aktualiziranje aktivnosti, nakon toga slijedi točka, i"
-" napokon class ime."
+"Hardverski modul za aktualiziranje aktivnosti, nakon toga slijedi točka, i "
+"napokon class ime."
 
 #: ../data/org.sugarlabs.gschema.xml.h:97 ../data/sugar.schemas.in.h:71
 msgid "Microformat update URL."
-msgstr "URL za nadogradnju mikroformata"
+msgstr "URL za nadogradnju mikroformata."
 
 #: ../data/org.sugarlabs.gschema.xml.h:98 ../data/sugar.schemas.in.h:72
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
-"URL koji koristi backend za nadogradnju mikroformata za aktualiziranje"
-" aktivnosti."
+"URL koji koristi hardver za nadogradnju mikroformata za aktualiziranje "
+"aktivnosti."
 
 #: ../data/org.sugarlabs.gschema.xml.h:99 ../data/sugar.schemas.in.h:73
 msgid "Automatic update frequency."
@@ -467,8 +464,8 @@ msgstr "Automatski interval (frekvencija) nadogradnje."
 msgid ""
 "Frequency of automatic activity updates, measured in days. 0 means disabled."
 msgstr ""
-"Interval (frekvencija) automatskih nadogradnji mjerena u danima. Ako je 0"
-" onda nadogradnja nije omogućena."
+"Interval (frekvencija) automatskih nadogradnji mjerena u danima. Ako je 0 "
+"onda nadogradnja nije omogućena."
 
 #: ../data/org.sugarlabs.gschema.xml.h:101 ../data/sugar.schemas.in.h:75
 msgid "Timestamp of last activity update."
@@ -476,12 +473,10 @@ msgstr "Vremenska oznaka zadnje aktualizacije aktivnosti."
 
 #: ../data/org.sugarlabs.gschema.xml.h:102 ../data/sugar.schemas.in.h:76
 msgid ""
-"A unix timestamp (seconds since epoch) of the last successful activity "
-"update."
+"A unix timestamp (seconds since epoch) of the last successful activity update."
 msgstr ""
-"Vremenska oznaka u UNIX formatu (sekunda nakon UNIX epohe) od zadnjeg"
-" uspješnog"
-" ažuriranja aktivnosti."
+"Vremenska oznaka u UNIX formatu (sekunda nakon UNIX epohe) od zadnjeg "
+"uspješnog ažuriranja aktivnosti."
 
 #: ../data/org.sugarlabs.gschema.xml.h:103
 msgid "New ASLO update.json URL."
@@ -490,8 +485,8 @@ msgstr "Novi URL za ‘update.json’ za nadogradnju ASLO paketa."
 #: ../data/org.sugarlabs.gschema.xml.h:104
 msgid "URL used by the new ASLO updater to download activity data."
 msgstr ""
-"URL koji rabi novi ASLO obnovitelj (program) za preuzimanje podataka o"
-" aktivnosti."
+"URL koji rabi novi ASLO obnovitelj (program) za preuzimanje podataka o "
+"aktivnosti."
 
 #: ../data/org.sugarlabs.gschema.xml.h:105 ../data/sugar.schemas.in.h:77
 msgid "A description of the hardware available to the user."
@@ -500,8 +495,8 @@ msgstr "Opis hardvera dostupnog korisniku."
 #: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
 msgstr ""
-"Ovaj string (niz znakova) je prikazan u sekciji o računalu u upravljačkoj"
-" ploči."
+"Ovaj string (niz znakova) je prikazan u sekciji o računalu u upravljačkoj "
+"ploči."
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
@@ -533,20 +528,19 @@ msgstr "ispuna:    %s"
 
 #: ../extensions/cpsection/aboutme/model.py:102
 msgid "Error in specified color modifiers."
-msgstr "Greška u specifiranom modifikatoru boje"
+msgstr "Greška u specificiranom modifikatoru boje."
 
 #: ../extensions/cpsection/aboutme/model.py:105
 msgid "Error in specified colors."
-msgstr "Greška u specifiranoj boji"
+msgstr "Greška u specificiranoj boji."
 
 #: ../extensions/cpsection/aboutme/view.py:243
 msgid "Click to change your color:"
 msgstr "Klikom na jedan od likova odaberi boju:"
 
-#: ../extensions/cpsection/aboutme/view.py:294
-#: ../src/jarabe/intro/window.py:203
+#: ../extensions/cpsection/aboutme/view.py:294 ../src/jarabe/intro/window.py:203
 msgid "Select gender:"
-msgstr "Odaberi spol"
+msgstr "Odaberi spol:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
@@ -562,7 +556,7 @@ msgstr "Identifikacija"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:87
 msgid "Model:"
-msgstr "Model"
+msgstr "Model:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Serial Number:"
@@ -574,19 +568,19 @@ msgstr "Softver"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:112
 msgid "Build:"
-msgstr "Izrada"
+msgstr "Izrada:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:117
 msgid "Sugar:"
-msgstr "Sugar"
+msgstr "Sugar:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:122
 msgid "Firmware:"
-msgstr "Firmver"
+msgstr "Firmver:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:127
 msgid "Wireless Firmware:"
-msgstr "Firmware bežičnog uređaja"
+msgstr "Firmver bežičnog uređaja:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:134
 #, python-format
@@ -640,7 +634,7 @@ msgstr "Datum i vrijeme"
 
 #: ../extensions/cpsection/datetime/model.py:100
 msgid "Error: timezone does not exist."
-msgstr "Greška: vremenska zona ne postoji"
+msgstr "Greška: vremenska zona ne postoji."
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
@@ -728,7 +722,7 @@ msgstr "Jezik"
 
 #: ../extensions/cpsection/language/model.py:29
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "Nije moguće otvoriti ~/.i18n. Napravi standardne postavke"
+msgstr "Nije moguće otvoriti ~/.i18n. Napravi standardne postavke."
 
 #: ../extensions/cpsection/language/model.py:156
 #, python-format
@@ -742,11 +736,11 @@ msgstr "Žao nam je, ali jezik „%s“ ne govorimo."
 
 #: ../extensions/cpsection/language/view.py:75
 msgid ""
-"Add languages in the order you prefer. If a translation is not available, "
-"the next in the list will be used."
+"Add languages in the order you prefer. If a translation is not available, the "
+"next in the list will be used."
 msgstr ""
-"Dodaj i poredaj jezike po svojem izboru. Ako nema prijevoda, rabi se sljedeći"
-" jezik u poretku."
+"Dodaj i poredaj jezike po svojem izboru. Ako nema prijevoda, rabi se sljedeći "
+"jezik u poretku."
 
 #: ../extensions/cpsection/language/view.py:383
 #, python-format
@@ -762,16 +756,16 @@ msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
-"Trebati ćeš navesti sljedeće podatke za postavke za mobilnu širokopojasnu"
-" vezu s (3G) mobilnom mrežom\"."
+"Trebati ćeš navesti sljedeće podatke za uspostavu mobilne širokopojasne veze "
+"s (3G) mobilnom mrežom\"."
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr "Država"
+msgstr "Država:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr "Pružatelj usluge"
+msgstr "Pružatelj usluge:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
@@ -779,23 +773,23 @@ msgstr "Plan:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
-msgstr "Ime korisnika"
+msgstr "Ime korisnika:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
-msgstr "Lozinka"
+msgstr "Lozinka:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:174
 msgid "Number:"
-msgstr "Broj"
+msgstr "Broj:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
-msgstr "Pristupna točka APN"
+msgstr "Pristupna točka APN:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
-msgstr "Osobni identifikacijski broj (pin)"
+msgstr "Osobni identifikacijski broj (pin):"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:162
 #, python-format
@@ -814,15 +808,15 @@ msgstr "Mreža"
 
 #: ../extensions/cpsection/network/model.py:88
 msgid "State is unknown."
-msgstr "Nepoznato stanje"
+msgstr "Nepoznato stanje."
 
 #: ../extensions/cpsection/network/model.py:104
 msgid "Error in specified radio argument use on/off."
-msgstr "Greška u specifiranom argumentu za radio, rabi uključi/isključi"
+msgstr "Greška u specificiranom argumentu za radio, rabi uključi/isključi."
 
 #: ../extensions/cpsection/network/model.py:197
 msgid "Error in specified argument use 0/1."
-msgstr "Greška u specifiranom argumentu, rabi 0/1"
+msgstr "Greška u specificiranom argumentu, rabi 0/1."
 
 #: ../extensions/cpsection/network/view.py:65
 msgid "Wireless"
@@ -855,8 +849,8 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
-"Poslužitelj je analogan sobi u kojoj si sada; ljudi na istom poslužitelju su"
-" vidljivi jedan drugom, čak i ako nisu na istoj mreži."
+"Poslužitelj je analogan sobi u kojoj si sada; ljudi na istom poslužitelju su "
+"vidljivi jedan drugom, čak i ako nisu na istoj mreži."
 
 #: ../extensions/cpsection/network/view.py:147
 msgid "Server:"
@@ -868,11 +862,10 @@ msgid ""
 "Sugar Activities.  Changing servers means discussions will happen in a "
 "different place with different people."
 msgstr ""
-"„Društvena pomoć“ je forum na kojem možeš razgovarati s programerima "
-"i diskutirati o Sugar-ovim aktivnostima.  Ako se spojiš na neki drugi"
-" poslužitelj, onda ćeš razgovarati i diskutirati s nekim drugim ljudima koji"
-" su "
-"spojeni na taj poslužitelj."
+"Društvena pomoć je forum na kojem možeš razgovarati s programerima i "
+"diskutirati o Sugar-ovim aktivnostima.  Ako se spojiš na neki drugi "
+"poslužitelj, onda ćeš razgovarati i diskutirati s nekim drugim ljudima koji "
+"su spojeni na taj poslužitelj."
 
 #: ../extensions/cpsection/network/view.py:173
 msgid "Social Help Server:"
@@ -884,7 +877,7 @@ msgstr "Napajanje"
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
-msgstr "Greška u automatskom pm argumentu, rabi uključi/isključi"
+msgstr "Greška u automatskom pm argumentu, rabi uključi/isključi."
 
 #: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
@@ -899,8 +892,8 @@ msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
-"Nadogradnja poboljšava softver, ispravlja greške, uklanja sigurnosne propuste"
-" i dodaje nove značajke."
+"Nadogradnja poboljšava softver, ispravlja greške, uklanja sigurnosne propuste "
+"i dodaje nove značajke."
 
 #: ../extensions/cpsection/updater/view.py:84
 msgid "Update in progress..."
@@ -1114,8 +1107,7 @@ msgstr "Kanal"
 
 #: ../extensions/deviceicon/network.py:138
 #: ../src/jarabe/journal/expandedentry.py:386
-#: ../src/jarabe/journal/listmodel.py:191
-#: ../src/jarabe/journal/listmodel.py:199
+#: ../src/jarabe/journal/listmodel.py:191 ../src/jarabe/journal/listmodel.py:199
 msgid "Unknown"
 msgstr "Nepoznato"
 
@@ -1184,19 +1176,19 @@ msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:355
 msgid "Check your PIN/PUK configuration."
-msgstr "Provjerite svoju PIN/PUK konfiguraciju"
+msgstr "Provjerite svoju PIN/PUK konfiguraciju."
 
 #: ../extensions/deviceicon/network.py:358
 msgid "Check your Access Point Name (APN) configuration"
-msgstr "Provjeri konfiguraciju/naziv pristupne točke (APN)"
+msgstr "Provjeri (APN) konfiguraciju/naziv pristupne točke"
 
 #: ../extensions/deviceicon/network.py:362
 msgid "Check the Number configuration."
-msgstr "Provjeri konfiguraciju broja"
+msgstr "Provjeri konfiguraciju broja."
 
 #: ../extensions/deviceicon/network.py:364
 msgid "Check your configuration."
-msgstr "Provjeri konfiguraciju"
+msgstr "Provjeri konfiguraciju."
 
 #: ../extensions/deviceicon/network.py:619
 msgid "Mesh Network"
@@ -1209,18 +1201,17 @@ msgstr "Mesh-mreža %s"
 
 #: ../extensions/deviceicon/network.py:782
 msgid "No GSM connection available."
-msgstr "Nema dostupnih GSM mreža"
+msgstr "Nema dostupnih GSM mreža."
 
 #: ../extensions/deviceicon/network.py:783
 msgid "Create a connection in My Settings."
-msgstr "Napravi postavke za spajanje u „Moje Postavke“"
+msgstr "Napravi postavke za spajanje u „Moje Postavke“."
 
 #: ../extensions/deviceicon/speech.py:49
 msgid "Speech"
 msgstr "Govor"
 
-#: ../extensions/deviceicon/speech.py:72
-#: ../extensions/deviceicon/speech.py:147
+#: ../extensions/deviceicon/speech.py:72 ../extensions/deviceicon/speech.py:147
 #: ../extensions/deviceicon/speech.py:152
 msgid "Say selected text"
 msgstr "Izgovori odabrani tekst"
@@ -1263,7 +1254,7 @@ msgstr "Raspored favorita"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Layout of the favorites view."
-msgstr "Raspored prikaza favorita"
+msgstr "Raspored prikaza favorita."
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Favorites resume mode"
@@ -1274,8 +1265,8 @@ msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
-"U stanju nastavljanje/obnova, klikom na omiljenu ikonu akcija se nastavlja od"
-" zadnjeg stanja te aktivnosti."
+"U stanju nastavljanje/obnova, klikom na omiljenu ikonu akcija se nastavlja od "
+"zadnjeg stanja te aktivnosti."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -1289,7 +1280,7 @@ msgstr ""
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr "sugar-upravljačka-ploča: parametar=%s nije dopuštena opcija"
+msgstr "sugar-upravljačka-ploča: parametar=%s nije ispravnja opcija"
 
 #: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
@@ -1311,15 +1302,15 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
-"Uporaba: sugar-control-panel [ opcija ] parametar [ argument ... ] \n"
-"    Upravljanje/postavke sugar-ove okoline sa sugar-upravljačkom pločom\n"
+"Uporaba: sugar-control-panel [opcija] parametar [argument ... ] \n"
+"    Upravljanje sa sugarovom okolinom\n"
 "    Opcije: \n"
 "    -h            pokaže ovu pomoć pa iziđe \n"
 "    -l            popis svih opcija \n"
 "    -h parametar  informacija o ovom parametru \n"
 "    -g parametar  trenutačna vrijednost ovoga parametra \n"
-"    -s parametar  postaviti trenutačnu vrijednost ovom parametru \n"
-"    -c parametar  izbrisati trenutačnu vrijednost ovom parametru \n"
+"    -s parametar  zada trenutačnu vrijednost ovom parametru \n"
+"    -c parametar  izbriše trenutačnu vrijednost ovom parametru \n"
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
@@ -1355,7 +1346,7 @@ msgstr "Odmah ponovno pokreni"
 
 #: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
 msgid "An activity is not responding."
-msgstr "Aktivnost ne reagira"
+msgstr "Aktivnost ne reagira."
 
 #: ../src/jarabe/controlpanel/gui.py:420 ../src/jarabe/view/buddymenu.py:138
 msgid "You may lose unsaved work if you continue."
@@ -1404,8 +1395,7 @@ msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Potvrdi brisanje: Želiš trajno izbrisati %s?"
 
 #: ../src/jarabe/desktop/activitieslist.py:552
-#: ../src/jarabe/frame/clipboardmenu.py:65
-#: ../src/jarabe/view/viewsource.py:383
+#: ../src/jarabe/frame/clipboardmenu.py:65 ../src/jarabe/view/viewsource.py:383
 msgid "Keep"
 msgstr "Zadržati"
 
@@ -1482,20 +1472,17 @@ msgid "Register again"
 msgstr "Ponovno se prijavi"
 
 #: ../src/jarabe/desktop/homewindow.py:255
-#: ../src/jarabe/desktop/viewtoolbar.py:73
-#: ../src/jarabe/frame/zoomtoolbar.py:57 ../src/jarabe/model/screenshot.py:63
-#: ../src/jarabe/view/viewhelp.py:76
+#: ../src/jarabe/desktop/viewtoolbar.py:73 ../src/jarabe/frame/zoomtoolbar.py:57
+#: ../src/jarabe/model/screenshot.py:63 ../src/jarabe/view/viewhelp.py:76
 msgid "Home"
 msgstr "Početna stranica"
 
-#: ../src/jarabe/desktop/homewindow.py:262
-#: ../src/jarabe/frame/zoomtoolbar.py:53 ../src/jarabe/model/screenshot.py:61
-#: ../src/jarabe/view/viewhelp.py:73
+#: ../src/jarabe/desktop/homewindow.py:262 ../src/jarabe/frame/zoomtoolbar.py:53
+#: ../src/jarabe/model/screenshot.py:61 ../src/jarabe/view/viewhelp.py:73
 msgid "Group"
 msgstr "Grupa"
 
-#: ../src/jarabe/desktop/homewindow.py:269
-#: ../src/jarabe/frame/zoomtoolbar.py:49
+#: ../src/jarabe/desktop/homewindow.py:269 ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Neighborhood"
 msgstr "Susjedstvo"
 
@@ -1531,8 +1518,7 @@ msgstr "Sigurnost bežične mreže:"
 msgid "Resume"
 msgstr "Nastavi"
 
-#: ../src/jarabe/desktop/meshbox.py:89
-#: ../src/jarabe/frame/activitiestray.py:208
+#: ../src/jarabe/desktop/meshbox.py:89 ../src/jarabe/frame/activitiestray.py:208
 msgid "Join"
 msgstr "Pridružiti se"
 
@@ -1628,7 +1614,7 @@ msgstr "Otvoriti"
 
 #: ../src/jarabe/frame/clipboardmenu.py:88
 msgid "Open with"
-msgstr "Otvori s(a)"
+msgstr "Otvori s/sa"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
@@ -1754,8 +1740,7 @@ msgstr "Datum: %s"
 msgid "Size: %s"
 msgstr "Veličina: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:412
-#: ../src/jarabe/journal/misc.py:131
+#: ../src/jarabe/journal/expandedentry.py:412 ../src/jarabe/journal/misc.py:131
 msgid "No date"
 msgstr "Bez datuma"
 
@@ -1778,8 +1763,7 @@ msgstr "Komentari:"
 #: ../src/jarabe/journal/journalactivity.py:182
 #: ../src/jarabe/journal/journaltoolbox.py:94
 #: ../src/jarabe/journal/palettes.py:260
-#: ../src/jarabe/journal/volumestoolbar.py:349
-#: ../src/jarabe/view/viewhelp.py:79
+#: ../src/jarabe/journal/volumestoolbar.py:349 ../src/jarabe/view/viewhelp.py:79
 msgid "Journal"
 msgstr "Dnevnik"
 
@@ -1852,7 +1836,7 @@ msgstr "Početak"
 #: ../src/jarabe/journal/journaltoolbox.py:682
 #: ../src/jarabe/journal/palettes.py:100 ../src/jarabe/journal/palettes.py:513
 msgid "No activity to start entry"
-msgstr "Nema aktivnosti za početak unosa"
+msgstr "Nema aktivnosti da se počne s unosom"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 msgid "Sort view"
@@ -1903,11 +1887,11 @@ msgstr "Filtar"
 
 #: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
 msgid "Your Journal is empty"
-msgstr "Tvoj dnevnik je prazan"
+msgstr "Tvoj Dnevnik je prazan"
 
 #: ../src/jarabe/journal/listview.py:476 ../src/jarabe/journal/iconview.py:215
 msgid "Your documents folder is empty"
-msgstr "Vaša mapa za dokumente je prazna"
+msgstr "Tvoja mapa za dokumente je prazna"
 
 #: ../src/jarabe/journal/listview.py:478 ../src/jarabe/journal/iconview.py:217
 msgid "The device is empty"
@@ -1925,16 +1909,16 @@ msgstr "Starija inačica aktivnosti %s"
 #: ../src/jarabe/journal/misc.py:314
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr "Želite povratak na stariju inačicu %s?"
+msgstr "Želiš li se vratiti na stariju inačicu %s"
 
 #: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
-msgstr "Vaš dnevnik je pun"
+msgstr "Tvoj Dnevnik je pun"
 
 #: ../src/jarabe/journal/modalalert.py:68
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
-"Izbriši nekoliko starijih unosa iz dnevnika da napraviš mjesta za nove unose."
+"Izbriši nekoliko starijih unosa u Dnevniku da napraviš mjesta za nove unose."
 
 #: ../src/jarabe/journal/modalalert.py:82
 msgid "Show Journal"
@@ -1949,22 +1933,22 @@ msgstr "Izaberi jedan objekt"
 msgid "Choose an object to open with %s activity"
 msgstr "Izaberi objekt koji treba otvoriti s aktivnosti %s"
 
-#: ../src/jarabe/journal/objectchooser.py:184
-#: ../src/jarabe/view/viewhelp.py:335 ../src/jarabe/view/viewsource.py:579
+#: ../src/jarabe/journal/objectchooser.py:184 ../src/jarabe/view/viewhelp.py:335
+#: ../src/jarabe/view/viewsource.py:579
 msgid "Close"
-msgstr "Zatvoriti"
+msgstr "Zatvori"
 
 #: ../src/jarabe/journal/palettes.py:84
 msgid "Resume with"
-msgstr "Nastavi s(a)"
+msgstr "Nastavi s/sa"
 
 #: ../src/jarabe/journal/palettes.py:87
 msgid "Start with"
-msgstr "Početi s(a)"
+msgstr "Počni s/sa"
 
 #: ../src/jarabe/journal/palettes.py:124
 msgid "Send to"
-msgstr "Poslati na"
+msgstr "Pošalji na"
 
 #: ../src/jarabe/journal/palettes.py:133
 msgid "View Details"
@@ -2006,7 +1990,7 @@ msgstr "Nijedna ispravna veza nije pronađena"
 
 #: ../src/jarabe/journal/palettes.py:511
 msgid "No activity to resume entry"
-msgstr "Nema aktivnosti da nastavi s tim unosom"
+msgstr "Nema aktivnosti da se nastavi s tim unosom"
 
 #: ../src/jarabe/journal/palettes.py:580 ../src/jarabe/view/palettes.py:133
 msgid "Stop"
@@ -2058,8 +2042,8 @@ msgstr "Uređaj nije moguće prirediti za konfiguraciju."
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
-"Nije uspjelo rezervirati IP konfiguraciju (adresa nije dostupna, istek"
-" vremena, itd.)"
+"Nije uspjelo rezervirati IP konfiguraciju (adresa nije dostupna, istek "
+"vremena, itd.)."
 
 #: ../src/jarabe/model/network.py:230
 msgid "The IP configuration is no longer valid."
@@ -2075,8 +2059,8 @@ msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
-"802.1X suplikant je odspojen od pristupne točke ili servera za provjeru"
-" autentičnosti."
+"802.1X suplikant je odspojen od pristupne točke ili servera za provjeru "
+"autentičnosti."
 
 #: ../src/jarabe/model/network.py:237
 msgid "Configuration of the 802.1X supplicant failed."
@@ -2160,7 +2144,7 @@ msgstr "Nije uspjelo inicirati modem."
 
 #: ../src/jarabe/model/network.py:278
 msgid "Failed to select the specified GSM APN"
-msgstr "Nije uspjelo odabrati navedenu pristupnu točku (GSM APN)"
+msgstr "Nije uspjelo odabrati navedenu pristupnu točku GSM APN"
 
 #: ../src/jarabe/model/network.py:280
 msgid "Not searching for networks."
@@ -2254,12 +2238,12 @@ msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
 msgstr ""
-"Dopušteni broj otvorenih aktivnosti je dostignut. Zatvori jednu od aktivnosti"
-" prije nego pokreneš neku novu aktivnost."
+"Dopušteni broj otvorenih aktivnosti je dostignut. Zatvori jednu od aktivnosti "
+"prije nego pokreneš neku novu aktivnost."
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
-msgstr "Ukloni prijatelja."
+msgstr "Ukloni prijatelja"
 
 #: ../src/jarabe/view/buddymenu.py:76
 msgid "Make friend"
@@ -2302,7 +2286,7 @@ msgstr "Aktivnost nije uspjelo pokrenuti"
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:105
 msgid "View Source"
-msgstr "Izvorni kod"
+msgstr "Izvorni kȏd"
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
@@ -2365,25 +2349,25 @@ msgstr "Izbriši svoju kopiju prije ponovnog pokušaja dupliciranja aktivnosti"
 
 #: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
-msgstr "Izvorni kod"
+msgstr "Izvorni kȏd"
 
 #: ../src/jarabe/view/viewsource.py:542
 msgid "Activity Bundle Source"
-msgstr "Izvorni kod paketa aktivnosti"
+msgstr "Izvorni kȏd paketa aktivnosti"
 
 #: ../src/jarabe/view/viewsource.py:561
 msgid "Sugar Toolkit Source"
-msgstr "Izvorni kod Sugar-ovih alata"
+msgstr "Izvorni kȏd Sugar-ovih alata"
 
 #: ../src/jarabe/view/viewsource.py:568
 #, python-format
 msgid "View source: %s"
-msgstr "Izvorni kod: %s"
+msgstr "Izvorni kȏd: %s"
 
 #: ../src/jarabe/view/viewsource.py:569
 #, python-format
 msgid "View source: %r"
-msgstr "Izvorni kod: %r"
+msgstr "Izvorni kȏd: %r"
 
 #: ../src/jarabe/view/viewsource.py:809
 msgid "Please select a file in the left panel."
@@ -2405,7 +2389,7 @@ msgstr "Odaberi volumen"
 
 #: ../extensions/cpsection/backup/backends/volume.py:78
 msgid "Not enough space in volume"
-msgstr "Nema dovoljno mjesta u volumenu."
+msgstr "Nema dovoljno mjesta u volumenu"
 
 #: ../extensions/cpsection/backup/backends/volume.py:122
 #, python-format
@@ -2414,7 +2398,7 @@ msgstr "Osiguranje od korisnika %s"
 
 #: ../extensions/cpsection/backup/backends/volume.py:191
 msgid "No checkpoints found in the device"
-msgstr "U uređaju nisu pronađene kontrolne točke."
+msgstr "U uređaju nisu pronađene kontrolne točke"
 
 #: ../extensions/cpsection/backup/backends/volume.py:199
 msgid "Select your checkpoint"
@@ -2430,11 +2414,11 @@ msgstr "Osiguranje na lokalnom uređaju"
 
 #: ../extensions/cpsection/backup/view.py:133
 msgid "Save the contents of your Journal"
-msgstr "Spremi sadržaj dnevnika."
+msgstr "Spremi sadržaj dnevnika"
 
 #: ../extensions/cpsection/backup/view.py:141
 msgid "Restore the contents of your Journal"
-msgstr "Obnovi sadržaj dnenika."
+msgstr "Obnovi sadržaj dnevnika"
 
 #: ../extensions/cpsection/backup/view.py:223
 msgid "Please close all the activities, and start again"
@@ -2442,11 +2426,11 @@ msgstr "Zatvori sve aktivnosti i počni od početka"
 
 #: ../extensions/cpsection/backup/view.py:229
 msgid "Select where you want create your backup"
-msgstr "Odaberi gdje želiš čuvati osiguranje (sigurnosne kopije)"
+msgstr "Odaberi gdje želiš čuvati osiguranje, sigurnosne kopije"
 
 #: ../extensions/cpsection/backup/view.py:231
 msgid "Select where you want retrieve your restore"
-msgstr "Odaberi od kuda želiš dohvatiti sadržaj za obnovu."
+msgstr "Odaberi od kuda želiš dohvatiti sadržaj za obnovu"
 
 #: ../extensions/cpsection/backup/view.py:271
 msgid "Retry"
@@ -2466,8 +2450,8 @@ msgid ""
 "will first be emptied of all its content; then the restored content will be "
 "added."
 msgstr ""
-"Želim vratiti sadržaj svojeg dnevnika. Da se to učini moj dnevnik treba prvo"
-" potpuno isprazniti i nakon toga mu se doda obnovljeni sadržaj."
+"Želim vratiti sadržaj svojeg Dnevnika. Da se to učini, Dnevnik treba prvo "
+"potpuno isprazniti i nakon toga mu se doda obnovljeni sadržaj."
 
 #: ../extensions/cpsection/backup/view.py:327
 msgid "Confirm"
