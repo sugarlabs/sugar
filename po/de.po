@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-05-09 01:27+0000\n"
+"PO-Revision-Date: 2017-06-03 21:59+0000\n"
 "Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "Language: de\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1494293260.000000\n"
+"X-POOTLE-MTIME: 1496527144.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -60,6 +60,7 @@ msgid "If TRUE, Sugar will show a \"Shutdown\" option."
 msgstr "Falls WAHR, wird Sugar die Option \"Abmelden\" anzeigen."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
+#, fuzzy
 msgid "Show Register"
 msgstr "Zeige Register"
 
@@ -218,12 +219,14 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
-msgstr ""
+msgstr "Animationsintervall des Starters"
 
 #: ../data/org.sugarlabs.gschema.xml.h:46
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
 msgstr ""
+"Verzögerung in Millisekunden zwischen Animationsaktualisierungen des "
+"pulsierenden Startersymbols"
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
@@ -243,11 +246,13 @@ msgstr "Verzögerung bei der Aktivierung eines Rahmens über die Ecken."
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr ""
+msgstr "Triggergröße"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
 msgstr ""
+"Größe des Bereichs des Triggerrahmens, angegeben in px von der Ecke bzw. "
+"Seite"
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
@@ -271,11 +276,11 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:57
 msgid "Social Help Server"
-msgstr ""
+msgstr "Server für soziale Hilfe"
 
 #: ../data/org.sugarlabs.gschema.xml.h:58
 msgid "URL of the social help server to use with protocol."
-msgstr ""
+msgstr "URL des zu benutzenden Servers für soziale Hilfe mit Protokoll."
 
 #: ../data/org.sugarlabs.gschema.xml.h:59 ../data/sugar.schemas.in.h:25
 msgid "Power Automatic"
@@ -357,11 +362,11 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:75
 msgid "Enable Ad-hoc autoconnect"
-msgstr ""
+msgstr "Erlaube automatische Ad-hoc-Verbindungen"
 
 #: ../data/org.sugarlabs.gschema.xml.h:76
 msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
-msgstr ""
+msgstr "Falls WAHR, verbindet sich Sugar automatisch mit Ad-hoc-Netzwerken."
 
 #: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
 msgid "GSM network username (DEPRECATED/UNUSED)"
@@ -503,6 +508,7 @@ msgstr "Eine Beschreibung der Hardware, die dem Benutzer zur Verfügung steht."
 #: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
 msgstr ""
+"Dieser Text wird im Control-Panel im Abschnitt über den Computer angezeigt."
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
@@ -563,7 +569,7 @@ msgstr "Identität"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:87
 msgid "Model:"
-msgstr ""
+msgstr "Modell:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Serial Number:"
@@ -592,7 +598,7 @@ msgstr "WLAN-Firmware:"
 #: ../extensions/cpsection/aboutcomputer/view.py:134
 #, python-format
 msgid "%d days ago"
-msgstr ""
+msgstr "vor %d Tagen"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:136
 #: ../src/jarabe/journal/journaltoolbox.py:169
@@ -686,19 +692,19 @@ msgstr "Größe"
 
 #: ../extensions/cpsection/frame/view.py:221
 msgid "toolbar size"
-msgstr ""
+msgstr "Größe der Werkzeugleiste"
 
 #: ../extensions/cpsection/frame/view.py:226
 msgid "exact corner or edge"
-msgstr ""
+msgstr "exakte Ecke oder Rand"
 
 #: ../extensions/cpsection/frame/view.py:228
 msgid "exact corner"
-msgstr ""
+msgstr "exakte Ecke"
 
 #: ../extensions/cpsection/frame/view.py:230
 msgid "exact edge"
-msgstr ""
+msgstr "exakter Rand"
 
 #: ../extensions/cpsection/frame/view.py:232
 #, fuzzy
@@ -708,7 +714,7 @@ msgstr "ignoriert"
 #. TRANS: px as in pixels
 #: ../extensions/cpsection/frame/view.py:235
 msgid "{}px"
-msgstr ""
+msgstr "{}px"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:38
@@ -757,11 +763,11 @@ msgstr ""
 #: ../extensions/cpsection/language/view.py:383
 #, python-format
 msgid "Error writting language configuration (%s)"
-msgstr ""
+msgstr "Fehler beim Speichern der Spracheinstellung (%s)"
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem"
-msgstr ""
+msgstr "Modem"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
@@ -839,6 +845,8 @@ msgstr "Funknetzwerk"
 #: ../extensions/cpsection/network/view.py:73
 msgid "The wireless radio may be turned off to save battery life."
 msgstr ""
+"Das Funknetzwerk lässt sich abschalten, um die Lebensdauer der Batterie zu "
+"erhöhen."
 
 # (Markus S,) war 'Radio:'
 #: ../extensions/cpsection/network/view.py:86
@@ -849,10 +857,12 @@ msgstr "Funknetz"
 msgid ""
 "Discard wireless connections if you have trouble connecting to the network"
 msgstr ""
+"Verwirf Drahtlosverbindungen, wenn du Schwierigkeiten hast, dich mit dem "
+"Netzwerk zu verbinden"
 
 #: ../extensions/cpsection/network/view.py:113
 msgid "Discard wireless connections"
-msgstr ""
+msgstr "Drahtlosverbindungen verwerfen"
 
 #: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
@@ -878,10 +888,14 @@ msgid ""
 "Sugar Activities.  Changing servers means discussions will happen in a "
 "different place with different people."
 msgstr ""
+"Soziale Hilfe ist ein Forum, in dem du Kontakt zu Entwicklern aufnehmen und "
+"über Sugar-Aktivitäten diskutieren kannst.  Wenn du die Server wechselst, "
+"bedeutet das, dass die Diskussion an einem anderen Ort mit anderen Personen "
+"stattfindet."
 
 #: ../extensions/cpsection/network/view.py:173
 msgid "Social Help Server:"
-msgstr ""
+msgstr "Server für soziale Hilfe:"
 
 #: ../extensions/cpsection/power/__init__.py:24
 msgid "Power"
@@ -953,7 +967,7 @@ msgstr[1] "Du kannst %s Aktualisierungen installieren."
 
 #: ../extensions/cpsection/updater/view.py:183
 msgid "Can't connect to the activity server"
-msgstr ""
+msgstr "Verbindung zum Aktivitätenserver fehlgeschlagen"
 
 #: ../extensions/cpsection/updater/view.py:186
 msgid "Verify your connection to internet and try again, or try again later"
@@ -1011,7 +1025,7 @@ msgstr "%.1f MB"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Web Services"
-msgstr ""
+msgstr "Internetdienste"
 
 #: ../extensions/cpsection/webaccount/view.py:65
 #, python-format
@@ -1019,12 +1033,12 @@ msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
 msgstr ""
-"Es sind keine Internetdienste installiert,\n"
+"Es sind keine Internetdienste installiert.\n"
 "Unter %s findest du weitere Informationen."
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
-msgstr ""
+msgstr "Mein Audio"
 
 #: ../extensions/deviceicon/audio.py:330
 msgid "Speaker"
@@ -1226,7 +1240,7 @@ msgstr "Keine GSM-Verbindung verfügbar."
 
 #: ../extensions/deviceicon/network.py:783
 msgid "Create a connection in My Settings."
-msgstr ""
+msgstr "Erzeuge eine Verbindung in meinen Einstellungen."
 
 #: ../extensions/deviceicon/speech.py:49
 msgid "Speech"
@@ -1344,6 +1358,8 @@ msgid ""
 "To apply your changes you have to restart Sugar.\n"
 "Hit ctrl+alt+erase on the keyboard to trigger a restart."
 msgstr ""
+"Die Änderungen werden erst nach einem Neustart von Sugar wirksam.\n"
+"Drücke strg-alt-löschen auf der Tastatur, um einen Neustart auszulösen."
 
 #: ../src/jarabe/controlpanel/gui.py:373 ../src/jarabe/journal/palettes.py:194
 #: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
@@ -1370,7 +1386,7 @@ msgstr "Jetzt neu starten"
 
 #: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
 msgid "An activity is not responding."
-msgstr ""
+msgstr "Eine Aktivität reagiert nicht."
 
 #: ../src/jarabe/controlpanel/gui.py:420 ../src/jarabe/view/buddymenu.py:138
 msgid "You may lose unsaved work if you continue."
@@ -1480,11 +1496,11 @@ msgstr "Dreieck"
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
-msgstr ""
+msgstr "Anmeldung"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
-msgstr ""
+msgstr "Bitte warten, dein Schulserver wird gesucht."
 
 #: ../src/jarabe/desktop/favoritesview.py:387
 msgid "Registration Failed"
@@ -1705,7 +1721,7 @@ msgstr "Vor"
 
 #: ../src/jarabe/intro/agepicker.py:38
 msgid "Select grade:"
-msgstr ""
+msgstr "Klassenstufe wählen:"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Preschool"
@@ -1725,7 +1741,7 @@ msgstr "2. Klasse"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "3rd Grade"
-msgstr ""
+msgstr "3. Klasse"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "4th Grade"
@@ -1733,7 +1749,7 @@ msgstr "4. Klasse"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "5th Grade"
-msgstr ""
+msgstr "5. Klasse"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "6th Grade"
@@ -1934,7 +1950,7 @@ msgstr "%(selected)d von %(total)d ausgewählt"
 
 #: ../src/jarabe/journal/journaltoolbox.py:917
 msgid "Select filter"
-msgstr ""
+msgstr "Filter wählen"
 
 #: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
 msgid "Your Journal is empty"
@@ -2277,18 +2293,20 @@ msgstr "Bildschirmfoto von \"%s\""
 
 #: ../src/jarabe/view/alerts.py:38 ../src/jarabe/view/alerts.py:48
 msgid "Activity launcher"
-msgstr ""
+msgstr "Aktivitätenstarter"
 
 #: ../src/jarabe/view/alerts.py:39
 #, python-format
 msgid "%s is already running. Please stop %s before launching it again."
-msgstr ""
+msgstr "%s läuft bereits. Beende %s bitte, bevor du es erneut startest."
 
 #: ../src/jarabe/view/alerts.py:49
 msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
 msgstr ""
+"Die maximale Zahl geöffneter Aktivititäten wurde erreicht. Schließe bitte "
+"eine Aktivität, ehe du eine neue startest."
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
@@ -2339,7 +2357,7 @@ msgstr "Quelltext anzeigen"
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
-msgstr ""
+msgstr "Hilfe ansehen"
 
 #: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
@@ -2352,16 +2370,16 @@ msgstr "Entfernen"
 
 #: ../src/jarabe/view/viewhelp.py:304
 msgid "Help Manual"
-msgstr ""
+msgstr "Handbuch"
 
 #: ../src/jarabe/view/viewhelp.py:318
 msgid "Social Help"
-msgstr ""
+msgstr "Soziale Hilfe"
 
 #: ../src/jarabe/view/viewhelp.py:326
 #, python-format
 msgid "Help: %s"
-msgstr ""
+msgstr "Hilfe: %s"
 
 #: ../src/jarabe/view/viewsource.py:364
 msgid "Instance Source"
@@ -2370,7 +2388,7 @@ msgstr "Quelltext der Instanz"
 #: ../src/jarabe/view/viewsource.py:392
 #, python-format
 msgid "Do you want to duplicate %s Activity?"
-msgstr ""
+msgstr "Möchtest du die Aktivität %s duplizieren?"
 
 #: ../src/jarabe/view/viewsource.py:394
 msgid "This may take a few minutes"
@@ -2378,7 +2396,7 @@ msgstr "Das kann ein paar Minuten dauern"
 
 #: ../src/jarabe/view/viewsource.py:408
 msgid "Duplicating activity..."
-msgstr ""
+msgstr "Aktivität wird dupliziert..."
 
 #: ../src/jarabe/view/viewsource.py:447
 msgid "Duplicated"
@@ -2386,15 +2404,16 @@ msgstr "Dupliziert"
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
-msgstr ""
+msgstr "Die Aktivität wurde dupliziert"
 
 #: ../src/jarabe/view/viewsource.py:462
 msgid "Duplicated activity already exists"
-msgstr ""
+msgstr "Die duplizierte Aktivität existiert bereits"
 
 #: ../src/jarabe/view/viewsource.py:463
 msgid "Delete your copy before trying to duplicate the activity again"
 msgstr ""
+"Lösche deine Kopie, bevor du die Aktivität erneut zu duplizieren versuchst"
 
 #: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
@@ -2421,54 +2440,54 @@ msgstr "Quelltext anzeigen: %r"
 
 #: ../src/jarabe/view/viewsource.py:809
 msgid "Please select a file in the left panel."
-msgstr ""
+msgstr "Wähle im linken Bereich bitte eine Datei aus."
 
 #: ../extensions/cpsection/backup/__init__.py:22
 msgid "Backup"
-msgstr ""
+msgstr "Datensicherung"
 
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171
 msgid "Please connect a device to continue"
-msgstr ""
+msgstr "Schließe bitte ein Gerät an, um fortzufahren"
 
 #: ../extensions/cpsection/backup/backends/volume.py:69
 #: ../extensions/cpsection/backup/backends/volume.py:178
 msgid "Select your volume"
-msgstr ""
+msgstr "Wähle deinen Datenträger"
 
 #: ../extensions/cpsection/backup/backends/volume.py:78
 msgid "Not enough space in volume"
-msgstr ""
+msgstr "Nicht genügend Platz auf dem Datenträger vorhanden"
 
 #: ../extensions/cpsection/backup/backends/volume.py:122
 #, python-format
 msgid "Backup from user %s"
-msgstr ""
+msgstr "Datensicherung von Benutzer %s"
 
 #: ../extensions/cpsection/backup/backends/volume.py:191
 msgid "No checkpoints found in the device"
-msgstr ""
+msgstr "Keine Wiederherstellungspunkte gefunden"
 
 #: ../extensions/cpsection/backup/backends/volume.py:199
 msgid "Select your checkpoint"
-msgstr ""
+msgstr "Wähle deinen Wiederherstellungspunkt"
 
 #: ../extensions/cpsection/backup/backends/volume.py:210
 msgid "Not enough space in disk"
-msgstr ""
+msgstr "Nicht genug Speicherplatz verfügbar"
 
 #: ../extensions/cpsection/backup/backends/volume.py:329
 msgid "Local Device Backup"
-msgstr ""
+msgstr "Lokales Backup"
 
 #: ../extensions/cpsection/backup/view.py:133
 msgid "Save the contents of your Journal"
-msgstr ""
+msgstr "Inhalte deines Tagebuchs sichern"
 
 #: ../extensions/cpsection/backup/view.py:141
 msgid "Restore the contents of your Journal"
-msgstr ""
+msgstr "Inhalte deines Tagebuchs wiederherstellen"
 
 #: ../extensions/cpsection/backup/view.py:223
 msgid "Please close all the activities, and start again"
@@ -2476,11 +2495,11 @@ msgstr "Schließe bitte alle Aktivitäten und starte neu"
 
 #: ../extensions/cpsection/backup/view.py:229
 msgid "Select where you want create your backup"
-msgstr ""
+msgstr "Wähle, wo die Datensicherung erstellt werden soll"
 
 #: ../extensions/cpsection/backup/view.py:231
 msgid "Select where you want retrieve your restore"
-msgstr ""
+msgstr "Wähle, wie die Daten wiederhergestellt werden sollen."
 
 #: ../extensions/cpsection/backup/view.py:271
 msgid "Retry"
@@ -2488,11 +2507,11 @@ msgstr "Erneut versuchen"
 
 #: ../extensions/cpsection/backup/view.py:290
 msgid "Starting backup..."
-msgstr ""
+msgstr "Starte Datensicherung..."
 
 #: ../extensions/cpsection/backup/view.py:294
 msgid "Starting restore..."
-msgstr ""
+msgstr "Starte Wiederherstellung..."
 
 #: ../extensions/cpsection/backup/view.py:321
 msgid ""
@@ -2500,6 +2519,9 @@ msgid ""
 "will first be emptied of all its content; then the restored content will be "
 "added."
 msgstr ""
+"Ich möchte den Inhalt meines Tagebuches wiederherstellen. Dabei werden "
+"zunächst sämtliche Inhalte aus meinem Tagebuch gelöscht; anschließend wird "
+"der wiederhergestellte Inhalt eingefügt."
 
 #: ../extensions/cpsection/backup/view.py:327
 msgid "Confirm"
@@ -2507,16 +2529,16 @@ msgstr "Bestätigen"
 
 #: ../extensions/cpsection/backup/view.py:365
 msgid "Operation started"
-msgstr ""
+msgstr "Vorgang wurde gestartet"
 
 #: ../extensions/cpsection/backup/view.py:377
 msgid "Backup finished successfully"
-msgstr ""
+msgstr "Datensicherung erfolgreich abgeschlossen"
 
 #: ../extensions/cpsection/backup/view.py:379
 msgid "Restore realized successfully."
-msgstr ""
+msgstr "Wiederherstellung erfolgreich abgeschlossen"
 
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
-msgstr ""
+msgstr "Benachrichtigungen löschen"

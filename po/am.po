@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-04-21 16:23+0000\n"
+"PO-Revision-Date: 2017-05-23 16:48+0000\n"
 "Last-Translator: dbekele <almazsolutions@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: am\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1492791800.000000\n"
+"X-POOTLE-MTIME: 1495558126.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -153,43 +153,43 @@ msgstr "እንደ መደብ የሚሆነው ምስል የሚገኝበት አ�
 
 #: ../data/org.sugarlabs.gschema.xml.h:31
 msgid "Background alpha level"
-msgstr ""
+msgstr "የመነሻ መደብ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:32
 msgid "The opacity of the background image."
-msgstr ""
+msgstr "የመነሻ መደብ አምሳል ጉልህእነት"
 
 #: ../data/org.sugarlabs.gschema.xml.h:33
 msgid "Mimetype registry"
-msgstr ""
+msgstr "የ\"ማይም\" ዓይነት መዝገብ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:34
 msgid "Consists of key-value pairs mimetypes and their corresponding activity"
-msgstr ""
+msgstr "ጥንድ መክፈቻ ጠቋሚ የ\"ማይም\" ዓይነትና የተያያዘው ድርጊትን የሚያካትት"
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
-msgstr ""
+msgstr "የማጉያ መጠን"
 
 #: ../data/org.sugarlabs.gschema.xml.h:36 ../data/sugar.schemas.in.h:8
 msgid "Volume level for the sound device."
-msgstr ""
+msgstr "የማጉያ መጠን ለድምፅ መሳሪያ፡፡"
 
 #: ../data/org.sugarlabs.gschema.xml.h:37 ../data/sugar.schemas.in.h:9
 msgid "Sound Muted"
-msgstr ""
+msgstr "መሰማት የተሳነው"
 
 #: ../data/org.sugarlabs.gschema.xml.h:38 ../data/sugar.schemas.in.h:10
 msgid "Setting for muting the sound device."
-msgstr ""
+msgstr "የድምፅ መሳሪያ እንዳይሰማ ማድረጊያ ቦታ፡፡"
 
 #: ../data/org.sugarlabs.gschema.xml.h:39
 msgid "Brightness Level"
-msgstr ""
+msgstr "የብርሃን ድምቀት መጠን"
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
-msgstr ""
+msgstr "የመጦመሪያው መስኮት የብርሃን ድምቀት መጠን፡፡"
 
 #: ../data/org.sugarlabs.gschema.xml.h:41
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
@@ -198,11 +198,11 @@ msgstr "የሰዓት ክልል"
 
 #: ../data/org.sugarlabs.gschema.xml.h:42 ../data/sugar.schemas.in.h:14
 msgid "Timezone setting for the system."
-msgstr ""
+msgstr "የመጦመሪያው የሰዓት ክልል ማስቀመጫ ቦታ፡፡"
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr ""
+msgstr "የመነሻ ቦታ እይታ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
