@@ -201,7 +201,7 @@ class ViewHelp(Gtk.Window):
         self._help_state = None
         if has_local_help:
             self._help_url = self._browser.get_local_method() + \
-                self._get_help_file(language, url)
+                             self._get_help_file(language, url)
 
         self._social_help_uri = '{}/goto/{}'.format(
             get_social_help_server(), activity.get_bundle_id())
