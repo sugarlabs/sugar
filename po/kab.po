@@ -1,116 +1,116 @@
-# Greek translation of Sugar.
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Simos Xenitellis <simos.lists@googlemail.com>, 2007.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sugar\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-05-06 17:41+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
-"Language-Team: Greek <olpc@grnet.gr>\n"
-"Language: el\n"
+"PO-Revision-Date: 2017-06-10 14:33+0000\n"
+"Last-Translator: belkacem77 <belkacem77@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: kab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1494092495.000000\n"
+"X-POOTLE-MTIME: 1497105188.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
-msgstr ""
+msgstr "Yuneg ar GSettings"
 
 #: ../data/org.sugarlabs.gschema.xml.h:2
 msgid "This key shows whether or not GConf values were migrated to GSettings"
 msgstr ""
+"Tasarutt-agi teskan-d ma yella neɣ ala azalen n GConf unagen ar GSettings"
 
 #: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
 msgid "Backup URL"
-msgstr "Αντιγράφο του URL"
+msgstr "Asekles n URL"
 
 #: ../data/org.sugarlabs.gschema.xml.h:4 ../data/sugar.schemas.in.h:12
 msgid "URL where the backup is saved to."
-msgstr "URL όπου αποθηκεύτηκε το αντίγραφο ασφάλειας."
+msgstr "Tansa URL n usekles n uḥraz."
 
 #: ../data/org.sugarlabs.gschema.xml.h:5 ../data/sugar.schemas.in.h:31
 msgid "Show Log out"
-msgstr "Εμφάνιση Αποσύνδεσης"
+msgstr "Tansa URL anida a yettwaḥrez ukalas."
 
 #: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr "Εάν είναι ΑΛΗΘΕΣ, το Sugar θα εμφανίσει την επιλογή \"Αποσύνδεση\"."
+msgstr "Ma IH, Sugar ad d-yesken asefran \"Ffeɣ\"."
 
 #: ../data/org.sugarlabs.gschema.xml.h:7 ../data/sugar.schemas.in.h:33
 msgid "Show Restart"
-msgstr "Εμφάνιση Επανεκκίνησης"
+msgstr "Sken Ales Asenker"
 
 #: ../data/org.sugarlabs.gschema.xml.h:8 ../data/sugar.schemas.in.h:34
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr "Εάν είναι ΑΛΗΘΕΣ, το Sugar θα εμφανίσει την επιλογή \"Επανεκκίνηση\"."
+msgstr "Ma IH, Sugar ad d-yesken asefran \"Ales Asenker\"."
 
 #: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
 msgid "Show Shutdown"
-msgstr ""
+msgstr "Sken Sens"
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
-#, fuzzy
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
-msgstr "Εάν είναι ΑΛΗΘΕΣ, το Sugar θα εμφανίσει την επιλογή \"Αποσύνδεση\"."
+msgstr "Ma IH, Sugar ad d-yesken asefran \"Sens\""
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
-msgstr ""
+msgstr "Sken ajerred"
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
-msgstr ""
+msgstr "Ma IH, Sugar ad d-yesken asefran \"Ajerred\"."
 
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
 msgid "Bundle IDs of protected activities"
-msgstr "Ομαδοποιημένες ΤΔ προστατευμένων Δραστηριοτήτων"
+msgstr "Isulayen n iukemmes n irmuden yettwammestnen"
 
 #: ../data/org.sugarlabs.gschema.xml.h:14 ../data/sugar.schemas.in.h:64
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
-msgstr ""
-"Οι χρήστες δε θα μπορούν να αφαιρέσουν αυτές τις δραστηριότητες από την "
-"προβολή λίστας."
+msgstr "Iseqdacen ur ttwasirgen ara ad kksen irmuden-agi seg tmeẓri tabdart."
 
 #: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
 msgid "A limit to the number of simultaneously open activities."
-msgstr ""
+msgstr "Talast n umḍan n urmud yeldin akken."
 
 #: ../data/org.sugarlabs.gschema.xml.h:16 ../data/sugar.schemas.in.h:80
 msgid ""
 "This int is used to set a limit to the number of open activities. By default "
 "(0), there is no limit."
 msgstr ""
+"Umḍan-agi ummid yettwaseqdec i usbadu n talast n umḍan n irmuden yeldin. "
+"Azal amezwer d (0), ulac talast."
 
 #: ../data/org.sugarlabs.gschema.xml.h:17 ../data/sugar.schemas.in.h:1
 msgid "User Name"
-msgstr "Όνομα χρήστη"
+msgstr "Isem n useqdac"
 
 #: ../data/org.sugarlabs.gschema.xml.h:18 ../data/sugar.schemas.in.h:2
 msgid "User name that is used throughout the desktop."
-msgstr "Το όνομα χρήστη που θα χρησιμοποιηθεί για την επιφάνεια εργασίας."
+msgstr "Isem n useqdac yettwaseqdacen deg tnarit."
 
 #: ../data/org.sugarlabs.gschema.xml.h:19 ../data/sugar.schemas.in.h:3
 msgid "Default nick"
-msgstr "Προκαθορισμένο παρωνύμιο"
+msgstr "Meffer isem amezwer"
 
 #: ../data/org.sugarlabs.gschema.xml.h:20 ../data/sugar.schemas.in.h:4
 msgid ""
 "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
 "long name."
 msgstr ""
-"«απενεργοποιημένο» για ερώτηση παρωνυμίου κατά την αρχικοποίηση, «σύστημα» "
-"για την επαναχρησιμοποίηση του ονόματος λογαριασμού σύνδεσης του UNIX."
+"\"yensa\" i usuter deg uwennez; \"anagraw\" i useqdec n yisem aɣezfan n "
+"umiḍan UNIX."
 
 #: ../data/org.sugarlabs.gschema.xml.h:21 ../data/sugar.schemas.in.h:5
 msgid "User Color"
-msgstr "Χρώμα χρήστη"
+msgstr "Ini n useqdac"
 
 #: ../data/org.sugarlabs.gschema.xml.h:22 ../data/sugar.schemas.in.h:6
 msgid ""
@@ -118,37 +118,36 @@ msgid ""
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
-"Χρώμα για το εικονίδιο του ΧΟ που χρησιμοποιείται στον υπολογιστή. Είναι "
-"συνδυασμός του χρώματος γραμμής και του χρώματος γεμίσματος σε μορφή RGB. "
-"Παράδειγμα: #AC32FF,#9A5200"
+"Ini n tignit XO yettwaseqdacen deg tnarit. Azrir n isekkilen yegber initen n "
+"ujerriḍ akked tačcart. Amasal icudd ar yiniten rgb, Amedya: #AC32FF,#9A5200"
 
 #: ../data/org.sugarlabs.gschema.xml.h:23
 msgid "User Gender"
-msgstr ""
+msgstr "Tuzuft n useqdac"
 
 #: ../data/org.sugarlabs.gschema.xml.h:24
 msgid "Gender of the Sugar user, either male, female, or unassigned"
-msgstr ""
+msgstr "Tuzuft n useqdac n Sugar, amalay, unti, neɣ ulac"
 
 #: ../data/org.sugarlabs.gschema.xml.h:25
 msgid "User Birth Timestamp"
-msgstr ""
+msgstr "Azemzakudn tlalit n useqdac"
 
 #: ../data/org.sugarlabs.gschema.xml.h:26
 msgid "Birth timestamp (seconds since the epoch)"
-msgstr ""
+msgstr "Azemzakud n tlalit (tasinin deg epoch n unagraw)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:27
 msgid "Group Label"
-msgstr ""
+msgstr "Tacreṭ n ugraw"
 
 #: ../data/org.sugarlabs.gschema.xml.h:28
 msgid "Label associated with age, e.g., '2nd Grade'"
-msgstr ""
+msgstr "Tacreṭ icudden ar tneɣrit n tɣuri, amedya 'Aseggas wis 2'"
 
 #: ../data/org.sugarlabs.gschema.xml.h:29
 msgid "Background image path"
-msgstr ""
+msgstr "Abrid n unekcum ar tugna n tugna n ugilal"
 
 #: ../data/org.sugarlabs.gschema.xml.h:30
 msgid "Path to the image to be used as a background."
@@ -172,19 +171,19 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
-msgstr "Επίπεδο έντασης"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:36 ../data/sugar.schemas.in.h:8
 msgid "Volume level for the sound device."
-msgstr "Επίπεδο έντασης της συσκευής ήχου."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:37 ../data/sugar.schemas.in.h:9
 msgid "Sound Muted"
-msgstr "Ήχος σε σίγαση"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:38 ../data/sugar.schemas.in.h:10
 msgid "Setting for muting the sound device."
-msgstr "Ρύθμιση για τη σίγαση της συσκευής ήχου."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:39
 msgid "Brightness Level"
@@ -192,25 +191,27 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
-msgstr ""
+msgstr "Aswir n tafat n ugdil n uselkim."
 
 #: ../data/org.sugarlabs.gschema.xml.h:41
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
 msgid "Timezone"
-msgstr "Ζώνη ώρας"
+msgstr "Izdi usrig"
 
 #: ../data/org.sugarlabs.gschema.xml.h:42 ../data/sugar.schemas.in.h:14
 msgid "Timezone setting for the system."
-msgstr "Ρύθμιση ζώνης ώρας συστήματος."
+msgstr "Tawila n izḍi usrig n unagraw."
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr ""
+msgstr "Timeẓriyin tigejdanin"
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
 "List of home views, including the view icon, the favorite icon and the layout"
 msgstr ""
+"Tubdarin n tmeẓriyin tigejdanin, igebren timeẓri tabdart, timeẓri tanurift "
+"akked d tmeẓri anarag"
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
@@ -223,19 +224,19 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
-msgstr "Καθυστέρηση ακμής"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:48 ../data/sugar.schemas.in.h:20
 msgid "Delay for the activation of the frame using the edges."
-msgstr "Καθυστέρηση ενεργοποίησης του πλαισίου που χρησιμοποιεί τις ακμές."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:49 ../data/sugar.schemas.in.h:21
 msgid "Corner Delay"
-msgstr "Καθυστέρηση γωνίας"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:50 ../data/sugar.schemas.in.h:22
 msgid "Delay for the activation of the frame using the corners."
-msgstr "Καθυστέρηση ενεργοποίησης του πλαισίου που χρησιμοποιεί τις γωνίες."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
@@ -247,23 +248,21 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
-msgstr "Εξυπηρετητής Jabber"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:54 ../data/sugar.schemas.in.h:24
 msgid "URL of the jabber server to use."
-msgstr "URL του εξυπηρετητή jabber που θα χρησιμοποιηθεί."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:55 ../data/sugar.schemas.in.h:29
 msgid "Publish to Gadget"
-msgstr "Δημοσίευση στις Επινοήσεις"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:56 ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"Εάν είναι ΑΛΗΘΕΣ, θα μπορούν οι άλλοι χρήστες να μας αναζητούν στον "
-"εξυπηρετητή Jabber."
 
 #: ../data/org.sugarlabs.gschema.xml.h:57
 msgid "Social Help Server"
@@ -275,70 +274,66 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:59 ../data/sugar.schemas.in.h:25
 msgid "Power Automatic"
-msgstr "Διαχείριση Αυτόματη"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:60
 #: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:26
 msgid "Automatic power management (increases battery life)"
-msgstr "Αυτόματη διαχείριση ενέργειας (αυξάνει τη διάρκεια της μπαταρίας)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:61 ../data/sugar.schemas.in.h:27
 msgid "Power Extreme"
-msgstr "Διαχείριση Ακραία"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:62 ../data/sugar.schemas.in.h:28
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
-"Μέγιστη διαχείριση ενέργειας (απενεργοποιεί την ασύρματη εκπομπή, αυξάνει τη "
-"διάρκεια της μπαταρίας)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:63 ../data/sugar.schemas.in.h:39
 msgid "Keyboard layouts"
-msgstr "Διατάξεις πληκτρολογίου"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:64 ../data/sugar.schemas.in.h:40
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
-"Κατάλογος διατάξεων πληκτρολογίου. Κάθε καταχώρηση πρέπει να είναι σε μορφή "
-"διάταξης (εναλλακτική μορφή)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:65 ../data/sugar.schemas.in.h:41
 msgid "Keyboard options"
-msgstr "Επιλογές πληκτρολογίου"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:66 ../data/sugar.schemas.in.h:42
 msgid "List of keyboard options."
-msgstr "Κατάλογος επιλογών πληκτρολογίου."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:67 ../data/sugar.schemas.in.h:43
 msgid "Keyboard model"
-msgstr "Μοντέλο πληκτρολογίου"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:68 ../data/sugar.schemas.in.h:44
 msgid "The keyboard model to be used"
-msgstr "Το μοντέλο πληκτρολογίου που θα χρησιμοποιηθεί"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:69 ../data/sugar.schemas.in.h:45
 msgid "Default font face"
-msgstr "Προκαθορισμένη όψη γραμματοσειράς"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:70 ../data/sugar.schemas.in.h:46
 msgid "Font face that is used throughout the desktop."
-msgstr "Όψη γραμματοσειράς που χρησιμοποιείται στην επιφάνεια εργασίας."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:71 ../data/sugar.schemas.in.h:47
 msgid "Default font size"
-msgstr "Προκαθορισμένο μέγεθος γραμματοσειράς"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:72 ../data/sugar.schemas.in.h:48
 msgid "Font size that is used throughout the desktop."
-msgstr "Μέγεθος γραμματοσειράς που χρησιμοποιείται στην επιφάνεια εργασίας."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:73 ../data/sugar.schemas.in.h:61
 msgid "Show Sugar Ad-hoc networks"
-msgstr "Δείξε τα δίκτυα Ad-hoc του Sugar"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:74 ../data/sugar.schemas.in.h:62
 msgid ""
@@ -346,9 +341,6 @@ msgid ""
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
-"Εάν είναι ΑΛΗΘΕΣ, το Sugar θα εμφανίζει τα εξορισμού δίκτυα Ad-hoc για τα "
-"κανάλια 1,6 και 11. Αν το Sugar δε βλέπει κανένα \"γνωστό\" δίκτυο όταν "
-"ξεκινάει, τότε συνδέεται αυτόματα σε ένα δίκτυο Ad-hoc."
 
 #: ../data/org.sugarlabs.gschema.xml.h:75
 msgid "Enable Ad-hoc autoconnect"
@@ -360,58 +352,52 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr "Όνομα χρήστη δικτύου GSM (ΞΕΠΕΡΑΣΜΕΝΟ/ΑΧΡΗΣΙΜΟΠΟΙΗΤΟ)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:78 ../data/sugar.schemas.in.h:50
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr "Ρύθμιση ονόματος χρήστη δικτύου GSM (ΞΕΠΕΡΑΣΜΕΝΟ/ΑΧΡΗΣΙΜΟΠΟΙΗΤΟ)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:79 ../data/sugar.schemas.in.h:51
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr "Κωδικός πρόσβασης δικτύου GSM (ΞΕΠΕΡΑΣΜΕΝΟ/ΑΧΡΗΣΙΜΟΠΟΙΗΤΟ)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:80 ../data/sugar.schemas.in.h:52
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr "Ρύθμιση κωδικού πρόσβασης δικτύου (ΞΕΠΕΡΑΣΜΕΝΟ/ΑΧΡΗΣΙΜΟΠΟΙΗΤΟ)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:81 ../data/sugar.schemas.in.h:53
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr "Αριθμός δικτύου GSM (ΞΕΠΕΡΑΣΜΕΝΟ/ΑΧΡΗΣΙΜΟΠΟΙΗΤΟ)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:82 ../data/sugar.schemas.in.h:54
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr "Ρύθμιση τηλεφωνικού αριθμού δικτύου GSM (ΞΕΠΕΡΑΣΜΕΝΟ/ΑΧΡΗΣΙΜΟΠΟΙΗΤΟ)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:83 ../data/sugar.schemas.in.h:55
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr "GSM δίκτυο APN (ΞΕΠΕΡΑΣΜΕΝΟ/ΑΧΡΗΣΙΜΟΠΟΙΗΤΟ)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:84 ../data/sugar.schemas.in.h:56
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
-"Ρύθμιση του ονόματος σημείου πρόσβασης στο δίκτυο GSM "
-"(ΞΕΠΕΡΑΣΜΕΝΟ/ΑΧΡΗΣΙΜΟΠΟΙΗΤΟ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:85 ../data/sugar.schemas.in.h:57
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr "GSM δίκτυο PIN (ΞΕΠΕΡΑΣΜΕΝΟ/ΑΧΡΗΣΙΜΟΠΟΙΗΤΟ)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:86 ../data/sugar.schemas.in.h:58
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
-"Ρύθμιση προσωπικού αριθμού ταυτοποίησης του δικτύου GSM "
-"(ΞΕΠΕΡΑΣΜΕΝΟ/ΑΧΡΗΣΙΜΟΠΟΙΗΤΟ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:87 ../data/sugar.schemas.in.h:59
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr "GSM δίκτυο PUK (ΞΕΠΕΡΑΣΜΕΝΟ/ΑΧΡΗΣΙΜΟΠΟΙΗΤΟ)"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:88 ../data/sugar.schemas.in.h:60
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
-"Ρύθμιση προσωπικού κλειδιού ξεκλειδώματος του δικτύου GSM "
-"(ΞΕΠΕΡΑΣΜΕΝΟ/ΑΧΡΗΣΙΜΟΠΟΙΗΤΟ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:89
 msgid "TODO: add summary"
@@ -423,64 +409,57 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:91 ../data/sugar.schemas.in.h:65
 msgid "Pitch value for the speech sugar service"
-msgstr "Ρύθμιση της τιμής για την υπηρεσία φωνής του Sugar"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:92 ../data/sugar.schemas.in.h:66
 msgid "Pitch value used by the speech service in Sugar"
-msgstr "Ρύθμιση της τιμής που χρησιμοποιεί η υπηρεσία φωνής του Sugar"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:93 ../data/sugar.schemas.in.h:67
 msgid "Rate value for the speech sugar service"
-msgstr "Προσδιορισμός της αξίας της υπηρεσίας φωνής του Sugar"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:94 ../data/sugar.schemas.in.h:68
 msgid "Rate value used by the speech service in Sugar"
-msgstr "Προσδιορισμός της αξίας που χρησιμοποιεί η υπηρεσία φωνής του Sugar"
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:95 ../data/sugar.schemas.in.h:69
 msgid "Activity update backend."
-msgstr "Άρθρωμα συστήματος υποστήριξης της ενημέρωσης μιας δραστηριότητας."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:96 ../data/sugar.schemas.in.h:70
 msgid ""
 "Activity update backend module, followed by a period, followed by the class "
 "name."
 msgstr ""
-"Άρθρωμα συστήματος υποστήριξης της ενημέρωσης μιας δραστηριότητας, "
-"ακολουθούμενο από μια περίοδο, ακολουθούμενο από το όνομα της κλάσης."
 
 #: ../data/org.sugarlabs.gschema.xml.h:97 ../data/sugar.schemas.in.h:71
 msgid "Microformat update URL."
-msgstr "Micro-μορφοποιημένο URL ενημέρωσης."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:98 ../data/sugar.schemas.in.h:72
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
-"Το URL που χρησιμοποιείται από το σύστημα υποστήριξης για τις πληροφορίες "
-"ενημέρωσης της δραστηριότητας."
 
 #: ../data/org.sugarlabs.gschema.xml.h:99 ../data/sugar.schemas.in.h:73
 msgid "Automatic update frequency."
-msgstr "Συχνότητα αυτόματης ενημέρωσης."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:100 ../data/sugar.schemas.in.h:74
 msgid ""
 "Frequency of automatic activity updates, measured in days. 0 means disabled."
 msgstr ""
-"Συχνότητα αυτόματης ενημέρωσης των δραστηριοτήτων, μετρημένη σε ημέρες. Το 0 "
-"σημαίνει ότι είναι απενεργοποιημένη."
 
 #: ../data/org.sugarlabs.gschema.xml.h:101 ../data/sugar.schemas.in.h:75
 msgid "Timestamp of last activity update."
-msgstr "Χρονοσήμανση τελευταίας ενημέρωσης της δραστηριότητας."
+msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:102 ../data/sugar.schemas.in.h:76
 msgid ""
 "A unix timestamp (seconds since epoch) of the last successful activity "
 "update."
 msgstr ""
-"Μια χρονοσήμανση του UNIX της τελευταίας επιτυχούς ενημέρωσης δραστηριότητας."
 
 #: ../data/org.sugarlabs.gschema.xml.h:103
 msgid "New ASLO update.json URL."
@@ -500,43 +479,43 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
-msgstr "Σχετικά με μένα"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:51
 msgid "You must enter a name."
-msgstr "Πρέπει να δοθεί ένα όνομα."
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:83
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr "πινελιά:   χρώμα=%s απόχρωση=%s"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:86
 #, python-format
 msgid "stroke:   %s"
-msgstr "πινελιά:   %s"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:88
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr "γέμισμα:     χρώμα=%s απόχρωση=%s"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:90
 #, python-format
 msgid "fill:     %s"
-msgstr "γέμισμα:     %s"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:102
 msgid "Error in specified color modifiers."
-msgstr "Λάθος στους διαμορφωτές καθορισμένου χρώματος."
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:105
 msgid "Error in specified colors."
-msgstr "Λάθος στα καθορισμένα χρώματα."
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/view.py:243
 msgid "Click to change your color:"
-msgstr "Πατήστε για να αλλάξετε χρώμα:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/view.py:294
 #: ../src/jarabe/intro/window.py:203
@@ -545,15 +524,15 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
-msgstr "Σχετικά με τον υπολογιστή μου"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/model.py:37
 msgid "Not available"
-msgstr "Δεν είναι διαθέσιμο"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:76
 msgid "Identity"
-msgstr "Ταυτότητα"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:87
 msgid "Model:"
@@ -561,27 +540,27 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Serial Number:"
-msgstr "Σειριακός αριθμός:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:103
 msgid "Software"
-msgstr "Λογισμικό"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:112
 msgid "Build:"
-msgstr "Αναγνωριστικό έκδοσης:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:117
 msgid "Sugar:"
-msgstr "Sugar:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:122
 msgid "Firmware:"
-msgstr "Υλικολογισμικό:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:127
 msgid "Wireless Firmware:"
-msgstr "Υλικολογισμικό Ασύρματου:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:134
 #, python-format
@@ -591,7 +570,7 @@ msgstr ""
 #: ../extensions/cpsection/aboutcomputer/view.py:136
 #: ../src/jarabe/journal/journaltoolbox.py:169
 msgid "Today"
-msgstr "Σήμερα"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:139
 msgid "Last system update:"
@@ -599,7 +578,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:150
 msgid "Copyright and License"
-msgstr "Πνευματικά δικαιώματα & Άδεια"
+msgstr ""
 
 #. TRANS: The word "Sugar" should not be translated.
 #: ../extensions/cpsection/aboutcomputer/view.py:169
@@ -609,70 +588,63 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"Το Sugar είναι το γραφικό περιβάλλον διεπαφής του χρήστη που σας ενδιαφέρει. "
-"Είναι Ελεύθερο Λογισμικό/Λογισμικό Ανοικτού Κώδικα αδειοδοτημένο με τους "
-"όρους της GNU Γενικής Άδειας Δημόσιας Χρήσης και είστε ευπρόσδεκτοι να το "
-"μετατρέψετε και να διανείμετε αντίγραφά του, πάντα υπό τους όρους της άδειας "
-"που περιγράφεται εδώ."
 
 #: ../extensions/cpsection/aboutcomputer/view.py:181
 msgid "Full license:"
-msgstr "Πλήρης άδεια:"
+msgstr ""
 
 #: ../extensions/cpsection/background/__init__.py:21
 msgid "Background"
-msgstr "Φόντο"
+msgstr ""
 
 #: ../extensions/cpsection/background/view.py:48
 msgid "Select a background:"
-msgstr "Επιλογή φόντου"
+msgstr ""
 
 #: ../extensions/cpsection/background/view.py:57
 msgid "Clear background"
-msgstr "Καθαρισμός φόντου"
+msgstr ""
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr "Ημερομηνία & ώρα"
+msgstr ""
 
 #: ../extensions/cpsection/datetime/model.py:100
-#, fuzzy
 msgid "Error: timezone does not exist."
-msgstr "Λάθος η ζώνη ώρας δεν υπάρχει."
+msgstr ""
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
-msgstr "Πλαίσιο"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:26
 msgid "never"
-msgstr "ποτέ"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "instantaneous"
-msgstr "στιγμιαίος"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:28
 #, python-format
 msgid "%s seconds"
-msgstr "%s δευτερόλεπτα"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:52
 msgid "Activation Delay"
-msgstr "Καθυστέρηση ενεργοποίησης"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:68
-#, fuzzy
 msgid "Activation Area"
-msgstr "Καθυστέρηση ενεργοποίησης"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:85
 msgid "Corner"
-msgstr "Γωνία"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:104
 msgid "Edge"
-msgstr "Άκρη"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:123
 msgid "Size"
@@ -706,48 +678,44 @@ msgstr ""
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:38
 msgid "Keyboard"
-msgstr "Πληκτρολόγιο"
+msgstr ""
 
 #: ../extensions/cpsection/keyboard/view.py:240
 msgid "Keyboard Model"
-msgstr "Μοντέλο πληκτρολογίου"
+msgstr ""
 
 #: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
-msgstr "Πλήκτρο(α) για αλλαγή διάταξης"
+msgstr ""
 
 #: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
-msgstr "Διάταξη(εις) πληκτρολογίου"
+msgstr ""
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:39
 msgid "Language"
-msgstr "Γλώσσα"
+msgstr ""
 
 #: ../extensions/cpsection/language/model.py:29
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr ""
-"Δεν είναι δυνατή η πρόσβαση στον ~/.i18n. Δημιουργία προκαθορισμένων "
-"ρυθμίσεων."
 
 #: ../extensions/cpsection/language/model.py:156
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "Γλώσσα για τον κωδικό=%s δεν μπορεί να καθοριστεί."
+msgstr ""
 
 #: ../extensions/cpsection/language/model.py:179
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "Λυπάμαι! δε μιλάω «%s»."
+msgstr ""
 
 #: ../extensions/cpsection/language/view.py:75
 msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
-"Προσθέστε γλώσσες με τη σειρά που επιθυμείτε. Εάν μια μετάφραση δεν είναι "
-"διαθέσιμη, θα χρησιμοποιηθεί η επόμενη γλώσσα της λίστας."
 
 #: ../extensions/cpsection/language/view.py:383
 #, python-format
@@ -763,73 +731,69 @@ msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
-"Θα πρέπει να παρέχετε τις ακόλουθες πληροφορίες, ώστε να δημιουργήσετε μια "
-"φορητή ευρυζωνική σύνδεση σε ένα δίκτυο 3G."
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr "Χώρα:"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr "Πάροχος:"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr "Σχέδιο:"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
-msgstr "Όνομα χρήστη:"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
-msgstr "Κωδικός πρόσβασης:"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:174
 msgid "Number:"
-msgstr "Αριθμός:"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
-msgstr "Όνομα Σημείου Πρόσβασης (APN):"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
-msgstr "Προσωπικός αριθμός (PIN):"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/model.py:162
 #, python-format
 msgid "Plan #%s"
-msgstr "Σχέδιο #%s"
+msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/model.py:292
 #, python-format
 msgid "Provider %s"
-msgstr "Πάροχος %s"
+msgstr ""
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
 msgid "Network"
-msgstr "Δίκτυο"
+msgstr ""
 
 #: ../extensions/cpsection/network/model.py:88
 msgid "State is unknown."
-msgstr "Η κατάσταση είναι άγνωστη."
+msgstr ""
 
 #: ../extensions/cpsection/network/model.py:104
 msgid "Error in specified radio argument use on/off."
 msgstr ""
-"Λάθος σε καθορισμένη παράμετρο ασύρματης εκπομπής. Χρησιμοποιήστε "
-"ανοικτό/κλειστό."
 
 #: ../extensions/cpsection/network/model.py:197
 msgid "Error in specified argument use 0/1."
-msgstr "Λάθος σε καθορισμένη παράμετρο. Χρησιμοποιήστε 0/1."
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:65
 msgid "Wireless"
-msgstr "Ασύρματο"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:73
 msgid "The wireless radio may be turned off to save battery life."
@@ -837,7 +801,7 @@ msgstr ""
 
 #: ../extensions/cpsection/network/view.py:86
 msgid "Radio"
-msgstr "Ασύρματη εκπομπή"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:103
 msgid ""
@@ -850,7 +814,7 @@ msgstr ""
 
 #: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
-msgstr "Συνεργασία"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:137
 msgid ""
@@ -858,13 +822,10 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
-"Ο εξυπηρετητής ισοδυναμεί με το δωμάτιο μέσα στο οποίο βρίσκεστε. Τα άτομα "
-"που είναι συνδεδεμένα στον ίδιο εξυπηρετητή μπορούν να \"βλέπουν\" ο ένας "
-"τον άλλο, ακόμη και όταν δεν είναι στο ίδιο δωμάτιο."
 
 #: ../extensions/cpsection/network/view.py:147
 msgid "Server:"
-msgstr "Εξυπηρετητής:"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:163
 msgid ""
@@ -879,69 +840,67 @@ msgstr ""
 
 #: ../extensions/cpsection/power/__init__.py:24
 msgid "Power"
-msgstr "Ενέργεια"
+msgstr ""
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
-msgstr "Σφάλμα στην παράμετρο αυτόματης Δ.Ε., χρησιμοποιήστε ανοικτό/κλειστό."
+msgstr ""
 
 #: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
-msgstr "Διαχείριση Ενέργειας"
+msgstr ""
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software Update"
-msgstr "Ενημέρωση λογισμικού"
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:70
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
-"Η ενημέρωση λογισμικού διορθώνει σφάλματα, ελαχιστοποιεί τα τρωτά σημεία "
-"ασφάλειας και παρέχει νέες λειτουργίες."
 
 #: ../extensions/cpsection/updater/view.py:84
 msgid "Update in progress..."
-msgstr "Ενημέρωση σε εξελιξη..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:119
 msgid "Checking for updates..."
-msgstr "Έλεγχος για ενημερώσεις..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:121
 msgid "Installing updates..."
-msgstr "Εγκατάσταση ενημερώσεων..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:150
 #, python-format
 msgid "Checking %s..."
-msgstr "Έλεγχος %s..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:152
 msgid "Looking for updates..."
-msgstr "Έλεγχος για ενημερώσεις..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:154
 #, python-format
 msgid "Downloading %s..."
-msgstr "Κατέβασμα αρχείων %s..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:156
 #, python-format
 msgid "Updating %s..."
-msgstr "Ενημέρωση %s..."
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:166
 msgid "Your software is up-to-date"
-msgstr "Το λογισμικό σας είναι ενημερωμένο"
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:168
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] "Μπορείτε να εγκαταστήσετε %s ενημέρωση"
-msgstr[1] "Μπορείτε να εγκαταστήσετε %s ενημερώσεις"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../extensions/cpsection/updater/view.py:183
 msgid "Can't connect to the activity server"
@@ -955,49 +914,49 @@ msgstr ""
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] "%s ενημέρωση εγκαταστάθηκε"
-msgstr[1] "%s ενημερώσεις εγκαταστάθηκαν"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../extensions/cpsection/updater/view.py:288
 msgid "Install selected"
-msgstr "Εγκατάσταση επιλεγμένου"
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:307
 #, python-format
 msgid "Download size: %s"
-msgstr "Μέγεθος αρχείων για κατέβασμα: %s"
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:399
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
-msgstr "Από την έκδοση %(current)s στην %(new)s (Μέγεθος: %(size)s)"
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:406
 #, python-format
 msgid "Version %(version)s (Size: %(size)s)"
-msgstr "Έκδοση %(version)s (Μέγεθος: %(size)s)"
+msgstr ""
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:423
 msgid "None"
-msgstr "Κανένα"
+msgstr ""
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:426
 msgid "1 KB"
-msgstr "1 KB"
+msgstr ""
 
 #. TRANS: download size of small updates, e.g. '250 KB'
 #: ../extensions/cpsection/updater/view.py:429
 #, python-format
 msgid "%.0f KB"
-msgstr "%.0f KB"
+msgstr ""
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
 #: ../extensions/cpsection/updater/view.py:432
 #, python-format
 msgid "%.1f MB"
-msgstr "%.1f MB"
+msgstr ""
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Web Services"
@@ -1009,8 +968,6 @@ msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
 msgstr ""
-"Δεν εγκαταστάθηκαν διαδικτυακες υπηρεσίες.\n"
-"Παρακαλώ επισκεφτείτε το %s για περισσότερες λεπτομέρειες."
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
@@ -1026,30 +983,30 @@ msgstr ""
 
 #: ../extensions/deviceicon/battery.py:69
 msgid "My Battery"
-msgstr "Η μπαταρία μου"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:151
 msgid "Removed"
-msgstr "Αφαιρέθηκε"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:154
 msgid "Charging"
-msgstr "Στη φόρτιση"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:157
 msgid "Very little power remaining"
-msgstr "Απομένει πολύ λίγη ενέργεια"
+msgstr ""
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
 #: ../extensions/deviceicon/battery.py:164
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(hour)d:%(min).2d απομένουν"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:167
 msgid "Charged"
-msgstr "Φορτισμένη"
+msgstr ""
 
 #: ../extensions/deviceicon/display.py:187
 msgid "My Display"
@@ -1069,19 +1026,19 @@ msgstr ""
 
 #: ../extensions/deviceicon/frame.py:53
 msgid "Show my keyboard"
-msgstr "Εμφάνιση του πληκτρολογίου μου"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:48
 #, python-format
 msgid "IP address: %s"
-msgstr "Διεύθυνση IP: %s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:80
 #: ../extensions/deviceicon/network.py:297
 #: ../src/jarabe/desktop/networkviews.py:134
 #: ../src/jarabe/desktop/networkviews.py:510
 msgid "Disconnect"
-msgstr "Αποσύνδεση"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:290
@@ -1089,59 +1046,58 @@ msgstr "Αποσύνδεση"
 #: ../src/jarabe/desktop/networkviews.py:552
 #: ../src/jarabe/desktop/networkviews.py:696
 msgid "Connecting..."
-msgstr "Σύνδεση..."
+msgstr ""
 
-# TODO: show the channel number
 #: ../extensions/deviceicon/network.py:110
 #: ../extensions/deviceicon/network.py:181
 #: ../src/jarabe/desktop/networkviews.py:257
 #: ../src/jarabe/desktop/networkviews.py:558
 #: ../src/jarabe/desktop/networkviews.py:702
 msgid "Connected"
-msgstr "Συνδέθηκε"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:123
 msgid "No wireless connection"
-msgstr "Δεν υπάρχει ασύρματη σύνδεση"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:137
 #: ../extensions/deviceicon/network.py:140
 msgid "Channel"
-msgstr "Κανάλι"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:138
 #: ../src/jarabe/journal/expandedentry.py:386
 #: ../src/jarabe/journal/listmodel.py:191
 #: ../src/jarabe/journal/listmodel.py:199
 msgid "Unknown"
-msgstr "Άγνωστο"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:156
 msgid "Wired Network"
-msgstr "Ενσύρματο δίκτυο"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:184
 msgid "Speed"
-msgstr "Ταχύτητα"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:209
 msgid "Wireless modem"
-msgstr "Ασύρματο modem"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:278
 msgid "Please wait..."
-msgstr "Παρακαλώ περιμένετε..."
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:282
 #: ../src/jarabe/desktop/networkviews.py:128
 #: ../src/jarabe/desktop/networkviews.py:504
 #: ../src/jarabe/desktop/networkviews.py:647
 msgid "Connect"
-msgstr "Σύνδεση"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:283
 msgid "Disconnected"
-msgstr "Αποσυνδέθηκε"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:289
 #: ../src/jarabe/controlpanel/toolbar.py:121
@@ -1152,61 +1108,61 @@ msgstr "Αποσυνδέθηκε"
 #: ../src/jarabe/journal/journaltoolbox.py:587
 #: ../src/jarabe/journal/palettes.py:166
 msgid "Cancel"
-msgstr "Άκυρο"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:327
 msgid "Try connection again"
-msgstr "Προσπαθήστε πάλι για σύνδεση"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:330
 #, python-format
 msgid "Error: %s"
-msgstr "Σφάλμα: %s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:334
 #, python-format
 msgid "Suggestion: %s"
-msgstr "Υπόδειξη:%s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:344
 #, python-format
 msgid "Connected for %s"
-msgstr "Συνδέθηκε για %s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:349
 #: ../extensions/deviceicon/network.py:350
 #, python-format
 msgid "%d KB"
-msgstr "%d KB"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:355
 msgid "Check your PIN/PUK configuration."
-msgstr "Ελέγξτε τις ρυθμίσεις PIN/PUK."
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:358
 msgid "Check your Access Point Name (APN) configuration"
-msgstr "Ελέγξτε τις ρυθμίσεις του Ονόματος του Σημείου Πρόσβασης (APN) σας"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:362
 msgid "Check the Number configuration."
-msgstr "Ελέγξτε τις ρυθμίσεις Αριθμών."
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:364
 msgid "Check your configuration."
-msgstr "Ελέγξτε τις ρυθμίσεις σας."
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:619
 msgid "Mesh Network"
-msgstr "Δίκτυο πλέγματος"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:665
 #, python-format
 msgid "Mesh Network %s"
-msgstr "Δίκτυο πλέγματος %s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:782
 msgid "No GSM connection available."
-msgstr "Δεν υπάρχει σύνδεση GSM."
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:783
 msgid "Create a connection in My Settings."
@@ -1214,65 +1170,63 @@ msgstr ""
 
 #: ../extensions/deviceicon/speech.py:49
 msgid "Speech"
-msgstr "Ομιλία"
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:72
 #: ../extensions/deviceicon/speech.py:147
 #: ../extensions/deviceicon/speech.py:152
 msgid "Say selected text"
-msgstr "Εκφώνησε το επιλεγμένο κείμενο"
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:80
 msgid "Stop playback"
-msgstr "Διακοπή αναπαραγωγής"
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:89
 msgid "Pitch"
-msgstr "Τόνος"
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:104
 msgid "Rate"
-msgstr "Ρυθμός"
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:142
 msgid "Pause playback"
-msgstr "Παύση αναπαραγωγής"
+msgstr ""
 
 #: ../extensions/deviceicon/touchpad.py:36
 msgid "finger"
-msgstr "δάχτυλο"
+msgstr ""
 
 #: ../extensions/deviceicon/touchpad.py:36
 msgid "stylus"
-msgstr "στυλό"
+msgstr ""
 
 #: ../extensions/deviceicon/touchpad.py:61
 msgid "My touchpad"
-msgstr "Η πινακίδα αφής μου"
+msgstr ""
 
 #: ../extensions/deviceicon/volume.py:62 ../src/jarabe/view/palettes.py:210
 msgid "Show contents"
-msgstr "Προβολή περιεχομένων"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:15
 msgid "Favorites Layout"
-msgstr "Διάταξη αγαπημένων"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Layout of the favorites view."
-msgstr "Διάταξη προβολής αγαπημένων."
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Favorites resume mode"
-msgstr "Λειτουργία επαναφοράς αγαπημένων"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:18
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
-"Σε λειτουργία επαναφοράς, το κλικ σε αγαπημένο εικονίδιο θα προκαλέσει "
-"επαναφορά της τελευταίας καταχώρησης αυτής της δραστηριότητας."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -1280,18 +1234,16 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
-"πίνακας-ελέγχου-sugar: ΠΡΟΕΙΔΟΠΟΙΗΣΗ! βρέθηκαν περισσότερες από μία επιλογές "
-"με το ίδιο όνομα: %s άρθρωμα: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr "πίνακας-ελέγχου-sugar: κλειδί=%s μη διαθέσιμη επιλογή"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
 msgid "sugar-control-panel: %s"
-msgstr "πίνακας-ελέγχου-sugar: %s"
+msgstr ""
 
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
@@ -1308,16 +1260,6 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
-"Χρήση: sugar-control-panel [ επιλογή ] κλειδί [ ορίσματα ... ] \n"
-"    Έλεγχος περιβάλλοντος εργασίας sugar. \n"
-"    Επιλογές: \n"
-"    -h           εμφάνιση αυτού του μηνύματος βοήθειας και έξοδος \n"
-"    -l           λίστα όλων των διαθέσιμων επιλογών \n"
-"    -h κλειδί       εμφάνιση πληροφοριών γι' αυτό το κλειδί \n"
-"    -g κλειδί       εμφανίζει την τρέχουσα τιμή του κλειδιού \n"
-"    -s κλειδί       καθορίζει την τρέχουσα τιμή του κλειδιού \n"
-"    -c κλειδί       καθαρίζει την τρέχουσα τιμή του κλειδιού \n"
-"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid ""
@@ -1329,24 +1271,24 @@ msgstr ""
 #: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
 #: ../src/jarabe/journal/volumestoolbar.py:304
 msgid "Warning"
-msgstr "Προειδοποίηση"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:374
 #: ../src/jarabe/controlpanel/sectionview.py:45
 msgid "Changes require restart"
-msgstr "Οι αλλαγές απαιτούν επανεκκίνηση"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:379
 msgid "Cancel changes"
-msgstr "Ακύρωση αλλαγών"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:384
 msgid "Later"
-msgstr "Αργότερα"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:388
 msgid "Restart now"
-msgstr "Επανεκκίνηση τώρα"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
 msgid "An activity is not responding."
@@ -1361,52 +1303,48 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:94
 #, python-format
 msgid "Search in %s"
-msgstr "Αναζήτηση στο %s"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
-msgstr "Ρυθμίσεις"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:349
 msgid "Done"
-msgstr "Ολοκληρώθηκε"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
 msgid "Ok"
-msgstr "Εντάξει"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:340
 #, python-format
 msgid "Version %s"
-msgstr "Έκδοση %s"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:424
 #: ../src/jarabe/journal/listview.py:566 ../src/jarabe/journal/iconview.py:301
 msgid "Clear search"
-msgstr "Εκκαθάριση αναζήτησης"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:510
 msgid "No matching activities"
-msgstr "Δεν υπάρχουν δραστηριότητες που να ταιριάζουν"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:546
 msgid "Confirm erase"
-msgstr "Επιβεβαίωση διαγραφής"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:548
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr "Επιβεβαίωση διαγραφής: Θέλετε να διαγραφεί μόνιμα το %s;"
+msgstr ""
 
-# self._stop_item = MenuItem(_('Stop download'), 'stock-close')
-# TODO: Implement stopping downloads
-# self._stop_item.connect('activate', self._stop_item_activate_cb)
-# self.append_menu_item(self._stop_item)
 #: ../src/jarabe/desktop/activitieslist.py:552
 #: ../src/jarabe/frame/clipboardmenu.py:65
 #: ../src/jarabe/view/viewsource.py:383
 msgid "Keep"
-msgstr "Διατήρηση"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:555
 #: ../src/jarabe/desktop/activitieslist.py:625
@@ -1417,42 +1355,40 @@ msgstr "Διατήρηση"
 #: ../src/jarabe/journal/journaltoolbox.py:812
 #: ../src/jarabe/journal/palettes.py:138 ../src/jarabe/journal/palettes.py:161
 msgid "Erase"
-msgstr "Διαγραφή"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:641
 msgid "Remove favorite"
-msgstr "Αφαίρεση αγαπημένου"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:645
 msgid "Make favorite"
-msgstr "Δημιουργία αγαπημένου"
+msgstr ""
 
-# TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:209
 msgid "Freeform"
-msgstr "Ελεύθερο σχήμα"
+msgstr ""
 
-# TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:305
 msgid "Ring"
-msgstr "Δακτύλιος"
+msgstr ""
 
 #. TRANS: label for the spiral layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:469
 msgid "Spiral"
-msgstr "Σπείρα"
+msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:537
 msgid "Box"
-msgstr "Πλαίσιο"
+msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:580
 msgid "Triangle"
-msgstr "Τρίγωνο"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
@@ -1464,41 +1400,41 @@ msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:387
 msgid "Registration Failed"
-msgstr "Η καταχώρηση απέτυχε"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:390
 msgid "Registration Successful"
-msgstr "Καταχώρηση Επιτυχής"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:391
 msgid "You are now registered with your school server."
-msgstr "Είσαι τώρα καταχωρημένος(-η) στον εξυπηρετητή του σχολείου σου."
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:680
 msgid "Register"
-msgstr "Καταχώρηση"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:682
 msgid "Register again"
-msgstr "Καταχώρηση ξανά"
+msgstr ""
 
 #: ../src/jarabe/desktop/homewindow.py:255
 #: ../src/jarabe/desktop/viewtoolbar.py:73
 #: ../src/jarabe/frame/zoomtoolbar.py:57 ../src/jarabe/model/screenshot.py:63
 #: ../src/jarabe/view/viewhelp.py:76
 msgid "Home"
-msgstr "Αρχική"
+msgstr ""
 
 #: ../src/jarabe/desktop/homewindow.py:262
 #: ../src/jarabe/frame/zoomtoolbar.py:53 ../src/jarabe/model/screenshot.py:61
 #: ../src/jarabe/view/viewhelp.py:73
 msgid "Group"
-msgstr "Φίλοι"
+msgstr ""
 
 #: ../src/jarabe/desktop/homewindow.py:269
 #: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Neighborhood"
-msgstr "Γειτονιά"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:92
 #, python-format
@@ -1506,174 +1442,169 @@ msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
-"Ένα κλειδί κωδικοποίησης είναι απαραίτητο για\n"
-" το ασύρματο δίκτυο '%s'."
 
 #: ../src/jarabe/desktop/keydialog.py:141
 msgid "Key Type:"
-msgstr "Τύπος Κλειδιού:"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:161
 msgid "Authentication Type:"
-msgstr "Τύπος Πιστοποίησης:"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:224
 msgid "WPA & WPA2 Personal"
-msgstr "WPA & WPA2 Ιδιωτικό"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:233
 msgid "Wireless Security:"
-msgstr "Ασφάλεια ασύρματου δικτύου:"
+msgstr ""
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
 #: ../src/jarabe/journal/journaltoolbox.py:659
 #: ../src/jarabe/journal/palettes.py:83 ../src/jarabe/view/palettes.py:98
 msgid "Resume"
-msgstr "Συνέχεια"
+msgstr ""
 
 #: ../src/jarabe/desktop/meshbox.py:89
 #: ../src/jarabe/frame/activitiestray.py:208
 msgid "Join"
-msgstr "Σύνδεση"
+msgstr ""
 
 #: ../src/jarabe/desktop/networkviews.py:499
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr "Δίκτυο Ad-hoc %d"
+msgstr ""
 
 #: ../src/jarabe/desktop/networkviews.py:643
 #, python-format
 msgid "Mesh Network %d"
-msgstr "Δίκτυο πλέγματος %d"
+msgstr ""
 
 #: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
-msgstr "Αδυναμία σύνδεσης στον διακομιστή."
+msgstr ""
 
 #: ../src/jarabe/desktop/schoolserver.py:151
 msgid "The server could not complete the request."
-msgstr "Ο διακομιστής δε μπόρεσε να ολοκληρώσει το αίτημα."
+msgstr ""
 
 #: ../src/jarabe/desktop/viewtoolbar.py:95
 msgid "List view"
-msgstr "Προβολή λίστας"
+msgstr ""
 
 #: ../src/jarabe/desktop/viewtoolbar.py:97
 #: ../src/jarabe/desktop/viewtoolbar.py:196
 #: ../src/jarabe/desktop/viewtoolbar.py:210
 #, python-format
-#, python-format,
 msgid "<Ctrl>%d"
-msgstr "<Ctrl>%d"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:213
 #: ../src/jarabe/frame/activitiestray.py:657
 msgid "Decline"
-msgstr "Απόρριψη"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:598
 #, python-format
 msgid "%dB"
-msgstr "%dB"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:600
 #, python-format
 msgid "%dKB"
-msgstr "%dKB"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:602
 #, python-format
 msgid "%dMB"
-msgstr "%dMB"
+msgstr ""
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:620
 #, python-format
 msgid "%s of %s"
-msgstr "%s από %s"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:634
 #, python-format
-#, python-format,
 msgid "Transfer from %s"
-msgstr "Μεταφορά από το%s"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:648
 #: ../extensions/cpsection/backup/view.py:324
 msgid "Accept"
-msgstr "Αποδοχή"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:722
 #: ../src/jarabe/frame/activitiestray.py:736
 #: ../src/jarabe/frame/activitiestray.py:878
 msgid "Dismiss"
-msgstr "Απομάκρυνση"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:750
 msgid "The other participant canceled the file transfer"
-msgstr "Το κα"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:800
 #, python-format
-#, python-format,
 msgid "Transfer to %s"
-msgstr "Μεταφορά στο%s"
+msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:54
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr "Αφαίρεση"
+msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:60
 #: ../src/jarabe/frame/clipboardmenu.py:83
 msgid "Open"
-msgstr "Άνοιγμα"
+msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:88
 msgid "Open with"
-msgstr "Άνοιγμα με"
+msgstr ""
 
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
 msgid "%s clipping"
-msgstr "%s στο πρόχειρο"
+msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
-msgstr "F1"
+msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
-msgstr "F2"
+msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
-msgstr "F3"
+msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:62 ../src/jarabe/model/screenshot.py:69
 msgid "Activity"
-msgstr "Δραστηριότητα"
+msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
-msgstr "F4"
+msgstr ""
 
 #: ../src/jarabe/intro/window.py:135
 msgid "Name:"
-msgstr "Όνομα:"
+msgstr ""
 
 #: ../src/jarabe/intro/window.py:174
 msgid "Click to change color:"
-msgstr "Κάντε κλικ για να αλλάξετε χρώμα:"
+msgstr ""
 
 #: ../src/jarabe/intro/window.py:337 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
-msgstr "Πίσω"
+msgstr ""
 
 #: ../src/jarabe/intro/window.py:352
 msgid "Next"
-msgstr "Επόμενο"
+msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:38
 msgid "Select grade:"
@@ -1728,7 +1659,7 @@ msgstr ""
 #: ../src/jarabe/journal/palettes.py:163
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
-msgstr "Θέλετε να διαγράψετε μόνιμα το \"%s\";"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:296
 #: ../src/jarabe/journal/listmodel.py:185 ../src/jarabe/journal/model.py:794
@@ -1736,47 +1667,47 @@ msgstr "Θέλετε να διαγράψετε μόνιμα το \"%s\";"
 #: ../src/jarabe/journal/volumestoolbar.py:134
 #: ../src/jarabe/journal/iconmodel.py:110
 msgid "Untitled"
-msgstr "Χωρίς τίτλο"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:366
 msgid "No preview"
-msgstr "Χωρίς προεπισκόπηση"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:386
 #, python-format
 msgid "Kind: %s"
-msgstr "Είδος: %s"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:387
 #, python-format
 msgid "Date: %s"
-msgstr "Ημερομηνία: %s"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:388
 #, python-format
 msgid "Size: %s"
-msgstr "Μέγεθος: %s"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:412
 #: ../src/jarabe/journal/misc.py:131
 msgid "No date"
-msgstr "Χωρίς ημερομηνία"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:421
 msgid "Participants:"
-msgstr "Συμμετέχοντες:"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:459
 msgid "Description:"
-msgstr "Περιγραφή:"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:465
 msgid "Tags:"
-msgstr "Ετικέτες:"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:470
 msgid "Comments:"
-msgstr "Σχόλια:"
+msgstr ""
 
 #: ../src/jarabe/journal/journalactivity.py:182
 #: ../src/jarabe/journal/journaltoolbox.py:94
@@ -1784,120 +1715,120 @@ msgstr "Σχόλια:"
 #: ../src/jarabe/journal/volumestoolbar.py:349
 #: ../src/jarabe/view/viewhelp.py:79
 msgid "Journal"
-msgstr "Ημερολόγιο"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:103
 msgid "Favorite entries"
-msgstr "Καταχωρίσεις αγαπημένων"
+msgstr ""
 
 #. TRANS: Item on a palette that filters by entry type.
 #: ../src/jarabe/journal/journaltoolbox.py:112
 #: ../src/jarabe/journal/journaltoolbox.py:403
 #: ../src/jarabe/journal/journaltoolbox.py:479
 msgid "Anything"
-msgstr "Οτιδήποτε"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:118
 #: ../src/jarabe/journal/journaltoolbox.py:165
 #: ../src/jarabe/journal/journaltoolbox.py:483
 msgid "Anytime"
-msgstr "Οποτεδήποτε"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:172
 msgid "Since yesterday"
-msgstr "Από χθες"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:175
 msgid "Past week"
-msgstr "Περασμένη εβδομάδα"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:178
 msgid "Past month"
-msgstr "Περασμένος μήνας"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:181
 msgid "Past year"
-msgstr "Περασμένος χρόνος"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:521
 #: ../src/jarabe/journal/palettes.py:105
 msgid "Copy to"
-msgstr "Αντιγραφή στο"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:529
 #: ../src/jarabe/journal/palettes.py:116 ../src/jarabe/view/viewsource.py:379
 msgid "Duplicate"
-msgstr "Δημιουργία αντίγραφου"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:535
 msgid "Refresh"
-msgstr "Ανανέωση"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:577
 #: ../src/jarabe/journal/palettes.py:156 ../src/jarabe/journal/palettes.py:374
 #: ../src/jarabe/journal/volumestoolbar.py:312
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr "Λάθος κατά την αντιγραφή της καταχώρησης. %s"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:578
 #: ../src/jarabe/journal/palettes.py:157 ../src/jarabe/journal/palettes.py:375
 #: ../src/jarabe/journal/volumestoolbar.py:313
 msgid "Error"
-msgstr "Λάθος"
+msgstr ""
 
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:662
 #: ../src/jarabe/journal/palettes.py:86
 msgid "Start"
-msgstr "Έναρξη"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:682
 #: ../src/jarabe/journal/palettes.py:100 ../src/jarabe/journal/palettes.py:513
 msgid "No activity to start entry"
-msgstr "Δεν υπάρχει δραστηριότητα για την έναρξη της καταχώρησης"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 msgid "Sort view"
-msgstr "Προβολή ταξινόμησης"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:711
 msgid "Sort by date modified"
-msgstr "Ταξινόμηση κατά ημερομηνία τροποποίησης"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:712
 msgid "Sort by date created"
-msgstr "Ταξινόμηση κατά ημερομηνία δημιουργίας"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:713
 msgid "Sort by size"
-msgstr "Ταξινόμηση κατά μέγεθος"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:778
 msgid "Deselect all"
-msgstr "Αποεπιλογή όλων"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:791
 msgid "Select all"
-msgstr "Επιλογή όλων"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:817
 #, python-format
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
-msgstr[0] "Θέλετε να σβήσετε %d καταχώριση;"
-msgstr[1] "Θέλετε να σβήσετε %d καταχωρίσεις"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:831
 #: ../src/jarabe/journal/palettes.py:378
 msgid "Copy"
-msgstr "Αντιγραφή"
+msgstr ""
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:882
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr "Επιλεγμένα %(selected)d από %(total)d"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:917
 msgid "Select filter"
@@ -1905,342 +1836,334 @@ msgstr ""
 
 #: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
 msgid "Your Journal is empty"
-msgstr "Το ημερολόγιο είναι κενό"
+msgstr ""
 
 #: ../src/jarabe/journal/listview.py:476 ../src/jarabe/journal/iconview.py:215
 msgid "Your documents folder is empty"
-msgstr "Ο φάκελος των αρχείων είναι κενός"
+msgstr ""
 
 #: ../src/jarabe/journal/listview.py:478 ../src/jarabe/journal/iconview.py:217
 msgid "The device is empty"
-msgstr "Η συσκευή είναι κενή"
+msgstr ""
 
 #: ../src/jarabe/journal/listview.py:480 ../src/jarabe/journal/iconview.py:220
 msgid "No matching entries"
-msgstr "Δεν βρέθηκαν καταχωρήσεις που να ταιριάζουν"
+msgstr ""
 
 #: ../src/jarabe/journal/misc.py:313
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr "Παλαιότερη Έκδοση της Δραστηριότητας %s"
+msgstr ""
 
 #: ../src/jarabe/journal/misc.py:314
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr "Θέλεις να υποβαθμιστώ στην έκδοση %s"
+msgstr ""
 
 #: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
-msgstr "Το ημερολόγιο είναι πλήρες"
+msgstr ""
 
 #: ../src/jarabe/journal/modalalert.py:68
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
-"Παρακαλώ διαγράψτε μερικές παλιές καταχωρήσεις του ημερολογίου για να "
-"εξοικονομήσετε χώρο για νέες."
 
 #: ../src/jarabe/journal/modalalert.py:82
 msgid "Show Journal"
-msgstr "Εμφάνιση ημερολογίου"
+msgstr ""
 
 #: ../src/jarabe/journal/objectchooser.py:171
 msgid "Choose an object"
-msgstr "Επιλογή ενός αντικειμένου"
+msgstr ""
 
 #: ../src/jarabe/journal/objectchooser.py:176
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr "Επιλογή ενός αντικειμένου για άνοιγμα με τη δραστηριότητα %s"
+msgstr ""
 
 #: ../src/jarabe/journal/objectchooser.py:184
 #: ../src/jarabe/view/viewhelp.py:335 ../src/jarabe/view/viewsource.py:579
 msgid "Close"
-msgstr "Κλείσιμο"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:84
 msgid "Resume with"
-msgstr "Συνέχεια με"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:87
 msgid "Start with"
-msgstr "Έναρξη με"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:124
 msgid "Send to"
-msgstr "Αποστολή στο"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:133
 msgid "View Details"
-msgstr "Προβολή λεπτομερειών"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:193
 msgid "Entries without a file cannot be sent."
-msgstr "Καταχωρίσεις χωρίς αρχείο δεν μπορούν να σταλούν."
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:272
 #: ../src/jarabe/journal/volumestoolbar.py:214
 msgid "Documents"
-msgstr "Έγγραφα"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:363 ../src/jarabe/journal/palettes.py:423
 #: ../src/jarabe/journal/volumestoolbar.py:303
 msgid "Entries without a file cannot be copied."
-msgstr "Καταχωρήσεις χωρίς αρχείο δεν μπορούν να αντιγραφούν."
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:383
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] "Θέλετε να αντιγράψετε %d καταχώριση;"
-msgstr[1] "Θέλετε να αντιγράψετε %d καταχωρίσεις;"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/jarabe/journal/palettes.py:408
 msgid "Clipboard"
-msgstr "Πρόχειρο"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:478
 msgid "No friends present"
-msgstr "Δεν εμφανίζονται φίλοι"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:483
 msgid "No valid connection found"
-msgstr "Δεν βρέθηκε έγκυρη σύνδεση"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:511
 msgid "No activity to resume entry"
-msgstr "Δεν υπάρχει δραστηριότητα για τη συνέχιση της καταχώρησης"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:580 ../src/jarabe/view/palettes.py:133
 msgid "Stop"
-msgstr "Κλείσιμο"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:585
 #: ../extensions/cpsection/backup/view.py:212
 #: ../extensions/cpsection/backup/view.py:265
 msgid "Continue"
-msgstr "Συνέχεια"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:622
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr "%(index)d από %(total)d : %(object_title)s"
+msgstr ""
 
 #: ../src/jarabe/journal/volumestoolbar.py:375
 #: ../src/jarabe/view/palettes.py:251 ../src/jarabe/view/palettes.py:317
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr "%(free_space)d MB ελεύθερα"
+msgstr ""
 
 #: ../src/jarabe/model/desktop.py:85
 #, python-format
-#, python-format,
 msgid "Favorites view %d"
-msgstr "Προβολή αγαπημένων %d"
+msgstr ""
 
 #: ../src/jarabe/model/network.py:217
 msgid "The reason for the device state change is unknown."
-msgstr "Η αιτία για την αλλαγή κατάστασης της συσκευής είναι άγνωστη."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:219
 msgid "The state change is normal."
-msgstr "Η αλλαγή κατάστασης είναι φυσιολογική."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:221
 msgid "The device is now managed."
-msgstr "Η συσκευή τώρα βρίσκεται υπό διαχείριση."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:223
 msgid "The device is no longer managed."
-msgstr "Η συσκευή δε βρίσκεται υπό διαχείριση πια."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:225
 msgid "The device could not be readied for configuration."
-msgstr "Η συσκευή δεν μπορεί να διαβαστεί για να ρυθμιστεί."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:227
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
-"Η ρύθμιση της IP δε μπορεί να δεσμευθεί (δεν υπάρχουν διευθύνσεις, τέλος "
-"χρόνου, κλπ)."
 
 #: ../src/jarabe/model/network.py:230
 msgid "The IP configuration is no longer valid."
-msgstr "Η ρύθμιση IP δεν ισχύει πια."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:232
 msgid "Secrets were required, but not provided."
-msgstr "Τα συνθηματικά είναι απαραίτητα, αλλά δε δόθηκαν."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:234
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
-"Ο πελάτης 802.1X αποσυνδέθηκε από το σημείο πρόσβασης ή το διακομιστή "
-"πιστοποίησης."
 
 #: ../src/jarabe/model/network.py:237
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr "Οι ρυθμίσεις του πελάτη 802.1X απέτυχαν."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:239
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr "Ο πελάτης 802.1X έφυγε ή έκλεισε απρόσμενα."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:241
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr "Ο πελάτης 802.1X δεν πιστοποιήθηκε έγκαιρα."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:243
 msgid "The PPP service failed to start within the allowed time."
-msgstr "Η υπηρεσία PPP απέτυχε να ξεκινήσει μέσα στον επιτρεπόμενο χρόνο."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:245
 msgid "The PPP service disconnected unexpectedly."
-msgstr "Η υπηρεσία PPP αποσυνδέθηκε απρόσμενα."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:247
 msgid "The PPP service quit or failed unexpectedly."
-msgstr "Η υπηρεσία PPP έκλεισε ή απέτυχε απρόσμενα."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:249
 msgid "The DHCP service failed to start within the allowed time."
-msgstr "Η υπηρεσία DHCP απέτυχε να ξεκινήσει μέσα στον επιτρεπόμενο χρόνο."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:251
 msgid "The DHCP service reported an unexpected error."
-msgstr "Η υπηρεσία DHCP ανάφερε ένα μη αναμενόμενο σφάλμα."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:253
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr "Η υπηρεσία DHCP έκλεισε ή απέτυχε απρόσμενα."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:255
 msgid "The shared connection service failed to start."
-msgstr "Η υπηρεσία κοινόχρηστης σύνδεσης απέτυχε να ξεκινήσει."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:257
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr "Η υπηρεσία κοινόχρηστης σύνδεσης έκλεισε ή απέτυχε απρόσμενα."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:260
 msgid "The AutoIP service failed to start."
-msgstr "Η υπηρεσία αυτόματης διευθυνσιοδότησης απέτυχε να ξεκινήσει."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:262
 msgid "The AutoIP service reported an unexpected error."
 msgstr ""
-"Η υπηρεσία αυτόματης διευθυνσιοδότησης ανάφερε ένα μη αναμενόμενο σφάλμα."
 
 #: ../src/jarabe/model/network.py:264
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr "Η υπηρεσία αυτόματης διευθυνσιοδότησης έκλεισε ή απέτυχε απρόσμενα."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:266
 msgid "Dialing failed because the line was busy."
-msgstr "Η κλήση αριθμού απέτυχε γιατί η γραμμή ήταν κατηλειμμένη."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:268
 msgid "Dialing failed because there was no dial tone."
-msgstr "Η κλήση αριθμού απέτυχε γιατί δεν υπήρχε ήχος κλήσης."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:270
 msgid "Dialing failed because there was no carrier."
-msgstr "Η κλήση αριθμού απέτυχε επειδή δεν υπήρχε φέρον σήμα."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:272
 msgid "Dialing timed out."
-msgstr "Η κλήση βγήκε εκτός χρονικού ορίου."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:274
 msgid "Dialing failed."
-msgstr "Η κλήση απέτυχε."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:276
 msgid "Modem initialization failed."
-msgstr "Η αρχικοποίηση του αποδιαμορφωτή απέτυχε."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:278
 msgid "Failed to select the specified GSM APN"
-msgstr "Αποτυχία επιλογής του καθορισμένου σημείου πρόσβασης GSM"
+msgstr ""
 
 #: ../src/jarabe/model/network.py:280
 msgid "Not searching for networks."
-msgstr "Δε γίνεται αναζήτηση για δίκτυα."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:282
 msgid "Network registration was denied."
-msgstr "Δεν επιτράπηκε η καταχώρηση στο δίκτυο."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:284
 msgid "Network registration timed out."
-msgstr "Η καταχώρηση στο δίκτυο βγήκε εκτός ορίου χρόνου."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:286
 msgid "Failed to register with the requested GSM network."
-msgstr "Απέτυχε η καταχώρηση στο δίκτυο GSM που ζητήθηκε."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:288
 msgid "PIN check failed."
-msgstr "Ο έλεγχος PIN απέτυχε."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:290
 msgid "Necessary firmware for the device may be missing."
-msgstr "Το απαραίτητο υλικολογισμικό της συσκευής ίσως να λείπει."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:292
 msgid "The device was removed."
-msgstr "Η συσκευή απομακρύνθηκε."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:294
 msgid "NetworkManager went to sleep."
-msgstr "Ο Διαχειριστής Δικτύου πήγε για ύπνο."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:296
 msgid "The device's active connection was removed or disappeared."
-msgstr "Η ενεργή σύνδεση της συσκευής απομακρύνθηκε ή χάθηκε."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:299
 msgid "A user or client requested the disconnection."
-msgstr "Ένας χρήστης ή πελάτης ζήτησε την αποσύνδεση."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:301
 msgid "The device's carrier/link changed."
-msgstr "Η σύνδεση/σήμα της συσκευής άλλαξε."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:303
 msgid "The device's existing connection was assumed."
-msgstr "Η υπάρχουσα σύνδεση της συσκευής έγινε δεκτή."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:305
 msgid "The supplicant is now available."
-msgstr "Ο αιτών είναι τώρα διαθέσιμος."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:307
 msgid "The modem could not be found."
-msgstr "Αδύνατη η εύρεση του modem."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:309
 msgid "The Bluetooth connection failed or timed out."
-msgstr "Η σύνδεση Bluetooth απέτυχε ή έληξε ο χρόνος αναμονής."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:311
 msgid "Unused."
-msgstr "Αχρησιμοποίητο."
+msgstr ""
 
 #: ../src/jarabe/model/screenshot.py:59 ../src/jarabe/view/viewhelp.py:70
 msgid "Mesh"
-msgstr "Πλεγματοειδές δίκτυο"
+msgstr ""
 
 #: ../src/jarabe/model/screenshot.py:72
 msgid "Screenshot"
-msgstr "Στιγμιότυπο οθόνης"
+msgstr ""
 
 #: ../src/jarabe/model/screenshot.py:74
 #, python-format
 msgid "Screenshot of \"%s\""
-msgstr "Στιγμιότυπο οθόνης του «%s»"
+msgstr ""
 
 #: ../src/jarabe/view/alerts.py:38 ../src/jarabe/view/alerts.py:48
 msgid "Activity launcher"
@@ -2259,50 +2182,50 @@ msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
-msgstr "Διαγραφή φίλου/ης"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:76
 msgid "Make friend"
-msgstr "Να γίνει φίλος/η"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:108
 msgid "Shutdown"
-msgstr "Τερματισμός"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:113
 msgid "Restart"
-msgstr "Επανεκκίνηση"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:119
 msgid "Logout"
-msgstr "Αποσύνδεση"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:124
 msgid "My Settings"
-msgstr "Ρυθμίσεις"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:183
 #, python-format
 msgid "Invite to %s"
-msgstr "Πρόσκληση στην %s"
+msgstr ""
 
 #: ../src/jarabe/view/launcher.py:159
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr "Η <b>%s</b> απέτυχε να ξεκινήσει."
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:53
 msgid "Starting..."
-msgstr "Εκκίνηση..."
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:63
 msgid "Activity failed to start"
-msgstr "Η δραστηριότητα απέτυχε να ξεκινήσει"
+msgstr ""
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:105
 msgid "View Source"
-msgstr "Προβολή πηγής"
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
@@ -2310,12 +2233,12 @@ msgstr ""
 
 #: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
-msgstr "Έναρξη νέου"
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:266
 msgctxt "Volume"
 msgid "Remove"
-msgstr "Αφαίρεση"
+msgstr ""
 
 #: ../src/jarabe/view/viewhelp.py:304
 msgid "Help Manual"
@@ -2332,7 +2255,7 @@ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:364
 msgid "Instance Source"
-msgstr "Στιγμιότυπο πηγής"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:392
 #, python-format
@@ -2348,9 +2271,8 @@ msgid "Duplicating activity..."
 msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:447
-#, fuzzy
 msgid "Duplicated"
-msgstr "Δημιουργία αντίγραφου"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
@@ -2366,26 +2288,25 @@ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
-msgstr "Πηγή"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:542
 msgid "Activity Bundle Source"
-msgstr "Πηγή δέσμης δραστηριοτήτων"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:561
 msgid "Sugar Toolkit Source"
-msgstr "Πηγή Εργαλειοθηκών του Sugar"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:568
 #, python-format
-#, python-format,
 msgid "View source: %s"
-msgstr "Προβολή πηγής: %s"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:569
 #, python-format
 msgid "View source: %r"
-msgstr "Προβολή πηγής: %r"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:809
 msgid "Please select a file in the left panel."
@@ -2488,82 +2409,3 @@ msgstr ""
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
 msgstr ""
-
-#~ msgid "Value must be an integer."
-#~ msgstr "Η τιμή πρέπει να είναι ακέραιος αριθμός."
-
-#~ msgid "Modem Configuration"
-#~ msgstr "Ρύθμιση του modem"
-
-#~ msgid "Configure your Web Services"
-#~ msgstr "Διαμόρφωση των διαδικτυακών υπηρεσιών σας"
-
-#~ msgid "Error timezone does not exist."
-#~ msgstr "Λάθος η ζώνη ώρας δεν υπάρχει."
-
-#~ msgid "Turn off the wireless radio to save battery life"
-#~ msgstr ""
-#~ "Απενεργοποιήστε την ασύρματη εκπομπή για να εξοικονομήσετε ενέργεια στην "
-#~ "μπαταρία"
-
-#~ msgid "Discard network history if you have trouble connecting to the network"
-#~ msgstr "Διαγράψτε το ιστορικού δικτύου εάν έχετε προβλήματα σύνδεσης στο δίκτυο"
-
-#~ msgid "Discard network history"
-#~ msgstr "Διαγραφή ιστορικού δικτύου"
-
-#~ msgid "Create a connection in the control panel."
-#~ msgstr "Δημιουργία σύνδεσης στον πίνακα ελέγχου."
-
-#~ msgid "My Speakers"
-#~ msgstr "Τα ηχεία μου"
-
-#~ msgid "Unmute"
-#~ msgstr "Άρση σίγασης"
-
-#~ msgid "Mute"
-#~ msgstr "Σίγαση"
-
-#~ msgid "To apply your changes you have to restart Sugar.\n"
-#~ msgstr "Για να εφαρμοστούν οι αλλαγές σου θα πρέπει να επανεκκινήσεις το Sugar.\n"
-
-#~ msgid "Anyone"
-#~ msgstr "Οποιοσδήποτε"
-
-#~ msgid "My friends"
-#~ msgstr "Οι φίλοι μου"
-
-#~ msgid "My class"
-#~ msgstr "Η τάξη μου"
-
-#~ msgid "<Ctrl>1"
-#~ msgstr "<Ctrl>1"
-
-#~ msgid "Update your activities to ensure compatibility with your new software"
-#~ msgstr ""
-#~ "Ενημερώστε τις δραστηριότητές σας για να βεβαιωθείτε για τη συμβατότητα τους "
-#~ "με το νέο σας λογισμικό"
-
-#~ msgid "Check now"
-#~ msgstr "Έλεγχος τώρα"
-
-#~ msgid "Sugar in a window"
-#~ msgstr "Το Sugar σε παράθυρο"
-
-#~ msgid "Software update"
-#~ msgstr "Ενημέρωση λογισμικού"
-
-#~ msgid "Search"
-#~ msgstr "Αναζήτηση"
-
-#~ msgid "Additional directories which can contain updated translations."
-#~ msgstr ""
-#~ "Πρόσθετοι κατάλογοι οι οποίοι μπορεί να περιέχουν ενημερωμένες μεταφράσεις."
-
-#~ msgid "Directory to search for translations"
-#~ msgstr "Κατάλογος για αναζήτηση μεταφράσεων"
-
-#~ msgid "Error in extreme pm argument, use on/off."
-#~ msgstr ""
-#~ "Σφάλμα στην παράμετρο ακραίας διαχείρισης ενέργειας, χρησιμοποιήστε ανοιχτό "
-#~ "ή κλειστό."

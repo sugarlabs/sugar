@@ -2475,3 +2475,66 @@ msgstr ""
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
 msgstr ""
+
+#~ msgid "Value must be an integer."
+#~ msgstr "E balor mester ta un number hinté."
+
+#~ msgid "Modem Configuration"
+#~ msgstr "Konfigurashon di modem"
+
+#~ msgid "Configure your Web Services"
+#~ msgstr "Konfigurá bo servisionan di web"
+
+#~ msgid "Error timezone does not exist."
+#~ msgstr "Eror di zona di tempu no ta eksistí."
+
+#~ msgid "Turn off the wireless radio to save battery life"
+#~ msgstr "Paga e radio sin waya pa spar bateria"
+
+#~ msgid "Discard network history if you have trouble connecting to the network"
+#~ msgstr "Deskartá historia di ret si bo tin problema pa konektá ku e ret"
+
+#~ msgid "Discard network history"
+#~ msgstr "Deskartá historia di ret"
+
+#~ msgid "Create a connection in the control panel."
+#~ msgstr "Krea un konekshon den control panel."
+
+#~ msgid "My Speakers"
+#~ msgstr "Mi spikernan"
+
+#~ msgid "Unmute"
+#~ msgstr "Desaktivá estado di silensio"
+
+#~ msgid "Mute"
+#~ msgstr "Silensiá"
+
+#~ msgid "To apply your changes you have to restart Sugar.\n"
+#~ msgstr "Pa apliká bo kambionan bo tin ku start Sugar di nobo.\n"
+
+#~ msgid "Anyone"
+#~ msgstr "Kualke hende"
+
+#~ msgid "My friends"
+#~ msgstr "Mi amigunan"
+
+#~ msgid "My class"
+#~ msgstr "Mi klas"
+
+#~ msgid "<Ctrl>1"
+#~ msgstr "<Ctrl>1"
+
+#~ msgid "Update your activities to ensure compatibility with your new software"
+#~ msgstr "Aktualisá bo aktividatnan pa hasi nan kompatibel ku e programa nobo"
+
+#~ msgid "Check now"
+#~ msgstr "Kontrolá awòr"
+
+#~ msgid "Software update"
+#~ msgstr "Aktualisashon di programa"
+
+#~ msgid "Search"
+#~ msgstr "Buska"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Eror den e argumento pm ekstremo, usa sende/paga."

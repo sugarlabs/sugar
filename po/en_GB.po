@@ -2474,3 +2474,78 @@ msgstr "Restore realised successfully."
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
 msgstr "Clear notifications"
+
+#~ msgid "Value must be an integer."
+#~ msgstr "Value must be an integer."
+
+#~ msgid "Modem Configuration"
+#~ msgstr "Modem Configuration"
+
+#~ msgid "Configure your Web Services"
+#~ msgstr "Configure your Web Services"
+
+#~ msgid "Select where you want retrive your restore"
+#~ msgstr "Select where you want retrieve your restore"
+
+#~ msgid "Error timezone does not exist."
+#~ msgstr "Error timezone does not exist."
+
+#~ msgid "Turn off the wireless radio to save battery life"
+#~ msgstr "Turn off the wireless radio to save battery life"
+
+#~ msgid "Discard network history if you have trouble connecting to the network"
+#~ msgstr "Discard network history if you have trouble connecting to the network"
+
+#~ msgid "Discard network history"
+#~ msgstr "Discard network history"
+
+#~ msgid "Create a connection in the control panel."
+#~ msgstr "Create a connection in the control panel."
+
+#~ msgid "My Speakers"
+#~ msgstr "My Speakers"
+
+#~ msgid "Unmute"
+#~ msgstr "Unmute"
+
+#~ msgid "Mute"
+#~ msgstr "Mute"
+
+#~ msgid "To apply your changes you have to restart Sugar.\n"
+#~ msgstr "To apply your changes you have to restart Sugar.\n"
+
+#~ msgid "Anyone"
+#~ msgstr "Anyone"
+
+#~ msgid "My friends"
+#~ msgstr "My friends"
+
+#~ msgid "My class"
+#~ msgstr "My class"
+
+#~ msgid "<Ctrl>1"
+#~ msgstr "<Ctrl>1"
+
+#~ msgid "Update your activities to ensure compatibility with your new software"
+#~ msgstr "Update your activities to ensure compatibility with your new software"
+
+#~ msgid "Check now"
+#~ msgstr "Check now"
+
+#~ msgid "Sugar in a window"
+#~ msgstr "Sugar in a window"
+
+#~ msgid "Software update"
+#~ msgstr "Software update"
+
+#~ msgid "Search"
+#~ msgstr "Search"
+
+#~ msgid "Additional directories which can contain updated translations."
+#~ msgstr "Additional directories which can contain updated translations."
+
+#~ msgid "Directory to search for translations"
+#~ msgstr "Directory to search for translations"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Error in extreme pm argument, use on/off."

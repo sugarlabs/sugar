@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-03-28 12:57+0000\n"
+"PO-Revision-Date: 2017-06-19 20:08+0000\n"
 "Last-Translator: GeeKrypter <psramaraju@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: te\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1490705867.000000\n"
+"X-POOTLE-MTIME: 1497902905.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -28,7 +28,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
 msgid "Backup URL"
-msgstr ""
+msgstr "బక్కుకుప్ యుఆర్ఎల్"
 
 #: ../data/org.sugarlabs.gschema.xml.h:4 ../data/sugar.schemas.in.h:12
 msgid "URL where the backup is saved to."
@@ -729,7 +729,7 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem"
-msgstr ""
+msgstr "మోడెమ్"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
@@ -1423,7 +1423,7 @@ msgstr "త్రిభుజం"
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
-msgstr ""
+msgstr "నమోదు"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
@@ -1965,7 +1965,7 @@ msgstr[1] ""
 
 #: ../src/jarabe/journal/palettes.py:408
 msgid "Clipboard"
-msgstr ""
+msgstr "క్లిప్బోర్డు"
 
 #: ../src/jarabe/journal/palettes.py:478
 msgid "No friends present"
@@ -2154,7 +2154,7 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:292
 msgid "The device was removed."
-msgstr ""
+msgstr "పరికరం తీసివేయబడింది."
 
 #: ../src/jarabe/model/network.py:294
 msgid "NetworkManager went to sleep."
@@ -2242,7 +2242,7 @@ msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:124
 msgid "My Settings"
-msgstr ""
+msgstr "నా సెట్టింగులు"
 
 #: ../src/jarabe/view/buddymenu.py:183
 #, python-format
