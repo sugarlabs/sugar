@@ -123,9 +123,9 @@ def setup_view_source(activity):
                 'org.freedesktop.DBus.Error.UnknownMethod',
                 'org.freedesktop.DBus.Python.NotImplementedError']
             if e.get_dbus_name() not in expected_exceptions:
-                logging.exception('Exception occured in HandleViewSource():')
+                logging.exception('Exception occurred in HandleViewSource():')
         except Exception:
-            logging.exception('Exception occured in HandleViewSource():')
+            logging.exception('Exception occurred in HandleViewSource():')
 
     window_xid = activity.get_xid()
     if window_xid is None:
@@ -149,9 +149,9 @@ def setup_view_source(activity):
                 'org.freedesktop.DBus.Error.UnknownMethod',
                 'org.freedesktop.DBus.Python.NotImplementedError']
             if e.get_dbus_name() not in expected_exceptions:
-                logging.exception('Exception occured in GetDocumentPath():')
+                logging.exception('Exception occurred in GetDocumentPath():')
         except Exception:
-            logging.exception('Exception occured in GetDocumentPath():')
+            logging.exception('Exception occurred in GetDocumentPath():')
 
     if bundle_path is None and document_path is None:
         _logger.debug('Activity without bundle_path nor document_path')

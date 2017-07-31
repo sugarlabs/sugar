@@ -122,7 +122,7 @@ class _UpdateChecker(GObject.GObject):
         try:
             version = NormalizedVersion(document.find(_FIND_VERSION).text)
         except InvalidVersionError:
-            _logger.exception('Exception occured while parsing version')
+            _logger.exception('Exception occurred while parsing version')
             self.emit('check-complete', None)
             return
 
@@ -131,7 +131,7 @@ class _UpdateChecker(GObject.GObject):
         try:
             size = long(document.find(_FIND_SIZE).text) * 1024
         except ValueError:
-            _logger.exception('Exception occured while parsing size')
+            _logger.exception('Exception occurred while parsing size')
             size = 0
 
         if version > NormalizedVersion(self._bundle.get_activity_version()):
