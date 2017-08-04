@@ -7,27 +7,28 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2013-08-15 01:12+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2017-08-04 05:37+0000\n"
+"Last-Translator: buddhi.raj <buddhi.tuladhar@olenepal.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ne\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1501825076.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
-msgstr ""
+msgstr "GSettings मा सारियो"
 
 #: ../data/org.sugarlabs.gschema.xml.h:2
 msgid "This key shows whether or not GConf values were migrated to GSettings"
-msgstr ""
+msgstr "यो settings ले GConf values हरूलाई GSettings मा सारियो कि सारिएन देखाउछ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
 msgid "Backup URL"
-msgstr "बैकअप URL"
+msgstr "ब्याकप URL"
 
 #: ../data/org.sugarlabs.gschema.xml.h:4 ../data/sugar.schemas.in.h:12
 msgid "URL where the backup is saved to."
@@ -39,7 +40,7 @@ msgstr "लग आउट देखाउनुहोस्"
 
 #: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr "यदि TRUE हो भने, सुगरले हामीलाई \"लग आउट\" विकल्प देखाउनेछ।"
+msgstr "यदि ठिक हो भने, सुगरले हामीलाई \"लग आउट\" विकल्प देखाउनेछ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:7 ../data/sugar.schemas.in.h:33
 msgid "Show Restart"
@@ -47,36 +48,36 @@ msgstr "रिइस्टार्ट बट्न देखाउ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:8 ../data/sugar.schemas.in.h:34
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr "यदि TRUE हो भने, सुगरले हामीलाई \"रिइसटार्ट\" विकल्प देखाउनेछ।"
+msgstr "यदि ठिक हो भने, सुगरले हामीलाई \"रिइसटार्ट\" विकल्प देखाउनेछ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
 msgid "Show Shutdown"
-msgstr ""
+msgstr "बन्द गर्ने बटन देखाउनुस् ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
-msgstr ""
+msgstr "यदी TRUE हो भने Sugar ले \"Shutdown\" विकल्प देखाउछ ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
-msgstr ""
+msgstr "दर्ता गरेर देखाऊ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
-msgstr ""
+msgstr "यदी ठिक छ भने सुगरले buddy palette मा \"Register\" विकल्प देखाउने छ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
 msgid "Bundle IDs of protected activities"
-msgstr "सुरक्षित क्रियाकलापहरुको बन्दल IDs"
+msgstr "सुरक्षित क्रियाकलापहरुको बन्डल IDs"
 
 #: ../data/org.sugarlabs.gschema.xml.h:14 ../data/sugar.schemas.in.h:64
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
-msgstr "प्रयोगकर्ताले सूची दृशयबाट यी क्रियाकलापहरु मेटाउन पाउनु हुनेछैन।"
+msgstr "प्रयोगकर्ताले सूची दृश्यबाट यी क्रियाकलापहरु मेटाउन पाउनु हुनेछैन।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
 msgid "A limit to the number of simultaneously open activities."
-msgstr ""
+msgstr "सगंसगै खोलिएको क्रिर्याकलापहरूको निश्चित सिमा ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:16 ../data/sugar.schemas.in.h:80
 msgid ""
@@ -86,15 +87,15 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:17 ../data/sugar.schemas.in.h:1
 msgid "User Name"
-msgstr "युजरको नाम"
+msgstr "प्रयोगकर्ताको नाम"
 
 #: ../data/org.sugarlabs.gschema.xml.h:18 ../data/sugar.schemas.in.h:2
 msgid "User name that is used throughout the desktop."
-msgstr "डेस्कटपभरि प्रयोग हुने युजरको नाम।"
+msgstr "डेस्कटपभरि प्रयोग हुने प्रयोगकर्ताको नाम।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:19 ../data/sugar.schemas.in.h:3
 msgid "Default nick"
-msgstr "पूर्वनिर्धारित निक"
+msgstr "पूर्वनिर्धारित नाम"
 
 #: ../data/org.sugarlabs.gschema.xml.h:20 ../data/sugar.schemas.in.h:4
 msgid ""
@@ -106,7 +107,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:21 ../data/sugar.schemas.in.h:5
 msgid "User Color"
-msgstr "युजरको रङ्ग"
+msgstr "प्रयोगकर्ताको रङ्ग"
 
 #: ../data/org.sugarlabs.gschema.xml.h:22 ../data/sugar.schemas.in.h:6
 msgid ""
@@ -119,11 +120,11 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:23
 msgid "User Gender"
-msgstr ""
+msgstr "प्रयोगकर्ताको लिङ्ग"
 
 #: ../data/org.sugarlabs.gschema.xml.h:24
 msgid "Gender of the Sugar user, either male, female, or unassigned"
-msgstr ""
+msgstr "सुगर  प्रयोगकर्ताको लिङ्ग, पुरुष, महिला वा अन्य"
 
 #: ../data/org.sugarlabs.gschema.xml.h:25
 msgid "User Birth Timestamp"
@@ -135,7 +136,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:27
 msgid "Group Label"
-msgstr ""
+msgstr "समुहको लेबल"
 
 #: ../data/org.sugarlabs.gschema.xml.h:28
 msgid "Label associated with age, e.g., '2nd Grade'"
@@ -167,15 +168,15 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
-msgstr "आवाजको स्तह"
+msgstr "आवाजको सतह"
 
 #: ../data/org.sugarlabs.gschema.xml.h:36 ../data/sugar.schemas.in.h:8
 msgid "Volume level for the sound device."
-msgstr "घ्वनि यन्त्रको लागि आवाजको स्तह ।"
+msgstr "घ्वनि यन्त्रको लागि आवाजको सतह ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:37 ../data/sugar.schemas.in.h:9
 msgid "Sound Muted"
-msgstr "आवाज बन्द"
+msgstr "आवाज बन्द गर"
 
 #: ../data/org.sugarlabs.gschema.xml.h:38 ../data/sugar.schemas.in.h:10
 msgid "Setting for muting the sound device."
@@ -183,11 +184,11 @@ msgstr "ध्वनि यन्त्रको आवाज बन्द ग�
 
 #: ../data/org.sugarlabs.gschema.xml.h:39
 msgid "Brightness Level"
-msgstr ""
+msgstr "चम्किलोपनाको तह"
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
-msgstr ""
+msgstr "कम्पुटर  स्क्रिनको चम्किलोपनाको तह"
 
 #: ../data/org.sugarlabs.gschema.xml.h:41
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
@@ -196,11 +197,11 @@ msgstr "समयक्षेत्र"
 
 #: ../data/org.sugarlabs.gschema.xml.h:42 ../data/sugar.schemas.in.h:14
 msgid "Timezone setting for the system."
-msgstr "प्रणालीको लागि समय अंचल सेटिङ्ग।"
+msgstr "प्रणालीको लागि समयअञ्चल सेटिङ्ग।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr ""
+msgstr "गृह दृश्य "
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
@@ -230,11 +231,11 @@ msgstr "फ्रेम आउन ढिलाइ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:50 ../data/sugar.schemas.in.h:22
 msgid "Delay for the activation of the frame using the corners."
-msgstr "कनँर प्रयोग गरेर ढांचाको सक्रियतालाई ढिलाइ गर।"
+msgstr "कर्नर प्रयोग गरेर ढांचाको सक्रियतालाई ढिलाइ गर।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr ""
+msgstr "अड्काउने वस्तुको आकार "
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
@@ -257,12 +258,12 @@ msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"यदि TRUE हो भने, सुगरले हामीलाई ज्याबर सर्भरको अरु युजरहरुले खोज्न मिल्छ "
-"बनाउनेछ।"
+"यदि ठिक  हो भने, सुगरले हामीलाई ज्याबर सर्भरको अरु प्रयोगकर्ताहरुले खोज्न "
+"मिल्ने बनाउनेछ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:57
 msgid "Social Help Server"
-msgstr ""
+msgstr "सामाजिक सहयोग सर्भर"
 
 #: ../data/org.sugarlabs.gschema.xml.h:58
 msgid "URL of the social help server to use with protocol."
@@ -279,13 +280,13 @@ msgstr "स्वचालित (अटोम्याटिक) पावर �
 
 #: ../data/org.sugarlabs.gschema.xml.h:61 ../data/sugar.schemas.in.h:27
 msgid "Power Extreme"
-msgstr "अत्यधिक शक्ती"
+msgstr "अत्यधिक शक्ति"
 
 #: ../data/org.sugarlabs.gschema.xml.h:62 ../data/sugar.schemas.in.h:28
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
-"चरम पावर व्यास्थापन (यसले वायरलेस रेडियो बन्द गर्छ, ब्याटरीको जीवन वृद्धि "
+"चरम पावर व्यबस्थापन (यसले वायरलेस रेडियो बन्द गर्छ, ब्याट्रीको जीवन वृद्धि "
 "गर्छ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:63 ../data/sugar.schemas.in.h:39
@@ -357,7 +358,7 @@ msgstr "GSM संजाल प्रयोगकर्ताको नाम (�
 
 #: ../data/org.sugarlabs.gschema.xml.h:78 ../data/sugar.schemas.in.h:50
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr "GSM संजाल प्रयोगकर्ताको नाम संरुप(निन्दा गरेको / प्रयोग नभएको)"
+msgstr "GSM संजाल प्रयोगकर्ताको नाम स्वरुप(निन्दा गरेको / प्रयोग नभएको)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:79 ../data/sugar.schemas.in.h:51
 msgid "GSM network password (DEPRECATED/UNUSED)"
@@ -365,48 +366,48 @@ msgstr "GSM संजाल पासवर्ड (निन्दा गरे�
 
 #: ../data/org.sugarlabs.gschema.xml.h:80 ../data/sugar.schemas.in.h:52
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr "GSM संजाल पासवर्ड संरुप (निन्दा गरेको / प्रयोग नभएको)"
+msgstr "GSM सञ्जाल पासवर्ड स्वरुप (निन्दा गरेको / प्रयोग नभएको)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:81 ../data/sugar.schemas.in.h:53
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr "GSM संजाल संख्या(निन्दा गरेको / प्रयोग नभएको)"
+msgstr "GSM सञ्जाल संख्या(निन्दा गरेको / प्रयोग नभएको)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:82 ../data/sugar.schemas.in.h:54
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr "GSM संजाल दूरवार्ता यन्त्र संख्या संरुप (निन्दा गरेको / प्रयोग नभएको)"
+msgstr "GSM सञ्जाल दूरवार्ता यन्त्र संख्या स्वरुप (निन्दा गरेको / प्रयोग नभएको)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:83 ../data/sugar.schemas.in.h:55
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr "GSM संजाल APN(निन्दा गरेको / प्रयोग नभएको)"
+msgstr "GSM सञ्जाल APN(निन्दा गरेको / प्रयोग नभएको)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:84 ../data/sugar.schemas.in.h:56
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
-msgstr "GSM संजाल पहुँच बिन्दुको नाम संरुप (निन्दा गरेको / प्रयोग नभएको)"
+msgstr "GSM सञ्जाल पहुँच बिन्दुको नाम स्वरुप (निन्दा गरेको / प्रयोग नभएको)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:85 ../data/sugar.schemas.in.h:57
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr "GSM संजाल PIN(निन्दा गरेको / प्रयोग नभएको)"
+msgstr "GSM सञ्जाल PIN(निन्दा गरेको / प्रयोग नभएको)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:86 ../data/sugar.schemas.in.h:58
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
-msgstr "GSM संजाल व्यक्तिगत पहिचान संख्या संरुप (निन्दा गरेको / प्रयोग नभएको)"
+msgstr "GSM सञ्जाल व्यक्तिगत पहिचान संख्या स्वरुप (निन्दा गरेको / प्रयोग नभएको)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:87 ../data/sugar.schemas.in.h:59
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr "GSM संजाल PUK(निन्दा गरेको / प्रयोग नभएको)"
+msgstr "GSM सञ्जाल PUK(निन्दा गरेको / प्रयोग नभएको)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:88 ../data/sugar.schemas.in.h:60
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
-msgstr "GSM संजाल व्यक्तिगत खोल्ने साँचो संरुप (निन्दा गरेको / प्रयोग नभएको)"
+msgstr "GSM सञ्जाल व्यक्तिगत खोल्ने साँचो स्वरुप (निन्दा गरेको / प्रयोग नभएको)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:89
 msgid "TODO: add summary"
-msgstr ""
+msgstr "TODO: सार बढाउनु "
 
 #: ../data/org.sugarlabs.gschema.xml.h:90
 msgid "TODO: add description"
-msgstr ""
+msgstr "को गर : वर्णन बढाउनु"
 
 #: ../data/org.sugarlabs.gschema.xml.h:91 ../data/sugar.schemas.in.h:65
 msgid "Pitch value for the speech sugar service"
@@ -480,7 +481,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
-msgstr "मेरो ब"
+msgstr "मेरो बारेमा"
 
 #: ../extensions/cpsection/aboutme/model.py:51
 msgid "You must enter a name."
@@ -521,7 +522,7 @@ msgstr "रङ्ग परिवर्तन गर्न क्लिक ग�
 #: ../extensions/cpsection/aboutme/view.py:294
 #: ../src/jarabe/intro/window.py:203
 msgid "Select gender:"
-msgstr ""
+msgstr "लिङ्ग छान"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
@@ -537,7 +538,7 @@ msgstr "व्यक्तित्व"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:87
 msgid "Model:"
-msgstr ""
+msgstr "व्यक्तित्व"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Serial Number:"
@@ -553,7 +554,7 @@ msgstr "बनाइ:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:117
 msgid "Sugar:"
-msgstr "शुगर:"
+msgstr "सुगर:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:122
 msgid "Firmware:"
@@ -561,12 +562,12 @@ msgstr "फर्मवेर:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:127
 msgid "Wireless Firmware:"
-msgstr "तारबिनाको फर्मवेर:"
+msgstr "फार्मवेर:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:134
 #, python-format
 msgid "%d days ago"
-msgstr ""
+msgstr "%द दिन पहिले"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:136
 #: ../src/jarabe/journal/journaltoolbox.py:169
@@ -589,9 +590,9 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"अहिले तपाईंले हेरिराखेको ग्रफीकल युजर इन्टरफेस सुगर हो।सुगर फ्री सफ्टवेर हो, "
-"जुन GNU जनरल पब्लिक अनुमति पत्रले हेर्छ, र तोकिएको नियमअनुसार तपाईंले यसलाई "
-"परिवर्तन गरेर नियम अनुसार अरुलाई दिन सक्नुहुनेछ।"
+"अहिले तपाईंले हेरिराखेको ग्राफीकल युजर इन्टरफेस सुगर हो।सुगर फ्री सफ्टवेर हो"
+", जुन GNU जनरल पब्लिक अनुमति पत्रले हेर्छ, र तोकिएको नियमअनुसार तपाईंले यसला"
+"ई परिवर्तन गरेर नियम अनुसार अरुलाई दिन सक्नुहुनेछ।"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:181
 msgid "Full license:"
@@ -603,15 +604,15 @@ msgstr "पृष्ठभूमि"
 
 #: ../extensions/cpsection/background/view.py:48
 msgid "Select a background:"
-msgstr ""
+msgstr "पृष्ठभुमि छान"
 
 #: ../extensions/cpsection/background/view.py:57
 msgid "Clear background"
-msgstr ""
+msgstr "पृष्ठभुमि हटाऊ"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr "मिती & समय"
+msgstr "मिती र  समय"
 
 #: ../extensions/cpsection/datetime/model.py:100
 msgid "Error: timezone does not exist."
@@ -623,7 +624,7 @@ msgstr "चौखट"
 
 #: ../extensions/cpsection/frame/view.py:26
 msgid "never"
-msgstr "कहिलेपनि नगर"
+msgstr "कहिले पनि नगर"
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "instantaneous"
@@ -652,7 +653,7 @@ msgstr "किनार"
 
 #: ../extensions/cpsection/frame/view.py:123
 msgid "Size"
-msgstr ""
+msgstr "आकार"
 
 #: ../extensions/cpsection/frame/view.py:221
 msgid "toolbar size"
@@ -660,19 +661,19 @@ msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:226
 msgid "exact corner or edge"
-msgstr ""
+msgstr "सहि कुना वा सतह"
 
 #: ../extensions/cpsection/frame/view.py:228
 msgid "exact corner"
-msgstr ""
+msgstr "सहि कुना"
 
 #: ../extensions/cpsection/frame/view.py:230
 msgid "exact edge"
-msgstr ""
+msgstr "सहि सतह "
 
 #: ../extensions/cpsection/frame/view.py:232
 msgid "ignored"
-msgstr ""
+msgstr "वास्ता नगर्नु "
 
 #. TRANS: px as in pixels
 #: ../extensions/cpsection/frame/view.py:235
@@ -730,7 +731,7 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem"
-msgstr ""
+msgstr "मोडेम"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
@@ -742,19 +743,19 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr ""
+msgstr "देश "
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr ""
+msgstr "दिने ब्यक्ति"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr ""
+msgstr "योजना"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
-msgstr "युजरनेम:"
+msgstr "प्रयोगकर्ताको नाम : "
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
@@ -770,17 +771,17 @@ msgstr "एक्सेस पोइण्ट नेम (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
-msgstr "निजी पहिचान संख्या (PIN):"
+msgstr "निजी पहिचान नम्बर (PIN):"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:162
 #, python-format
 msgid "Plan #%s"
-msgstr ""
+msgstr "योजना #%"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:292
 #, python-format
 msgid "Provider %s"
-msgstr ""
+msgstr "योजना #%"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
@@ -801,11 +802,11 @@ msgstr "०/१ प्रयोग गर्ने तोकिएको नि�
 
 #: ../extensions/cpsection/network/view.py:65
 msgid "Wireless"
-msgstr "वायरलेस"
+msgstr "०/१ प्रयोग गर्ने तोकिएको निर्देशनमा त्रुटि छ।"
 
 #: ../extensions/cpsection/network/view.py:73
 msgid "The wireless radio may be turned off to save battery life."
-msgstr ""
+msgstr "तार बिना प्रयोग गरिने रेडियो ब्यट्रि बचाउनको लागि बन्द गरिनुपर्छ।"
 
 #: ../extensions/cpsection/network/view.py:86
 msgid "Radio"
@@ -831,7 +832,7 @@ msgid ""
 "network."
 msgstr ""
 "तिमी बसेको कोठा जतिमा सर्भर भरपर्छ, ‍एउटै सर्भरमा भएका XO हरु एक अर्कालाई "
-"देख्न सक्छन्, एउटै नेटवर्कमा नहुन्दा पनि।"
+"देख्न सक्छन्, एउटै नेटवर्कमा नहुँदा पनि।"
 
 #: ../extensions/cpsection/network/view.py:147
 msgid "Server:"
@@ -846,7 +847,7 @@ msgstr ""
 
 #: ../extensions/cpsection/network/view.py:173
 msgid "Social Help Server:"
-msgstr ""
+msgstr "सामाजिक सहयोग सर्भर :"
 
 #: ../extensions/cpsection/power/__init__.py:24
 msgid "Power"
@@ -862,15 +863,15 @@ msgstr "पावर ब्यवस्थापन"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software Update"
-msgstr "सॉफ्टवेयर अद्यावधिक"
+msgstr "सफ्टवेयर अद्यावधिक"
 
 #: ../extensions/cpsection/updater/view.py:70
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
-"सफ्टवेयार अपडेटहरूले त्रुटिहरू ठिक गर्छ, सुरक्षामा भएका कमजोरीहरूलाई हटाउँछ "
-"र नयाँ विशेषताहरू दिन्छ।"
+"सफ्टवेयर अपडेटहरूले त्रुटिहरू ठिक गर्छ, सुरक्षामा भएका कमजोरीहरूलाई हटाउँछ र "
+"नयाँ विशेषताहरू दिन्छ।"
 
 #: ../extensions/cpsection/updater/view.py:84
 msgid "Update in progress..."
@@ -932,7 +933,7 @@ msgstr[1] "%s अपडेटहरू स्थापित गरियो"
 
 #: ../extensions/cpsection/updater/view.py:288
 msgid "Install selected"
-msgstr "छानिएकाहरूलाई स्थापित गर"
+msgstr "छानिएकोहरूलाई स्थापित गर"
 
 #: ../extensions/cpsection/updater/view.py:307
 #, python-format
@@ -949,10 +950,11 @@ msgstr "%(current)s संस्करणबाट %(new)s (Size: %(size)s)"
 #: ../extensions/cpsection/updater/view.py:406
 #, python-format
 msgid "Version %(version)s (Size: %(size)s)"
-msgstr ""
+msgstr "संस्करण%( संस्करण )स (आकार :%(आकार )स )"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:423
+#, fuzzy
 msgid "None"
 msgstr "कुनै पनि होइन"
 
@@ -975,7 +977,7 @@ msgstr "%.1f KB"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Web Services"
-msgstr ""
+msgstr "सञ्जाल सेवाहरू "
 
 #: ../extensions/cpsection/webaccount/view.py:65
 #, python-format
@@ -986,19 +988,19 @@ msgstr ""
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
-msgstr ""
+msgstr "मेरो आवाज"
 
 #: ../extensions/deviceicon/audio.py:330
 msgid "Speaker"
-msgstr ""
+msgstr "स्पिकर "
 
 #: ../extensions/deviceicon/audio.py:331
 msgid "Microphone"
-msgstr ""
+msgstr "माईक्रोफोन"
 
 #: ../extensions/deviceicon/battery.py:69
 msgid "My Battery"
-msgstr "मेरो ब्यााटरी"
+msgstr "मेरो ब्याट्रि"
 
 #: ../extensions/deviceicon/battery.py:151
 msgid "Removed"
@@ -1026,19 +1028,19 @@ msgstr "चार्ज भयो"
 
 #: ../extensions/deviceicon/display.py:187
 msgid "My Display"
-msgstr ""
+msgstr "मेरो दृश्य"
 
 #: ../extensions/deviceicon/display.py:189
 msgid "Take a screenshot"
-msgstr ""
+msgstr "स्क्रिनसट लेउ"
 
 #: ../extensions/deviceicon/display.py:211
 msgid "Brightness"
-msgstr ""
+msgstr "चम्किलोपना "
 
 #: ../extensions/deviceicon/display.py:239
 msgid "Display"
-msgstr ""
+msgstr "देखाउनु"
 
 #: ../extensions/deviceicon/frame.py:53
 msgid "Show my keyboard"
@@ -1187,7 +1189,7 @@ msgstr "कुनै पनि GSM कनेक्सन उपलब्ध छ�
 
 #: ../extensions/deviceicon/network.py:783
 msgid "Create a connection in My Settings."
-msgstr ""
+msgstr "मेरो सेटिङसंग जडान गर्नुहोस्"
 
 #: ../extensions/deviceicon/speech.py:49
 msgid "Speech"
@@ -1197,7 +1199,7 @@ msgstr "भाषण"
 #: ../extensions/deviceicon/speech.py:147
 #: ../extensions/deviceicon/speech.py:152
 msgid "Say selected text"
-msgstr "चुनिएका पाठ भन"
+msgstr "छानिएको पाठ भन"
 
 #: ../extensions/deviceicon/speech.py:80
 msgid "Stop playback"
@@ -1213,7 +1215,7 @@ msgstr "गति"
 
 #: ../extensions/deviceicon/speech.py:142
 msgid "Pause playback"
-msgstr "पाशर्व रोक"
+msgstr "पाशर्व बन्दगर"
 
 #: ../extensions/deviceicon/touchpad.py:36
 msgid "finger"
@@ -1313,7 +1315,7 @@ msgstr "सावधान"
 #: ../src/jarabe/controlpanel/gui.py:374
 #: ../src/jarabe/controlpanel/sectionview.py:45
 msgid "Changes require restart"
-msgstr "परिवर्तनका लागि पुण: सुरु गर्न आवश्यक छ"
+msgstr "परिवर्तनका लागि पुर्ण: सुरु गर्न आवश्यक छ"
 
 #: ../src/jarabe/controlpanel/gui.py:379
 msgid "Cancel changes"
@@ -1438,7 +1440,7 @@ msgstr "त्रिकोण"
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
-msgstr ""
+msgstr "खातामा उतार्ने"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
@@ -1458,11 +1460,11 @@ msgstr "अब तपाईँको नाम बिद्यालयको �
 
 #: ../src/jarabe/desktop/favoritesview.py:680
 msgid "Register"
-msgstr "दर्ता"
+msgstr "दर्ता गर"
 
 #: ../src/jarabe/desktop/favoritesview.py:682
 msgid "Register again"
-msgstr "दर्ता फेरी गर"
+msgstr " फेरी दर्ता गर"
 
 #: ../src/jarabe/desktop/homewindow.py:255
 #: ../src/jarabe/desktop/viewtoolbar.py:73
@@ -1658,51 +1660,51 @@ msgstr "अर्को"
 
 #: ../src/jarabe/intro/agepicker.py:38
 msgid "Select grade:"
-msgstr ""
+msgstr "लिङ्ग छान "
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Preschool"
-msgstr ""
+msgstr "पूर्वविद्यालय "
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Kindergarten"
-msgstr ""
+msgstr "बच्चाहरू पढ्ने ठाँउ "
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "1st Grade"
-msgstr ""
+msgstr "पहिलो श्रेणी"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "2nd Grade"
-msgstr ""
+msgstr "दोस्रो श्रेणी"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "3rd Grade"
-msgstr ""
+msgstr "तेस्रो श्रेणी"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "4th Grade"
-msgstr ""
+msgstr "चाैथो श्रेणी"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "5th Grade"
-msgstr ""
+msgstr "चाैथो श्रेणी"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "6th Grade"
-msgstr ""
+msgstr "छैँटाै श्रेणी"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "7th Grade"
-msgstr ""
+msgstr "छैँटाै श्रेणी"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "High School"
-msgstr ""
+msgstr "माध्यमिक विद्यालय "
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "Adult"
-msgstr ""
+msgstr "जवान "
 
 #: ../src/jarabe/journal/expandedentry.py:153
 #: ../src/jarabe/journal/journaltoolbox.py:584
@@ -1757,7 +1759,7 @@ msgstr "चिनोहरु:"
 
 #: ../src/jarabe/journal/expandedentry.py:470
 msgid "Comments:"
-msgstr ""
+msgstr "टिप्पणी गर्नु "
 
 #: ../src/jarabe/journal/journalactivity.py:182
 #: ../src/jarabe/journal/journaltoolbox.py:94
@@ -1769,7 +1771,7 @@ msgstr "पंजिका"
 
 #: ../src/jarabe/journal/journaltoolbox.py:103
 msgid "Favorite entries"
-msgstr ""
+msgstr "मन परेका सामाग्रीहरु"
 
 # TRANS: Item in a combo box that filters by entry type.
 #. TRANS: Item on a palette that filters by entry type.
@@ -1816,7 +1818,7 @@ msgstr "नक्कल"
 
 #: ../src/jarabe/journal/journaltoolbox.py:535
 msgid "Refresh"
-msgstr ""
+msgstr "ताजा गर्नुहोस्"
 
 #: ../src/jarabe/journal/journaltoolbox.py:577
 #: ../src/jarabe/journal/palettes.py:156 ../src/jarabe/journal/palettes.py:374
@@ -1853,19 +1855,19 @@ msgstr "परिमार्जित मिति क्रमबद्व र
 
 #: ../src/jarabe/journal/journaltoolbox.py:712
 msgid "Sort by date created"
-msgstr "परिमार्जित मिति सृजित गरेको अनुसार क्रमबद्व रुपमा राखनुहोस्"
+msgstr "परिमार्जित मिति सृजित गरेको अनुसार क्रमबद्व रुपमा राख्नुहोस्"
 
 #: ../src/jarabe/journal/journaltoolbox.py:713
 msgid "Sort by size"
-msgstr "साइज अनुसार क्रमबद्व रुपमा राखनुहोस्"
+msgstr "साइज अनुसार क्रमबद्व रुपमा राख्नुहोस्"
 
 #: ../src/jarabe/journal/journaltoolbox.py:778
 msgid "Deselect all"
-msgstr ""
+msgstr "चयन रद्द गर्नुहोस्"
 
 #: ../src/jarabe/journal/journaltoolbox.py:791
 msgid "Select all"
-msgstr ""
+msgstr "चयन गर्नुहोस"
 
 #: ../src/jarabe/journal/journaltoolbox.py:817
 #, python-format
@@ -1877,17 +1879,17 @@ msgstr[1] ""
 #: ../src/jarabe/journal/journaltoolbox.py:831
 #: ../src/jarabe/journal/palettes.py:378
 msgid "Copy"
-msgstr ""
+msgstr "प्रतिलिपी"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:882
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr ""
+msgstr "छानिएको %(छानिएको) द  को % (जम्मा )द"
 
 #: ../src/jarabe/journal/journaltoolbox.py:917
 msgid "Select filter"
-msgstr ""
+msgstr "filter चयन गर्नुहोस्"
 
 #: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
 msgid "Your Journal is empty"
@@ -1943,7 +1945,7 @@ msgstr "बन्द"
 
 #: ../src/jarabe/journal/palettes.py:84
 msgid "Resume with"
-msgstr "पुनरारम्भ सहित"
+msgstr "बन्द"
 
 #: ../src/jarabe/journal/palettes.py:87
 msgid "Start with"
@@ -2002,12 +2004,12 @@ msgstr "बन्द गर"
 #: ../extensions/cpsection/backup/view.py:212
 #: ../extensions/cpsection/backup/view.py:265
 msgid "Continue"
-msgstr ""
+msgstr "होइन"
 
 #: ../src/jarabe/journal/palettes.py:622
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr ""
+msgstr " %(सुची )द को  % (जम्मा ) :% (बिषय _ शिर्षक )स "
 
 #: ../src/jarabe/journal/volumestoolbar.py:375
 #: ../src/jarabe/view/palettes.py:251 ../src/jarabe/view/palettes.py:317
@@ -2019,7 +2021,7 @@ msgstr "%(free_space)d MB खालि"
 #, python-format
 #, python-format,
 msgid "Favorites view %d"
-msgstr "मन्पर्दो दृश्य %d"
+msgstr "मनपर्दो दृश्य %d"
 
 #: ../src/jarabe/model/network.py:217
 msgid "The reason for the device state change is unknown."
@@ -2035,20 +2037,20 @@ msgstr "यन्त्र अहिले व्यवस्थापित भ
 
 #: ../src/jarabe/model/network.py:223
 msgid "The device is no longer managed."
-msgstr "यन्र अहिले व्यवस्थापित छैन।"
+msgstr "यन्त्र अहिले व्यवस्थापित छैन।"
 
 #: ../src/jarabe/model/network.py:225
 msgid "The device could not be readied for configuration."
-msgstr "यस यन्त्रलाई कन्फिगरेसनलाई तयार पार्न सकिएन।"
+msgstr "यस यन्त्रलाई कन्फिग्रेसनलाई तयार पार्न सकिएन।"
 
 #: ../src/jarabe/model/network.py:227
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
-msgstr "IP कन्फिगरेसन सुरक्षित हुन सकेन् (टाइमआउट,ठेगाना उपलब्ध छइन)।"
+msgstr "IP कन्फिग्रेसन सुरक्षित हुन सकेन् (टाइमआउट,ठेगाना उपलब्ध छैन)।"
 
 #: ../src/jarabe/model/network.py:230
 msgid "The IP configuration is no longer valid."
-msgstr "IP कन्फिगरेसन मान्य छैन।"
+msgstr "IP कन्फिग्रेसन मान्य छैन।"
 
 #: ../src/jarabe/model/network.py:232
 msgid "Secrets were required, but not provided."
@@ -2070,7 +2072,7 @@ msgstr "अप्रत्याशित रूपमा 802.1X सप्लि
 
 #: ../src/jarabe/model/network.py:241
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr "802.1X सप्लिक्यान्टलाई प्रमाणीकरण गर्न घेरै समय लाग्यो।"
+msgstr "अप्रत्याशित रूपमा 802.1X सप्लिक्यान्ट बन्द वा असफल भयो।"
 
 #: ../src/jarabe/model/network.py:243
 msgid "The PPP service failed to start within the allowed time."
@@ -2198,7 +2200,7 @@ msgstr "निवेदक अहिले उपलब्ध छ।"
 
 #: ../src/jarabe/model/network.py:307
 msgid "The modem could not be found."
-msgstr "मोडेम भेटाउन सकोएन।"
+msgstr "मोडेम भेटाउन सकिएन ।"
 
 #: ../src/jarabe/model/network.py:309
 msgid "The Bluetooth connection failed or timed out."
@@ -2258,7 +2260,7 @@ msgstr "लगआउट"
 
 #: ../src/jarabe/view/buddymenu.py:124
 msgid "My Settings"
-msgstr "मेरो सेटिंगहरु"
+msgstr "मेरो सेटिंग"
 
 #: ../src/jarabe/view/buddymenu.py:183
 #, python-format
@@ -2285,7 +2287,7 @@ msgstr "स्रोत दृश्य"
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
-msgstr ""
+msgstr "सहयोग हेर्नु "
 
 #: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
@@ -2298,16 +2300,16 @@ msgstr "हटाउनुहोस्"
 
 #: ../src/jarabe/view/viewhelp.py:304
 msgid "Help Manual"
-msgstr ""
+msgstr "मार्गनिर्देशन"
 
 #: ../src/jarabe/view/viewhelp.py:318
 msgid "Social Help"
-msgstr ""
+msgstr "सामाजिक सहयोग"
 
 #: ../src/jarabe/view/viewhelp.py:326
 #, python-format
 msgid "Help: %s"
-msgstr ""
+msgstr "सहयोग:%स"
 
 #: ../src/jarabe/view/viewsource.py:364
 msgid "Instance Source"
@@ -2320,7 +2322,7 @@ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:394
 msgid "This may take a few minutes"
-msgstr ""
+msgstr "केहि समय पर्खनुहोस्"
 
 #: ../src/jarabe/view/viewsource.py:408
 msgid "Duplicating activity..."
@@ -2328,7 +2330,7 @@ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:447
 msgid "Duplicated"
-msgstr ""
+msgstr "उस्तै "
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
@@ -2367,11 +2369,11 @@ msgstr "स्रोत दृश्य : %r"
 
 #: ../src/jarabe/view/viewsource.py:809
 msgid "Please select a file in the left panel."
-msgstr ""
+msgstr "दाहिने पट्टिको फाइल चयन गर्नुहोस्"
 
 #: ../extensions/cpsection/backup/__init__.py:22
 msgid "Backup"
-msgstr ""
+msgstr "पछिसम्म "
 
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171
@@ -2381,7 +2383,7 @@ msgstr ""
 #: ../extensions/cpsection/backup/backends/volume.py:69
 #: ../extensions/cpsection/backup/backends/volume.py:178
 msgid "Select your volume"
-msgstr ""
+msgstr "तिम्रो परिमाण  छान "
 
 #: ../extensions/cpsection/backup/backends/volume.py:78
 msgid "Not enough space in volume"
@@ -2398,7 +2400,7 @@ msgstr ""
 
 #: ../extensions/cpsection/backup/backends/volume.py:199
 msgid "Select your checkpoint"
-msgstr ""
+msgstr "तिम्रो जाच गर्ने विन्दु छान "
 
 #: ../extensions/cpsection/backup/backends/volume.py:210
 msgid "Not enough space in disk"
@@ -2430,7 +2432,7 @@ msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:271
 msgid "Retry"
-msgstr ""
+msgstr "पुन: कोशीश गर्नु "
 
 #: ../extensions/cpsection/backup/view.py:290
 msgid "Starting backup..."
@@ -2438,7 +2440,7 @@ msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:294
 msgid "Starting restore..."
-msgstr ""
+msgstr "मर्मत गर्न थालिएको "
 
 #: ../extensions/cpsection/backup/view.py:321
 msgid ""
@@ -2449,11 +2451,11 @@ msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:327
 msgid "Confirm"
-msgstr ""
+msgstr "निधो गर्नु"
 
 #: ../extensions/cpsection/backup/view.py:365
 msgid "Operation started"
-msgstr ""
+msgstr "कार्यसन्चालन सुरू गरिएको "
 
 #: ../extensions/cpsection/backup/view.py:377
 msgid "Backup finished successfully"
@@ -2465,4 +2467,4 @@ msgstr ""
 
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
-msgstr ""
+msgstr "सफा सुचना "
