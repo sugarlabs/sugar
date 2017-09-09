@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import signal
 import statvfs
 from gettext import gettext as _
 import logging
@@ -156,7 +157,16 @@ class CurrentActivityPalette(BasePalette):
 
     def __stop_activate_cb(self, menu_item):
         self._home_activity.stop()
+        pid = self._home_activity.get_pid()
+        GObject.timeout_add(3000, self.__kill_cb, pid, signal.SIGTERM)
+        GObject.timeout_add(4500, self.__kill_cb, pid, signal.SIGKILL)
         self.emit('done')
+
+    def __kill_cb(self, pid, sig):
+        try:
+            os.kill(pid, sig)
+        finally:
+            return False
 
 
 class ActivityPalette(Palette):
