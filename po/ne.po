@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-08-04 05:37+0000\n"
+"PO-Revision-Date: 2017-08-08 03:55+0000\n"
 "Last-Translator: buddhi.raj <buddhi.tuladhar@olenepal.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ne\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1501825076.000000\n"
+"X-POOTLE-MTIME: 1502164529.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -84,6 +84,8 @@ msgid ""
 "This int is used to set a limit to the number of open activities. By default "
 "(0), there is no limit."
 msgstr ""
+"यो int चालु क्रियाकलाप हरुको सिमानिरधारण गर्न प्रयोग गरिन्छ । पूर्वनिर्धारित "
+"सिमा (0),याहा सिमा छैन।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:17 ../data/sugar.schemas.in.h:1
 msgid "User Name"
@@ -124,15 +126,15 @@ msgstr "प्रयोगकर्ताको लिङ्ग"
 
 #: ../data/org.sugarlabs.gschema.xml.h:24
 msgid "Gender of the Sugar user, either male, female, or unassigned"
-msgstr "सुगर  प्रयोगकर्ताको लिङ्ग, पुरुष, महिला वा अन्य"
+msgstr "सुगर प्रयोगकर्ताको लिङ्ग, पुरुष, महिला वा अन्य"
 
 #: ../data/org.sugarlabs.gschema.xml.h:25
 msgid "User Birth Timestamp"
-msgstr ""
+msgstr "प्रयोगकर्ता जन्म टाइमस्टैम्प"
 
 #: ../data/org.sugarlabs.gschema.xml.h:26
 msgid "Birth timestamp (seconds since the epoch)"
-msgstr ""
+msgstr "जन्म टाइमस्ट्याम्प (सेकेन्ड युग देखि)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:27
 msgid "Group Label"
@@ -140,39 +142,39 @@ msgstr "समुहको लेबल"
 
 #: ../data/org.sugarlabs.gschema.xml.h:28
 msgid "Label associated with age, e.g., '2nd Grade'"
-msgstr ""
+msgstr "उमेर सम्बन्धित लेबल, जस्तै, '2nd ग्रेड'"
 
 #: ../data/org.sugarlabs.gschema.xml.h:29
 msgid "Background image path"
-msgstr ""
+msgstr "पृष्ठभूमिको चित्र भएको स्थल जाने बाटो"
 
 #: ../data/org.sugarlabs.gschema.xml.h:30
 msgid "Path to the image to be used as a background."
-msgstr ""
+msgstr "पृष्ठभूमिमा प्रयोग हुने चित्रभएको स्थल जाने बाटो"
 
 #: ../data/org.sugarlabs.gschema.xml.h:31
 msgid "Background alpha level"
-msgstr ""
+msgstr "पृष्ठभूमिको अल्फा स्तर"
 
 #: ../data/org.sugarlabs.gschema.xml.h:32
 msgid "The opacity of the background image."
-msgstr ""
+msgstr "पृष्ठभूमि मा भएको चित्रको opacity"
 
 #: ../data/org.sugarlabs.gschema.xml.h:33
 msgid "Mimetype registry"
-msgstr ""
+msgstr "Mimetype सङ्‍ग्रह"
 
 #: ../data/org.sugarlabs.gschema.xml.h:34
 msgid "Consists of key-value pairs mimetypes and their corresponding activity"
-msgstr ""
+msgstr "key-value जोडी Mimetypes र आफ्नो संवाददाता गतिविधि हुन्छन्"
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
-msgstr "आवाजको सतह"
+msgstr "आवाजको स्तर"
 
 #: ../data/org.sugarlabs.gschema.xml.h:36 ../data/sugar.schemas.in.h:8
 msgid "Volume level for the sound device."
-msgstr "घ्वनि यन्त्रको लागि आवाजको सतह ।"
+msgstr "घ्वनि यन्त्रको लागि आवाजको स्तर।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:37 ../data/sugar.schemas.in.h:9
 msgid "Sound Muted"
@@ -188,7 +190,7 @@ msgstr "चम्किलोपनाको तह"
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
-msgstr "कम्पुटर  स्क्रिनको चम्किलोपनाको तह"
+msgstr "कम्पुटर स्क्रिनको चम्किलोपनाको तह"
 
 #: ../data/org.sugarlabs.gschema.xml.h:41
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
@@ -201,21 +203,21 @@ msgstr "प्रणालीको लागि समयअञ्चल से
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr "गृह दृश्य "
+msgstr "गृह दृश्य"
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
 "List of home views, including the view icon, the favorite icon and the layout"
-msgstr ""
+msgstr "गृह दृश्य को सुचि, दृश्य प्रतिमा सहित, मनपर्ने प्रतिमा र लेआउट"
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
-msgstr ""
+msgstr "सुरुवात एनिमेसन अन्तराल"
 
 #: ../data/org.sugarlabs.gschema.xml.h:46
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
-msgstr ""
+msgstr "लन्चर pulsing प्रतिमा एनिमेसन अद्यावधिक बीच मिलिसेकेन्डमा ढिलाइ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
@@ -235,11 +237,11 @@ msgstr "कर्नर प्रयोग गरेर ढांचाको �
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr "अड्काउने वस्तुको आकार "
+msgstr "अड्काउने वस्तुको आकार"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
-msgstr ""
+msgstr "कुना / किनारा देखि पिक्सेल मा फ्रेम ट्रिगर क्षेत्र को आकार,।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
@@ -258,7 +260,7 @@ msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"यदि ठिक  हो भने, सुगरले हामीलाई ज्याबर सर्भरको अरु प्रयोगकर्ताहरुले खोज्न "
+"यदि ठिक हो भने, सुगरले हामीलाई ज्याबर सर्भरको अरु प्रयोगकर्ताहरुले खोज्न "
 "मिल्ने बनाउनेछ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:57
@@ -267,7 +269,7 @@ msgstr "सामाजिक सहयोग सर्भर"
 
 #: ../data/org.sugarlabs.gschema.xml.h:58
 msgid "URL of the social help server to use with protocol."
-msgstr ""
+msgstr "प्रोटोकल संग प्रयोग गर्न सामाजिक सहायता सर्भर URL।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:59 ../data/sugar.schemas.in.h:25
 msgid "Power Automatic"
@@ -346,11 +348,11 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:75
 msgid "Enable Ad-hoc autoconnect"
-msgstr ""
+msgstr "Ad-hoc स्वतहजडान गर्न सक्षम गर्नुस"
 
 #: ../data/org.sugarlabs.gschema.xml.h:76
 msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
-msgstr ""
+msgstr "साँचो भने, सुगर Ad-hoc सञ्जाल स्वतह: जदान हुनेछ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
 msgid "GSM network username (DEPRECATED/UNUSED)"
@@ -403,7 +405,7 @@ msgstr "GSM सञ्जाल व्यक्तिगत खोल्ने �
 
 #: ../data/org.sugarlabs.gschema.xml.h:89
 msgid "TODO: add summary"
-msgstr "TODO: सार बढाउनु "
+msgstr "TODO: सार बढाउनु"
 
 #: ../data/org.sugarlabs.gschema.xml.h:90
 msgid "TODO: add description"
@@ -427,57 +429,61 @@ msgstr "भाषण सेवाले सुगरमा प्रयोग �
 
 #: ../data/org.sugarlabs.gschema.xml.h:95 ../data/sugar.schemas.in.h:69
 msgid "Activity update backend."
-msgstr ""
+msgstr "कृयाकलाप अपडेट ब्याकएन्ड"
 
 #: ../data/org.sugarlabs.gschema.xml.h:96 ../data/sugar.schemas.in.h:70
 msgid ""
 "Activity update backend module, followed by a period, followed by the class "
 "name."
-msgstr ""
+msgstr "कृयाकलाप अपडेट ब्याकएन्ड मोड्युल,एक अवधि पछि, कक्षा नाम पछि ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:97 ../data/sugar.schemas.in.h:71
 msgid "Microformat update URL."
-msgstr ""
+msgstr "Microformat अद्यावधिक URL।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:98 ../data/sugar.schemas.in.h:72
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
+"कृयाकलाप अद्यावधिक जानकारीको लागि microformat अद्यावधिक ब्याकइन्ड प्रयोग "
+"गरिएको URL।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:99 ../data/sugar.schemas.in.h:73
 msgid "Automatic update frequency."
-msgstr ""
+msgstr "स्वचालित अद्यावधिक आवृत्ति।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:100 ../data/sugar.schemas.in.h:74
 msgid ""
 "Frequency of automatic activity updates, measured in days. 0 means disabled."
-msgstr ""
+msgstr "स्वचालित कृयाकलापको अद्यावधिक आवृत्ति, दिनमा मापन। ० माने अक्षम ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:101 ../data/sugar.schemas.in.h:75
 msgid "Timestamp of last activity update."
-msgstr ""
+msgstr "पछिल्लो अद्यावधिकको Timestamp।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:102 ../data/sugar.schemas.in.h:76
 msgid ""
 "A unix timestamp (seconds since epoch) of the last successful activity "
 "update."
 msgstr ""
+"अन्तिम सफल कृयाकलाप अद्यावधिकको एक Unix टाइमस्ट्याम्प (युग देखि सेकेन्ड) ।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:103
 msgid "New ASLO update.json URL."
-msgstr ""
+msgstr "नयाँ ASLO update.json URL।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:104
 msgid "URL used by the new ASLO updater to download activity data."
 msgstr ""
+"कृयाकलाप डाटा डाउनलोड गर्न नयाँ ASLO अद्यावधिककर्ता द्वारा प्रयोग गरिएको URL।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:105 ../data/sugar.schemas.in.h:77
 msgid "A description of the hardware available to the user."
-msgstr ""
+msgstr "प्रयोगकर्ता उपलब्ध हार्डवेयर को एक विवरण।"
 
 #: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
-msgstr ""
+msgstr "यो स्ट्रिङ कम्प्युटर खण्ड बारेमा, नियन्त्रण प्यानलमा प्रदर्शित छ।"
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
@@ -576,7 +582,7 @@ msgstr "आज"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:139
 msgid "Last system update:"
-msgstr ""
+msgstr "पछिल्लो प्रणाली अद्यावधिक:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:150
 msgid "Copyright and License"
@@ -612,11 +618,11 @@ msgstr "पृष्ठभुमि हटाऊ"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr "मिती र  समय"
+msgstr "मिति र समय"
 
 #: ../extensions/cpsection/datetime/model.py:100
 msgid "Error: timezone does not exist."
-msgstr ""
+msgstr "त्रुटि: समय क्षेत्र अवस्थित छैन।"
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
@@ -641,7 +647,7 @@ msgstr "सुरु गर्न ढिलाइ"
 
 #: ../extensions/cpsection/frame/view.py:68
 msgid "Activation Area"
-msgstr ""
+msgstr "सक्रियता क्षेत्र"
 
 #: ../extensions/cpsection/frame/view.py:85
 msgid "Corner"
@@ -657,7 +663,7 @@ msgstr "आकार"
 
 #: ../extensions/cpsection/frame/view.py:221
 msgid "toolbar size"
-msgstr ""
+msgstr "उपकरणपट्टी आकार"
 
 #: ../extensions/cpsection/frame/view.py:226
 msgid "exact corner or edge"
@@ -678,7 +684,7 @@ msgstr "वास्ता नगर्नु "
 #. TRANS: px as in pixels
 #: ../extensions/cpsection/frame/view.py:235
 msgid "{}px"
-msgstr ""
+msgstr "{} पिक्सेल"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:38
@@ -727,7 +733,7 @@ msgstr ""
 #: ../extensions/cpsection/language/view.py:383
 #, python-format
 msgid "Error writting language configuration (%s)"
-msgstr ""
+msgstr "भाषा विन्यास लेखनुमा त्रुटि (% s)"
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem"
@@ -815,11 +821,11 @@ msgstr "रेडियो"
 #: ../extensions/cpsection/network/view.py:103
 msgid ""
 "Discard wireless connections if you have trouble connecting to the network"
-msgstr ""
+msgstr "यदि सञ्जाल जडानमा समस्या छ भने वायरलेस जडानहरू अस्विकृत गर्नु।"
 
 #: ../extensions/cpsection/network/view.py:113
 msgid "Discard wireless connections"
-msgstr ""
+msgstr "वायरलेस जडानहरू अस्विकृत गर्नु"
 
 #: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
@@ -844,6 +850,8 @@ msgid ""
 "Sugar Activities.  Changing servers means discussions will happen in a "
 "different place with different people."
 msgstr ""
+"सामाजिक सहायता भनेको एक मम‍ंच हो जहाँ तँपाइ सुगर developers सङ्ग छलफल गर्न "
+"सक्नु हुन्छ। सर्भर परिवर्तन मतलब छलफलहरू फरक मान्छे संग फरक ठाउँमा हुनेछ।"
 
 #: ../extensions/cpsection/network/view.py:173
 msgid "Social Help Server:"
@@ -875,7 +883,7 @@ msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:84
 msgid "Update in progress..."
-msgstr ""
+msgstr "प्रगति अद्यावधिक ..."
 
 #: ../extensions/cpsection/updater/view.py:119
 msgid "Checking for updates..."
@@ -918,11 +926,13 @@ msgstr[1] "तिमी %s अपडेटहरू राख्न सक्छ
 
 #: ../extensions/cpsection/updater/view.py:183
 msgid "Can't connect to the activity server"
-msgstr ""
+msgstr "कृयाकलाप सर्भर जडान गर्न सक्दैन"
 
 #: ../extensions/cpsection/updater/view.py:186
 msgid "Verify your connection to internet and try again, or try again later"
 msgstr ""
+"इन्टरनेटमा आफ्नो जडान प्रमाणित गर्नु र पुन: प्रयास गर्नुहोस्, वा पछि पुन: "
+"प्रयास गर्नुहोस्"
 
 #: ../extensions/cpsection/updater/view.py:206
 #, python-format
@@ -984,7 +994,7 @@ msgstr "सञ्जाल सेवाहरू "
 msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
-msgstr ""
+msgstr "web services हरु स्थापना गरिएको छैन।कृपया थप विवरण लागि %s भ्रमण गर्नु।"
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
@@ -1301,10 +1311,13 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
+#, fuzzy
 msgid ""
 "To apply your changes you have to restart Sugar.\n"
 "Hit ctrl+alt+erase on the keyboard to trigger a restart."
 msgstr ""
+"तपाईंको परिवर्तनहरू लागू गर्न सुगर पुन सुरुगर्न पर्छ। पुन सुरुगर्न keyboard "
+"मा ctrl+alt+erase ठिच्नुस।"
 
 #: ../src/jarabe/controlpanel/gui.py:373 ../src/jarabe/journal/palettes.py:194
 #: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
@@ -1331,11 +1344,12 @@ msgstr "पुन: सुरु गर"
 
 #: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
 msgid "An activity is not responding."
-msgstr ""
+msgstr "एक कृयाकलापको प्रतिक्रिया छैन।"
 
 #: ../src/jarabe/controlpanel/gui.py:420 ../src/jarabe/view/buddymenu.py:138
 msgid "You may lose unsaved work if you continue."
 msgstr ""
+"यादि तपाईंले जारी राख्नु भयो भने , सुरक्षित नगरिएका काम गुमाउन सक्नु हुन्छ।"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
@@ -1444,7 +1458,7 @@ msgstr "खातामा उतार्ने"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
-msgstr ""
+msgstr "कृपया प्रतीक्षा गर्नुहोस्, तपाइको स्कुल सरभरको खोज हुदै छ।"
 
 #: ../src/jarabe/desktop/favoritesview.py:387
 msgid "Registration Failed"
@@ -1874,6 +1888,8 @@ msgstr "चयन गर्नुहोस"
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
 msgstr[0] ""
+"के तँपाई %d वटा इन्ट्री हटाउन चहानुहुन्छ ? के तँपाई %d वटा इन्ट्रीहारुहटाउन "
+"चहानुहुन्छ ?"
 msgstr[1] ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:831
@@ -1936,7 +1952,7 @@ msgstr "वस्तु छान"
 #: ../src/jarabe/journal/objectchooser.py:176
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr ""
+msgstr "%s को गतिविधि खोल्न वस्तु चयन"
 
 #: ../src/jarabe/journal/objectchooser.py:184
 #: ../src/jarabe/view/viewhelp.py:335 ../src/jarabe/view/viewsource.py:579
@@ -1977,8 +1993,8 @@ msgstr "फाइल नभाको प्रविष्टिहरु कप
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "तपाईँ % d प्रवेश प्रतिलिपि गर्न चाहनुहुन्छ?"
+msgstr[1] "तपाईँ % d प्रविष्टिहरू प्रतिलिपि गर्न चाहनुहुन्छ?"
 
 #: ../src/jarabe/journal/palettes.py:408
 msgid "Clipboard"
@@ -2004,7 +2020,7 @@ msgstr "बन्द गर"
 #: ../extensions/cpsection/backup/view.py:212
 #: ../extensions/cpsection/backup/view.py:265
 msgid "Continue"
-msgstr "होइन"
+msgstr "जारी राख"
 
 #: ../src/jarabe/journal/palettes.py:622
 #, python-format
@@ -2225,18 +2241,20 @@ msgstr "\"%s\" को स्क्रिनसट"
 
 #: ../src/jarabe/view/alerts.py:38 ../src/jarabe/view/alerts.py:48
 msgid "Activity launcher"
-msgstr ""
+msgstr "कृयाकलाप सुरुवात"
 
 #: ../src/jarabe/view/alerts.py:39
 #, python-format
 msgid "%s is already running. Please stop %s before launching it again."
-msgstr ""
+msgstr "%s पहिले नै चलिरहेको छ। कृपया %s फेरिसुरु हुनु भन्दा अगाडि रोक्नु।"
 
 #: ../src/jarabe/view/alerts.py:49
 msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
 msgstr ""
+"चालु कृयाकलाप हरु अधिकतम संख्या पुगेको छ। कृपया एउटा नयाँ सुरु गर्नुभन्दा "
+"पहिले एउटा कृयाकलाप बन्द गर्नुहोस्।"
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
@@ -2318,7 +2336,7 @@ msgstr "दृष्टांत स्रोत"
 #: ../src/jarabe/view/viewsource.py:392
 #, python-format
 msgid "Do you want to duplicate %s Activity?"
-msgstr ""
+msgstr "तपाईँ %s को कृयाकलाप नक्कल गर्न चाहनुहुन्छ?"
 
 #: ../src/jarabe/view/viewsource.py:394
 msgid "This may take a few minutes"
@@ -2326,7 +2344,7 @@ msgstr "केहि समय पर्खनुहोस्"
 
 #: ../src/jarabe/view/viewsource.py:408
 msgid "Duplicating activity..."
-msgstr ""
+msgstr "कृयाकलाप नक्कल गरिदै ..."
 
 #: ../src/jarabe/view/viewsource.py:447
 msgid "Duplicated"
@@ -2334,15 +2352,15 @@ msgstr "उस्तै "
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
-msgstr ""
+msgstr "कृयाकलाप नक्कल गरिएको छ"
 
 #: ../src/jarabe/view/viewsource.py:462
 msgid "Duplicated activity already exists"
-msgstr ""
+msgstr "नक्कलि कृयाकलाप पहिले नै अवस्थित छ"
 
 #: ../src/jarabe/view/viewsource.py:463
 msgid "Delete your copy before trying to duplicate the activity again"
-msgstr ""
+msgstr "फेरि कृयाकलाप नक्कल गर्न प्रयास गर्नु अघि आफ्नो प्रतिलिपि मेटाउनु"
 
 #: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
@@ -2378,7 +2396,7 @@ msgstr "पछिसम्म "
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171
 msgid "Please connect a device to continue"
-msgstr ""
+msgstr "कृपया जारी गर्न उपकरण जोड्नु"
 
 #: ../extensions/cpsection/backup/backends/volume.py:69
 #: ../extensions/cpsection/backup/backends/volume.py:178
@@ -2387,16 +2405,16 @@ msgstr "तिम्रो परिमाण  छान "
 
 #: ../extensions/cpsection/backup/backends/volume.py:78
 msgid "Not enough space in volume"
-msgstr ""
+msgstr "भोलुममा पर्याप्त स्पेस छैन"
 
 #: ../extensions/cpsection/backup/backends/volume.py:122
 #, python-format
 msgid "Backup from user %s"
-msgstr ""
+msgstr "प्रयोगकर्ता %s बाट जगेडा"
 
 #: ../extensions/cpsection/backup/backends/volume.py:191
 msgid "No checkpoints found in the device"
-msgstr ""
+msgstr "उपकरणमा कुनै चौकियों फेला परेन"
 
 #: ../extensions/cpsection/backup/backends/volume.py:199
 msgid "Select your checkpoint"
@@ -2404,31 +2422,31 @@ msgstr "तिम्रो जाच गर्ने विन्दु छा�
 
 #: ../extensions/cpsection/backup/backends/volume.py:210
 msgid "Not enough space in disk"
-msgstr ""
+msgstr "डिस्क मा पर्याप्त ठाउँ छैन"
 
 #: ../extensions/cpsection/backup/backends/volume.py:329
 msgid "Local Device Backup"
-msgstr ""
+msgstr "स्थानीय उपकरण जगेडा"
 
 #: ../extensions/cpsection/backup/view.py:133
 msgid "Save the contents of your Journal"
-msgstr ""
+msgstr "तपाईंको पंजिकाको सामग्रीहरू सुरक्षित गर्नुहोस"
 
 #: ../extensions/cpsection/backup/view.py:141
 msgid "Restore the contents of your Journal"
-msgstr ""
+msgstr "तपाईंको पंजिकाको सामग्रीहरू पुनर्स्थापना गर्नुहोस"
 
 #: ../extensions/cpsection/backup/view.py:223
 msgid "Please close all the activities, and start again"
-msgstr ""
+msgstr "कृपया सबै कृयाकलाप हारु बन्द गर्नु, र फेरि सुरु गर्नु ।"
 
 #: ../extensions/cpsection/backup/view.py:229
 msgid "Select where you want create your backup"
-msgstr ""
+msgstr "जहाँ तपाईंले आफ्नो जगेडा सिर्जना गर्न चाहनुहुन्छ चयन गर्नु"
 
 #: ../extensions/cpsection/backup/view.py:231
 msgid "Select where you want retrieve your restore"
-msgstr ""
+msgstr "चयन गर्नुस् जहा तँपाईं आफ्नो बहाल प्राप्त गर्न चाहनु हुन्छ ।"
 
 #: ../extensions/cpsection/backup/view.py:271
 msgid "Retry"
@@ -2436,7 +2454,7 @@ msgstr "पुन: कोशीश गर्नु "
 
 #: ../extensions/cpsection/backup/view.py:290
 msgid "Starting backup..."
-msgstr ""
+msgstr "जगेडा सुरु हुँदैछ ..."
 
 #: ../extensions/cpsection/backup/view.py:294
 msgid "Starting restore..."
@@ -2448,6 +2466,8 @@ msgid ""
 "will first be emptied of all its content; then the restored content will be "
 "added."
 msgstr ""
+"म मेरो पंजिका को सामग्री पुनर्स्थापना गर्न चाहन्छु। यो गर्न, मेरो पंजिकामा "
+"पहिले सामग्रीहरु खाली गरिनेछ; त्यसपछि सामग्री पुनःस्थापित थपिनेछ।"
 
 #: ../extensions/cpsection/backup/view.py:327
 msgid "Confirm"
@@ -2459,11 +2479,11 @@ msgstr "कार्यसन्चालन सुरू गरिएको "
 
 #: ../extensions/cpsection/backup/view.py:377
 msgid "Backup finished successfully"
-msgstr ""
+msgstr "जगेडा सफलतापूर्वक समाप्त"
 
 #: ../extensions/cpsection/backup/view.py:379
 msgid "Restore realized successfully."
-msgstr ""
+msgstr "पुनर्स्थापना सफलतापूर्वक बुझियो ।"
 
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
