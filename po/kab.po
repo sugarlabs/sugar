@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-06-10 14:33+0000\n"
-"Last-Translator: belkacem77 <belkacem77@gmail.com>\n"
+"PO-Revision-Date: 2017-10-15 20:28+0000\n"
+"Last-Translator: Yacine-Bouklif <yacine_tizi2003@yahoo.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: kab\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1497105188.000000\n"
+"X-POOTLE-MTIME: 1508099328.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -37,7 +37,7 @@ msgstr "Tansa URL n usekles n uḥraz."
 
 #: ../data/org.sugarlabs.gschema.xml.h:5 ../data/sugar.schemas.in.h:31
 msgid "Show Log out"
-msgstr "Tansa URL anida a yettwaḥrez ukalas."
+msgstr "Sken tuffɣa"
 
 #: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Log out\" option."
@@ -57,7 +57,7 @@ msgstr "Sken Sens"
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
-msgstr "Ma IH, Sugar ad d-yesken asefran \"Sens\""
+msgstr "Ma IH, Sugar ad d-yesken asefran \"Sens\"."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
@@ -151,43 +151,45 @@ msgstr "Abrid n unekcum ar tugna n tugna n ugilal"
 
 #: ../data/org.sugarlabs.gschema.xml.h:30
 msgid "Path to the image to be used as a background."
-msgstr ""
+msgstr "Abrid n unekcum n tugna yettwaseqdacen d agilal."
 
 #: ../data/org.sugarlabs.gschema.xml.h:31
 msgid "Background alpha level"
-msgstr ""
+msgstr "Aswir n tefrawant n ubadu alpha i tugna n ugilal"
 
 #: ../data/org.sugarlabs.gschema.xml.h:32
 msgid "The opacity of the background image."
-msgstr ""
+msgstr "Aswir n tebrek n tugna n ugilal."
 
 #: ../data/org.sugarlabs.gschema.xml.h:33
 msgid "Mimetype registry"
-msgstr ""
+msgstr "Anaw MIME (azmam IANA)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:34
 msgid "Consists of key-value pairs mimetypes and their corresponding activity"
 msgstr ""
+"Yettwammel s tyugiwin tasarutt-azalen n wanawen MIME akked irmuden-nsen "
+"imenṭaḍen"
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
-msgstr ""
+msgstr "Aswir n ubleɣ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:36 ../data/sugar.schemas.in.h:8
 msgid "Volume level for the sound device."
-msgstr ""
+msgstr "Aswir n ubleɣ n yibenk ameslaw."
 
 #: ../data/org.sugarlabs.gschema.xml.h:37 ../data/sugar.schemas.in.h:9
 msgid "Sound Muted"
-msgstr ""
+msgstr "Ameslaw yensa"
 
 #: ../data/org.sugarlabs.gschema.xml.h:38 ../data/sugar.schemas.in.h:10
 msgid "Setting for muting the sound device."
-msgstr ""
+msgstr "Aseggem n usexsi n yibenk ameslaw."
 
 #: ../data/org.sugarlabs.gschema.xml.h:39
 msgid "Brightness Level"
-msgstr ""
+msgstr "Aswir n ubruṛeq"
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
@@ -215,32 +217,32 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
-msgstr ""
+msgstr "Azilal n umray n umsenker"
 
 #: ../data/org.sugarlabs.gschema.xml.h:46
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
-msgstr ""
+msgstr "Tansagt s tmilisinin gar usmiren n imrayen i yiwen n umseker. "
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
-msgstr ""
+msgstr "Tanzagt n rrif"
 
 #: ../data/org.sugarlabs.gschema.xml.h:48 ../data/sugar.schemas.in.h:20
 msgid "Delay for the activation of the frame using the edges."
-msgstr ""
+msgstr "Tanzagt n tilmi iseqdacen lerryuf n tmeẓri."
 
 #: ../data/org.sugarlabs.gschema.xml.h:49 ../data/sugar.schemas.in.h:21
 msgid "Corner Delay"
-msgstr ""
+msgstr "Tanzagt n tiɣmert"
 
 #: ../data/org.sugarlabs.gschema.xml.h:50 ../data/sugar.schemas.in.h:22
 msgid "Delay for the activation of the frame using the corners."
-msgstr ""
+msgstr "Tanzagt n urmad n tilmi iseqdacen tiɣmar n tmeẓri"
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr ""
+msgstr "Teɣzi n temnaḍt n urmad"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
@@ -325,7 +327,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:71 ../data/sugar.schemas.in.h:47
 msgid "Default font size"
-msgstr ""
+msgstr "Tiddi n lexṣas"
 
 #: ../data/org.sugarlabs.gschema.xml.h:72 ../data/sugar.schemas.in.h:48
 msgid "Font size that is used throughout the desktop."
@@ -528,11 +530,11 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/model.py:37
 msgid "Not available"
-msgstr ""
+msgstr "Ulac"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:76
 msgid "Identity"
-msgstr ""
+msgstr "Tamagit"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:87
 msgid "Model:"
@@ -544,7 +546,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:103
 msgid "Software"
-msgstr ""
+msgstr "Aseɣẓan"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:112
 msgid "Build:"
@@ -570,7 +572,7 @@ msgstr ""
 #: ../extensions/cpsection/aboutcomputer/view.py:136
 #: ../src/jarabe/journal/journaltoolbox.py:169
 msgid "Today"
-msgstr ""
+msgstr "Ass-a"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:139
 msgid "Last system update:"
@@ -578,7 +580,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:150
 msgid "Copyright and License"
-msgstr ""
+msgstr "Izerfan n umeskar d turagt"
 
 #. TRANS: The word "Sugar" should not be translated.
 #: ../extensions/cpsection/aboutcomputer/view.py:169
@@ -595,31 +597,31 @@ msgstr ""
 
 #: ../extensions/cpsection/background/__init__.py:21
 msgid "Background"
-msgstr ""
+msgstr "Agilal"
 
 #: ../extensions/cpsection/background/view.py:48
 msgid "Select a background:"
-msgstr ""
+msgstr "Fren agilal:"
 
 #: ../extensions/cpsection/background/view.py:57
 msgid "Clear background"
-msgstr ""
+msgstr "Sfeḍ agilal"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr ""
+msgstr "Azemz akked usrag"
 
 #: ../extensions/cpsection/datetime/model.py:100
 msgid "Error: timezone does not exist."
-msgstr ""
+msgstr "Tuccḍa: tamnaḍt tasragant ulac-itt."
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
-msgstr ""
+msgstr "Akatar"
 
 #: ../extensions/cpsection/frame/view.py:26
 msgid "never"
-msgstr ""
+msgstr "werǧin"
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "instantaneous"
@@ -648,11 +650,11 @@ msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:123
 msgid "Size"
-msgstr ""
+msgstr "Tiddi (bytes/octets)"
 
 #: ../extensions/cpsection/frame/view.py:221
 msgid "toolbar size"
-msgstr ""
+msgstr "Tiddi n tfeggagt n ifecka"
 
 #: ../extensions/cpsection/frame/view.py:226
 msgid "exact corner or edge"
@@ -668,7 +670,7 @@ msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:232
 msgid "ignored"
-msgstr ""
+msgstr "yettwanef"
 
 #. TRANS: px as in pixels
 #: ../extensions/cpsection/frame/view.py:235
@@ -678,7 +680,7 @@ msgstr ""
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:38
 msgid "Keyboard"
-msgstr ""
+msgstr "Anasiw"
 
 #: ../extensions/cpsection/keyboard/view.py:240
 msgid "Keyboard Model"
@@ -695,7 +697,7 @@ msgstr ""
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:39
 msgid "Language"
-msgstr ""
+msgstr "Tutlayt"
 
 #: ../extensions/cpsection/language/model.py:29
 msgid "Could not access ~/.i18n. Create standard settings."
@@ -734,7 +736,7 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr ""
+msgstr "Tamurt:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
@@ -746,11 +748,11 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
-msgstr ""
+msgstr "Isem n wemseqdac:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
-msgstr ""
+msgstr "Awal n tbaḍnit:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:174
 msgid "Number:"
@@ -777,7 +779,7 @@ msgstr ""
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
 msgid "Network"
-msgstr ""
+msgstr "Azeṭṭa"
 
 #: ../extensions/cpsection/network/model.py:88
 msgid "State is unknown."
@@ -825,7 +827,7 @@ msgstr ""
 
 #: ../extensions/cpsection/network/view.py:147
 msgid "Server:"
-msgstr ""
+msgstr "Aqeddac:"
 
 #: ../extensions/cpsection/network/view.py:163
 msgid ""
@@ -889,7 +891,7 @@ msgstr ""
 #: ../extensions/cpsection/updater/view.py:156
 #, python-format
 msgid "Updating %s..."
-msgstr ""
+msgstr "Amucceḍ %s..."
 
 #: ../extensions/cpsection/updater/view.py:166
 msgid "Your software is up-to-date"
@@ -924,7 +926,7 @@ msgstr ""
 #: ../extensions/cpsection/updater/view.py:307
 #, python-format
 msgid "Download size: %s"
-msgstr ""
+msgstr "Tiddi n usider: %s"
 
 #: ../extensions/cpsection/updater/view.py:399
 #, python-format
@@ -939,7 +941,7 @@ msgstr ""
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:423
 msgid "None"
-msgstr ""
+msgstr "Aucun"
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:426
@@ -956,11 +958,11 @@ msgstr ""
 #: ../extensions/cpsection/updater/view.py:432
 #, python-format
 msgid "%.1f MB"
-msgstr ""
+msgstr "%.1f MAṬ"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Web Services"
-msgstr ""
+msgstr "Imeẓla Web"
 
 #: ../extensions/cpsection/webaccount/view.py:65
 #, python-format
@@ -971,7 +973,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
-msgstr ""
+msgstr "Ameslaw-iw"
 
 #: ../extensions/deviceicon/audio.py:330
 msgid "Speaker"
@@ -979,7 +981,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/audio.py:331
 msgid "Microphone"
-msgstr ""
+msgstr "Asawaḍ"
 
 #: ../extensions/deviceicon/battery.py:69
 msgid "My Battery"
@@ -991,7 +993,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/battery.py:154
 msgid "Charging"
-msgstr ""
+msgstr "Asali"
 
 #: ../extensions/deviceicon/battery.py:157
 msgid "Very little power remaining"
@@ -1006,15 +1008,15 @@ msgstr ""
 
 #: ../extensions/deviceicon/battery.py:167
 msgid "Charged"
-msgstr ""
+msgstr "Yuli"
 
 #: ../extensions/deviceicon/display.py:187
 msgid "My Display"
-msgstr ""
+msgstr "Agdil-iw"
 
 #: ../extensions/deviceicon/display.py:189
 msgid "Take a screenshot"
-msgstr ""
+msgstr "Ṭṭef agdil"
 
 #: ../extensions/deviceicon/display.py:211
 msgid "Brightness"
@@ -1022,11 +1024,11 @@ msgstr ""
 
 #: ../extensions/deviceicon/display.py:239
 msgid "Display"
-msgstr ""
+msgstr "Sken"
 
 #: ../extensions/deviceicon/frame.py:53
 msgid "Show my keyboard"
-msgstr ""
+msgstr "Sken anasiw-iw"
 
 #: ../extensions/deviceicon/network.py:48
 #, python-format
@@ -1038,7 +1040,7 @@ msgstr ""
 #: ../src/jarabe/desktop/networkviews.py:134
 #: ../src/jarabe/desktop/networkviews.py:510
 msgid "Disconnect"
-msgstr ""
+msgstr "Ffeɣ"
 
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:290
@@ -1054,11 +1056,11 @@ msgstr ""
 #: ../src/jarabe/desktop/networkviews.py:558
 #: ../src/jarabe/desktop/networkviews.py:702
 msgid "Connected"
-msgstr ""
+msgstr "Iqqen"
 
 #: ../extensions/deviceicon/network.py:123
 msgid "No wireless connection"
-msgstr ""
+msgstr "Tuqqna war tinelli"
 
 #: ../extensions/deviceicon/network.py:137
 #: ../extensions/deviceicon/network.py:140
@@ -1070,11 +1072,11 @@ msgstr ""
 #: ../src/jarabe/journal/listmodel.py:191
 #: ../src/jarabe/journal/listmodel.py:199
 msgid "Unknown"
-msgstr ""
+msgstr "Arussin"
 
 #: ../extensions/deviceicon/network.py:156
 msgid "Wired Network"
-msgstr ""
+msgstr "Aẓeṭṭa n tnelli"
 
 #: ../extensions/deviceicon/network.py:184
 msgid "Speed"
@@ -1082,22 +1084,23 @@ msgstr ""
 
 #: ../extensions/deviceicon/network.py:209
 msgid "Wireless modem"
-msgstr ""
+msgstr "Atrar war tinelli"
 
 #: ../extensions/deviceicon/network.py:278
 msgid "Please wait..."
-msgstr ""
+msgstr "Ttxil-k arǧu..."
 
 #: ../extensions/deviceicon/network.py:282
 #: ../src/jarabe/desktop/networkviews.py:128
 #: ../src/jarabe/desktop/networkviews.py:504
 #: ../src/jarabe/desktop/networkviews.py:647
 msgid "Connect"
-msgstr ""
+msgstr "Qqen"
 
 #: ../extensions/deviceicon/network.py:283
+#, fuzzy
 msgid "Disconnected"
-msgstr ""
+msgstr "Yenser"
 
 #: ../extensions/deviceicon/network.py:289
 #: ../src/jarabe/controlpanel/toolbar.py:121
@@ -1108,32 +1111,32 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:587
 #: ../src/jarabe/journal/palettes.py:166
 msgid "Cancel"
-msgstr ""
+msgstr "Sesfex"
 
 #: ../extensions/deviceicon/network.py:327
 msgid "Try connection again"
-msgstr ""
+msgstr "Ɛreḍ tikelt nniḍen tuqqna"
 
 #: ../extensions/deviceicon/network.py:330
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "Tuccḍa: %s"
 
 #: ../extensions/deviceicon/network.py:334
 #, python-format
 msgid "Suggestion: %s"
-msgstr ""
+msgstr "Asumer: %s"
 
 #: ../extensions/deviceicon/network.py:344
 #, python-format
 msgid "Connected for %s"
-msgstr ""
+msgstr "Iqqen ɣer %s"
 
 #: ../extensions/deviceicon/network.py:349
 #: ../extensions/deviceicon/network.py:350
 #, python-format
 msgid "%d KB"
-msgstr ""
+msgstr "%d KAṬ"
 
 #: ../extensions/deviceicon/network.py:355
 msgid "Check your PIN/PUK configuration."
@@ -1153,7 +1156,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/network.py:619
 msgid "Mesh Network"
-msgstr ""
+msgstr "Azeṭṭa Mesh"
 
 #: ../extensions/deviceicon/network.py:665
 #, python-format
@@ -1170,7 +1173,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/speech.py:49
 msgid "Speech"
-msgstr ""
+msgstr "Ameslay"
 
 #: ../extensions/deviceicon/speech.py:72
 #: ../extensions/deviceicon/speech.py:147
@@ -1188,7 +1191,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/speech.py:104
 msgid "Rate"
-msgstr ""
+msgstr "Afmiḍi"
 
 #: ../extensions/deviceicon/speech.py:142
 msgid "Pause playback"
@@ -1208,7 +1211,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/volume.py:62 ../src/jarabe/view/palettes.py:210
 msgid "Show contents"
-msgstr ""
+msgstr "Sken Igburen"
 
 #: ../data/sugar.schemas.in.h:15
 msgid "Favorites Layout"
@@ -1271,7 +1274,7 @@ msgstr ""
 #: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
 #: ../src/jarabe/journal/volumestoolbar.py:304
 msgid "Warning"
-msgstr ""
+msgstr "Ɣur-k"
 
 #: ../src/jarabe/controlpanel/gui.py:374
 #: ../src/jarabe/controlpanel/sectionview.py:45
@@ -1303,24 +1306,24 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:94
 #, python-format
 msgid "Search in %s"
-msgstr ""
+msgstr "Nadi di %s"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
-msgstr ""
+msgstr "Iγewwaṛen"
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:349
 msgid "Done"
-msgstr ""
+msgstr "Immed"
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
 msgid "Ok"
-msgstr ""
+msgstr "Ih"
 
 #: ../src/jarabe/desktop/activitieslist.py:340
 #, python-format
 msgid "Version %s"
-msgstr ""
+msgstr "Lqem %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:424
 #: ../src/jarabe/journal/listview.py:566 ../src/jarabe/journal/iconview.py:301
@@ -1344,7 +1347,7 @@ msgstr ""
 #: ../src/jarabe/frame/clipboardmenu.py:65
 #: ../src/jarabe/view/viewsource.py:383
 msgid "Keep"
-msgstr ""
+msgstr "Eǧǧ"
 
 #: ../src/jarabe/desktop/activitieslist.py:555
 #: ../src/jarabe/desktop/activitieslist.py:625
@@ -1355,7 +1358,7 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:812
 #: ../src/jarabe/journal/palettes.py:138 ../src/jarabe/journal/palettes.py:161
 msgid "Erase"
-msgstr ""
+msgstr "Sfeḍ"
 
 #: ../src/jarabe/desktop/activitieslist.py:641
 msgid "Remove favorite"
@@ -1392,7 +1395,7 @@ msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
-msgstr ""
+msgstr "Ajerred"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
@@ -1412,7 +1415,7 @@ msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:680
 msgid "Register"
-msgstr ""
+msgstr "Sekles"
 
 #: ../src/jarabe/desktop/favoritesview.py:682
 msgid "Register again"
@@ -1423,18 +1426,18 @@ msgstr ""
 #: ../src/jarabe/frame/zoomtoolbar.py:57 ../src/jarabe/model/screenshot.py:63
 #: ../src/jarabe/view/viewhelp.py:76
 msgid "Home"
-msgstr ""
+msgstr "Agejdan"
 
 #: ../src/jarabe/desktop/homewindow.py:262
 #: ../src/jarabe/frame/zoomtoolbar.py:53 ../src/jarabe/model/screenshot.py:61
 #: ../src/jarabe/view/viewhelp.py:73
 msgid "Group"
-msgstr ""
+msgstr "Agraw"
 
 #: ../src/jarabe/desktop/homewindow.py:269
 #: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Neighborhood"
-msgstr ""
+msgstr "Anarag-iw"
 
 #: ../src/jarabe/desktop/keydialog.py:92
 #, python-format
@@ -1445,7 +1448,7 @@ msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:141
 msgid "Key Type:"
-msgstr ""
+msgstr "Anaw n tsarutt:"
 
 #: ../src/jarabe/desktop/keydialog.py:161
 msgid "Authentication Type:"
@@ -1469,7 +1472,7 @@ msgstr ""
 #: ../src/jarabe/desktop/meshbox.py:89
 #: ../src/jarabe/frame/activitiestray.py:208
 msgid "Join"
-msgstr ""
+msgstr "Asemlil"
 
 #: ../src/jarabe/desktop/networkviews.py:499
 #, python-format
@@ -1491,7 +1494,7 @@ msgstr ""
 
 #: ../src/jarabe/desktop/viewtoolbar.py:95
 msgid "List view"
-msgstr ""
+msgstr "Timeẓri n tebdart"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:97
 #: ../src/jarabe/desktop/viewtoolbar.py:196
@@ -1503,28 +1506,28 @@ msgstr ""
 #: ../src/jarabe/frame/activitiestray.py:213
 #: ../src/jarabe/frame/activitiestray.py:657
 msgid "Decline"
-msgstr ""
+msgstr "Agwi"
 
 #: ../src/jarabe/frame/activitiestray.py:598
 #, python-format
 msgid "%dB"
-msgstr ""
+msgstr "%dAṬ"
 
 #: ../src/jarabe/frame/activitiestray.py:600
 #, python-format
 msgid "%dKB"
-msgstr ""
+msgstr "%dKAṬ"
 
 #: ../src/jarabe/frame/activitiestray.py:602
 #, python-format
 msgid "%dMB"
-msgstr ""
+msgstr "%dMAṬ"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:620
 #, python-format
 msgid "%s of %s"
-msgstr ""
+msgstr "%s, si  %s"
 
 #: ../src/jarabe/frame/activitiestray.py:634
 #, python-format
@@ -1534,13 +1537,13 @@ msgstr ""
 #: ../src/jarabe/frame/activitiestray.py:648
 #: ../extensions/cpsection/backup/view.py:324
 msgid "Accept"
-msgstr ""
+msgstr "Qbel"
 
 #: ../src/jarabe/frame/activitiestray.py:722
 #: ../src/jarabe/frame/activitiestray.py:736
 #: ../src/jarabe/frame/activitiestray.py:878
 msgid "Dismiss"
-msgstr ""
+msgstr "Kkes"
 
 #: ../src/jarabe/frame/activitiestray.py:750
 msgid "The other participant canceled the file transfer"
@@ -1554,16 +1557,16 @@ msgstr ""
 #: ../src/jarabe/frame/clipboardmenu.py:54
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr ""
+msgstr "Kkes"
 
 #: ../src/jarabe/frame/clipboardmenu.py:60
 #: ../src/jarabe/frame/clipboardmenu.py:83
 msgid "Open"
-msgstr ""
+msgstr "Ldi"
 
 #: ../src/jarabe/frame/clipboardmenu.py:88
 msgid "Open with"
-msgstr ""
+msgstr "Ldi s"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
@@ -1584,7 +1587,7 @@ msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:62 ../src/jarabe/model/screenshot.py:69
 msgid "Activity"
-msgstr ""
+msgstr "Armud"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
@@ -1592,7 +1595,7 @@ msgstr ""
 
 #: ../src/jarabe/intro/window.py:135
 msgid "Name:"
-msgstr ""
+msgstr "Isem :"
 
 #: ../src/jarabe/intro/window.py:174
 msgid "Click to change color:"
@@ -1600,11 +1603,11 @@ msgstr ""
 
 #: ../src/jarabe/intro/window.py:337 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
-msgstr ""
+msgstr "Uɣal"
 
 #: ../src/jarabe/intro/window.py:352
 msgid "Next"
-msgstr ""
+msgstr "Ar zdat"
 
 #: ../src/jarabe/intro/agepicker.py:38
 msgid "Select grade:"
@@ -1616,7 +1619,7 @@ msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Kindergarten"
-msgstr ""
+msgstr "Aɣerbaz n warrac"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "1st Grade"
@@ -1667,11 +1670,11 @@ msgstr ""
 #: ../src/jarabe/journal/volumestoolbar.py:134
 #: ../src/jarabe/journal/iconmodel.py:110
 msgid "Untitled"
-msgstr ""
+msgstr "War azwel"
 
 #: ../src/jarabe/journal/expandedentry.py:366
 msgid "No preview"
-msgstr ""
+msgstr "Ulac taskant"
 
 #: ../src/jarabe/journal/expandedentry.py:386
 #, python-format
@@ -1681,17 +1684,17 @@ msgstr ""
 #: ../src/jarabe/journal/expandedentry.py:387
 #, python-format
 msgid "Date: %s"
-msgstr ""
+msgstr "Azmez: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:388
 #, python-format
 msgid "Size: %s"
-msgstr ""
+msgstr "Taɣzi : %s."
 
 #: ../src/jarabe/journal/expandedentry.py:412
 #: ../src/jarabe/journal/misc.py:131
 msgid "No date"
-msgstr ""
+msgstr "Ulac azemz"
 
 #: ../src/jarabe/journal/expandedentry.py:421
 msgid "Participants:"
@@ -1699,15 +1702,15 @@ msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:459
 msgid "Description:"
-msgstr ""
+msgstr "Aglam"
 
 #: ../src/jarabe/journal/expandedentry.py:465
 msgid "Tags:"
-msgstr ""
+msgstr "Ticraḍ:"
 
 #: ../src/jarabe/journal/expandedentry.py:470
 msgid "Comments:"
-msgstr ""
+msgstr "Iwenniten:"
 
 #: ../src/jarabe/journal/journalactivity.py:182
 #: ../src/jarabe/journal/journaltoolbox.py:94
@@ -1726,7 +1729,7 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:403
 #: ../src/jarabe/journal/journaltoolbox.py:479
 msgid "Anything"
-msgstr ""
+msgstr "Yal taɣawsa"
 
 #: ../src/jarabe/journal/journaltoolbox.py:118
 #: ../src/jarabe/journal/journaltoolbox.py:165
@@ -1744,25 +1747,25 @@ msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:178
 msgid "Past month"
-msgstr ""
+msgstr "Aggur yezrin"
 
 #: ../src/jarabe/journal/journaltoolbox.py:181
 msgid "Past year"
-msgstr ""
+msgstr "Aseggas yezrin"
 
 #: ../src/jarabe/journal/journaltoolbox.py:521
 #: ../src/jarabe/journal/palettes.py:105
 msgid "Copy to"
-msgstr ""
+msgstr "Nɣel ar"
 
 #: ../src/jarabe/journal/journaltoolbox.py:529
 #: ../src/jarabe/journal/palettes.py:116 ../src/jarabe/view/viewsource.py:379
 msgid "Duplicate"
-msgstr ""
+msgstr "Sleg"
 
 #: ../src/jarabe/journal/journaltoolbox.py:535
 msgid "Refresh"
-msgstr ""
+msgstr "Sismeḍ"
 
 #: ../src/jarabe/journal/journaltoolbox.py:577
 #: ../src/jarabe/journal/palettes.py:156 ../src/jarabe/journal/palettes.py:374
@@ -1775,13 +1778,13 @@ msgstr ""
 #: ../src/jarabe/journal/palettes.py:157 ../src/jarabe/journal/palettes.py:375
 #: ../src/jarabe/journal/volumestoolbar.py:313
 msgid "Error"
-msgstr ""
+msgstr "Tuccḍa"
 
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:662
 #: ../src/jarabe/journal/palettes.py:86
 msgid "Start"
-msgstr ""
+msgstr "Exécuté le"
 
 #: ../src/jarabe/journal/journaltoolbox.py:682
 #: ../src/jarabe/journal/palettes.py:100 ../src/jarabe/journal/palettes.py:513
@@ -1790,7 +1793,7 @@ msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 msgid "Sort view"
-msgstr ""
+msgstr "Smizzwer timeẓri"
 
 #: ../src/jarabe/journal/journaltoolbox.py:711
 msgid "Sort by date modified"
@@ -1802,15 +1805,15 @@ msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:713
 msgid "Sort by size"
-msgstr ""
+msgstr "Smizzwer s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:778
 msgid "Deselect all"
-msgstr ""
+msgstr "Kkes afran i meṛṛa"
 
 #: ../src/jarabe/journal/journaltoolbox.py:791
 msgid "Select all"
-msgstr ""
+msgstr "Fren kulec"
 
 #: ../src/jarabe/journal/journaltoolbox.py:817
 #, python-format
@@ -1822,7 +1825,7 @@ msgstr[1] ""
 #: ../src/jarabe/journal/journaltoolbox.py:831
 #: ../src/jarabe/journal/palettes.py:378
 msgid "Copy"
-msgstr ""
+msgstr "Nɣel"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:882
@@ -1884,7 +1887,7 @@ msgstr ""
 #: ../src/jarabe/journal/objectchooser.py:184
 #: ../src/jarabe/view/viewhelp.py:335 ../src/jarabe/view/viewsource.py:579
 msgid "Close"
-msgstr ""
+msgstr "Mdel"
 
 #: ../src/jarabe/journal/palettes.py:84
 msgid "Resume with"
@@ -1900,7 +1903,7 @@ msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:133
 msgid "View Details"
-msgstr ""
+msgstr "Wali talqayt"
 
 #: ../src/jarabe/journal/palettes.py:193
 msgid "Entries without a file cannot be sent."
@@ -1925,7 +1928,7 @@ msgstr[1] ""
 
 #: ../src/jarabe/journal/palettes.py:408
 msgid "Clipboard"
-msgstr ""
+msgstr "Ɣef afus"
 
 #: ../src/jarabe/journal/palettes.py:478
 msgid "No friends present"
@@ -1941,13 +1944,13 @@ msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:580 ../src/jarabe/view/palettes.py:133
 msgid "Stop"
-msgstr ""
+msgstr "Seḥbes"
 
 #: ../src/jarabe/journal/palettes.py:585
 #: ../extensions/cpsection/backup/view.py:212
 #: ../extensions/cpsection/backup/view.py:265
 msgid "Continue"
-msgstr ""
+msgstr "Kemmel"
 
 #: ../src/jarabe/journal/palettes.py:622
 #, python-format
@@ -2158,7 +2161,7 @@ msgstr ""
 
 #: ../src/jarabe/model/screenshot.py:72
 msgid "Screenshot"
-msgstr ""
+msgstr "Tuṭṭfa n ugdil"
 
 #: ../src/jarabe/model/screenshot.py:74
 #, python-format
@@ -2190,19 +2193,19 @@ msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:108
 msgid "Shutdown"
-msgstr ""
+msgstr "Sexsi"
 
 #: ../src/jarabe/view/buddymenu.py:113
 msgid "Restart"
-msgstr ""
+msgstr "Ales tanekra"
 
 #: ../src/jarabe/view/buddymenu.py:119
 msgid "Logout"
-msgstr ""
+msgstr "Tuffɣa"
 
 #: ../src/jarabe/view/buddymenu.py:124
 msgid "My Settings"
-msgstr ""
+msgstr "Iɣewwaṛen-iw"
 
 #: ../src/jarabe/view/buddymenu.py:183
 #, python-format
@@ -2216,7 +2219,7 @@ msgstr ""
 
 #: ../src/jarabe/view/palettes.py:53
 msgid "Starting..."
-msgstr ""
+msgstr "Tanekra..."
 
 #: ../src/jarabe/view/palettes.py:63
 msgid "Activity failed to start"
@@ -2225,11 +2228,11 @@ msgstr ""
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:105
 msgid "View Source"
-msgstr ""
+msgstr "Sken aɣbalu"
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
-msgstr ""
+msgstr "Wali asebter n tallelt"
 
 #: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
@@ -2238,7 +2241,7 @@ msgstr ""
 #: ../src/jarabe/view/palettes.py:266
 msgctxt "Volume"
 msgid "Remove"
-msgstr ""
+msgstr "Kkes"
 
 #: ../src/jarabe/view/viewhelp.py:304
 msgid "Help Manual"
@@ -2288,7 +2291,7 @@ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
-msgstr ""
+msgstr "Aqbalu"
 
 #: ../src/jarabe/view/viewsource.py:542
 msgid "Activity Bundle Source"
@@ -2314,7 +2317,7 @@ msgstr ""
 
 #: ../extensions/cpsection/backup/__init__.py:22
 msgid "Backup"
-msgstr ""
+msgstr "Sekles"
 
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171
@@ -2373,15 +2376,15 @@ msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:271
 msgid "Retry"
-msgstr ""
+msgstr "Ɛref̣ tikelt-nniḍen"
 
 #: ../extensions/cpsection/backup/view.py:290
 msgid "Starting backup..."
-msgstr ""
+msgstr "Asenker n uḥraz..."
 
 #: ../extensions/cpsection/backup/view.py:294
 msgid "Starting restore..."
-msgstr ""
+msgstr "Asenker n tririt..."
 
 #: ../extensions/cpsection/backup/view.py:321
 msgid ""
@@ -2392,11 +2395,11 @@ msgstr ""
 
 #: ../extensions/cpsection/backup/view.py:327
 msgid "Confirm"
-msgstr ""
+msgstr "Sentem"
 
 #: ../extensions/cpsection/backup/view.py:365
 msgid "Operation started"
-msgstr ""
+msgstr "Tamhelt tebda"
 
 #: ../extensions/cpsection/backup/view.py:377
 msgid "Backup finished successfully"
@@ -2408,4 +2411,4 @@ msgstr ""
 
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
-msgstr ""
+msgstr "Sfeḍ ilɣa"

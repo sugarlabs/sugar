@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-01-22 17:57+0000\n"
-"Last-Translator: Elias <elias.secchi@gmail.com>\n"
+"PO-Revision-Date: 2017-10-24 11:27+0000\n"
+"Last-Translator: PaoloPelloni <info@paolopelloni.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -16,15 +16,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1485107827.000000\n"
+"X-POOTLE-MTIME: 1508844452.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
-msgstr "Passa a GSettings"
+msgstr "Passato a GSettings"
 
 #: ../data/org.sugarlabs.gschema.xml.h:2
 msgid "This key shows whether or not GConf values were migrated to GSettings"
 msgstr ""
+"Questa chiave mostra se i valori di GConf siano stati migrati in GSettings o "
+"meno"
 
 #: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
 msgid "Backup URL"
@@ -51,12 +53,10 @@ msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr "Se TRUE, Sugar mostrerà una opzione di \"Riavvia\"."
 
 #: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
-#, fuzzy
 msgid "Show Shutdown"
 msgstr "Mostra Disconnessione"
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
-#, fuzzy
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
 msgstr "Se TRUE, Sugar mostrerà una opzione di \"Disconnessione\"."
 
@@ -67,6 +67,8 @@ msgstr "Mostra Registro"
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
 msgstr ""
+"Se TRUE, Sugar mostrerà una opzione di \"Registrazione\" nella tavolozza "
+"buddy."
 
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
 msgid "Bundle IDs of protected activities"
@@ -127,11 +129,11 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:23
 msgid "User Gender"
-msgstr ""
+msgstr "Genere dell'utente"
 
 #: ../data/org.sugarlabs.gschema.xml.h:24
 msgid "Gender of the Sugar user, either male, female, or unassigned"
-msgstr ""
+msgstr "Genere dell'utente di Sugar, maschio, femmina, oppure non indicato"
 
 #: ../data/org.sugarlabs.gschema.xml.h:25
 msgid "User Birth Timestamp"
@@ -139,7 +141,7 @@ msgstr "Data di nascita dell'utente"
 
 #: ../data/org.sugarlabs.gschema.xml.h:26
 msgid "Birth timestamp (seconds since the epoch)"
-msgstr ""
+msgstr "Segnatempo (secondi dall'epoch)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:27
 msgid "Group Label"
@@ -147,7 +149,7 @@ msgstr "Etichetta del gruppo"
 
 #: ../data/org.sugarlabs.gschema.xml.h:28
 msgid "Label associated with age, e.g., '2nd Grade'"
-msgstr ""
+msgstr "Etichetta associata con l'età, ad esempio \"2° grado\""
 
 #: ../data/org.sugarlabs.gschema.xml.h:29
 msgid "Background image path"
@@ -159,7 +161,7 @@ msgstr "Percorso dell'immagine usata come sfondo"
 
 #: ../data/org.sugarlabs.gschema.xml.h:31
 msgid "Background alpha level"
-msgstr ""
+msgstr "Livello alfa dello sfondo"
 
 #: ../data/org.sugarlabs.gschema.xml.h:32
 msgid "The opacity of the background image."
@@ -167,13 +169,12 @@ msgstr "Opacità dell'immagine di sfondo."
 
 #: ../data/org.sugarlabs.gschema.xml.h:33
 msgid "Mimetype registry"
-msgstr ""
+msgstr "Registro tipi mime"
 
 #: ../data/org.sugarlabs.gschema.xml.h:34
-#, fuzzy
 msgid "Consists of key-value pairs mimetypes and their corresponding activity"
 msgstr ""
-"Costituito da coppie chiave-valore di mimetype a dalle proprie attività "
+"Costituito da coppie chiave-valore di tipi mime e dalle proprie attività "
 "corrispondenti"
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
@@ -211,21 +212,24 @@ msgstr "Selezione per il Timezone del sistema."
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr ""
+msgstr "Viste home"
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
 "List of home views, including the view icon, the favorite icon and the layout"
 msgstr ""
+"Elenco di viste home, inclusa la vista icona, l'icona favorita ed il layout"
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
-msgstr ""
+msgstr "Intervallo animazione di avvio"
 
 #: ../data/org.sugarlabs.gschema.xml.h:46
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
 msgstr ""
+"Ritardo in millisecondi fra gli aggiornamenti delle animazioni per l'icona "
+"pulsante di avvio."
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
@@ -247,11 +251,11 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr ""
+msgstr "Dimensioni trigger"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
-msgstr ""
+msgstr "Dimensioni dell'area trigger, in pixel dall'angolo/estremo."
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
@@ -366,7 +370,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:76
 msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
-msgstr ""
+msgstr "Se TRUE, Sugar si collegherà automaticamente a reti Ad-hoc"
 
 #: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
 msgid "GSM network username (DEPRECATED/UNUSED)"
@@ -427,11 +431,11 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:89
 msgid "TODO: add summary"
-msgstr ""
+msgstr "DA FARE: aggiungi sommario"
 
 #: ../data/org.sugarlabs.gschema.xml.h:90
 msgid "TODO: add description"
-msgstr ""
+msgstr "DA FARE: aggiungi descrizione"
 
 #: ../data/org.sugarlabs.gschema.xml.h:91 ../data/sugar.schemas.in.h:65
 msgid "Pitch value for the speech sugar service"
@@ -506,7 +510,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:105 ../data/sugar.schemas.in.h:77
 msgid "A description of the hardware available to the user."
-msgstr ""
+msgstr "Una descrizione dell'hardware disponibile all'utente."
 
 #: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
@@ -555,7 +559,7 @@ msgstr "Seleziona per cambiare il tuo colore:"
 #: ../extensions/cpsection/aboutme/view.py:294
 #: ../src/jarabe/intro/window.py:203
 msgid "Select gender:"
-msgstr ""
+msgstr "Seleziona il genere:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
@@ -571,7 +575,7 @@ msgstr "Identità"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:87
 msgid "Model:"
-msgstr ""
+msgstr "Modello:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Serial Number:"
@@ -609,7 +613,7 @@ msgstr "Oggi"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:139
 msgid "Last system update:"
-msgstr ""
+msgstr "Ultimo aggiornamento di sistema:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:150
 msgid "Copyright and License"
@@ -651,7 +655,7 @@ msgstr "Data e Ora"
 #: ../extensions/cpsection/datetime/model.py:100
 #, fuzzy
 msgid "Error: timezone does not exist."
-msgstr "Errore, timezone non esistente."
+msgstr "Errore: fuso orario non esistente."
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
@@ -689,27 +693,27 @@ msgstr "Margine"
 
 #: ../extensions/cpsection/frame/view.py:123
 msgid "Size"
-msgstr ""
+msgstr "Dimensioni"
 
 #: ../extensions/cpsection/frame/view.py:221
 msgid "toolbar size"
-msgstr ""
+msgstr "dimensioni della barra degli strumenti"
 
 #: ../extensions/cpsection/frame/view.py:226
 msgid "exact corner or edge"
-msgstr ""
+msgstr "angolo o bordo esatto"
 
 #: ../extensions/cpsection/frame/view.py:228
 msgid "exact corner"
-msgstr ""
+msgstr "angolo esatto"
 
 #: ../extensions/cpsection/frame/view.py:230
 msgid "exact edge"
-msgstr ""
+msgstr "bordo esatto"
 
 #: ../extensions/cpsection/frame/view.py:232
 msgid "ignored"
-msgstr ""
+msgstr "ignorato"
 
 #. TRANS: px as in pixels
 #: ../extensions/cpsection/frame/view.py:235
@@ -851,11 +855,11 @@ msgstr "Radio"
 #: ../extensions/cpsection/network/view.py:103
 msgid ""
 "Discard wireless connections if you have trouble connecting to the network"
-msgstr ""
+msgstr "Ignora connessione wireless se hai problemi a connetterti alle rete"
 
 #: ../extensions/cpsection/network/view.py:113
 msgid "Discard wireless connections"
-msgstr ""
+msgstr "Ignora connessioni wireless"
 
 #: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
@@ -960,6 +964,7 @@ msgstr ""
 #: ../extensions/cpsection/updater/view.py:186
 msgid "Verify your connection to internet and try again, or try again later"
 msgstr ""
+"Verifica la connessione a internet e prova di nuovo, oppure prova più tardi"
 
 #: ../extensions/cpsection/updater/view.py:206
 #, python-format
@@ -1011,7 +1016,7 @@ msgstr "%.1f MB"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Web Services"
-msgstr ""
+msgstr "Servizi Web"
 
 #: ../extensions/cpsection/webaccount/view.py:65
 #, python-format
@@ -1024,15 +1029,15 @@ msgstr ""
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
-msgstr ""
+msgstr "Mio audio"
 
 #: ../extensions/deviceicon/audio.py:330
 msgid "Speaker"
-msgstr ""
+msgstr "Speaker"
 
 #: ../extensions/deviceicon/audio.py:331
 msgid "Microphone"
-msgstr ""
+msgstr "Microfono"
 
 #: ../extensions/deviceicon/battery.py:69
 msgid "My Battery"
@@ -1063,15 +1068,15 @@ msgstr "Carica"
 
 #: ../extensions/deviceicon/display.py:187
 msgid "My Display"
-msgstr ""
+msgstr "Mio schermo"
 
 #: ../extensions/deviceicon/display.py:189
 msgid "Take a screenshot"
-msgstr ""
+msgstr "Cattura la schermata"
 
 #: ../extensions/deviceicon/display.py:211
 msgid "Brightness"
-msgstr ""
+msgstr "Luminosità"
 
 #: ../extensions/deviceicon/display.py:239
 msgid "Display"
@@ -1366,11 +1371,11 @@ msgstr "Riavvia adesso"
 
 #: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
 msgid "An activity is not responding."
-msgstr ""
+msgstr "Un'attività non sta rispondendo."
 
 #: ../src/jarabe/controlpanel/gui.py:420 ../src/jarabe/view/buddymenu.py:138
 msgid "You may lose unsaved work if you continue."
-msgstr ""
+msgstr "Potresti perdere il lavoro non salvato se continui."
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
@@ -1476,7 +1481,7 @@ msgstr "Triangolo"
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
-msgstr ""
+msgstr "Registrazione"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
@@ -1705,11 +1710,11 @@ msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Preschool"
-msgstr ""
+msgstr "Prescolastico"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Kindergarten"
-msgstr ""
+msgstr "Asilo"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "1st Grade"
@@ -1717,35 +1722,35 @@ msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "2nd Grade"
-msgstr ""
+msgstr "2° grado"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "3rd Grade"
-msgstr ""
+msgstr "3° grado"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "4th Grade"
-msgstr ""
+msgstr "4° grado"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "5th Grade"
-msgstr ""
+msgstr "5° grado"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "6th Grade"
-msgstr ""
+msgstr "6° grado"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "7th Grade"
-msgstr ""
+msgstr "7° grado"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "High School"
-msgstr ""
+msgstr "Scuola superiore"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "Adult"
-msgstr ""
+msgstr "Adulto"
 
 #: ../src/jarabe/journal/expandedentry.py:153
 #: ../src/jarabe/journal/journaltoolbox.py:584
@@ -1930,7 +1935,7 @@ msgstr "Selezionati %(selected)d di %(total)d"
 
 #: ../src/jarabe/journal/journaltoolbox.py:917
 msgid "Select filter"
-msgstr ""
+msgstr "Seleziona filtro"
 
 #: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
 msgid "Your Journal is empty"
@@ -2278,18 +2283,22 @@ msgstr "Schermata di \"%s\""
 
 #: ../src/jarabe/view/alerts.py:38 ../src/jarabe/view/alerts.py:48
 msgid "Activity launcher"
-msgstr ""
+msgstr "Lanciatore di Attività"
 
 #: ../src/jarabe/view/alerts.py:39
 #, python-format
 msgid "%s is already running. Please stop %s before launching it again."
 msgstr ""
+"%s è già in esecuzione. Per favore interrompete l'esecuzione di %s prima di "
+"lanciarlo nuovamente."
 
 #: ../src/jarabe/view/alerts.py:49
 msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
 msgstr ""
+"Hai raggiunto il numero massimo di attività aperte. Per favore chiudi "
+"un'attività prima di lanciarne una nuova."
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
@@ -2341,7 +2350,7 @@ msgstr "Visualizza Sorgente"
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
-msgstr ""
+msgstr "Mostra l'Aiuto"
 
 #: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
@@ -2354,7 +2363,7 @@ msgstr "Rimuovi"
 
 #: ../src/jarabe/view/viewhelp.py:304
 msgid "Help Manual"
-msgstr ""
+msgstr "Manuale di Aiuto"
 
 #: ../src/jarabe/view/viewhelp.py:318
 msgid "Social Help"
@@ -2393,7 +2402,7 @@ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:462
 msgid "Duplicated activity already exists"
-msgstr ""
+msgstr "Un duplicato dell'attività esiste già"
 
 #: ../src/jarabe/view/viewsource.py:463
 msgid "Delete your copy before trying to duplicate the activity again"
