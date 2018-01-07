@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Copyright (C) 2009-2013 Sugar Labs
 #
 # This program is free software: you can redistribute it and/or modify
