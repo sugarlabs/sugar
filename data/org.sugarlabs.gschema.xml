@@ -370,7 +370,7 @@
             <default>'none'</default>
             <summary>Proxy configuration mode</summary>
             <description>
-            Select the proxy configuration mode. Supported values are "none", 
+            Select the proxy configuration mode. Supported values are "none",
             "manual", "auto".
 
             If this is "none", then proxies are not used.
@@ -405,10 +405,10 @@
             <default>[ 'localhost', '127.0.0.0/8', '::1' ]</default>
             <summary>Non-proxy hosts</summary>
             <description>
-            This key contains a list of hosts which are connected to directly, 
-            rather than via the proxy (if it is active). The values can be 
-            hostnames, domains (using an initial wildcard like *.foo.com), IP host 
-            addresses (both IPv4 and IPv6) and network addresses with a netmask 
+            This key contains a list of hosts which are connected to directly,
+            rather than via the proxy (if it is active). The values can be
+            hostnames, domains (using an initial wildcard like *.foo.com), IP host
+            addresses (both IPv4 and IPv6) and network addresses with a netmask
             (something like 192.168.0.0/24).
             </description>
         </key>
@@ -426,7 +426,7 @@
             <default>8080</default>
             <summary>HTTP proxy port</summary>
             <description>
-            The port on the machine defined by "/system/proxy/http/host" that you 
+            The port on the machine defined by "/system/proxy/http/host" that you
             proxy through.
             </description>
         </key>
@@ -434,9 +434,9 @@
             <default>false</default>
             <summary>Authenticate proxy server connections</summary>
             <description>
-            If true, then connections to the proxy server require authentication. 
-            The username/password combo is defined by 
-            "/system/proxy/http/authentication-user" and 
+            If true, then connections to the proxy server require authentication.
+            The username/password combo is defined by
+            "/system/proxy/http/authentication-user" and
             "/system/proxy/http/authentication-password".
 
             This applies only to the http proxy; when using a separate
@@ -472,7 +472,7 @@
             <default>0</default>
             <summary>Secure HTTP proxy port</summary>
             <description>
-            The port on the machine defined by "/system/proxy/https/host" that you 
+            The port on the machine defined by "/system/proxy/https/host" that you
             proxy through.
             </description>
         </key>
@@ -490,7 +490,7 @@
             <default>0</default>
             <summary>FTP proxy port</summary>
             <description>
-            The port on the machine defined by "/system/proxy/ftp/host" that you 
+            The port on the machine defined by "/system/proxy/ftp/host" that you
             proxy through.
             </description>
         </key>
@@ -508,9 +508,9 @@
             <default>0</default>
             <summary>SOCKS proxy port</summary>
             <description>
-            The port on the machine defined by "/system/proxy/socks/host" that you 
+            The port on the machine defined by "/system/proxy/socks/host" that you
             proxy through.
             </description>
         </key>
-    </schema>    
+    </schema>
 </schemalist>
