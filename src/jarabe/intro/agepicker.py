@@ -203,7 +203,7 @@ class AgePicker(Gtk.Grid):
         self._color = XoColor()
 
         if self._gender not in GENDERS:
-            self._gender = 'female'
+            self._gender = 'male'
 
         gender_index = GENDERS.index(self._gender)
         age_index = age_to_index(self._age)
