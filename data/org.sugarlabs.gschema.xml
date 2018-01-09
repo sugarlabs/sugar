@@ -77,6 +77,11 @@
             <summary>User Gender</summary>
             <description>Gender of the Sugar user, either male, female, or unassigned</description>
         </key>
+        <key name="default-gender" type="s">
+            <default>'disabled'</default>
+            <summary>Ask for Gender</summary>
+            <description>Whether or not gender should be asked for when starting sugar. By default, gender will be disabled, and can be set to be male or female on default. Setting it to an empty string is reccomended to enable it without a default gender. </description>
+        </key>
         <key name="birth-timestamp" type="i">
             <default>0</default>
             <summary>User Birth Timestamp</summary>
