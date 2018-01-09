@@ -262,19 +262,16 @@ class _AgePage(_Page):
 class _IntroBox(Gtk.VBox):
     done_signal = GObject.Signal('done', arg_types=([object]))
 
-    PAGE_NAME = 0
-    PAGE_COLOR = 1
-    PAGE_GENDER = 2
-    PAGE_AGE = 3
+    PAGES = ["NAME", "COLOR", "GENDER", "AGE"]
 
-    PAGE_FIRST = min(PAGE_NAME, PAGE_COLOR, PAGE_GENDER, PAGE_AGE)
-    PAGE_LAST = max(PAGE_NAME, PAGE_COLOR, PAGE_GENDER, PAGE_AGE)
+    PAGE_FIRST = 0
+    PAGE_LAST = len(PAGES) - 1
 
     def __init__(self, start_on_age_page):
         Gtk.VBox.__init__(self)
         self.set_border_width(style.zoom(30))
 
-        self._page = self.PAGE_NAME
+        self._page = 0
         self._name_page = _NamePage(self)
         self._color_page = _ColorPage()
         self._gender_page = _GenderPage()
@@ -283,9 +280,19 @@ class _IntroBox(Gtk.VBox):
         self._next_button = None
 
         settings = Gio.Settings('org.sugarlabs.user')
+
+        if 'default-gender' in settings.list_keys():
+            default_gender = settings.get_string('default-gender')
+            if default_gender == 'disabled':
+                self.PAGES[self.PAGES.index("GENDER")] = False
+            elif default_gender == 'female':
+                self._gender_page._gp._set_gender('female')
+            elif default_gender == 'male':
+                self._gender_page._gp._set_gender('male')
+
         default_nick = settings.get_string('default-nick')
         if default_nick != 'disabled':
-            self._page = self.PAGE_COLOR
+            self._page += 1
             if default_nick == 'system':
                 pwd_entry = pwd.getpwuid(os.getuid())
                 default_nick = (pwd_entry.pw_gecos.split(',')[0] or
@@ -295,7 +302,7 @@ class _IntroBox(Gtk.VBox):
         # XXX should also consider whether or not there is a nick
         nick = settings.get_string('nick')
         if start_on_age_page and nick:
-            self._page = self.PAGE_AGE
+            self._page = self.PAGES.index("AGE")
 
         self._setup_page()
 
@@ -321,12 +328,12 @@ class _IntroBox(Gtk.VBox):
                 self._age_page.update_color(self._color_page.get_color())
             self._current_page = self._age_page
 
-        setup_methods = {
-            self.PAGE_NAME: _setup_name_page,
-            self.PAGE_COLOR: _setup_color_page,
-            self.PAGE_GENDER: _setup_gender_page,
-            self.PAGE_AGE: _setup_age_page
-        }
+        setup_methods = [
+            _setup_name_page,
+            _setup_color_page,
+            _setup_gender_page,
+            _setup_age_page
+        ]
 
         setup_methods[self._page](self)
         self.pack_start(self._current_page, True, True, 0)
@@ -367,6 +374,9 @@ class _IntroBox(Gtk.VBox):
         self.pack_start(button_box, False, True, 0)
         button_box.show()
 
+        if not self.PAGES[self._page]:
+            self.next()
+
     def _update_next_button(self):
         self._next_button.set_sensitive(self._current_page.props.valid)
 
@@ -385,7 +395,7 @@ class _IntroBox(Gtk.VBox):
         self.next()
 
     def next(self):
-        if self._current_page.props.valid:
+        if self._current_page.props.valid or not self.PAGES[self._page]:
             if self._page == self.PAGE_LAST:
                 self.done()
             else:
