@@ -53,17 +53,5 @@ and sugar-toolkit-gtk3.
 Clone the repository, run `autogen.sh`, then `make` and `make
 install`.
 
-Hacking
--------
-
-For hacking you can use the
-[sugar-build](https://github.com/sugarlabs/sugar-build) tool.
-
-Sugar is made of several modules and depends on libraries with
-different names in GNU/Linux distributions.  To make it easier for
-developers to build from sources, we developed a set of scripts that
-automates builds and other common development tasks.
-
 See also [Setup a development
 environment](https://developer.sugarlabs.org/dev-environment.md.html)
-
