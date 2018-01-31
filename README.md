@@ -14,8 +14,6 @@ Sugar is free/libre and open-source software.
 
 https://www.sugarlabs.org/
 
-https://wiki.sugarlabs.org/
-
 Installing on Debian or Ubuntu
 ------------------------------
 
@@ -25,8 +23,7 @@ sudo apt install sucrose
 
 Then log out, and log in with the Sugar desktop selected.
 
-See also [Debian](http://wiki.sugarlabs.org/go/Debian) and
-[Ubuntu](http://wiki.sugarlabs.org/go/Ubuntu) on the Wiki.
+See also [Debian](docs/debian.md) or [Ubuntu](docs/ubuntu.md).
 
 Installing on Fedora
 --------------------
@@ -39,7 +36,7 @@ sudo dnf install python2-decorator webkitgtk3
 Then restart your computer.  At the *Sign in* select the *Sugar*
 desktop.
 
-See also [Fedora](http://wiki.sugarlabs.org/go/Fedora) on the Wiki.
+See also [Fedora](docs/fedora.md).
 
 Building
 --------
@@ -47,11 +44,11 @@ Building
 Sugar follows the [GNU Coding
 Standards](https://www.gnu.org/prep/standards/).
 
-Install all dependencies, especially sugar-artwork, sugar-datastore,
-and sugar-toolkit-gtk3.
+Install all dependencies, especially `sugar-artwork`, `sugar-datastore`,
+and `sugar-toolkit-gtk3`.
 
 Clone the repository, run `autogen.sh`, then `make` and `make
 install`.
 
 See also [Setup a development
-environment](https://developer.sugarlabs.org/dev-environment.md.html)
+environment](docs/development-environment.md).
