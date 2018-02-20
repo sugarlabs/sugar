@@ -8,7 +8,13 @@ In relation to Sugar, Ubuntu is a downstream distribution project that can be us
 Ubuntu 18.04 Bionic
 -------------------
 
-Sugar 0.112 will be in Ubuntu 18.04 Bionic.
+Sugar 0.112 is in the archive for Ubuntu 18.04 Bionic, and can be installed by typing
+
+    sudo apt install sucrose
+
+-   log out,
+-   log in with the Sugar desktop selected.
+
 
 Ubuntu 17.10 Artful
 -------------------
