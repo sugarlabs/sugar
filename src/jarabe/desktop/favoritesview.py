@@ -310,6 +310,10 @@ class FavoritesView(ViewContainer):
     def _add_activity(self, activity_info):
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
+
+        if not activity_info.get_show_launcher():
+            return
+
         icon = ActivityIcon(activity_info)
         icon.props.pixel_size = style.STANDARD_ICON_SIZE
         # icon.set_resume_mode(self._resume_mode)
