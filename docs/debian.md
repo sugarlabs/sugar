@@ -54,6 +54,8 @@ Sucrose packages are usually updated in the unstable release. These packages mig
 
 Interested in developing Sugar software?  Visit our [developer documentation website](http://developer.sugarlabs.org/).
 
+See also [local packaging example](debian-packaging-example.md).
+
 Derivatives
 -----------
 
