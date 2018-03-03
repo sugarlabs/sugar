@@ -415,6 +415,11 @@ class BaseListView(Gtk.Bin):
         self.tree_view.queue_draw_area(cell_rect.x, cell_rect.y,
                                        cell_rect.width, cell_rect.height)
 
+        # HACK for https://bugs.sugarlabs.org/ticket/4944
+        # Icon does not update automatically if there is only one journal entry
+        if len(self._model.get_all_ids()) == 1:
+            self._do_refresh()
+
     def __select_set_data_cb(self, column, cell, tree_model, tree_iter,
                              data):
         uid = tree_model[tree_iter][ListModel.COLUMN_UID]
