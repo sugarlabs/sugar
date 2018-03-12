@@ -509,7 +509,8 @@ class MeshBox(ViewContainer):
         hash_value = ap.network_hash()
         if old_hash_value == hash_value:
             # no change in network identity, so just update signal strengths
-            self.wireless_networks[hash_value].update_strength()
+            if hash_value in self.wireless_networks:
+                self.wireless_networks[hash_value].update_strength()
             return
 
         # properties change includes a change of the identity of the network
