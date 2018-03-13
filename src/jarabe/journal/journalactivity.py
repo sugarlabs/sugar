@@ -398,10 +398,8 @@ class JournalActivity(JournalWindow):
 
         if self._active_view == JournalViews.MAIN:
             if keyname == 'Up' or keyname == 'Down':
-                path, col = self._list_view.tree_view.get_cursor()
                 if not self._list_view.tree_view.has_focus():
                     self._list_view.tree_view.grab_focus()
-                self._list_view.tree_view.set_cursor_on_cell(path, col, None, True)
 
             elif keyname == 'Escape':
                 self._main_toolbox.clear_query()
@@ -417,7 +415,7 @@ class JournalActivity(JournalWindow):
                     path, col = self._list_view.tree_view.get_cursor()
                     self.show_main_view()
                     self._list_view.tree_view.grab_focus()
-                    column = self._list_view.tree_view.get_column(1)
+                    column = self._list_view.tree_view.get_column(5)
                     self._list_view.tree_view.set_cursor_on_cell(path, column, None, True)
 
                 if keyname == 'Return':
