@@ -11,7 +11,6 @@ Using Sugar as a Desktop Environment
 Install Fedora. Then, in a Terminal, type:
 
     sudo dnf groupinstall sugar-desktop
-    sudo dnf install python2-decorator webkitgtk3
 
 Then restart your computer. At the *Sign in* select the *Sugar* desktop.
 
@@ -21,7 +20,7 @@ Using Sugar with another Desktop Environment
 Select the *GNOME on Xorg* or *GNOME Classic* desktop, then in a Terminal, type:
 
     sudo dnf groupinstall sugar-desktop
-    sudo dnf install sugar-runner python2-decorator webkitgtk3
+    sudo dnf install sugar-runner
     sugar-runner
 
 Sugar will start. *Logout* from Sugar to return to the desktop environment you were previously using.
