@@ -183,7 +183,7 @@ class BaseListView(Gtk.Bin):
         self.tree_view.connect('detail-clicked', self.__detail_clicked_cb)
         self.tree_view.connect('volume-error', self.__volume_error_cb)
         selection = self.tree_view.get_selection()
-        selection.set_mode(Gtk.SelectionMode.NONE)
+        selection.set_mode(Gtk.SelectionMode.SINGLE)
         self.tree_view.props.fixed_height_mode = True
         self._scrolled_window.add(self.tree_view)
         self.tree_view.show()
@@ -728,6 +728,7 @@ class ListView(BaseListView):
         self.tree_view.connect('drag-data-get', self.__drag_data_get_cb)
         self.tree_view.connect('button-release-event',
                                self.__button_release_event_cb)
+        self.tree_view.connect('key-press-event', self._key_press_event_cb)
 
         self.cell_title.connect('edited', self.__cell_title_edited_cb)
         self.cell_title.connect('editing-canceled', self.__editing_canceled_cb)
@@ -742,6 +743,38 @@ class ListView(BaseListView):
         column.props.fixed_width = cell_detail.props.width
         column.pack_start(cell_detail, True)
         self.tree_view.append_column(column)
+
+    def _key_press_event_cb(self, tree_view, event):
+        '''
+        Adds keyboard accessibility to the journal.
+        Activity can be resumed by pressing 'Enter' key.
+        Entry can be renamed by pressing 'Ctrl' + 'F2' keys
+        Detail View can be opened with 'Right' arrow key.
+        '''
+        keyname = Gdk.keyval_name(event.keyval)
+        path, col = self.tree_view.get_cursor()
+
+        if self.tree_view.has_focus():
+            if keyname == 'Return':
+                self.__icon_clicked_cb(None, path)
+
+            if event.state & Gdk.ModifierType.CONTROL_MASK and keyname == 'F2':
+                row = self.tree_view.get_model()[path]
+                metadata = model.get(row[ListModel.COLUMN_UID])
+                self.cell_title.props.editable = model.is_editable(metadata)
+
+                if self.cell_title.props.editable:
+                    self.emit('title-edit-started')
+
+                column = self.tree_view.get_column(3)
+                tree_view.set_cursor_on_cell(path, column, self.cell_title,
+                                         start_editing=True)
+
+            if keyname == 'Right':
+                tree_iter = self._model.get_iter(path)
+                uid = self._model[tree_iter][ListModel.COLUMN_UID]
+                self.emit('detail-clicked', uid)
+
 
     def is_dragging(self):
         return self._is_dragging

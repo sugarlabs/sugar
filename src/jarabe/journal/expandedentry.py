@@ -252,6 +252,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         self._vbox = Gtk.VBox()
         self.add(self._vbox)
 
+        self.in_focus = False
         self._metadata = None
         self._update_title_sid = None
 
@@ -262,8 +263,11 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
                               style.DEFAULT_SPACING * 2)
         self._keep_sid = self._keep_icon.connect(
             'toggled', self._keep_icon_toggled_cb)
+        self._title.connect('activate', self._title_entered)
         self._title.connect(
             'focus-out-event', self._title_focus_out_event_cb)
+        self._title.connect(
+            'focus-in-event', self._focus_in_cb)
 
         if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
             # Reverse header children.
@@ -475,12 +479,14 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
     def _create_description(self):
         widget = TextView()
+        widget.connect('focus-in-event', self._focus_in_cb)
         widget.connect('focus-out-event',
                        self._description_tags_focus_out_event_cb)
         return self._create_scrollable(widget, label=_('Description:')), widget
 
     def _create_tags(self):
         widget = TextView()
+        widget.connect('focus-in-event', self._focus_in_cb)
         widget.connect('focus-out-event',
                        self._description_tags_focus_out_event_cb)
         return self._create_scrollable(widget, label=_('Tags:')), widget
@@ -488,7 +494,20 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
     def _create_comments(self):
         widget = CommentsView()
         widget.connect('comments-changed', self._comments_changed_cb)
+        widget.connect('focus-in-event', self._focus_in_cb)
+        widget.connect('focus-out-event', self._focus_out_cb)
         return self._create_scrollable(widget, label=_('Comments:')), widget
+
+    def _focus_in_cb(self, widget, event):
+        self.in_focus = True
+
+    def _focus_out_cb(self, widget, event):
+        self.in_focus = False
+
+    def _title_entered(self, widget):
+        self._update_entry()
+        self._title.hide()
+        self._title.show()
 
     def _title_notify_text_cb(self, entry, pspec):
         if not self._update_title_sid:
@@ -507,6 +526,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         self._write_entry()
 
     def _update_entry(self, needs_update=False):
+        self.in_focus = False
         if not model.is_editable(self._metadata):
             return
 

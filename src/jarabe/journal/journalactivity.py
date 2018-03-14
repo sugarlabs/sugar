@@ -50,6 +50,8 @@ from jarabe.journal.modalalert import ModalAlert
 from jarabe.journal import model
 from jarabe.journal.journalwindow import JournalWindow
 from jarabe.journal.bundlelauncher import launch_bundle, get_bundle
+from jarabe.journal import journalwindow
+from jarabe.journal.listmodel import ListModel
 
 from jarabe.model import session
 
@@ -374,13 +376,45 @@ class JournalActivity(JournalWindow):
             activity_id=activity_id, project_metadata=self.project_metadata)
 
     def __key_press_event_cb(self, widget, event):
-        #if not self._main_toolbox.search_entry.has_focus():
-        #self._main_toolbox.search_entry.grab_focus()
+        '''
+        Entries can be scrolled with 'Up'/'Down' arrow keys.
+        Search can be started by pressing 'Ctrl' + 'F' keys
+        Search can be stopped by pressing `Escape` key
+        Return from Detail view to Main view by pressing 'Left' arrow key
+        Pressing 'Return' in Detail View starts the activity
+        '''
 
         keyname = Gdk.keyval_name(event.keyval)
-        if keyname == 'Escape':
-            self._main_toolbox.clear_query()
-            self.show_main_view()
+
+        if self._active_view == JournalViews.MAIN:
+            if keyname == 'Up' or keyname == 'Down':
+                path, col = self._list_view.tree_view.get_cursor()
+                if not self._list_view.tree_view.has_focus():
+                    self._list_view.tree_view.grab_focus()
+                self._list_view.tree_view.set_cursor_on_cell(path, col, None, True)
+
+            elif keyname == 'Escape':
+                self._main_toolbox.clear_query()
+                if not self._list_view.tree_view.has_focus():
+                    self._list_view.tree_view.grab_focus()
+
+            elif event.state & Gdk.ModifierType.CONTROL_MASK and keyname == 'f':
+                self._main_toolbox.search_entry.grab_focus()
+
+        elif self._active_view == JournalViews.DETAIL:
+            if not self._detail_view._expanded_entry.in_focus:
+                if keyname == 'Left':
+                    path, col = self._list_view.tree_view.get_cursor()
+                    self.show_main_view()
+                    self._list_view.tree_view.grab_focus()
+                    column = self._list_view.tree_view.get_column(1)
+                    self._list_view.tree_view.set_cursor_on_cell(path, column, None, True)
+
+                if keyname == 'Return':
+                    metadata = self._detail_toolbox.get_metadata()
+                    misc.resume(metadata,
+                            alert_window=journalwindow.get_journal_window())
+
 
     def __choose_project_cb(self, tree_view, metadata_to_send):
         project_chooser = ObjectChooser(self.get_window())
@@ -431,6 +465,9 @@ class JournalActivity(JournalWindow):
     def _query_changed_cb(self, toolbar, query):
         self._list_view.update_with_query(query)
         self.show_main_view()
+        self._main_toolbox.search_entry.grab_focus()
+        Gtk.Entry.do_move_cursor(self._main_toolbox.search_entry,
+                                 Gtk.MovementStep.BUFFER_ENDS, 1, False)
         self._add_new_box.props.visible = \
             query.get('activity') == PROJECT_BUNDLE_ID
 
