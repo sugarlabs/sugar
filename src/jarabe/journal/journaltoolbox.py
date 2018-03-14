@@ -574,6 +574,9 @@ class DetailToolbox(ToolbarBox):
         self._refresh_refresh_palette()
         self._refresh_resume_palette()
 
+    def get_metadata(self):
+        return self._metadata
+
     def _resume_clicked_cb(self, button):
         if not misc.can_resume(self._metadata):
             palette = self._resume.get_palette()
