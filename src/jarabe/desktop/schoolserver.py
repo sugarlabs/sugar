@@ -153,13 +153,6 @@ def register_laptop(url=_REGISTER_URL):
     settings = Gio.Settings('org.sugarlabs')
     settings.set_string('backup-url', data['backupurl'])
 
-    # DEPRECATED
-    from gi.repository import GConf
-    client = GConf.Client.get_default()
-    client.set_string(
-        '/desktop/sugar/collaboration/jabber_server', data['jabberserver'])
-    client.set_string('/desktop/sugar/backup_url', data['backupurl'])
-
     return True
 
 

@@ -20,8 +20,4 @@ def check_group_label():
     settings = Gio.Settings('org.sugarlabs.user')
     if len(settings.get_string('group-label')) > 0:
         return True
-
-    # DEPRECATED
-    from gi.repository import GConf
-    client = GConf.Client.get_default()
-    return client.get_string('/desktop/sugar/user/group') is not None
+    return False

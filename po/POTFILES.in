@@ -40,7 +40,6 @@ extensions/deviceicon/speech.py
 extensions/deviceicon/touchpad.py
 extensions/deviceicon/volume.py
 extensions/globalkey/screenshot.py
-data/sugar.schemas.in
 src/jarabe/controlpanel/cmd.py
 src/jarabe/controlpanel/gui.py
 src/jarabe/controlpanel/sectionview.py

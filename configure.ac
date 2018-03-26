@@ -15,7 +15,7 @@ AM_MAINTAINER_MODE
 PYTHON=python2
 AM_PATH_PYTHON
 
-PKG_CHECK_MODULES(SHELL, gtk+-3.0 gconf-2.0)
+PKG_CHECK_MODULES(SHELL, gtk+-3.0)
 
 IT_PROG_INTLTOOL([0.35.0])
 GETTEXT_PACKAGE=sugar
@@ -28,15 +28,6 @@ AC_ARG_ENABLE(update-mimedb,
     enable_update_mimedb=yes)
 AM_CONDITIONAL(ENABLE_UPDATE_MIMEDB, test x$enable_update_mimedb = xyes)
 
-# Verify that gconftool is installed 
-# 
-AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
-
-if test "$GCONFTOOL" = no; then
-  AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
-fi
-
-AM_GCONF_SOURCE_2
 GLIB_GSETTINGS
 
 
