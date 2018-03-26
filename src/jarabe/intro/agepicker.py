@@ -115,11 +115,6 @@ def save_age(age):
     # Record the label so we know it was set
     settings.set_string('group-label', age_to_group_label(age))
 
-    # DEPRECATED
-    from gi.repository import GConf
-    client = GConf.Client.get_default()
-    client.set_int('/desktop/sugar/user/birth_timestamp', birth_timestamp)
-
 
 class GroupLabels():
     GROUP_LABEL = []

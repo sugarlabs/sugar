@@ -39,12 +39,6 @@ def save_gender(gender):
     else:
         settings.set_string('gender', '')
 
-    # DEPRECATED
-    from gi.repository import GConf
-    if gender is not None:
-        client = GConf.Client.get_default()
-        client.set_string('/desktop/sugar/user/gender', gender)
-
 
 class GenderPicker(Gtk.Grid):
 

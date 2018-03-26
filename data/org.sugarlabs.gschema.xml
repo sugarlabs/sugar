@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
     <schema id="org.sugarlabs" path="/org/sugarlabs/">
-        <key name="gsettings-migrated" type="b">
-            <default>false</default>
-            <summary>Migrated to GSettings</summary>
-            <description>This key shows whether or not GConf values were migrated to GSettings</description>
-        </key>
         <key name="backup-url" type="s">
             <default>''</default>
             <summary>Backup URL</summary>

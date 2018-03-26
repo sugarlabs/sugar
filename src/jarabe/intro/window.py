@@ -62,16 +62,6 @@ def create_profile(user_profile):
 
     agepicker.save_age(user_profile.age)
 
-    # DEPRECATED
-    from gi.repository import GConf
-    client = GConf.Client.get_default()
-
-    client.set_string('/desktop/sugar/user/nick', user_profile.nickname)
-
-    client.set_string('/desktop/sugar/user/color', colors.to_string())
-
-    client.suggest_sync()
-
     if profile.get_pubkey() and profile.get_profile().privkey_hash:
         logging.info('Valid key pair found, skipping generation.')
         return
