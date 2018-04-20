@@ -18,10 +18,10 @@
 import logging
 
 import gi
-gi.require_version('NMClient', '1.0')
+gi.require_version('NM', '1.0')
 from gettext import gettext as _
 from gi.repository import Gio
-from gi.repository import NMClient
+from gi.repository import NM
 
 from jarabe.model import network
 
@@ -136,4 +136,4 @@ def set_publish_information(value):
     settings.set_boolean('publish-gadget', value)
     return 0
 
-nm_client = NMClient.Client()
+nm_client = NM.Client()
