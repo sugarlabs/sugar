@@ -52,3 +52,24 @@ install`.
 
 See also [Setup a development
 environment](docs/development-environment.md).
+
+[![alt text][1.1]][1]
+[![alt text][2.1]][2]
+[![alt text][3.1]][3]
+[![alt text][4.1]][4]
+
+
+<!-- icons with padding -->
+
+[1.1]: https://svgshare.com/i/708.svg (twitter icon with padding)
+[2.1]: https://svgshare.com/i/70R.svg (instagram icon with padding)
+[3.1]: https://svgshare.com/i/6yt.svg (facebook icon with padding)
+[4.1]: https://svgshare.com/i/70a.svg (youtube icon with padding)
+
+
+<!-- update these accordingly -->
+
+[1]: https://twitter.com/sugar_labs
+[2]: https://www.instagram.com/sugarlabsforall/
+[3]: https://www.facebook.com/SugarLabs-187845102582/timeline/
+[4]: https://www.youtube.com/channel/UCfsR9AEb7HuPRAc14jfiI6g/featured
