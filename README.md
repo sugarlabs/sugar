@@ -12,7 +12,10 @@ can run on most computers.
 
 Sugar is free/libre and open-source software.
 
-https://www.sugarlabs.org/ [![alt text][1.1]][1]
+https://www.sugarlabs.org/ 
+
+
+[![alt text][1.1]][1]
 [![alt text][2.1]][2]
 [![alt text][3.1]][3]
 [![alt text][4.1]][4]
@@ -59,10 +62,10 @@ environment](docs/development-environment.md).
 
 <!-- icons with padding -->
 
-[1.1]: data/icon/twitter.svg (twitter icon with padding)
-[2.1]: data/icon/instagram.svg (instagram icon with padding)
-[3.1]: data/icon/facebook.svg (facebook icon with padding)
-[4.1]: data/icon/youtube.svg (youtube icon with padding)
+[1.1]: /data/icon/twitter.svg (twitter icon with padding)
+[2.1]: /data/icon/instagram.svg (instagram icon with padding)
+[3.1]: /data/icon/facebook.svg (facebook icon with padding)
+[4.1]: /data/icon/youtube.svg (youtube icon with padding)
 
 
 <!-- update these accordingly -->
