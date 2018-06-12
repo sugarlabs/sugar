@@ -62,10 +62,10 @@ environment](docs/development-environment.md).
 
 <!-- icons with padding -->
 
-[1.1]: /data/icon/twitter.svg (twitter icon with padding)
-[2.1]: /data/icon/instagram.svg (instagram icon with padding)
-[3.1]: /data/icon/facebook.svg (facebook icon with padding)
-[4.1]: /data/icon/youtube.svg (youtube icon with padding)
+[1.1]: data/icons/twitter.svg (twitter icon with padding)
+[2.1]: data/icons/instagram.svg (instagram icon with padding)
+[3.1]: data/icons/facebook.svg (facebook icon with padding)
+[4.1]: data/icons/youtube.svg (youtube icon with padding)
 
 
 <!-- update these accordingly -->
