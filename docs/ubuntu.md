@@ -16,6 +16,10 @@ Sugar 0.112 is in the archive for Ubuntu 18.04 Bionic, and can be installed by t
 -   log in with the Sugar desktop selected,
 -   press the F3 button to switch to the home view ([issue #769](https://github.com/sugarlabs/sugar/issues/769)).
 
+Known problems
+
+-   Sugar starts in Journal ([issue #769](https://github.com/sugarlabs/sugar/issues/769)),
+-   My Settings, Network, may hang, requires reboot or forced logout to escape, fixed by 04c63f6dd2b6f10a80376a43c735822f5283bda7,
 
 Ubuntu 17.10 Artful
 -------------------
