@@ -427,6 +427,7 @@ class ActivityIcon(CanvasIcon):
 
         self.connect_after('activate', self.__button_activate_cb)
 
+        datastore.created.connect(self.__datastore_listener_updated_cb)
         datastore.updated.connect(self.__datastore_listener_updated_cb)
         datastore.deleted.connect(self.__datastore_listener_deleted_cb)
 
