@@ -108,3 +108,14 @@ Clone the Browse and Terminal activities;
 Log out and log in again with the Sugar desktop selected, or use the remote desktop feature described earlier on this page.
 
 After making changes in a Sugar module, repeat the `sudo make install` step, and log in again.
+
+
+Change Debugging Level
+--------------------
+
+You can enable debugging in Sugar by uncommenting the line
+```shell
+#export SUGAR_LOGGER_LEVEL=debug
+```
+present in  `~/.sugar/default/debug`
+The debug file also allows the enabling of debugging for other parts of the stack, such as collaboration.
