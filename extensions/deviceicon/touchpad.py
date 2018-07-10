@@ -129,7 +129,7 @@ def _write_touchpad_mode_str(mode_str):
     """ Write the touchpad mode to the node path. """
     try:
         node_file_handle = open(NODE_PATH, 'w')
-    except IOError, e:
+    except IOError as e:
         logging.error('Error opening %s for writing: %s', NODE_PATH, e)
         return
     node_file_handle.write(mode_str)

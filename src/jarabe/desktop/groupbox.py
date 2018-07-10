@@ -70,7 +70,7 @@ class GroupBox(ViewContainer):
         icon.destroy()
 
     def _toolbar_query_changed_cb(self, toolbar, query):
-        self._query = normalize_string(query.decode('utf-8'))
+        self._query = normalize_string(query)
         for icon in self.get_children():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)

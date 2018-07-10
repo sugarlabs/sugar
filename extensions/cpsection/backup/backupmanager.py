@@ -47,7 +47,7 @@ class BackupManager():
                 module = _load_module(module_name)
                 if module is not None:
                     if hasattr(module, 'get_name'):
-                        logging.error('FOUND BACKEND %s', module.get_name())
+                        logging.debug('FOUND BACKEND %s', module.get_name())
                         self._backends.append(module)
 
     def get_backends(self):
@@ -66,7 +66,7 @@ class BackupManager():
 def _load_module(module):
     try:
         module = import_module('%s.%s' % (BACKENDS_MODULE, module))
-    except ImportError, e:
+    except ImportError as e:
         module = None
         logging.error('ImportError: %s' % (e))
     return module

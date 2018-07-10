@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # Copyright (C) 2007, Red Hat, Inc.
 #
@@ -35,12 +35,12 @@ parser.add_argument("-u", "--uri",
                     help='URI to load')
 
 args = parser.parse_args()
-print args.bundle_id
+print(args.bundle_id)
 bus = dbus.SessionBus()
 proxy = bus.get_object('org.laptop.Shell', '/org/laptop/Shell')
 path = dbus.Interface(proxy, 'org.laptop.Shell').GetBundlePath(args.bundle_id)
 if not path:
-    print 'Cannot find %s bundle.' % args.bundle_id
+    print('Cannot find %s bundle.' % args.bundle_id)
     sys.exit(1)
 
 activity = ActivityBundle(path)

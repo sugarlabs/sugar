@@ -197,7 +197,7 @@ class ClipboardIcon(RadioToolButton):
 
     def _get_targets(self):
         targets = []
-        for format_type in self._cb_object.get_formats().keys():
+        for format_type in list(self._cb_object.get_formats().keys()):
             targets.append(Gtk.TargetEntry.new(format_type,
                                                Gtk.TargetFlags.SAME_APP, 0))
         return targets

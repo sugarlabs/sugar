@@ -25,7 +25,6 @@ from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import Gio
 import dbus
-import statvfs
 import os
 
 from sugar3.graphics.alert import ErrorAlert
@@ -553,7 +552,7 @@ class JournalActivity(JournalWindow):
         if self._critical_space_alert:
             return
         stat = os.statvfs(env.get_profile_path())
-        free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
+        free_space = stat[0] * stat[4]
         if free_space < (_SPACE_THRESHOLD * 1024 * 1024):
             self._critical_space_alert = ModalAlert()
             self._critical_space_alert.connect('destroy',

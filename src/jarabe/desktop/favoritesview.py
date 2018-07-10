@@ -358,7 +358,9 @@ class FavoritesView(ViewContainer):
         query = query.strip()
         for icon in self.get_children():
             if icon not in [self._owner_icon, self._activity_icon]:
-                activity_name = icon.get_activity_name().decode('utf-8')
+                activity_name = icon.get_activity_name()
+                if isinstance(activity_name, bytes):
+                    activity_name = activity_name.decode()
                 normalized_name = normalize_string(activity_name)
                 if normalized_name.find(query) > -1:
                     icon.alpha = 1.0
@@ -370,7 +372,9 @@ class FavoritesView(ViewContainer):
         selected = []
         for icon in self.get_children():
             if icon not in [self._owner_icon, self._activity_icon]:
-                activity_name = icon.get_activity_name().decode('utf-8')
+                activity_name = icon.get_activity_name()
+                if isinstance(activity_name, bytes):
+                    activity_name = activity_name.decode()
                 normalized_name = normalize_string(activity_name)
                 if normalized_name.find(query) > -1:
                     selected.append(icon)

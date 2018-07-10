@@ -137,7 +137,7 @@ class ConnectionWatcher(GObject.GObject):
         self.emit('connection-removed', conn)
 
     def get_connections(self):
-        return self._connections.values()
+        return list(self._connections.values())
 
     def __error_handler_cb(exception):
         logging.debug('Exception from asynchronous method call:\n%s' % exception)
@@ -154,10 +154,10 @@ if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
     def connection_added_cb(conn_watcher, conn):
-        print 'new connection', conn["service_name"]
+        print('new connection', conn["service_name"])
 
     def connection_removed_cb(conn_watcher, conn):
-        print 'removed connection', conn["service_name"]
+        print('removed connection', conn["service_name"])
 
     watcher = ConnectionWatcher()
     watcher.connect('connection-added', connection_added_cb)
