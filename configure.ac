@@ -12,7 +12,7 @@ AM_INIT_AUTOMAKE([1.9 foreign dist-xz no-dist-gzip])
 
 AM_MAINTAINER_MODE
 
-PYTHON=python2
+PYTHON=python3
 AM_PATH_PYTHON
 
 AC_PATH_PROG([EMPY], [empy])

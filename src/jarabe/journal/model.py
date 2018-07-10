@@ -291,9 +291,8 @@ class InplaceResultSet(BaseResultSet):
         else:
             # timestamp
             keygetter = itemgetter(2)
-        self._file_list.sort(lambda a, b: cmp(b, a),
-                             key=keygetter,
-                             reverse=(self._sort[0] == '-'))
+        self._file_list.sort(key=keygetter,
+                             reverse=not self._sort[0] == '-')
         self.ready.send(self)
 
     def find(self, query):
@@ -949,7 +948,7 @@ def get_documents_path():
     try:
         pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
                                 stdout=subprocess.PIPE)
-        documents_path = os.path.normpath(pipe.communicate()[0].strip())
+        documents_path = os.path.normpath(pipe.communicate()[0].strip().decode())
         if os.path.exists(documents_path) and \
                 os.environ.get('HOME') != documents_path:
             _documents_path = documents_path

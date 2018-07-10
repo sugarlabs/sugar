@@ -16,7 +16,7 @@
 import logging
 import os
 import shutil
-import urlparse
+import urllib.parse
 import tempfile
 
 from gi.repository import GObject
@@ -37,9 +37,9 @@ class Clipboard(GObject.GObject):
         'object-added': (GObject.SignalFlags.RUN_FIRST, None,
                          ([object])),
         'object-deleted': (GObject.SignalFlags.RUN_FIRST, None,
-                           ([long])),
+                           ([int])),
         'object-selected': (GObject.SignalFlags.RUN_FIRST, None,
-                            ([long])),
+                            ([int])),
         'object-state-changed': (GObject.SignalFlags.RUN_FIRST, None,
                                  ([object])),
     }
@@ -123,18 +123,18 @@ class Clipboard(GObject.GObject):
 
     def _process_object(self, cb_object):
         formats = cb_object.get_formats()
-        for format_name, format_ in formats.iteritems():
+        for format_name, format_ in list(formats.items()):
             if format_.is_on_disk() and not format_.owns_disk_data:
                 new_uri = self._copy_file(format_.get_data())
                 format_.set_data(new_uri)
 
         # Add a text/plain format to objects that are text but lack it
-        if 'text/plain' not in formats.keys():
-            if 'UTF8_STRING' in formats.keys():
+        if 'text/plain' not in list(formats.keys()):
+            if 'UTF8_STRING' in list(formats.keys()):
                 self.add_object_format(
                     cb_object.get_id(), 'text/plain',
                     data=formats['UTF8_STRING'].get_data(), on_disk=False)
-            elif 'text/unicode' in formats.keys():
+            elif 'text/unicode' in list(formats.keys()):
                 self.add_object_format(
                     cb_object.get_id(), 'text/plain',
                     data=formats['UTF8_STRING'].get_data(), on_disk=False)
@@ -150,7 +150,7 @@ class Clipboard(GObject.GObject):
         return format_
 
     def _copy_file(self, original_uri):
-        uri = urlparse.urlparse(original_uri)
+        uri = urllib.parse.urlparse(original_uri)
         path = uri.path  # pylint: disable=E1101
         directory_, file_name = os.path.split(path)
 

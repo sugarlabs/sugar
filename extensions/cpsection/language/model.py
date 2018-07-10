@@ -30,7 +30,7 @@ _standard_msg = _('Could not access ~/.i18n. Create standard settings.')
 
 def read_all_languages():
     fdp = subprocess.Popen(['locale', '-av'], stdout=subprocess.PIPE)
-    lines = fdp.stdout.read().split('\n')
+    lines = fdp.stdout.read().decode().split('\n')
     locales = []
 
     for line in lines:
@@ -142,12 +142,12 @@ def print_languages():
         found_lang = False
         for lang in languages:
             if lang[2].split('.')[0] == code.split('.')[0]:
-                print lang[0].replace(' ', '_') + '/' + \
-                    lang[1].replace(' ', '_')
+                print(lang[0].replace(' ', '_') + '/' +
+                      lang[1].replace(' ', '_'))
                 found_lang = True
                 break
         if not found_lang:
-            print (_('Language for code=%s could not be determined.') % code)
+            print((_('Language for code=%s could not be determined.') % code))
 
 
 def set_languages(languages):
@@ -170,7 +170,7 @@ def set_languages(languages):
             if code == languages:
                 set_languages_list([locale_str])
                 return 1
-        print (_("Sorry I do not speak \'%s\'.") % languages)
+        print((_("Sorry I do not speak \'%s\'.") % languages))
 
 
 def set_languages_list(languages):

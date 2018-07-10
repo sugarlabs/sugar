@@ -36,7 +36,7 @@ from jarabe.model import shell
 
 
 try:
-    olpc_build = file('/boot/olpc_build', 'r').readline()
+    olpc_build = open('/boot/olpc_build', 'r').readline()
 except:
     olpc_build = ''
 
@@ -114,7 +114,7 @@ def get_help_url_and_title(activity):
         _logger.error('helplink.json malformed, or can\'t be read')
 
     if links:
-        if link_id in links.keys():
+        if link_id in list(links.keys()):
             return links[link_id], title
 
     return None, title

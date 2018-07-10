@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # Copyright (C) 2015 Martin Abente Lahaye <tch@sugarlabs.org>
 #
@@ -60,7 +60,7 @@ def _main():
     try:
         SugarBacklightSetup()
     except Exception as err:
-        print 'Could not create device link: %s' % str(err)
+        print('Could not create device link: %s' % str(err))
         sys.exit(1)
 
 if __name__ == '__main__':

@@ -15,7 +15,6 @@
 
 import os
 import signal
-import statvfs
 from gettext import gettext as _
 import logging
 
@@ -255,8 +254,8 @@ class JournalPalette(BasePalette):
 
     def __popup_cb(self, palette):
         stat = os.statvfs(env.get_profile_path())
-        free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
-        total_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BLOCKS]
+        free_space = stat[0] * stat[4]
+        total_space = stat[0] * stat[2]
 
         fraction = (total_space - free_space) / float(total_space)
         self._progress_bar.props.fraction = fraction
@@ -322,8 +321,8 @@ class VolumePalette(Palette):
     def __popup_cb(self, palette):
         mount_point = self._mount.get_root().get_path()
         stat = os.statvfs(mount_point)
-        free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
-        total_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BLOCKS]
+        free_space = stat[0] * stat[4]
+        total_space = stat[0] * stat[2]
 
         fraction = (total_space - free_space) / float(total_space)
         self._progress_bar.props.fraction = fraction

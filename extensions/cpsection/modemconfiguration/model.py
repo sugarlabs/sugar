@@ -215,7 +215,7 @@ class ServiceProvidersParser(object):
         # Check service provider database file exists
         try:
             tree = ElementTree(file=PROVIDERS_PATH)
-        except (IOError, SyntaxError), e:
+        except (IOError, SyntaxError) as e:
             msg = ("Mobile broadband provider database: Could not read "
                    "provider information %s error=%s") % (PROVIDERS_PATH, e)
             logging.warning(msg)
@@ -317,7 +317,7 @@ class ServiceProviders(object):
 
         provider_name = self._settings.get_string(CONF_SP_PROVIDER)
         if not provider_name:
-            provider_name = u''
+            provider_name = ''
         else:
             provider_name = provider_name.decode('utf-8')
 

@@ -113,7 +113,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         self._update_entry()
 
     def _update_entry(self):
-        #updating description
+        # updating description
         bounds = self._description.get_buffer().get_bounds()
         old_description = self.project_metadata.get('description', None)
         new_description = self._description.get_buffer().get_text(

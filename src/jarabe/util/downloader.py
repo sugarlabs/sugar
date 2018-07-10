@@ -16,7 +16,7 @@
 
 
 import os
-from urlparse import urlparse
+from urllib.parse import urlparse
 import tempfile
 
 import gi
@@ -81,7 +81,7 @@ class Downloader(GObject.GObject):
         self._message.connect('got-chunk', self._got_chunk_cb)
         self._message.connect('got-headers', self._headers_cb, None)
         if self._request_headers is not None:
-            for header_key in self._request_headers.keys():
+            for header_key in list(self._request_headers.keys()):
                 self._message.request_headers.append(
                     header_key, self._request_headers[header_key])
 

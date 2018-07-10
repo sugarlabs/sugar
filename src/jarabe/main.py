@@ -28,11 +28,6 @@ import sys
 import subprocess
 import shutil
 
-# Change the default encoding to avoid UnicodeDecodeError
-# http://lists.sugarlabs.org/archive/sugar-devel/2012-August/038928.html
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 # Disable overlay scrolling before GTK is loaded
 os.environ['GTK_OVERLAY_SCROLLING'] = '0'
 os.environ['LIBOVERLAY_SCROLLBAR'] = '0'
@@ -247,7 +242,7 @@ def cleanup_temporary_files():
     except OSError as e:
         # temporary files cleanup is not critical; it should not prevent
         # sugar from starting if (for example) the disk is full or read-only.
-        print 'temporary files cleanup failed: %s' % e
+        print('temporary files cleanup failed: %s' % e)
 
 
 def setup_timezone():
@@ -377,7 +372,7 @@ def main():
     try:
         Gtk.main()
     except KeyboardInterrupt:
-        print 'Ctrl+C pressed, exiting...'
+        print('Ctrl+C pressed, exiting...')
 
     _stop_window_manager()
 

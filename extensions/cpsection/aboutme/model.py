@@ -39,7 +39,7 @@ def get_nick():
 
 
 def print_nick():
-    print get_nick()
+    print(get_nick())
 
 
 def set_nick(nick):
@@ -48,8 +48,8 @@ def set_nick(nick):
     """
     if not nick:
         raise ValueError(_('You must enter a name.'))
-    if not isinstance(nick, unicode):
-        nick = unicode(nick, 'utf-8')
+    if not isinstance(nick, str):
+        nick = str(nick, 'utf-8')
     settings = Gio.Settings('org.sugarlabs.user')
     settings.set_string('nick', nick)
     return 1
@@ -74,14 +74,14 @@ def print_color():
                 fill_tuple = (color, hue)
 
     if stroke_tuple is not None:
-        print ('stroke:   color=%s hue=%s') % (stroke_tuple[0],
-                                               stroke_tuple[1])
+        print(('stroke:   color=%s hue=%s') % (stroke_tuple[0],
+                                               stroke_tuple[1]))
     else:
-        print ('stroke:   %s') % (tmp[0])
+        print(('stroke:   %s') % (tmp[0]))
     if fill_tuple is not None:
-        print ('fill:     color=%s hue=%s') % (fill_tuple[0], fill_tuple[1])
+        print(('fill:     color=%s hue=%s') % (fill_tuple[0], fill_tuple[1]))
     else:
-        print ('fill:     %s') % (tmp[1])
+        print(('fill:     %s') % (tmp[1]))
 
 
 def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
@@ -93,10 +93,10 @@ def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
     """
 
     if stroke_modifier not in _MODIFIERS or fill_modifier not in _MODIFIERS:
-        print (_('Error in specified color modifiers.'))
+        print((_('Error in specified color modifiers.')))
         return
     if stroke not in _COLORS or fill not in _COLORS:
-        print (_('Error in specified colors.'))
+        print((_('Error in specified colors.')))
         return
 
     if stroke_modifier == fill_modifier:

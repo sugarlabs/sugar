@@ -515,8 +515,8 @@ class WirelessDeviceView(ToolButton):
                 self._color = profile.get_color()
             else:
                 sha_hash = hashlib.sha1()
-                data = self._ssid + hex(self._flags)
-                sha_hash.update(data)
+                data = self._ssid.decode() + hex(self._flags)
+                sha_hash.update(data.encode('utf-8'))
                 digest = hash(sha_hash.digest())
                 index = digest % len(xocolor.colors)
 

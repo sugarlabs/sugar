@@ -160,6 +160,8 @@ class OwnerBuddyModel(BaseBuddyModel):
         if CONNECTION_INTERFACE_BUDDY_INFO in connection:
             properties = {}
             if self.props.key is not None:
+                if isinstance(self.props.key, str):
+                    self.props.key = self.props.key.encode()
                 properties['key'] = dbus.ByteArray(self.props.key)
             if self.props.color is not None:
                 properties['color'] = self.props.color.to_string()

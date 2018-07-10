@@ -102,7 +102,7 @@ def get_all_accounts():
     _ensure_module_repository()
 
     accounts = []
-    for service, service_info in _module_repository.iteritems():
+    for service, service_info in list(_module_repository.items()):
         accounts.append(service_info['account'])
 
     return accounts

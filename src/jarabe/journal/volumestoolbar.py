@@ -16,7 +16,6 @@
 
 import logging
 import os
-import statvfs
 from gettext import gettext as _
 
 from gi.repository import GObject
@@ -24,7 +23,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
-import cPickle
+import pickle
 import xapian
 import json
 import tempfile
@@ -100,8 +99,8 @@ def _convert_entries(root):
 
 def _convert_entry(root, document):
     try:
-        metadata_loaded = cPickle.loads(document.get_data())
-    except cPickle.PickleError as e:
+        metadata_loaded = pickle.loads(document.get_data())
+    except pickle.PickleError as e:
         logging.debug('Convert DS-0 Journal entries: '
                       'error converting metadata: %s', e)
         return
@@ -117,7 +116,7 @@ def _convert_entry(root, document):
     if uid is None:
         return
 
-    for key, value in metadata_loaded.items():
+    for key, value in list(metadata_loaded.items()):
         metadata[str(key)] = str(value[0])
 
     if 'uid' not in metadata:
@@ -368,8 +367,8 @@ class JournalButtonPalette(Palette):
 
     def __popup_cb(self, palette):
         stat = os.statvfs(env.get_profile_path())
-        free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
-        total_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BLOCKS]
+        free_space = stat[0] * stat[4]
+        total_space = stat[0] * stat[2]
 
         fraction = (total_space - free_space) / float(total_space)
         self._progress_bar.props.fraction = fraction

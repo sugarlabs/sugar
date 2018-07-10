@@ -15,9 +15,9 @@
 
 import logging
 from gettext import gettext as _
-import xmlrpclib
+import xmlrpc.client
 import socket
-import httplib
+import http.client
 import os
 from string import ascii_uppercase
 import random
@@ -87,7 +87,7 @@ class RegisterError(Exception):
     pass
 
 
-class _TimeoutHTTP(httplib.HTTP):
+class _TimeoutHTTP(http.client.HTTPConnection):
 
     def __init__(self, host='', port=None, strict=None, timeout=None):
         if port == 0:
@@ -99,7 +99,7 @@ class _TimeoutHTTP(httplib.HTTP):
                                    port, strict, timeout=_REGISTER_TIMEOUT))
 
 
-class _TimeoutTransport(xmlrpclib.Transport):
+class _TimeoutTransport(xmlrpc.client.Transport):
 
     def make_connection(self, host):
         host, extra_headers, x509_ = self.get_host_info(host)
@@ -132,13 +132,13 @@ def register_laptop(url=_REGISTER_URL):
         url = 'http://' + jabber_server + ':8080/'
 
     if sys.hexversion < 0x2070000:
-        server = xmlrpclib.ServerProxy(url, _TimeoutTransport())
+        server = xmlrpc.client.ServerProxy(url, _TimeoutTransport())
     else:
         socket.setdefaulttimeout(_REGISTER_TIMEOUT)
-        server = xmlrpclib.ServerProxy(url)
+        server = xmlrpc.client.ServerProxy(url)
     try:
         data = server.register(sn, nick, uuid_, profile.pubkey)
-    except (xmlrpclib.Error, TypeError, socket.error):
+    except (xmlrpc.client.Error, TypeError, socket.error):
         logging.exception('Registration: cannot connect to server')
         raise RegisterError(_('Cannot connect to the server.'))
     finally:

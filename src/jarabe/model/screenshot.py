@@ -17,7 +17,7 @@
 import os
 import tempfile
 from gettext import gettext as _
-import StringIO
+import io
 import cairo
 
 from gi.repository import Gdk
@@ -114,6 +114,6 @@ def _get_preview_data(screenshot_surface):
     cr.set_source_surface(screenshot_surface)
     cr.paint()
 
-    preview_str = StringIO.StringIO()
+    preview_str = io.StringIO()
     preview_surface.write_to_png(preview_str)
     return dbus.ByteArray(preview_str.getvalue())

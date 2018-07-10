@@ -28,10 +28,10 @@ from sugar3.graphics.xocolor import XoColor
 
 from jarabe.controlpanel.sectionview import SectionView
 
-from backupmanager import BackupManager
-from backupmanager import OPERATION_BACKUP, OPERATION_RESTORE
-from backends.backend_tools import PreConditionsError
-from backends.backend_tools import PreConditionsChoose
+from .backupmanager import BackupManager
+from .backupmanager import OPERATION_BACKUP, OPERATION_RESTORE
+from .backends.backend_tools import PreConditionsError
+from .backends.backend_tools import PreConditionsChoose
 
 
 class BackupView(SectionView):

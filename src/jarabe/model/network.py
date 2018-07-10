@@ -25,7 +25,7 @@ import uuid
 import dbus
 import dbus.service
 from gi.repository import GObject
-import ConfigParser
+import configparser
 from gi.repository import Gio
 import ctypes
 
@@ -701,7 +701,7 @@ class AccessPoint(GObject.GObject):
         else:
             fl |= 1 << 6
 
-        hashstr = str(fl) + '@' + self.ssid
+        hashstr = str(fl) + '@' + self.ssid.decode()
         return hash(hashstr)
 
     def _update_properties(self, properties):
@@ -957,12 +957,12 @@ def _migrate_old_wifi_connections():
     if not os.path.exists(config_path):
         return
 
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     try:
         if not config.read(config_path):
             logging.error('Error reading the nm config file')
             return
-    except ConfigParser.ParsingError:
+    except configparser.ParsingError:
         logging.exception('Error reading the nm config file')
         return
 
@@ -1005,7 +1005,7 @@ def _migrate_old_wifi_connections():
                     if config.has_option(section, 'pairwise'):
                         value = config.get(section, 'pairwise')
                         settings.wireless_security.pairwise = value
-        except ConfigParser.Error:
+        except configparser.Error:
             logging.exception('Error reading section')
         else:
             add_connection(settings)
@@ -1095,7 +1095,7 @@ def _is_non_printable(char):
     """
     Return True if char is a non-printable unicode character, False otherwise
     """
-    return (char < u' ') or (u'~' < char < u'\xA0') or (char == u'\xAD')
+    return (char < ' ') or ('~' < char < '\xA0') or (char == '\xAD')
 
 
 def ssid_to_display_name(ssid):
@@ -1123,7 +1123,7 @@ def ssid_to_display_name(ssid):
     """
     for encoding in ['utf-8', 'iso-8859-1', 'windows-1251']:
         try:
-            display_name = unicode(ssid, encoding)
+            display_name = str(ssid, encoding)
         except UnicodeDecodeError:
             continue
 

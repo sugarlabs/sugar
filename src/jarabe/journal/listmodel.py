@@ -214,7 +214,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         buddies = []
         if metadata.get('buddies'):
             try:
-                buddies = json.loads(metadata['buddies']).values()
+                buddies = list(json.loads(metadata['buddies']).values())
             except json.decoder.JSONDecodeError as exception:
                 logging.warning('Cannot decode buddies for %r: %s',
                                 metadata['uid'], exception)
@@ -224,7 +224,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
                             metadata['uid'], buddies)
             buddies = []
 
-        for n_ in xrange(0, 3):
+        for n_ in range(0, 3):
             if buddies:
                 try:
                     nick, color = buddies.pop(0)

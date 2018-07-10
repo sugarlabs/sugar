@@ -365,7 +365,7 @@ if __name__ == '__main__':
 
     test_file_name = '/home/humitos/test.py'
     test_temp_file = tempfile.mkstemp()[1]
-    print test_temp_file
+    print(test_temp_file)
     test_input_stream = Gio.File.new_for_path(test_file_name).read(None)
     test_output_stream = Gio.File.new_for_path(test_temp_file)\
         .append_to(Gio.FileCreateFlags.PRIVATE, None)

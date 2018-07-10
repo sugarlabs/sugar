@@ -597,7 +597,7 @@ class Network(SectionView):
 
         try:
             radio_state = self._model.get_radio()
-        except self._model.ReadError, detail:
+        except self._model.ReadError as detail:
             self._radio_alert.props.msg = detail
             self._radio_alert.show()
         else:
@@ -675,7 +675,7 @@ class Network(SectionView):
             icon.show()
 
     def _apply_proxy_settings(self):
-        for setting in self._proxy_settings.values():
+        for setting in list(self._proxy_settings.values()):
             if (Gio.Settings.get_has_unapplied(setting)):
                 setting.apply()
 
@@ -683,7 +683,7 @@ class Network(SectionView):
         self._apply_jabber(self._entry.get_text())
         self._model.set_social_help(self._social_help_entry.get_text())
         settings_changed = False
-        for setting in self._proxy_settings.values():
+        for setting in list(self._proxy_settings.values()):
             if (Gio.Settings.get_has_unapplied(setting)):
                 settings_changed = True
         if settings_changed:
@@ -697,9 +697,9 @@ class Network(SectionView):
     def undo(self):
         self._button.disconnect(self._radio_change_handler)
         self._radio_alert.hide()
-        for setting in self._proxy_settings.values():
+        for setting in list(self._proxy_settings.values()):
             setting.revert()
-        for alert in self._proxy_inline_alerts.values():
+        for alert in list(self._proxy_inline_alerts.values()):
             alert.hide()
 
     def _validate(self):
@@ -712,7 +712,7 @@ class Network(SectionView):
         radio_state = widget.get_active()
         try:
             self._model.set_radio(radio_state)
-        except self._model.ReadError, detail:
+        except self._model.ReadError as detail:
             self._radio_alert.props.msg = detail
             self._radio_valid = False
         else:

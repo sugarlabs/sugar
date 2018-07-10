@@ -197,8 +197,8 @@ class WEPKeyDialog(KeyDialog):
 
     def print_security(self):
         (key, auth_alg) = self._get_security()
-        print 'Key: %s' % key
-        print 'Auth: %d' % auth_alg
+        print('Key: %s' % key)
+        print('Auth: %d' % auth_alg)
 
     def create_security(self):
         (key, auth_alg) = self._get_security()
@@ -254,7 +254,7 @@ class WPAKeyDialog(KeyDialog):
 
     def print_security(self):
         key = self._get_security()
-        print 'Key: %s' % key
+        print('Key: %s' % key)
 
     def create_security(self):
         wsec = {'psk': self._get_security()}

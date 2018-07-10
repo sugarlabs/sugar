@@ -14,7 +14,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 class WebService():
     def get_icon_name(self):
         raise "Not implemented"
