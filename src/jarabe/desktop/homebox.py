@@ -84,7 +84,7 @@ class HomeBox(Gtk.VBox):
                       (self._list_view_index))
 
     def __toolbar_query_changed_cb(self, toolbar, query):
-        self._query = normalize_string(query.decode('utf-8'))
+        self._query = normalize_string(query)
         self._list_view.set_filter(self._query)
         for i in range(desktop.get_number_of_views()):
             self._favorites_boxes[i].set_filter(self._query)

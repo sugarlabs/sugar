@@ -103,7 +103,7 @@ class Browser():
 
     def _items_history_as_list(self, history):
         back_items = []
-        for n in reversed(range(1, history.get_back_length() + 1)):
+        for n in reversed(list(range(1, history.get_back_length() + 1))):
             item = history.get_nth_item(n * -1)
             back_items.append(item)
 

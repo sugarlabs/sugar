@@ -1,11 +1,11 @@
 SUBDIRS = icons
 
 sugar-72.gtkrc: gtkrc.em
-	$(srcdir)/em.py -D scaling=\'72\' $(srcdir)/gtkrc.em > \
+	empy3 -D scaling=\'72\' $(srcdir)/gtkrc.em > \
 		$(top_builddir)/data/sugar-72.gtkrc
 
 sugar-100.gtkrc: gtkrc.em
-	$(srcdir)/em.py -D scaling=\'100\' $(srcdir)/gtkrc.em > \
+	empy3 -D scaling=\'100\' $(srcdir)/gtkrc.em > \
 		$(top_builddir)/data/sugar-100.gtkrc
 
 sugardir = $(pkgdatadir)/data
@@ -60,5 +60,5 @@ polkit_policydir = $(datadir)/polkit-1/actions
 polkit_in_files = org.sugar.brightness.policy.in org.sugar.serial-number.policy.in
 polkit_policy_DATA = $(polkit_in_files:.policy.in=.policy)
 
-EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(icon_DATA) $(gsettings_SCHEMAS) $(convert_DATA) $(polkit_in_files)
+EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) gtkrc.em $(icon_DATA) $(gsettings_SCHEMAS) $(convert_DATA) $(polkit_in_files)
 CLEANFILES = $(GTKRC_FILES) $(mime_xml_files) $(polkit_policy_DATA)

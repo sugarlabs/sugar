@@ -27,11 +27,11 @@ import locale
 import logging
 from tempfile import NamedTemporaryFile
 
-from StringIO import StringIO
-from ConfigParser import ConfigParser
+from io import StringIO
+from configparser import ConfigParser
 from zipfile import ZipFile
-from urlparse import urljoin
-from HTMLParser import HTMLParser
+from urllib.parse import urljoin
+from html.parser import HTMLParser
 
 from gi.repository import GLib
 from gi.repository import GObject
@@ -231,7 +231,7 @@ class MicroformatUpdater(object):
         # version installed. Queue the remaining ones to be checked.
         registry = bundleregistry.get_registry()
         self._bundles_to_check = []
-        for bundle_id, data in self._parser.results.iteritems():
+        for bundle_id, data in list(self._parser.results.items()):
             # filter optional activities for automatic updates
             if self._auto and data[2] is True:
                 logging.debug('filtered optional activity %s', bundle_id)
@@ -365,7 +365,7 @@ class MetadataLookup(GObject.GObject):
         try:
             name = self._do_name_lookup()
             self._complete(name)
-        except Exception, e:
+        except Exception as e:
             self._complete(e)
 
     def _do_name_lookup(self):

@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-from urlparse import urlparse
+from urllib.parse import urlparse
 import hashlib
 
 from gi.repository import Gtk

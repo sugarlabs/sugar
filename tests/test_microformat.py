@@ -33,8 +33,8 @@ class TestMicroformat(unittest.TestCase):
         parser.close()
 
         results = parser.results
-        self.assertIn('org.sugarlabs.AbacusActivity', results.keys())
-        self.assertIn('org.laptop.WebActivity', results.keys())
+        self.assertIn('org.sugarlabs.AbacusActivity', list(results.keys()))
+        self.assertIn('org.laptop.WebActivity', list(results.keys()))
 
         # test that we picked the newest version
         version, url = results['org.sugarlabs.AbacusActivity']

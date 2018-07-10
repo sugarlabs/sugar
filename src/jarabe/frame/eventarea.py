@@ -146,13 +146,13 @@ class EventArea(GObject.GObject):
         return True
 
     def show(self):
-        for box in self._boxes.itervalues():
+        for box in list(self._boxes.values()):
             box.show()
 
     def hide(self):
-        for box in self._boxes.itervalues():
+        for box in list(self._boxes.values()):
             box.hide()
 
     def _window_stacking_changed_cb(self, screen):
-        for box in self._boxes.itervalues():
+        for box in list(self._boxes.values()):
             box.get_window().raise_()

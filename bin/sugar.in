@@ -80,4 +80,4 @@ cat > "$debug_file_path" << EOF
 EOF
 fi
 
-exec python2 -m jarabe.main
+exec python3 -m jarabe.main

@@ -28,4 +28,4 @@ lint:
 
 test: lint check-po
 	PYTHONPATH=$(pkgdatadir)/extensions:$(PYTHONPATH) \
-	python -m sugar3.test.discover $(top_srcdir)/tests
+	python3 -m sugar3.test.discover $(top_srcdir)/tests

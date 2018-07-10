@@ -269,7 +269,7 @@ class AdHocManager(GObject.GObject):
         Return: Boolean
 
         """
-        for access_point in self._networks.values():
+        for access_point in list(self._networks.values()):
             if access_point is not None:
                 if access_point.model.object_path == ap_object_path:
                     return True

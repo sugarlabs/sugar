@@ -81,7 +81,7 @@ class Brightness(GObject.GObject):
         result, output, error, status = GLib.spawn_command_line_sync(cmd)
         if status != 0:
             return None
-        return output.rstrip('\0\n')
+        return output.rstrip(b'\0\n')
 
     def _helper_write(self, option, value):
         cmd = 'pkexec sugar-backlight-helper --%s %d' % (option, value)

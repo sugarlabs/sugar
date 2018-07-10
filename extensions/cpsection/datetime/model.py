@@ -50,7 +50,7 @@ def read_all_timezones(fn=_zone_tab):
             timezones.append(line[2])
     timezones.sort()
 
-    for offset in xrange(-12, 15):
+    for offset in range(-12, 15):
         if offset < 0:
             tz = 'UTC%d' % offset
         elif offset > 0:
@@ -67,7 +67,7 @@ def get_timezone():
 
 
 def print_timezone():
-    print get_timezone()
+    print(get_timezone())
 
 
 def fix_UTC_time_zone(timezone):

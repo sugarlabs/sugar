@@ -147,6 +147,8 @@ class ViewToolbar(Gtk.Toolbar):
         new_query = entry.props.text
         if self._query != new_query:
             self._query = new_query
+            if isinstance(self._query, bytes):
+                self._query = self._query.decode()
             self.emit('query-changed', self._query)
 
     def _entry_changed_cb(self, entry):

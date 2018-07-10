@@ -140,7 +140,7 @@ class Language(SectionView):
                     locale_country = country
 
         language_palette = []
-        key_list = self._language_dict.keys()
+        key_list = list(self._language_dict.keys())
         for language_key in sorted(key_list):
             language_palette.append(
                 {'label': self._language_dict[language_key],
@@ -327,7 +327,7 @@ class Language(SectionView):
     def _language_changed(self, widget, event, item):
         i = item['index']
 
-        for language_key in self._language_dict.keys():
+        for language_key in list(self._language_dict.keys()):
             if self._language_dict[language_key] == item['label']:
                 new_country_list = \
                     self._build_country_list(language_key, idx=i)

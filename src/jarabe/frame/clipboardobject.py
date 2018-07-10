@@ -15,7 +15,7 @@
 
 import os
 import logging
-import urlparse
+import urllib.parse
 from gi.repository import Gio
 from gi.repository import Gtk
 
@@ -33,7 +33,7 @@ class ClipboardObject(object):
         self._formats = {}
 
     def destroy(self):
-        for format_ in self._formats.itervalues():
+        for format_ in list(self._formats.values()):
             format_.destroy()
 
     def get_id(self):
@@ -83,7 +83,7 @@ class ClipboardObject(object):
         if not self._formats:
             return False
         else:
-            return self._formats.keys()[0] == ActivityBundle.MIME_TYPE
+            return list(self._formats.keys())[0] == ActivityBundle.MIME_TYPE
 
     def get_percent(self):
         return self._percent
@@ -101,10 +101,10 @@ class ClipboardObject(object):
         if not self._formats:
             return ''
 
-        format_ = mime.choose_most_significant(self._formats.keys())
+        format_ = mime.choose_most_significant(list(self._formats.keys()))
         if format_ == 'text/uri-list':
             uri_data = self._formats[format_].get_data()
-            uri = urlparse.urlparse(uri_data, 'file')
+            uri = urllib.parse.urlparse(uri_data, 'file')
             scheme = uri.scheme  # pylint: disable=E1101
             if scheme == 'file':
                 path = uri.path  # pylint: disable=E1101
@@ -128,7 +128,7 @@ class Format(object):
 
     def destroy(self):
         if self._on_disk:
-            uri = urlparse.urlparse(self._data)
+            uri = urllib.parse.urlparse(self._data)
             path = uri.path  # pylint: disable=E1101
             if os.path.isfile(path):
                 os.remove(path)

@@ -243,14 +243,18 @@ class ActivitiesTreeView(Gtk.TreeView):
         of matching activities.
 
         """
-        self._query = normalize_string(query.decode('utf-8'))
+        if isinstance(query, bytes):
+            query = query.decode()
+        self._query = normalize_string(query)
         self.get_model().refilter()
         matches = self.get_model().iter_n_children(None)
         return matches
 
     def __model_visible_cb(self, model, tree_iter, data):
         title = model[tree_iter][self._model.column_title]
-        title = normalize_string(title.decode('utf-8'))
+        if isinstance(title, bytes):
+            title = title.decode('utf-8')
+        title = normalize_string(title)
         return title is not None and title.find(self._query) > -1
 
     def create_palette(self, path, column):
