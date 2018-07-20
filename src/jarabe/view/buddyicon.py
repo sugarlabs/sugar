@@ -16,7 +16,6 @@
 from sugar3.graphics import style
 from sugar3.graphics.icon import CanvasIcon
 
-from jarabe.view.buddymenu import BuddyMenu
 from jarabe.util.normalize import normalize_string
 
 
@@ -40,6 +39,9 @@ class BuddyIcon(CanvasIcon):
         self._update_color()
 
     def create_palette(self):
+        # import BuddyMenu here to avoid recursive import
+        # See ticket https://github.com/sugarlabs/sugar/issues/793
+        from jarabe.view.buddymenu import BuddyMenu
         palette = BuddyMenu(self._buddy)
         self.connect_to_palette_pop_events(palette)
         return palette

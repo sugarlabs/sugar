@@ -42,7 +42,6 @@ from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette
 from jarabe.view.palettes import ActivityPalette
 from jarabe.view.buddyicon import BuddyIcon
-from jarabe.view.buddymenu import BuddyMenu
 from jarabe.model.buddy import get_owner_instance
 from jarabe.model import shell
 from jarabe.model import bundleregistry
@@ -677,6 +676,9 @@ class OwnerIcon(BuddyIcon):
                                               __enter_notify_event_cb)
 
     def create_palette(self):
+        # import BuddyMenu here to avoid recursive import
+        # See ticket https://github.com/sugarlabs/sugar/issues/793
+        from jarabe.view.buddymenu import BuddyMenu
         palette = BuddyMenu(get_owner_instance())
 
         settings = Gio.Settings('org.sugarlabs')
