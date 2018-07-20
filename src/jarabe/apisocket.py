@@ -22,8 +22,8 @@ import dbus
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gio
-from gwebsockets.server import Server
-from gwebsockets.server import Message
+from jarabe.gwebsockets.server import Server
+from jarabe.gwebsockets.server import Message
 
 from sugar3 import env
 
