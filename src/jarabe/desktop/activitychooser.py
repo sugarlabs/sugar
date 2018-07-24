@@ -16,23 +16,50 @@
 
 import logging
 
-from gi.repository import GObject
 from gi.repository import GLib
+from gettext import gettext as _
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GObject
 
-from sugar3.graphics import style
-from sugar3.graphics.popwindow import PopWindow
 from sugar3.activity import activityfactory
 from sugar3.graphics import iconentry
+from sugar3.graphics import style
+from sugar3.graphics.toolbutton import ToolButton
 
+from jarabe.model import shell
 from jarabe.desktop.activitieslist import ActivitiesList
 from jarabe.util.normalize import normalize_string
+
+
+class TitleBox(Gtk.Toolbar):
+    def __init__(self):
+        Gtk.Toolbar.__init__(self)
+
+        self.close_button = ToolButton(icon_name='dialog-cancel')
+        self.close_button.set_tooltip(_('Close'))
+        self.insert(self.close_button, -1)
+        self.close_button.show()
+
+        self._label = Gtk.Label()
+        self._label.set_alignment(0, 0.5)
+
+        tool_item = Gtk.ToolItem()
+        tool_item.set_expand(True)
+        tool_item.add(self._label)
+        self._label.show()
+        self.insert(tool_item, 0)
+        tool_item.show()
+
+    def set_title(self, title):
+        self._label.set_markup('<b>%s</b>' % title)
+        self._label.show()
+
 
 _AUTOSEARCH_TIMEOUT = 1000
 
 
-class ActivityChooser(PopWindow):
+class ActivityChooser(Gtk.Window):
 
     __gtype_name__ = 'ActivityChooser'
 
@@ -43,16 +70,37 @@ class ActivityChooser(PopWindow):
     }
 
     def __init__(self):
-        logging.debug('In the Object Chooser class init hehehe')
-        PopWindow.__init__(self)
-        width, height = self.HALF_WIDTH
+        Gtk.Window.__init__(self)
 
-        self.set_size((width*3/2, height*2/3))
+        self.set_decorated(False)
+        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
+        self.set_border_width(style.LINE_WIDTH)
+        self.set_resizable(False)
+        self.set_modal(True)
+        self.set_can_focus(True)
+
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.add(self._vbox)
+        self._vbox.show()
+
+        self._title_box = TitleBox()
+        self._title_box.close_button.connect(
+            'clicked',
+            self.__close_button_clicked_cb)
+        self._title_box.set_size_request(-1, style.GRID_CELL_SIZE)
+
+        self._vbox.pack_start(self._title_box, False, True, 0)
+        self._title_box.show()
+
+        self.set_size_request((Gdk.Screen.height() - style.GRID_CELL_SIZE * 3)*3/4,
+                  (Gdk.Screen.height() - style.GRID_CELL_SIZE * 2)*2/3)
         self.connect('key-press-event', self.__key_press_event_cb)
+        self.connect('realize', self.__realize_cb)
+
         self._list_view = ActivitiesList()
 
         self.search_bar = SearchBar()
-        self.get_vbox().pack_start(self.search_bar, False, False, 0)
+        self._vbox.pack_start(self.search_bar, False, False, 0)
         self.search_bar.connect('query-changed',
                                 self.__toolbar_query_changed_cb)
         self.search_bar.search_entry.connect('key-press-event',
@@ -64,7 +112,7 @@ class ActivityChooser(PopWindow):
 
         self._scrolled_window.add(self._list_view)
 
-        self.get_vbox().pack_start(self._scrolled_window, True, True, 0)
+        self._vbox.pack_start(self._scrolled_window, True, True, 0)
 
         self._list_view.show()
         self._list_view.connect('clear-clicked',
@@ -101,6 +149,17 @@ class ActivityChooser(PopWindow):
 
         self.show()
 
+    def __close_button_clicked_cb(self, button):
+        self.destroy()
+
+    def __realize_cb(self, widget):
+        shell.get_model().push_modal()
+        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
+        window = self.get_window()
+        window.set_accept_focus(True)
+        shell.get_model().push_modal()
+
+
     def __toolbar_query_changed_cb(self, toolbar, query):
         self._query = normalize_string(query.decode('utf-8'))
         self._list_view.set_filter(self._query)
@@ -125,6 +184,10 @@ class ActivityChooser(PopWindow):
             toolbar.search_entry.select_region(pos, -1)
 
     def __key_press_event_cb(self, widget, event):
+        keyname = Gdk.keyval_name(event.keyval)
+        if keyname == 'Escape':
+            self.destroy()
+
         if not self.search_bar.search_entry.has_focus():
             self.search_bar.search_entry.grab_focus()
 
@@ -146,7 +209,7 @@ class ActivityChooser(PopWindow):
         toolbar.clear_query()
 
     def set_title(self, text):
-        self.get_title_box().set_title(text)
+        self._title_box.set_title(text)
 
     def _got_row_tree_view(self, row):
         bundle_id = row[self.tree_view._model.column_bundle_id]

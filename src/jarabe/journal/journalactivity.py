@@ -51,7 +51,7 @@ from jarabe.journal import model
 from jarabe.journal.journalwindow import JournalWindow
 from jarabe.journal.bundlelauncher import launch_bundle, get_bundle
 
-from jarabe.model import session
+from jarabe.model import session, shell
 
 from sugar3.graphics import style
 
@@ -360,7 +360,18 @@ class JournalActivity(JournalWindow):
             activity_id=None, project_metadata=None)
 
     def __add_new_activate_cb(self, bar, title):
+        shell_model = shell.get_model()
+        activity = shell_model.get_active_activity()
+        if activity.has_shell_window():
+            return
+
+        if shell.get_model().has_modal():
+            return
+
         chooser = ActivityChooser()
+        activity.push_shell_window(chooser)
+        chooser.connect('hide', activity.pop_shell_window)
+
         text = _("Choose an activity to start '%s' with") % title
         chooser.set_title(text)
         chooser.connect('activity-selected',

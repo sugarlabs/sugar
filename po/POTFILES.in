@@ -44,6 +44,7 @@ src/jarabe/controlpanel/cmd.py
 src/jarabe/controlpanel/gui.py
 src/jarabe/controlpanel/sectionview.py
 src/jarabe/controlpanel/toolbar.py
+src/jarabe/desktop/activitychooser.py
 src/jarabe/desktop/activitieslist.py
 src/jarabe/desktop/favoriteslayout.py
 src/jarabe/desktop/favoritesview.py
