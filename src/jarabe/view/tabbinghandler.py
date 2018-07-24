@@ -15,7 +15,7 @@
 
 import logging
 
-from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gdk
 
 from jarabe.model import shell
@@ -94,13 +94,13 @@ class TabbingHandler(object):
 
     def _start_timeout(self, event_time):
         self._cancel_timeout()
-        self._timeout = GObject.timeout_add(
+        self._timeout = GLib.timeout_add(
             _RAISE_DELAY,
             lambda: self.__timeout_cb(event_time))
 
     def _cancel_timeout(self):
         if self._timeout:
-            GObject.source_remove(self._timeout)
+            GLib.source_remove(self._timeout)
             self._timeout = None
 
     def _activate_current(self, event_time):

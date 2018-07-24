@@ -99,7 +99,7 @@ class ActivityModel(GObject.GObject):
     def set_color(self, color):
         self._color = color
 
-    color = GObject.property(type=object, getter=get_color, setter=set_color)
+    color = GObject.Property(type=object, getter=get_color, setter=set_color)
 
     def get_bundle(self):
         return self._bundle
@@ -107,7 +107,7 @@ class ActivityModel(GObject.GObject):
     def set_bundle(self, bundle):
         self._bundle = bundle
 
-    bundle = GObject.property(type=object, getter=get_bundle,
+    bundle = GObject.Property(type=object, getter=get_bundle,
                               setter=set_bundle)
 
     def get_name(self):
@@ -116,7 +116,7 @@ class ActivityModel(GObject.GObject):
     def set_name(self, name):
         self._name = name
 
-    name = GObject.property(type=object, getter=get_name, setter=set_name)
+    name = GObject.Property(type=object, getter=get_name, setter=set_name)
 
     def is_private(self):
         return self._private
@@ -124,7 +124,7 @@ class ActivityModel(GObject.GObject):
     def set_private(self, private):
         self._private = private
 
-    private = GObject.property(type=object, getter=is_private,
+    private = GObject.Property(type=object, getter=is_private,
                                setter=set_private)
 
     def get_buddies(self):
@@ -140,7 +140,7 @@ class ActivityModel(GObject.GObject):
         self.notify('buddies')
         self.emit('buddy-removed', buddy)
 
-    buddies = GObject.property(type=object, getter=get_buddies)
+    buddies = GObject.Property(type=object, getter=get_buddies)
 
     def get_current_buddies(self):
         return self._current_buddies
@@ -155,7 +155,7 @@ class ActivityModel(GObject.GObject):
         self.notify('current-buddies')
         self.emit('current-buddy-removed', buddy)
 
-    current_buddies = GObject.property(type=object, getter=get_current_buddies)
+    current_buddies = GObject.Property(type=object, getter=get_current_buddies)
 
 
 class _Account(GObject.GObject):

@@ -20,7 +20,7 @@ import logging
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GObject
+from gi.repository import GLib
 import gettext
 
 from sugar3.graphics import style
@@ -375,15 +375,15 @@ class Language(SectionView):
                 self.restart_alerts.remove('lang')
             self._lang_alert.hide()
             if self._lang_sid:
-                GObject.source_remove(self._lang_sid)
+                GLib.source_remove(self._lang_sid)
             self._model.undo()
             return False
 
         if self._lang_sid:
-            GObject.source_remove(self._lang_sid)
-        self._lang_sid = GObject.timeout_add(self._APPLY_TIMEOUT,
-                                             self.__lang_timeout_cb,
-                                             selected_langs)
+            GLib.source_remove(self._lang_sid)
+        self._lang_sid = GLib.timeout_add(self._APPLY_TIMEOUT,
+                                          self.__lang_timeout_cb,
+                                          selected_langs)
 
     def __lang_timeout_cb(self, codes):
         self._lang_sid = 0

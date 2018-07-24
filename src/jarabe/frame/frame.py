@@ -17,7 +17,7 @@ import logging
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gio
 
 from sugar3.graphics import animator
@@ -246,7 +246,7 @@ class Frame(object):
 
         self._notif_by_icon[icon] = window
 
-        timeout_id = GObject.timeout_add(
+        timeout_id = GLib.timeout_add(
             duration, lambda: self.remove_notification(icon))
         return timeout_id
 

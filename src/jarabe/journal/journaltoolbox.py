@@ -22,6 +22,7 @@ import os
 import time
 
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 
@@ -151,7 +152,7 @@ class MainToolbox(ToolbarBox):
         self.connect('size_allocate', self.__size_allocate_cb)
 
     def __size_allocate_cb(self, widget, allocation):
-        GObject.idle_add(self._update_buttons, allocation.width)
+        GLib.idle_add(self._update_buttons, allocation.width)
 
     def _update_buttons(self, toolbar_width):
         # Show the label next to the button icon if there is room on
@@ -316,7 +317,7 @@ class MainToolbox(ToolbarBox):
 
     def _search_entry_activated_cb(self, search_entry):
         if self._autosearch_timer:
-            GObject.source_remove(self._autosearch_timer)
+            GLib.source_remove(self._autosearch_timer)
         self._update_if_needed()
 
     def _search_entry_changed_cb(self, search_entry):
@@ -325,9 +326,9 @@ class MainToolbox(ToolbarBox):
             return
 
         if self._autosearch_timer:
-            GObject.source_remove(self._autosearch_timer)
-        self._autosearch_timer = GObject.timeout_add(_AUTOSEARCH_TIMEOUT,
-                                                     self._autosearch_timer_cb)
+            GLib.source_remove(self._autosearch_timer)
+        self._autosearch_timer = GLib.timeout_add(_AUTOSEARCH_TIMEOUT,
+                                                  self._autosearch_timer_cb)
 
     def _autosearch_timer_cb(self):
         logging.debug('_autosearch_timer_cb')
@@ -444,7 +445,7 @@ class MainToolbox(ToolbarBox):
                              'file': activity_info.get_icon(),
                              'callback': self._what_palette_cb,
                              'id': bundle_id})
-                    except GObject.GError as exception:
+                    except GLib.GError as exception:
                         # fall back to generic icon
                         logging.warning('Falling back to default icon for'
                                         ' "what" filter because %r (%r) has an'
@@ -793,7 +794,7 @@ class EditToolbox(ToolbarBox):
 
     def display_selected_entries_status(self):
         info_widget = self._multi_select_info_widget
-        GObject.idle_add(info_widget.display_selected_entries)
+        GLib.idle_add(info_widget.display_selected_entries)
 
     def set_total_number_of_entries(self, total):
         self._multi_select_info_widget.set_total_number_of_entries(total)
@@ -984,7 +985,7 @@ class FilterToolItem(Gtk.ToolButton):
     def set_palette(self, palette):
         self._palette_invoker.palette = palette
 
-    palette = GObject.property(
+    palette = GObject.Property(
         type=object, setter=set_palette, getter=get_palette)
 
     def get_palette_invoker(self):
@@ -994,7 +995,7 @@ class FilterToolItem(Gtk.ToolButton):
         self._palette_invoker.detach()
         self._palette_invoker = palette_invoker
 
-    palette_invoker = GObject.property(
+    palette_invoker = GObject.Property(
         type=object, setter=set_palette_invoker, getter=get_palette_invoker)
 
     def do_draw(self, cr):

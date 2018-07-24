@@ -18,6 +18,7 @@ import textwrap
 from gettext import gettext as _
 
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 
@@ -240,9 +241,9 @@ class NotificationIcon(Gtk.EventBox):
     __gtype_name__ = 'SugarNotificationIcon'
 
     __gproperties__ = {
-        'xo-color': (object, None, None, GObject.PARAM_READWRITE),
-        'icon-name': (str, None, None, None, GObject.PARAM_READWRITE),
-        'icon-filename': (str, None, None, None, GObject.PARAM_READWRITE),
+        'xo-color': (object, None, None, GObject.ParamFlags.READWRITE),
+        'icon-name': (str, None, None, None, GObject.ParamFlags.READWRITE),
+        'icon-filename': (str, None, None, None, GObject.ParamFlags.READWRITE),
     }
 
     _PULSE_TIMEOUT = 3
@@ -261,8 +262,8 @@ class NotificationIcon(Gtk.EventBox):
         self.add(self._icon)
         self._icon.show()
 
-        GObject.timeout_add_seconds(self._PULSE_TIMEOUT,
-                                    self.__stop_pulsing_cb)
+        GLib.timeout_add_seconds(self._PULSE_TIMEOUT,
+                                 self.__stop_pulsing_cb)
 
         self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
 

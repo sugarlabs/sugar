@@ -17,6 +17,7 @@ import logging
 from gettext import gettext as _
 
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 
@@ -63,9 +64,9 @@ class BackupView(SectionView):
 class _BackupButton(Gtk.EventBox):
 
     __gproperties__ = {
-        'icon-name': (str, None, None, None, GObject.PARAM_READWRITE),
-        'pixel-size': (object, None, None, GObject.PARAM_READWRITE),
-        'title': (str, None, None, None, GObject.PARAM_READWRITE),
+        'icon-name': (str, None, None, None, GObject.ParamFlags.READWRITE),
+        'pixel-size': (object, None, None, GObject.ParamFlags.READWRITE),
+        'title': (str, None, None, None, GObject.ParamFlags.READWRITE),
     }
 
     def __init__(self, **kwargs):
@@ -237,7 +238,7 @@ class OperationPanel(Gtk.Grid):
             self._ask_options(message, combo_options, self._select_backend)
         else:
             self._backend = self._view.manager.get_backends()[0]
-            GObject.idle_add(self._start_operation)
+            GLib.idle_add(self._start_operation)
 
     def _ask_options(self, message, options, continue_cb):
         """
@@ -291,7 +292,7 @@ class OperationPanel(Gtk.Grid):
             self._operator = self._backend.get_restore()
             self._message_label.set_text(_('Starting restore...'))
 
-        GObject.idle_add(self._continue_operation)
+        GLib.idle_add(self._continue_operation)
 
     def _continue_operation(self, options={}):
         need_more_information = True
@@ -306,7 +307,7 @@ class OperationPanel(Gtk.Grid):
                               self._assign_parameter_backend)
         if not need_more_information:
             if self._operation == OPERATION_BACKUP:
-                GObject.idle_add(self._internal_start_operation)
+                GLib.idle_add(self._internal_start_operation)
 
             if self._operation == OPERATION_RESTORE:
                 # The restore is potentially dangerous
@@ -347,7 +348,7 @@ class OperationPanel(Gtk.Grid):
         # disable the accept button until the operation finish
         self._view.props.is_valid = False
 
-        GObject.idle_add(self._operator.start)
+        GLib.idle_add(self._operator.start)
 
     def __retry_cb(self, button):
         self._start_operation()

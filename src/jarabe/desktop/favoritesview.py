@@ -381,7 +381,7 @@ class FavoritesView(ViewContainer):
         alert.props.title = _('Registration')
         alert.props.msg = _('Please wait, searching for your school server.')
         self._box.add_alert(alert)
-        GObject.idle_add(self.__register)
+        GLib.idle_add(self.__register)
 
     def __register(self):
         self._box.remove_alert()

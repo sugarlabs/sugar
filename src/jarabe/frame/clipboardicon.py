@@ -19,7 +19,7 @@ import logging
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import SugarExt
-from gi.repository import GObject
+from gi.repository import GLib
 
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.icon import Icon
@@ -76,7 +76,7 @@ class ClipboardIcon(RadioToolButton):
     def _drag_data_get_cb(self, widget, context, selection, target_type,
                           event_time):
         frame = jarabe.frame.get_view()
-        self._timeout_id = GObject.timeout_add(
+        self._timeout_id = GLib.timeout_add(
             jarabe.frame.frame.NOTIFICATION_DURATION,
             lambda: frame.remove_notification(self._notif_icon))
         target_atom = selection.get_target()
@@ -182,7 +182,7 @@ class ClipboardIcon(RadioToolButton):
 
     def _drag_begin_cb(self, widget, context):
         # TODO: We should get the pixbuf from the icon, with colors, etc.
-        GObject.source_remove(self._timeout_id)
+        GLib.source_remove(self._timeout_id)
         icon_theme = Gtk.IconTheme.get_default()
         pixbuf = icon_theme.load_icon(self._icon.props.icon_name,
                                       style.STANDARD_ICON_SIZE, 0)

@@ -109,7 +109,7 @@ class Activity(GObject.GObject):
     def get_launch_status(self):
         return self._launch_status
 
-    launch_status = GObject.property(getter=get_launch_status)
+    launch_status = GObject.Property(getter=get_launch_status)
 
     def add_window(self, window, is_main_window=False):
         """Add a window to the windows stack."""
@@ -731,10 +731,10 @@ class ShellModel(GObject.GObject):
         self.emit('launch-started', home_activity)
 
         if activity_id in self._launch_timers:
-            GObject.source_remove(self._launch_timers[activity_id])
+            GLib.source_remove(self._launch_timers[activity_id])
             del self._launch_timers[activity_id]
 
-        timer = GObject.timeout_add_seconds(90, self._check_activity_launched,
+        timer = GLib.timeout_add_seconds(90, self._check_activity_launched,
                                             activity_id)
         self._launch_timers[activity_id] = timer
 

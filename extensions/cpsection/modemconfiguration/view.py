@@ -62,7 +62,7 @@ class EntryWithLabel(Gtk.HBox):
     def get_entry(self):
         return self._entry
 
-    entry = GObject.property(type=object, getter=get_entry)
+    entry = GObject.Property(type=object, getter=get_entry)
 
 
 class ModemConfiguration(SectionView):

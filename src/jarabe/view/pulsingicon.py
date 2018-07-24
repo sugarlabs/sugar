@@ -16,6 +16,7 @@
 import math
 
 from gi.repository import GObject
+from gi.repository import GLib
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
@@ -53,15 +54,15 @@ class Pulser(object):
         if restart:
             self._phase = 0
         if self._pulse_hid is None:
-            self._pulse_hid = GObject.timeout_add(self._interval,
-                                                  self.__pulse_cb)
+            self._pulse_hid = GLib.timeout_add(self._interval,
+                                               self.__pulse_cb)
         if self._start_scale != self._end_scale:
             self._icon.scale = self._start_scale + \
                 self._current_scale_step * self._current_zoom_step
 
     def stop(self):
         if self._pulse_hid is not None:
-            GObject.source_remove(self._pulse_hid)
+            GLib.source_remove(self._pulse_hid)
             self._pulse_hid = None
         self._icon.xo_color = self._icon.get_base_color()
         self._phase = 0
@@ -105,7 +106,7 @@ class PulsingIcon(Icon):
     def get_pulse_color(self):
         return self._pulse_color
 
-    pulse_color = GObject.property(
+    pulse_color = GObject.Property(
         type=object, getter=get_pulse_color, setter=set_pulse_color)
 
     def set_base_color(self, base_color):
@@ -126,7 +127,7 @@ class PulsingIcon(Icon):
             end_scale = 1.0
         self._pulser.set_zooming(start_scale, end_scale, zoom_steps)
 
-    base_color = GObject.property(
+    base_color = GObject.Property(
         type=object, getter=get_base_color, setter=set_base_color)
 
     def set_paused(self, paused):
@@ -140,7 +141,7 @@ class PulsingIcon(Icon):
     def get_paused(self):
         return self._paused
 
-    paused = GObject.property(
+    paused = GObject.Property(
         type=bool, default=False, getter=get_paused, setter=set_paused)
 
     def set_pulsing(self, pulsing):
@@ -154,7 +155,7 @@ class PulsingIcon(Icon):
     def get_pulsing(self):
         return self._pulsing
 
-    pulsing = GObject.property(
+    pulsing = GObject.Property(
         type=bool, default=False, getter=get_pulsing, setter=set_pulsing)
 
     def _get_palette(self):
@@ -197,7 +198,7 @@ class EventPulsingIcon(CanvasIcon):
     def get_pulse_color(self):
         return self._pulse_color
 
-    pulse_color = GObject.property(
+    pulse_color = GObject.Property(
         type=object, getter=get_pulse_color, setter=set_pulse_color)
 
     def set_base_color(self, base_color):
@@ -207,7 +208,7 @@ class EventPulsingIcon(CanvasIcon):
     def get_base_color(self):
         return self._base_color
 
-    base_color = GObject.property(
+    base_color = GObject.Property(
         type=object, getter=get_base_color, setter=set_base_color)
 
     def set_paused(self, paused):
@@ -221,7 +222,7 @@ class EventPulsingIcon(CanvasIcon):
     def get_paused(self):
         return self._paused
 
-    paused = GObject.property(
+    paused = GObject.Property(
         type=bool, default=False, getter=get_paused, setter=set_paused)
 
     def set_pulsing(self, pulsing):
@@ -237,5 +238,5 @@ class EventPulsingIcon(CanvasIcon):
     def get_pulsing(self):
         return self._pulsing
 
-    pulsing = GObject.property(
+    pulsing = GObject.Property(
         type=bool, default=False, getter=get_pulsing, setter=set_pulsing)

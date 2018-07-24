@@ -24,6 +24,7 @@ import hashlib
 import datetime
 import time
 from gi.repository import Gtk
+from gi.repository import GLib
 from gi.repository import GObject
 import dbus
 
@@ -849,7 +850,7 @@ class GsmDeviceView(TrayIcon):
             if connection is not None:
                 self._connection_timestamp = time.time() - \
                     connection.get_settings('connection')['timestamp']
-                self._connection_time_handler = GObject.timeout_add_seconds(
+                self._connection_time_handler = GLib.timeout_add_seconds(
                     1, self.__connection_timecount_cb)
                 self._palette.update_connection_time()
                 self._palette.update_stats(0, 0)
@@ -860,7 +861,7 @@ class GsmDeviceView(TrayIcon):
             gsm_state = _GSM_STATE_DISCONNECTED
             self._connection_timestamp = 0
             if self._connection_time_handler is not None:
-                GObject.source_remove(self._connection_time_handler)
+                GLib.source_remove(self._connection_time_handler)
             if self._palette is not None:
                 self._palette.connection_info_box.hide()
 

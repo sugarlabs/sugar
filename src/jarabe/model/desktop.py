@@ -48,22 +48,22 @@ class DesktopViewModel(GObject.GObject):
     def get_view_icons(self):
         return self._view_icons
 
-    view_icons = GObject.property(type=object, getter=get_view_icons)
+    view_icons = GObject.Property(type=object, getter=get_view_icons)
 
     def get_number_of_views(self):
         return self._number_of_views
 
-    number_of_views = GObject.property(type=object, getter=get_number_of_views)
+    number_of_views = GObject.Property(type=object, getter=get_number_of_views)
 
     def get_favorite_icons(self):
         return self._favorite_icons
 
-    favorite_icons = GObject.property(type=object, getter=get_favorite_icons)
+    favorite_icons = GObject.Property(type=object, getter=get_favorite_icons)
 
     def get_view_labels(self):
         return self._view_labels
 
-    view_labels = GObject.property(type=object, getter=get_view_labels)
+    view_labels = GObject.Property(type=object, getter=get_view_labels)
 
     def _ensure_view_icons(self, update=False):
         if self._view_icons and not update:

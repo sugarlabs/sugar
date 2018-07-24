@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gio
-from gi.repository import GObject
+from gi.repository import GLib
 
 from gi.repository import SugarExt
 from sugar3 import dispatch
@@ -49,15 +49,15 @@ class PlaybackSound(object):
         self._volume.set_volume(new_volume)
         self.volume_changed.send(None)
         if self._save_timeout_id != -1:
-            GObject.source_remove(self._save_timeout_id)
-        self._save_timeout_id = GObject.timeout_add(_SAVE_TIMEOUT, self.save)
+            GLib.source_remove(self._save_timeout_id)
+        self._save_timeout_id = GLib.timeout_add(_SAVE_TIMEOUT, self.save)
 
     def set_muted(self, new_state):
         self._volume.set_mute(new_state)
         self.muted_changed.send(None)
         if self._save_timeout_id != -1:
-            GObject.source_remove(self._save_timeout_id)
-        self._save_timeout_id = GObject.timeout_add(_SAVE_TIMEOUT, self.save)
+            GLib.source_remove(self._save_timeout_id)
+        self._save_timeout_id = GLib.timeout_add(_SAVE_TIMEOUT, self.save)
 
     def save(self):
         self._save_timeout_id = -1

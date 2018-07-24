@@ -15,6 +15,7 @@
 
 from gi.repository import Gtk
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import SugarExt
 import dbus
 import os
@@ -71,7 +72,7 @@ class SessionManager(GObject.GObject):
     def __shutdown_completed_cb(self, session):
         if self._logout_mode is not None:
             if self._try_shutdown():
-                GObject.timeout_add(self.SHUTDOWN_TIMEOUT, self._try_shutdown)
+                GLib.timeout_add(self.SHUTDOWN_TIMEOUT, self._try_shutdown)
 
     def _try_shutdown(self):
         if len(self._shell_model) > 0:
