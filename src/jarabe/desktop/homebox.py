@@ -173,11 +173,6 @@ class HomeBox(Gtk.VBox):
     def suspend(self):
         pass
 
-    def has_activities(self):
-        # TODO: Do we need this?
-        # return self._donut.has_activities()
-        return False
-
     def set_resume_mode(self, resume_mode, favorite_view=0):
         self._resume_mode = resume_mode
         self._favorites_boxes[favorite_view].set_resume_mode(resume_mode)
