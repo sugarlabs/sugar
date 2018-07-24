@@ -274,7 +274,7 @@ class BundleRegistry(GObject.GObject):
                                   ' bundle %s:', bundle_dir)
 
         bundle_dirs = list(bundles.keys())
-        bundle_dirs.sort(key = lambda x: bundles[x])
+        bundle_dirs.sort(key=lambda x: bundles[x])
         for folder in bundle_dirs:
             try:
                 self.add_bundle(folder, emit_signals=False)

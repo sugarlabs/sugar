@@ -142,8 +142,8 @@ def print_languages():
         found_lang = False
         for lang in languages:
             if lang[2].split('.')[0] == code.split('.')[0]:
-                print(lang[0].replace(' ', '_') + '/' + \
-                    lang[1].replace(' ', '_'))
+                print(lang[0].replace(' ', '_') + '/' +
+                      lang[1].replace(' ', '_'))
                 found_lang = True
                 break
         if not found_lang:
