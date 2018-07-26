@@ -19,6 +19,7 @@
 
 from gi.repository import Gtk
 from gi.repository import GObject
+from gi.repository import GLib
 from gettext import gettext as _
 
 from sugar3.graphics import style
@@ -143,7 +144,7 @@ class ColorPicker(EventIcon):
             self._color = color
         self.props.xo_color = self._color
 
-    color = GObject.property(type=object, setter=set_color)
+    color = GObject.Property(type=object, setter=set_color)
 
     def __activate_cb(self, button, picker):
         if picker != _CURRENT_COLOR:
@@ -365,9 +366,9 @@ class AboutMe(SectionView):
 
     def __nick_changed_cb(self, widget, data=None):
         if self._nick_sid:
-            GObject.source_remove(self._nick_sid)
-        self._nick_sid = GObject.timeout_add(self._APPLY_TIMEOUT,
-                                             self.__nick_timeout_cb, widget)
+            GLib.source_remove(self._nick_sid)
+        self._nick_sid = GLib.timeout_add(self._APPLY_TIMEOUT,
+                                          self.__nick_timeout_cb, widget)
 
     def __nick_timeout_cb(self, widget):
         self._nick_sid = 0

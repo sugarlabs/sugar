@@ -18,6 +18,7 @@ import random
 
 from gi.repository import GObject
 from gi.repository import Gdk
+from gi.repository import GLib
 
 from gi.repository import SugarExt
 
@@ -210,9 +211,9 @@ class Grid(SugarExt.Grid):
 
         if self._collisions and not self._collisions_sid:
             self._collisions_sid = \
-                GObject.timeout_add(_REFRESH_RATE,
-                                    self.__solve_collisions_cb,
-                                    priority=GObject.PRIORITY_LOW)
+                GLib.timeout_add(_REFRESH_RATE,
+                                 self.__solve_collisions_cb,
+                                 priority=GLib.PRIORITY_LOW)
 
     def get_child_rect(self, child):
         return self._child_rects[child]

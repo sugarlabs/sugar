@@ -18,6 +18,7 @@ import logging
 from gettext import gettext as _
 
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
@@ -432,7 +433,7 @@ class ControlPanel(Gtk.Window):
             self._section_toolbar.accept_button.set_sensitive(False)
             self._section_toolbar.cancel_button.set_sensitive(False)
             get_session_manager().logout()
-            GObject.timeout_add_seconds(4, self.__quit_timeout_cb)
+            GLib.timeout_add_seconds(4, self.__quit_timeout_cb)
 
     def __quit_timeout_cb(self):
         self.unbusy()
@@ -511,10 +512,10 @@ class _SectionIcon(Gtk.EventBox):
     __gtype_name__ = 'SugarSectionIcon'
 
     __gproperties__ = {
-        'icon-name': (str, None, None, None, GObject.PARAM_READWRITE),
-        'pixel-size': (object, None, None, GObject.PARAM_READWRITE),
-        'xo-color': (object, None, None, GObject.PARAM_READWRITE),
-        'title': (str, None, None, None, GObject.PARAM_READWRITE),
+        'icon-name': (str, None, None, None, GObject.ParamFlags.READWRITE),
+        'pixel-size': (object, None, None, GObject.ParamFlags.READWRITE),
+        'xo-color': (object, None, None, GObject.ParamFlags.READWRITE),
+        'title': (str, None, None, None, GObject.ParamFlags.READWRITE),
     }
 
     def __init__(self, **kwargs):

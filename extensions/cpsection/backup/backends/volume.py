@@ -22,7 +22,7 @@ from datetime import datetime
 
 from gettext import gettext as _
 from gi.repository import Gio
-from gi.repository import GObject
+from gi.repository import GLib
 
 from sugar3 import env
 from sugar3 import profile
@@ -105,7 +105,7 @@ class Backup(Backend):
         elif len(self._entries) == 0:
             self._do_finish()
         else:
-            GObject.idle_add(self._do_continue)
+            GLib.idle_add(self._do_continue)
 
     def _do_cancel(self):
         self._tarfile.close()
@@ -133,7 +133,7 @@ class Backup(Backend):
         self._entries = self._get_datastore_entries()
         self._total = len(self._entries)
         self._cancelled = False
-        GObject.idle_add(self._do_continue)
+        GLib.idle_add(self._do_continue)
 
     def cancel(self):
         self._cancelled = True
@@ -218,7 +218,7 @@ class Restore(Backend):
                 self._percent = percent
                 logging.debug('restore-local progress is %f', percent)
                 self.emit('progress', float(percent) / 100.0)
-            GObject.idle_add(self._do_continue)
+            GLib.idle_add(self._do_continue)
         else:
             self._do_finish()
 
@@ -234,7 +234,7 @@ class Restore(Backend):
         self._tarfile = tarfile.open(self._checkpoint, 'r:gz')
         self._bytes = 0.0
         self._reset_datastore()
-        GObject.idle_add(self._do_continue)
+        GLib.idle_add(self._do_continue)
 
     def cancel(self):
         if not self._cancellable:

@@ -17,7 +17,7 @@ import logging
 
 import dbus
 import uuid
-from gi.repository import GObject
+from gi.repository import GLib
 
 from jarabe.model import network
 from jarabe.model.network import Settings
@@ -98,8 +98,8 @@ class OlpcMeshManager(object):
 
         """
         if self._idle_source != 0:
-            GObject.source_remove(self._idle_source)
-        self._idle_source = GObject.timeout_add_seconds(10, self._idle_check)
+            GLib.source_remove(self._idle_source)
+        self._idle_source = GLib.timeout_add_seconds(10, self._idle_check)
 
     def __get_state_error_cb(self, err):
         logging.debug('Error getting the device state: %s', err)

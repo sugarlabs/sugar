@@ -20,7 +20,7 @@ from gettext import gettext as _
 
 from gi.repository import Gtk
 from gi.repository import Gio
-from gi.repository import GObject
+from gi.repository import GLib
 import dbus
 
 from sugar3.graphics.palette import Palette
@@ -130,7 +130,7 @@ class BuddyMenu(Palette):
     def _quit(self, action):
         jarabe.desktop.homewindow.get_instance().busy()
         action()
-        GObject.timeout_add_seconds(3, self.__quit_timeout_cb)
+        GLib.timeout_add_seconds(3, self.__quit_timeout_cb)
 
     def __quit_timeout_cb(self):
         jarabe.desktop.homewindow.get_instance().unbusy()

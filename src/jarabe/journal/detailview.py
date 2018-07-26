@@ -75,7 +75,7 @@ class DetailView(Gtk.VBox):
         self._metadata = metadata
         self._update_view()
 
-    metadata = GObject.property(
+    metadata = GObject.Property(
         type=object, getter=get_metadata, setter=set_metadata)
 
 

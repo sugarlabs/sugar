@@ -24,6 +24,7 @@ gi.require_version('Soup', '2.4')
 from gi.repository import GObject
 from gi.repository import Soup
 from gi.repository import Gio
+from gi.repository import GLib
 
 from jarabe import config
 from sugar3 import env
@@ -204,7 +205,7 @@ class Downloader(GObject.GObject):
     def _write_next_buffer(self):
         if not self._output_stream.has_pending():
             data = self._pending_buffers.pop(0)
-            self._output_stream.write_bytes_async(data, GObject.PRIORITY_LOW,
+            self._output_stream.write_bytes_async(data, GLib.PRIORITY_LOW,
                                                   None, self.__write_async_cb,
                                                   None)
 

@@ -16,6 +16,7 @@
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Wnck
 
 from sugar3.graphics import style
@@ -110,7 +111,7 @@ class EventArea(GObject.GObject):
 
     def _enter_notify_cb(self, widget, event):
         if self._sids:
-            GObject.source_remove(widget.sid)
+            GLib.source_remove(widget.sid)
             del self._sids[widget]
 
         delay = None
@@ -120,9 +121,9 @@ class EventArea(GObject.GObject):
             delay = self._edge_delay
 
         if delay is not None:
-            self._sids[widget] = GObject.timeout_add(delay,
-                                                     self.__delay_cb,
-                                                     widget)
+            self._sids[widget] = GLib.timeout_add(delay,
+                                                  self.__delay_cb,
+                                                  widget)
 
     def __delay_cb(self, widget):
         del self._sids[widget]
@@ -131,7 +132,7 @@ class EventArea(GObject.GObject):
 
     def _leave_notify_cb(self, widget, event):
         if widget in self._sids:
-            GObject.source_remove(self._sids[widget])
+            GLib.source_remove(self._sids[widget])
             del self._sids[widget]
         self._notify_leave()
 

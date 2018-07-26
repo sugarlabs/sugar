@@ -20,6 +20,7 @@ import logging
 import os
 
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
@@ -596,7 +597,7 @@ class BatchOperator(GObject.GObject):
 
     def _show_confirmation_alert(self):
         self._journalactivity.freeze_ui()
-        GObject.idle_add(self.__show_confirmation_alert_internal)
+        GLib.idle_add(self.__show_confirmation_alert_internal)
 
     def __show_confirmation_alert_internal(self):
         # Show a alert requesting confirmation before run the batch operation
@@ -628,7 +629,7 @@ class BatchOperator(GObject.GObject):
             self._stop_batch_execution()
         elif hasattr(self, '_object_index') == False:
             self._object_index = 0
-            GObject.idle_add(self._operate_by_uid_internal)
+            GLib.idle_add(self._operate_by_uid_internal)
 
     def _operate_by_uid_internal(self):
         # If there is still some uid left, proceed with the operation.
@@ -647,7 +648,7 @@ class BatchOperator(GObject.GObject):
                 'object_title': title}
 
             self._confirmation_alert.props.msg = alert_message
-            GObject.idle_add(self._operate_per_metadata, metadata)
+            GLib.idle_add(self._operate_per_metadata, metadata)
         else:
             self._finish_batch_execution()
 
@@ -656,7 +657,7 @@ class BatchOperator(GObject.GObject):
 
         # process the next
         self._object_index = self._object_index + 1
-        GObject.idle_add(self._operate_by_uid_internal)
+        GLib.idle_add(self._operate_by_uid_internal)
 
     def _stop_batch_execution(self):
         self._object_index = len(self._uid_list)

@@ -25,6 +25,7 @@ from gettext import gettext as _
 import gi
 gi.require_version('GtkSource', '3.0')
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Pango
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -410,7 +411,7 @@ class DocumentButton(RadioToolButton):
             new_alert.props.title = _("Duplicating activity...")
 
             self.get_toplevel().add_alert(new_alert)
-            GObject.idle_add(internal_callback, new_alert)
+            GLib.idle_add(internal_callback, new_alert)
 
     def __set_busy_cursor(self, busy):
         cursor = None
@@ -453,7 +454,7 @@ class DocumentButton(RadioToolButton):
                 finally:
                     self.__set_busy_cursor(False)
 
-            GObject.idle_add(async_copy_activity_tree)
+            GLib.idle_add(async_copy_activity_tree)
         else:
             if copy_alert:
                 self.get_toplevel().remove_alert(copy_alert)

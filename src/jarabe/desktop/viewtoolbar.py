@@ -24,6 +24,7 @@ import logging
 
 from gi.repository import Gtk
 from gi.repository import GObject
+from gi.repository import GLib
 
 from sugar3.graphics import style
 from sugar3.graphics import iconentry
@@ -141,7 +142,7 @@ class ViewToolbar(Gtk.Toolbar):
 
     def _entry_activated_cb(self, entry):
         if self._autosearch_timer:
-            GObject.source_remove(self._autosearch_timer)
+            GLib.source_remove(self._autosearch_timer)
             self._autosearch_timer = None
         new_query = entry.props.text
         if self._query != new_query:
@@ -154,9 +155,9 @@ class ViewToolbar(Gtk.Toolbar):
             return
 
         if self._autosearch_timer:
-            GObject.source_remove(self._autosearch_timer)
-        self._autosearch_timer = GObject.timeout_add(_AUTOSEARCH_TIMEOUT,
-                                                     self._autosearch_timer_cb)
+            GLib.source_remove(self._autosearch_timer)
+        self._autosearch_timer = GLib.timeout_add(_AUTOSEARCH_TIMEOUT,
+                                                  self._autosearch_timer_cb)
 
     def _autosearch_timer_cb(self):
         logging.debug('_autosearch_timer_cb')

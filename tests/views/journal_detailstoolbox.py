@@ -20,8 +20,6 @@ from gi.repository import Gtk
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
-from sugar3.graphics.palette import Palette
-
 from jarabe import config
 from jarabe.journal.journaltoolbox import DetailToolbox
 from jarabe.journal.journalwindow import JournalWindow

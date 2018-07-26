@@ -90,7 +90,7 @@ def create_profile(user_profile):
 
 class _Page(Gtk.VBox):
     __gproperties__ = {
-        'valid': (bool, None, None, False, GObject.PARAM_READABLE),
+        'valid': (bool, None, None, False, GObject.ParamFlags.READABLE),
     }
 
     def __init__(self):

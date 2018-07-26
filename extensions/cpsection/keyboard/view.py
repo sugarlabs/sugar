@@ -22,6 +22,7 @@ import locale
 from gi.repository import Gtk
 from gi.repository import GdkX11
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Pango
 
 import logging
@@ -273,10 +274,10 @@ class Keyboard(SectionView):
 
     def __kmodel_changed_cb(self, combobox):
         if self.__kmodel_sid is not None:
-            GObject.source_remove(self.__kmodel_sid)
-        self.__kmodel_sid = GObject.timeout_add(_APPLY_TIMEOUT,
-                                                self.__kmodel_timeout_cb,
-                                                combobox)
+            GLib.source_remove(self.__kmodel_sid)
+        self.__kmodel_sid = GLib.timeout_add(_APPLY_TIMEOUT,
+                                             self.__kmodel_timeout_cb,
+                                             combobox)
 
     def __kmodel_timeout_cb(self, combobox):
         it = combobox.get_active_iter()
@@ -341,8 +342,8 @@ class Keyboard(SectionView):
 
     def __group_switch_changed_cb(self, combobox):
         if self.__group_switch_sid is not None:
-            GObject.source_remove(self.__group_switch_sid)
-        self.__group_switch_sid = GObject.timeout_add(
+            GLib.source_remove(self.__group_switch_sid)
+        self.__group_switch_sid = GLib.timeout_add(
             _APPLY_TIMEOUT, self.__group_switch_timeout_cb, combobox)
 
     def __group_switch_timeout_cb(self, combobox):
@@ -454,9 +455,9 @@ class Keyboard(SectionView):
         self.__determine_add_remove_box_visibility()
 
         if self.__layout_sid is not None:
-            GObject.source_remove(self.__layout_sid)
-        self.__layout_sid = GObject.timeout_add(_APPLY_TIMEOUT,
-                                                self.__layout_timeout_cb)
+            GLib.source_remove(self.__layout_sid)
+        self.__layout_sid = GLib.timeout_add(_APPLY_TIMEOUT,
+                                             self.__layout_timeout_cb)
 
     def __layout_timeout_cb(self):
         if self._selected_klayouts == \

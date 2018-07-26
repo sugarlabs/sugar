@@ -15,7 +15,7 @@
 
 
 from gi.repository import Gtk
-from gi.repository import GObject
+from gi.repository import GLib
 from gettext import gettext as _
 
 from sugar3.graphics import style
@@ -157,8 +157,8 @@ class Frame(SectionView):
 
     def __corner_delay_changed_cb(self, scale, data=None):
         if self._corner_delay_sid:
-            GObject.source_remove(self._corner_delay_sid)
-        self._corner_delay_sid = GObject.timeout_add(
+            GLib.source_remove(self._corner_delay_sid)
+        self._corner_delay_sid = GLib.timeout_add(
             self._APPLY_TIMEOUT, self.__corner_delay_timeout_cb, scale)
 
     def __corner_delay_timeout_cb(self, scale):
@@ -180,8 +180,8 @@ class Frame(SectionView):
 
     def __edge_delay_changed_cb(self, scale, data=None):
         if self._edge_delay_sid:
-            GObject.source_remove(self._edge_delay_sid)
-        self._edge_delay_sid = GObject.timeout_add(
+            GLib.source_remove(self._edge_delay_sid)
+        self._edge_delay_sid = GLib.timeout_add(
             self._APPLY_TIMEOUT, self.__edge_delay_timeout_cb, scale)
 
     def __edge_delay_timeout_cb(self, scale):
@@ -203,8 +203,8 @@ class Frame(SectionView):
 
     def __trigger_size_changed_cb(self, scale, data=None):
         if self._trigger_size_sid:
-            GObject.source_remove(self._trigger_size_sid)
-        self._trigger_size_sid = GObject.timeout_add(
+            GLib.source_remove(self._trigger_size_sid)
+        self._trigger_size_sid = GLib.timeout_add(
             self._APPLY_TIMEOUT, self.__trigger_size_timeout_cb, scale)
 
     def __trigger_size_timeout_cb(self, scale):
@@ -236,11 +236,11 @@ class Frame(SectionView):
 
     def apply(self):
         if self._corner_delay_sid:
-            GObject.source_remove(self._corner_delay_sid)
+            GLib.source_remove(self._corner_delay_sid)
             self.__corner_delay_timeout_cb(self._corner_delay_slider)
         if self._edge_delay_sid:
-            GObject.source_remove(self._edge_delay_sid)
+            GLib.source_remove(self._edge_delay_sid)
             self.__edge_delay_timeout_cb(self._edge_delay_slider)
         if self._trigger_size_sid:
-            GObject.source_remove(self._trigger_size_sid)
+            GLib.source_remove(self._trigger_size_sid)
             self.__trigger_size_timeout_cb(self._trigger_size_sid)

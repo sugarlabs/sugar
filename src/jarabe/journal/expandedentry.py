@@ -20,6 +20,7 @@ import time
 import os
 
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gtk
 import json
 
@@ -493,8 +494,8 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
     def _title_notify_text_cb(self, entry, pspec):
         if not self._update_title_sid:
             self._update_title_sid = \
-                GObject.timeout_add_seconds(1,
-                                            self._update_title_cb)
+                GLib.timeout_add_seconds(1,
+                                         self._update_title_cb)
 
     def _title_focus_out_event_cb(self, entry, event):
         self._update_entry()

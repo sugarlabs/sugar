@@ -455,7 +455,7 @@ class BaseListView(Gtk.Bin):
         window = self.get_toplevel().get_window()
         if window is not None:
             window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
-        GObject.idle_add(self._do_refresh, new_query)
+        GLib.idle_add(self._do_refresh, new_query)
 
     def _do_refresh(self, new_query=False):
         if self._model is not None:
@@ -677,13 +677,13 @@ class BaseListView(Gtk.Bin):
             if self._update_dates_timer is None:
                 logging.debug('Adding date updating timer')
                 self._update_dates_timer = \
-                    GObject.timeout_add_seconds(UPDATE_INTERVAL,
-                                                self.__update_dates_timer_cb)
+                    GLib.timeout_add_seconds(UPDATE_INTERVAL,
+                                             self.__update_dates_timer_cb)
         else:
             self._fully_obscured = True
             if self._update_dates_timer is not None:
                 logging.debug('Remove date updating timer')
-                GObject.source_remove(self._update_dates_timer)
+                GLib.source_remove(self._update_dates_timer)
                 self._update_dates_timer = None
 
     def __update_dates_timer_cb(self):
@@ -880,4 +880,4 @@ class CellRendererBuddy(CellRendererIcon):
             self.props.icon_name = 'computer-xo'
             self.props.xo_color = xo_color
 
-    buddy = GObject.property(type=object, setter=set_buddy)
+    buddy = GObject.Property(type=object, setter=set_buddy)

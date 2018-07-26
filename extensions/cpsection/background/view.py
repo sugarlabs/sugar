@@ -19,7 +19,7 @@ import os
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import GdkPixbuf
 
 from sugar3.graphics import style
@@ -129,14 +129,14 @@ class Background(SectionView):
                 pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
                     file_path, style.XLARGE_ICON_SIZE,
                     style.XLARGE_ICON_SIZE)
-            except GObject.GError:
+            except GLib.GError:
                 pass
             else:
                 self._store.append([pixbuf, file_path])
                 self._paths_list.append(file_path)
 
-            self._append_to_store_sid = GObject.idle_add(self._append_to_store,
-                                                         file_paths)
+            self._append_to_store_sid = GLib.idle_add(self._append_to_store,
+                                                      file_paths)
         else:
             self._select_background()
             self._images_loaded = True
@@ -147,7 +147,7 @@ class Background(SectionView):
 
     def _cancel_append_to_store(self):
         if self._append_to_store_sid is not None:
-            GObject.source_remove(self._append_to_store_sid)
+            GLib.source_remove(self._append_to_store_sid)
             self._append_to_store_sid = None
 
     def __realize_cb(self, widget):

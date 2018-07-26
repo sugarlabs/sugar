@@ -238,9 +238,10 @@ class AudioPalette(Palette):
 
 class DeviceModelAudio(GObject.GObject):
     __gproperties__ = {
-        'level': (int, None, None, 0, 100, 0, GObject.PARAM_READWRITE),
-        'last-level': (int, None, None, 0, 100, 0, GObject.PARAM_READABLE),
-        'muted': (bool, None, None, False, GObject.PARAM_READWRITE),
+        'level': (int, None, None, 0, 100, 0, GObject.ParamFlags.READWRITE),
+        'last-level': (int, None, None, 0, 100, 0,
+                       GObject.ParamFlags.READABLE),
+        'muted': (bool, None, None, False, GObject.ParamFlags.READWRITE),
     }
 
     def __init__(self):

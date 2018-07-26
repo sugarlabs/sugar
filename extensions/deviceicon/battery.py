@@ -184,12 +184,12 @@ class BatteryPalette(Palette):
 
 class DeviceModel(GObject.GObject):
     __gproperties__ = {
-        'level': (int, None, None, 0, 100, 0, GObject.PARAM_READABLE),
+        'level': (int, None, None, 0, 100, 0, GObject.ParamFlags.READABLE),
         'time-remaining': (int, None, None, 0, GLib.MAXINT32, 0,
-                           GObject.PARAM_READABLE),  # unit: seconds
-        'charging': (bool, None, None, False, GObject.PARAM_READABLE),
-        'discharging': (bool, None, None, False, GObject.PARAM_READABLE),
-        'present': (bool, None, None, False, GObject.PARAM_READABLE),
+                           GObject.ParamFlags.READABLE),  # unit: seconds
+        'charging': (bool, None, None, False, GObject.ParamFlags.READABLE),
+        'discharging': (bool, None, None, False, GObject.ParamFlags.READABLE),
+        'present': (bool, None, None, False, GObject.ParamFlags.READABLE),
     }
 
     __gsignals__ = {
@@ -256,8 +256,8 @@ class DeviceModel(GObject.GObject):
         but without any indication that the burst is complete, so we
         use a timeout to respond."""
         if self._timeout_sid:
-            GObject.source_remove(self._timeout_sid)
-        self._timeout_sid = GObject.timeout_add(100, self.__timeout_cb)
+            GLib.source_remove(self._timeout_sid)
+        self._timeout_sid = GLib.timeout_add(100, self.__timeout_cb)
 
     def __timeout_cb(self):
         old_level = self._level
@@ -301,7 +301,7 @@ class DeviceModel(GObject.GObject):
                       self._level)
         sm = get_session_manager()
         sm.shutdown()
-        GObject.timeout_add_seconds(10, sm.shutdown_completed)
+        GLib.timeout_add_seconds(10, sm.shutdown_completed)
 
 def setup(tray):
     bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)

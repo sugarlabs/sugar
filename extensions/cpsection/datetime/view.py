@@ -16,6 +16,7 @@
 
 from gi.repository import Gtk
 from gi.repository import GObject
+from gi.repository import GLib
 from gettext import gettext as _
 
 from sugar3.graphics import style
@@ -121,9 +122,9 @@ class TimeZone(SectionView):
             return False
 
         if self._zone_sid:
-            GObject.source_remove(self._zone_sid)
-        self._zone_sid = GObject.timeout_add(self._APPLY_TIMEOUT,
-                                             self.__zone_timeout_cb, row)
+            GLib.source_remove(self._zone_sid)
+        self._zone_sid = GLib.timeout_add(self._APPLY_TIMEOUT,
+                                          self.__zone_timeout_cb, row)
         return True
 
     def __zone_timeout_cb(self, row):

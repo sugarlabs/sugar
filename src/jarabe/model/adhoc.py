@@ -18,6 +18,7 @@ import logging
 import dbus
 import uuid
 from gi.repository import Gio
+from gi.repository import GLib
 from gi.repository import GObject
 
 from jarabe.model import network
@@ -148,8 +149,8 @@ class AdHocManager(GObject.GObject):
         will complete quickly, and long before the timeout ticks.
         """
         if self._idle_source != 0:
-            GObject.source_remove(self._idle_source)
-        self._idle_source = GObject.timeout_add_seconds(
+            GLib.source_remove(self._idle_source)
+        self._idle_source = GLib.timeout_add_seconds(
             self._AUTOCONNECT_TIMEOUT, self.__idle_check_cb)
 
     def __idle_check_cb(self):
