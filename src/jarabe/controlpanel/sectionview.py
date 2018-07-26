@@ -31,8 +31,10 @@ class SectionView(Gtk.VBox):
 
     __gproperties__ = {
         'is_valid': (bool, None, None, True, GObject.ParamFlags.READWRITE),
-        'is_cancellable': (bool, None, None, True, GObject.ParamFlags.READWRITE),
-        'is_deferrable': (bool, None, None, True, GObject.ParamFlags.READWRITE),
+        'is_cancellable': (bool, None, None, True,
+                           GObject.ParamFlags.READWRITE),
+        'is_deferrable': (bool, None, None, True,
+                          GObject.ParamFlags.READWRITE),
     }
 
     _APPLY_TIMEOUT = 1000
