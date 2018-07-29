@@ -96,6 +96,12 @@ Package version in this form will be _lower than_ the official package.
 
 Optionally confirm the version number has changed by reading the `debian/changelog` file.  Familiarise yourself with the format and previous entries.
 
+Clear the `debian/patches/series` file
+
+```
+> debian/patches/series
+```
+
 Build the package, without signing.
 
 ```
