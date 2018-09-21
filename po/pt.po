@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-05-07 02:47+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"PO-Revision-Date: 2017-12-02 22:46+0000\n"
+"Last-Translator: valente <valente.luis@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1494125235.000000\n"
+"X-POOTLE-MTIME: 1512254814.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -500,14 +500,17 @@ msgstr "Novo URL para update.json ASLO."
 #: ../data/org.sugarlabs.gschema.xml.h:104
 msgid "URL used by the new ASLO updater to download activity data."
 msgstr ""
+"URL utilizado pelo novo atualizador ASLO para transferir dados da atividade."
 
 #: ../data/org.sugarlabs.gschema.xml.h:105 ../data/sugar.schemas.in.h:77
 msgid "A description of the hardware available to the user."
-msgstr ""
+msgstr "Uma descrição do hardware disponível para o utilizador."
 
 #: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
 msgstr ""
+"Esta string será mostrada no painel de controlo, na secção acerca do "
+"computador."
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
@@ -552,7 +555,7 @@ msgstr "Clica para mudar a tua cor:"
 #: ../extensions/cpsection/aboutme/view.py:294
 #: ../src/jarabe/intro/window.py:203
 msgid "Select gender:"
-msgstr ""
+msgstr "Selecionar o género:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
@@ -568,7 +571,7 @@ msgstr "Identidade"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:87
 msgid "Model:"
-msgstr ""
+msgstr "Modelo:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Serial Number:"
@@ -597,7 +600,7 @@ msgstr "Firmware da Rede Sem Fios:"
 #: ../extensions/cpsection/aboutcomputer/view.py:134
 #, python-format
 msgid "%d days ago"
-msgstr ""
+msgstr "%d dias atrás"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:136
 #: ../src/jarabe/journal/journaltoolbox.py:169
@@ -606,7 +609,7 @@ msgstr "Hoje"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:139
 msgid "Last system update:"
-msgstr ""
+msgstr "Última atualização do sistema:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:150
 msgid "Copyright and License"
@@ -646,9 +649,8 @@ msgid "Date & Time"
 msgstr "Data & Hora"
 
 #: ../extensions/cpsection/datetime/model.py:100
-#, fuzzy
 msgid "Error: timezone does not exist."
-msgstr "Erro: fuso horário não existe."
+msgstr "Erro: O fuso horário não existe."
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
@@ -672,9 +674,8 @@ msgid "Activation Delay"
 msgstr "Demora da Ativação"
 
 #: ../extensions/cpsection/frame/view.py:68
-#, fuzzy
 msgid "Activation Area"
-msgstr "Demora da Ativação"
+msgstr "Área de Ativação"
 
 #: ../extensions/cpsection/frame/view.py:85
 msgid "Corner"
@@ -686,7 +687,7 @@ msgstr "Lado"
 
 #: ../extensions/cpsection/frame/view.py:123
 msgid "Size"
-msgstr ""
+msgstr "Tamanho"
 
 #: ../extensions/cpsection/frame/view.py:221
 msgid "toolbar size"
@@ -848,11 +849,11 @@ msgstr "Rádio"
 #: ../extensions/cpsection/network/view.py:103
 msgid ""
 "Discard wireless connections if you have trouble connecting to the network"
-msgstr ""
+msgstr "Rejeite ligações sem fios se tiver problemas a ligar-se a esta rede"
 
 #: ../extensions/cpsection/network/view.py:113
 msgid "Discard wireless connections"
-msgstr ""
+msgstr "Rejeitar ligações sem fios"
 
 #: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
@@ -877,10 +878,13 @@ msgid ""
 "Sugar Activities.  Changing servers means discussions will happen in a "
 "different place with different people."
 msgstr ""
+"Social Help é um fórum que lhe permite ligar-se a desenvolvedores e discutir "
+"Sugar Activities.  Mudar de servidores significa que as discussões "
+"decorrerão noutro lugar e com pessoas diferentes."
 
 #: ../extensions/cpsection/network/view.py:173
 msgid "Social Help Server:"
-msgstr ""
+msgstr "Servidor Social Help:"
 
 #: ../extensions/cpsection/power/__init__.py:24
 msgid "Power"
@@ -950,11 +954,11 @@ msgstr[1] "Podes instalar %s atualizações"
 
 #: ../extensions/cpsection/updater/view.py:183
 msgid "Can't connect to the activity server"
-msgstr ""
+msgstr "Impossível ligar ao servidor da atividade"
 
 #: ../extensions/cpsection/updater/view.py:186
 msgid "Verify your connection to internet and try again, or try again later"
-msgstr ""
+msgstr "Verifique a ligação à Internet e tente de novo ou volte mais tarde"
 
 #: ../extensions/cpsection/updater/view.py:206
 #, python-format
@@ -1006,7 +1010,7 @@ msgstr "%.1f MB"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Web Services"
-msgstr ""
+msgstr "Serviços Web"
 
 #: ../extensions/cpsection/webaccount/view.py:65
 #, python-format
@@ -1019,11 +1023,11 @@ msgstr ""
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
-msgstr ""
+msgstr "Meu Áudio"
 
 #: ../extensions/deviceicon/audio.py:330
 msgid "Speaker"
-msgstr ""
+msgstr "Altifalante"
 
 #: ../extensions/deviceicon/audio.py:331
 msgid "Microphone"
@@ -1473,11 +1477,11 @@ msgstr "Triângulo"
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
-msgstr ""
+msgstr "Registo"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
-msgstr ""
+msgstr "Por favor aguarde, a procurar o seu servidos escolar."
 
 #: ../src/jarabe/desktop/favoritesview.py:387
 msgid "Registration Failed"
@@ -1695,27 +1699,27 @@ msgstr "Próximo"
 
 #: ../src/jarabe/intro/agepicker.py:38
 msgid "Select grade:"
-msgstr ""
+msgstr "Selecione o ano:"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Preschool"
-msgstr ""
+msgstr "Pré-escola"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Kindergarten"
-msgstr ""
+msgstr "Jardim-de-Infância"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "1st Grade"
-msgstr ""
+msgstr "1.º Ano"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "2nd Grade"
-msgstr ""
+msgstr "2.º Ano"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "3rd Grade"
-msgstr ""
+msgstr "3.º Ano"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "4th Grade"
@@ -2271,13 +2275,15 @@ msgstr "Lançador de atividades"
 #: ../src/jarabe/view/alerts.py:39
 #, python-format
 msgid "%s is already running. Please stop %s before launching it again."
-msgstr ""
+msgstr "%s já está em execução. Por favor para %s antes de o iniciar de novo."
 
 #: ../src/jarabe/view/alerts.py:49
 msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
 msgstr ""
+"Atingiu o número máximo de atividades. Por favor encerre uma atividade antes "
+"de iniciar uma nova."
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
@@ -2329,7 +2335,7 @@ msgstr "Ver Código-fonte"
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
-msgstr ""
+msgstr "Ver Ajuda"
 
 #: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
@@ -2342,16 +2348,16 @@ msgstr "Remover"
 
 #: ../src/jarabe/view/viewhelp.py:304
 msgid "Help Manual"
-msgstr ""
+msgstr "Manual de Ajuda"
 
 #: ../src/jarabe/view/viewhelp.py:318
 msgid "Social Help"
-msgstr ""
+msgstr "Social Help"
 
 #: ../src/jarabe/view/viewhelp.py:326
 #, python-format
 msgid "Help: %s"
-msgstr ""
+msgstr "Ajuda: %s"
 
 #: ../src/jarabe/view/viewsource.py:364
 msgid "Instance Source"
@@ -2360,32 +2366,31 @@ msgstr "Código-fonte da Instância"
 #: ../src/jarabe/view/viewsource.py:392
 #, python-format
 msgid "Do you want to duplicate %s Activity?"
-msgstr ""
+msgstr "Quer duplicar a Atividade %s ?"
 
 #: ../src/jarabe/view/viewsource.py:394
 msgid "This may take a few minutes"
-msgstr ""
+msgstr "Pode demorar alguns minutos"
 
 #: ../src/jarabe/view/viewsource.py:408
 msgid "Duplicating activity..."
-msgstr ""
+msgstr "A duplicar a atividade..."
 
 #: ../src/jarabe/view/viewsource.py:447
-#, fuzzy
 msgid "Duplicated"
-msgstr "Duplicar"
+msgstr "Duplicada"
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
-msgstr ""
+msgstr "A atividade foi duplicada"
 
 #: ../src/jarabe/view/viewsource.py:462
 msgid "Duplicated activity already exists"
-msgstr ""
+msgstr "A atividade duplicada já existe"
 
 #: ../src/jarabe/view/viewsource.py:463
 msgid "Delete your copy before trying to duplicate the activity again"
-msgstr ""
+msgstr "Apague a cópia antes de tentar duplicar novamente a atividade"
 
 #: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
@@ -2412,78 +2417,78 @@ msgstr "Ver código-fonte: %r"
 
 #: ../src/jarabe/view/viewsource.py:809
 msgid "Please select a file in the left panel."
-msgstr ""
+msgstr "Selecione um ficheiro no painel esquerdo."
 
 #: ../extensions/cpsection/backup/__init__.py:22
 msgid "Backup"
-msgstr ""
+msgstr "Backup"
 
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171
 msgid "Please connect a device to continue"
-msgstr ""
+msgstr "Por favor ligue um dispositivo e continue"
 
 #: ../extensions/cpsection/backup/backends/volume.py:69
 #: ../extensions/cpsection/backup/backends/volume.py:178
 msgid "Select your volume"
-msgstr ""
+msgstr "Selecione o disco"
 
 #: ../extensions/cpsection/backup/backends/volume.py:78
 msgid "Not enough space in volume"
-msgstr ""
+msgstr "Sem espaço suficiente em disco"
 
 #: ../extensions/cpsection/backup/backends/volume.py:122
 #, python-format
 msgid "Backup from user %s"
-msgstr ""
+msgstr "Backup do utilizador %s"
 
 #: ../extensions/cpsection/backup/backends/volume.py:191
 msgid "No checkpoints found in the device"
-msgstr ""
+msgstr "Dispositivo sem pontos de verificação"
 
 #: ../extensions/cpsection/backup/backends/volume.py:199
 msgid "Select your checkpoint"
-msgstr ""
+msgstr "Selecione pontos de verificação"
 
 #: ../extensions/cpsection/backup/backends/volume.py:210
 msgid "Not enough space in disk"
-msgstr ""
+msgstr "Espaço em disco insuficiente"
 
 #: ../extensions/cpsection/backup/backends/volume.py:329
 msgid "Local Device Backup"
-msgstr ""
+msgstr "Dispositivo Local de Backup"
 
 #: ../extensions/cpsection/backup/view.py:133
 msgid "Save the contents of your Journal"
-msgstr ""
+msgstr "Guarda o conteúdo do seu jornal"
 
 #: ../extensions/cpsection/backup/view.py:141
 msgid "Restore the contents of your Journal"
-msgstr ""
+msgstr "Restaura o conteúdo do seu jornal"
 
 #: ../extensions/cpsection/backup/view.py:223
 msgid "Please close all the activities, and start again"
-msgstr ""
+msgstr "Por favor, feche todas as atividades e reinicie"
 
 #: ../extensions/cpsection/backup/view.py:229
 msgid "Select where you want create your backup"
-msgstr ""
+msgstr "Indique onde quer criar o backup"
 
 #: ../extensions/cpsection/backup/view.py:231
 msgid "Select where you want retrieve your restore"
-msgstr ""
+msgstr "Indique onde quer recuperar o restauro"
 
 #: ../extensions/cpsection/backup/view.py:271
 msgid "Retry"
-msgstr ""
+msgstr "Tentar de novo"
 
 #: ../extensions/cpsection/backup/view.py:290
 msgid "Starting backup..."
-msgstr ""
+msgstr "A iniciar o backup..."
 
 #: ../extensions/cpsection/backup/view.py:294
 msgid "Starting restore..."
-msgstr ""
+msgstr "A iniciar o restauro..."
 
 #: ../extensions/cpsection/backup/view.py:321
 msgid ""
@@ -2491,23 +2496,25 @@ msgid ""
 "will first be emptied of all its content; then the restored content will be "
 "added."
 msgstr ""
+"Quero restaurar o conteúdo do meu Jornal. Para tal, primeiro o meu Jornal "
+"será esvaziado; depois será adicionado o conteúdo restaurado."
 
 #: ../extensions/cpsection/backup/view.py:327
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #: ../extensions/cpsection/backup/view.py:365
 msgid "Operation started"
-msgstr ""
+msgstr "Operação iniciada"
 
 #: ../extensions/cpsection/backup/view.py:377
 msgid "Backup finished successfully"
-msgstr ""
+msgstr "Backup concluído com sucesso"
 
 #: ../extensions/cpsection/backup/view.py:379
 msgid "Restore realized successfully."
-msgstr ""
+msgstr "Restauro realizado com sucesso."
 
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
-msgstr ""
+msgstr "Limpar notificações"

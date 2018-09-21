@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-05-07 03:22+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"PO-Revision-Date: 2018-01-05 11:52+0000\n"
+"Last-Translator: xs2mahmood <xs2mahmood@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ur\n"
 "MIME-Version: 1.0\n"
@@ -16,15 +16,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1494127349.000000\n"
+"X-POOTLE-MTIME: 1515153174.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
-msgstr ""
+msgstr "جی سیٹنگز پر منتقل"
 
 #: ../data/org.sugarlabs.gschema.xml.h:2
 msgid "This key shows whether or not GConf values were migrated to GSettings"
 msgstr ""
+"یہ بٹن دکھاتاہے آیاکہ جی کانف کی اقدار  جی سیٹنگز  پر منتقل ہوئ تھیں یا نہیں"
 
 # بیک اپ URL
 #: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
@@ -33,11 +34,11 @@ msgstr "بیک اپ URL"
 
 #: ../data/org.sugarlabs.gschema.xml.h:4 ../data/sugar.schemas.in.h:12
 msgid "URL where the backup is saved to."
-msgstr ""
+msgstr "یو آر ایل جہاں بیک اپ محفوظ ہے"
 
 #: ../data/org.sugarlabs.gschema.xml.h:5 ../data/sugar.schemas.in.h:31
 msgid "Show Log out"
-msgstr ""
+msgstr "لاگ آؤٹ دکھائیں"
 
 # اگر یہ سچ ہے تو، شوگر  "لاگ آؤٹ" کا اختیار دے گا.
 #: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
@@ -46,7 +47,7 @@ msgstr "اگر یہ سچ ہے تو، شوگر \"لاگ آؤٹ\" کا اختیا�
 
 #: ../data/org.sugarlabs.gschema.xml.h:7 ../data/sugar.schemas.in.h:33
 msgid "Show Restart"
-msgstr ""
+msgstr "ری اسٹارٹ دکھائیں"
 
 # اگر یہ سچ ہے تو، شوگر "Restart" کا اختیار دے گا.
 #: ../data/org.sugarlabs.gschema.xml.h:8 ../data/sugar.schemas.in.h:34
@@ -55,21 +56,20 @@ msgstr "اگر یہ سچ ہے تو، شوگر \"Restart\" کا اختیار دے
 
 #: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
 msgid "Show Shutdown"
-msgstr ""
+msgstr "شٹ ڈاؤن دکھائیں"
 
 # اگر یہ سچ ہے تو، شوگر  "لاگ آؤٹ" کا اختیار دے گا.
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
-#, fuzzy
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
 msgstr "اگر یہ سچ ہے تو، شوگر \"لاگ آؤٹ\" کا اختیار دے گا."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
-msgstr ""
+msgstr "رجسٹر دکھائیں"
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
-msgstr ""
+msgstr "اگر سچ ہے تو، شوگر بڈی پیلیٹ میں \\ \"رجسٹر \"کا اختیار دکھائے گا"
 
 # محفوظ سرگرمیوں کی پوٹلی کی شناخت
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
@@ -80,25 +80,27 @@ msgstr "محفوظ سرگرمیوں کی پوٹلی کی شناخت"
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
+"صارف کو ان سرگرمیوں کو فہرست کے نقطہ نظر کے ذریعے ختم کرنے کی اجازت نہیں دی "
+"جائے گی"
 
 #: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
 msgid "A limit to the number of simultaneously open activities."
-msgstr ""
+msgstr "ایک ہی وقت میں کھلی سرگرمیوں کی ایک حد"
 
 #: ../data/org.sugarlabs.gschema.xml.h:16 ../data/sugar.schemas.in.h:80
 msgid ""
 "This int is used to set a limit to the number of open activities. By default "
 "(0), there is no limit."
 msgstr ""
+"یہ عدد سرگرمیوں کی تعداد میں حد مقرر کرنے کے لئے استعمال کیا جاتا ہے. پہلے "
+"سے طے شدہ (0)، کوئی حد نہیں ہے"
 
 #: ../data/org.sugarlabs.gschema.xml.h:17 ../data/sugar.schemas.in.h:1
-#, fuzzy
 msgid "User Name"
 msgstr "اسمِ صارف"
 
 # فونٹ جو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے
 #: ../data/org.sugarlabs.gschema.xml.h:18 ../data/sugar.schemas.in.h:2
-#, fuzzy
 msgid "User name that is used throughout the desktop."
 msgstr "فونٹ جو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے"
 
@@ -118,7 +120,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:21 ../data/sugar.schemas.in.h:5
 msgid "User Color"
-msgstr ""
+msgstr "صارف کا رنگ"
 
 # XO آئکن  کے لئے رنگ جو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے.  سٹرنگ سٹروک رنگ اور بھرنے کے رنگ پر مشتمل ہے، فارمیٹ ہے RGB رنگوں کا .مثال کے طور پر : # AC32FF، 9A5200 #
 #: ../data/org.sugarlabs.gschema.xml.h:22 ../data/sugar.schemas.in.h:6
@@ -133,75 +135,75 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:23
 msgid "User Gender"
-msgstr ""
+msgstr "صارف کی صنف"
 
 #: ../data/org.sugarlabs.gschema.xml.h:24
 msgid "Gender of the Sugar user, either male, female, or unassigned"
-msgstr ""
+msgstr "شوگر صارف کی صنف، یا تو مرد، عورت، یا غیر دستخط"
 
 #: ../data/org.sugarlabs.gschema.xml.h:25
 msgid "User Birth Timestamp"
-msgstr ""
+msgstr "صارف پیدائش ٹائمسٹیمپ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:26
 msgid "Birth timestamp (seconds since the epoch)"
-msgstr ""
+msgstr "پیدائش ٹائمسٹیمپ (ایجچ سے سیکنڈ)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:27
 msgid "Group Label"
-msgstr ""
+msgstr "گروہ کا عنوان"
 
 #: ../data/org.sugarlabs.gschema.xml.h:28
 msgid "Label associated with age, e.g., '2nd Grade'"
-msgstr ""
+msgstr "عمر کے ساتھ منسلک لیبل، مثال کے طور پر، 'دوسری گریڈ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:29
 msgid "Background image path"
-msgstr ""
+msgstr "پس منظر کی تصویر کا راستہ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:30
 msgid "Path to the image to be used as a background."
-msgstr ""
+msgstr "پس منظر کے طور پر استعمال ہونے والی تصویر کا راستہ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:31
 msgid "Background alpha level"
-msgstr ""
+msgstr "پس منظر الفا کی سطح"
 
 #: ../data/org.sugarlabs.gschema.xml.h:32
 msgid "The opacity of the background image."
-msgstr ""
+msgstr "پس منظر کی تصویر کا دھندلاپن"
 
 #: ../data/org.sugarlabs.gschema.xml.h:33
 msgid "Mimetype registry"
-msgstr ""
+msgstr "اپنی مرضی کے مطابق رجسٹری"
 
 #: ../data/org.sugarlabs.gschema.xml.h:34
 msgid "Consists of key-value pairs mimetypes and their corresponding activity"
-msgstr ""
+msgstr "کلیدی قدر کے جوڑے میم ٹائپس  اور ان کے متعلقہ سرگرمیوں کی فہرست"
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
-msgstr ""
+msgstr "آواز کی سطح"
 
 #: ../data/org.sugarlabs.gschema.xml.h:36 ../data/sugar.schemas.in.h:8
 msgid "Volume level for the sound device."
-msgstr ""
+msgstr "صوتی آلہ کے لئے آواز کی سطح"
 
 #: ../data/org.sugarlabs.gschema.xml.h:37 ../data/sugar.schemas.in.h:9
 msgid "Sound Muted"
-msgstr ""
+msgstr "صوتی خاموش"
 
 #: ../data/org.sugarlabs.gschema.xml.h:38 ../data/sugar.schemas.in.h:10
 msgid "Setting for muting the sound device."
-msgstr ""
+msgstr "صوتی آلہ کو خاموش کرنے کی ترتیب"
 
 #: ../data/org.sugarlabs.gschema.xml.h:39
 msgid "Brightness Level"
-msgstr ""
+msgstr "چمک کی سطح"
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
-msgstr ""
+msgstr "کمپیوٹر اسکرین کے لئے روشنی کی سطح"
 
 # ٹائم زون
 #: ../data/org.sugarlabs.gschema.xml.h:41
@@ -211,25 +213,26 @@ msgstr "ٹائم زون"
 
 #: ../data/org.sugarlabs.gschema.xml.h:42 ../data/sugar.schemas.in.h:14
 msgid "Timezone setting for the system."
-msgstr ""
+msgstr "نظام کے لئے ٹائم زون کی ترتیب"
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr ""
+msgstr "ہوم کے نظارے"
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
 "List of home views, including the view icon, the favorite icon and the layout"
-msgstr ""
+msgstr "نظریاتی آئیکن، پسندیدہ آئیکن اور ترتیب سمیت ہوم کے نظاروں کی فہرست"
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
-msgstr ""
+msgstr "لانچر کا حرکت پذیری وقفہ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:46
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
 msgstr ""
+"لانچر پلسنگ آئیکن کے لئے حرکت پذیر کی تازہ کاری کے درمیان ملیسیکنڈ میں تاخیر"
 
 # ایج تاخیر
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
@@ -253,23 +256,23 @@ msgstr "کونے کونے کا استعمال کرتے ہوئے فریم کی ا
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr ""
+msgstr "ٹرگر سائز"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
-msgstr ""
+msgstr "کونے / کنارے سے پی ایکس میں فریم ٹرگر کے علاقے کا سائز"
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
-msgstr ""
+msgstr "جابر سرور"
 
 #: ../data/org.sugarlabs.gschema.xml.h:54 ../data/sugar.schemas.in.h:24
 msgid "URL of the jabber server to use."
-msgstr ""
+msgstr "استعمال کرنے کے لئے جابر سرور کا یو آر ایل"
 
 #: ../data/org.sugarlabs.gschema.xml.h:55 ../data/sugar.schemas.in.h:29
 msgid "Publish to Gadget"
-msgstr ""
+msgstr "گیجٹ پر شائع"
 
 # اگر یہ سچ ہے تو شوگر ہمیں جیبر سرور کے دیگر صارفین کے لئے تلاش کرنا آسان بنا دے گا.
 #: ../data/org.sugarlabs.gschema.xml.h:56 ../data/sugar.schemas.in.h:30
@@ -282,15 +285,15 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:57
 msgid "Social Help Server"
-msgstr ""
+msgstr "سماجی مدد سرور"
 
 #: ../data/org.sugarlabs.gschema.xml.h:58
 msgid "URL of the social help server to use with protocol."
-msgstr ""
+msgstr "پروٹوکول کے ساتھ استعمال کرنے کے لئےسماجی مدد سرور کا یو آر ایل"
 
 #: ../data/org.sugarlabs.gschema.xml.h:59 ../data/sugar.schemas.in.h:25
 msgid "Power Automatic"
-msgstr ""
+msgstr "طاقت خود کار طریقے سے"
 
 #: ../data/org.sugarlabs.gschema.xml.h:60
 #: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:26
@@ -299,7 +302,7 @@ msgstr "آٹو ميٹک پاور کنٹرول(بیٹری کا دورانيہ ذ�
 
 #: ../data/org.sugarlabs.gschema.xml.h:61 ../data/sugar.schemas.in.h:27
 msgid "Power Extreme"
-msgstr ""
+msgstr "طاقت کی انتہا"
 
 # انتہائی پاور مینجمنٹ (وائرلیس ریڈیو کو غیر فعال کر دیتے ہیں، بیٹری کی زندگی کو بڑھاتا ہے)
 #: ../data/org.sugarlabs.gschema.xml.h:62 ../data/sugar.schemas.in.h:28
@@ -311,32 +314,30 @@ msgstr ""
 
 # کی بورڈ ترتیب
 #: ../data/org.sugarlabs.gschema.xml.h:63 ../data/sugar.schemas.in.h:39
-#, fuzzy
 msgid "Keyboard layouts"
 msgstr "کی بورڈ ترتیب"
 
 #: ../data/org.sugarlabs.gschema.xml.h:64 ../data/sugar.schemas.in.h:40
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
-msgstr ""
+msgstr "کی بورڈ کی ترتیب کی فہرست۔ ہر اندراج فارم ترتیب (مختلف) میں ہونا چاہئے"
 
 #: ../data/org.sugarlabs.gschema.xml.h:65 ../data/sugar.schemas.in.h:41
 msgid "Keyboard options"
-msgstr ""
+msgstr "کی بورڈ کے اختیارات"
 
 #: ../data/org.sugarlabs.gschema.xml.h:66 ../data/sugar.schemas.in.h:42
 msgid "List of keyboard options."
-msgstr ""
+msgstr "کی بورڈ کے اختیارات کی فہرست"
 
 # کی بورڈ ماڈل
 #: ../data/org.sugarlabs.gschema.xml.h:67 ../data/sugar.schemas.in.h:43
-#, fuzzy
 msgid "Keyboard model"
 msgstr "کی بورڈ ماڈل"
 
 #: ../data/org.sugarlabs.gschema.xml.h:68 ../data/sugar.schemas.in.h:44
 msgid "The keyboard model to be used"
-msgstr ""
+msgstr "استعمال کرنے کے لئے کی بورڈ ماڈل"
 
 # پہلے سے مقرر شدہ فانٹ کا چہرہ
 #: ../data/org.sugarlabs.gschema.xml.h:69 ../data/sugar.schemas.in.h:45
@@ -360,161 +361,156 @@ msgstr "فونٹ سائزجو ڈیسک ٹاپ بھر میں استعمال کی�
 
 #: ../data/org.sugarlabs.gschema.xml.h:73 ../data/sugar.schemas.in.h:61
 msgid "Show Sugar Ad-hoc networks"
-msgstr ""
+msgstr "شوگر ایڈہاک نیٹ ورک دکھائیں"
 
 #: ../data/org.sugarlabs.gschema.xml.h:74 ../data/sugar.schemas.in.h:62
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
-msgstr ""
+msgstr "اگر "
 
 #: ../data/org.sugarlabs.gschema.xml.h:75
 msgid "Enable Ad-hoc autoconnect"
-msgstr ""
+msgstr "ایڈہاک خود کار طریقے سے منسلک کر نے کو فعال کریں۔"
 
 #: ../data/org.sugarlabs.gschema.xml.h:76
 msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
-msgstr ""
+msgstr "اگر سچ ہے تو، شوگرایڈہاک نیٹ ورکس کوخودکار طریقے سے منسلک کرےگا۔"
 
 #: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
-#, fuzzy
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک صارف کا نام"
 
 #: ../data/org.sugarlabs.gschema.xml.h:78 ../data/sugar.schemas.in.h:50
-#, fuzzy
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک صارف کا نام کی ترتیب"
 
 #: ../data/org.sugarlabs.gschema.xml.h:79 ../data/sugar.schemas.in.h:51
-#, fuzzy
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک پاس ورڈ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:80 ../data/sugar.schemas.in.h:52
-#, fuzzy
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک پاس ورڈ کی ترتیب"
 
 #: ../data/org.sugarlabs.gschema.xml.h:81 ../data/sugar.schemas.in.h:53
-#, fuzzy
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک نمبر"
 
 #: ../data/org.sugarlabs.gschema.xml.h:82 ../data/sugar.schemas.in.h:54
-#, fuzzy
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک ٹیلی فون نمبر کی ترتیب"
 
 #: ../data/org.sugarlabs.gschema.xml.h:83 ../data/sugar.schemas.in.h:55
-#, fuzzy
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک APNGSM نیٹ ورک APN"
 
 #: ../data/org.sugarlabs.gschema.xml.h:84 ../data/sugar.schemas.in.h:56
-#, fuzzy
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک تک رسائی کے نقطہ نام کی ترتیب"
 
 #: ../data/org.sugarlabs.gschema.xml.h:85 ../data/sugar.schemas.in.h:57
-#, fuzzy
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک PIN"
 
 #: ../data/org.sugarlabs.gschema.xml.h:86 ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک کی ذاتی شناختی نمبر کی ترتیب"
 
 #: ../data/org.sugarlabs.gschema.xml.h:87 ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک PUK"
 
 #: ../data/org.sugarlabs.gschema.xml.h:88 ../data/sugar.schemas.in.h:60
-#, fuzzy
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک کی ذاتی کھولنے کی کلید کی ترتیب"
 
 #: ../data/org.sugarlabs.gschema.xml.h:89
 msgid "TODO: add summary"
-msgstr ""
+msgstr "ٹوڈو: خلاصہ شامل کریں"
 
 #: ../data/org.sugarlabs.gschema.xml.h:90
 msgid "TODO: add description"
-msgstr ""
+msgstr "ٹوڈو: تفصیل شامل کریں"
 
 #: ../data/org.sugarlabs.gschema.xml.h:91 ../data/sugar.schemas.in.h:65
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "شوگر کی صوتی سروس کے لئے پچ کی قدر۔"
 
 #: ../data/org.sugarlabs.gschema.xml.h:92 ../data/sugar.schemas.in.h:66
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "پچ کی قدرجو شوگر کی صوتی سروس نے استعمال کی ہے۔"
 
 #: ../data/org.sugarlabs.gschema.xml.h:93 ../data/sugar.schemas.in.h:67
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "شوگر کی صوتی سروس کے لئے شرح کی قیمت۔"
 
 #: ../data/org.sugarlabs.gschema.xml.h:94 ../data/sugar.schemas.in.h:68
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "شوگر میں تقریر کی خدمت کی طرف سے استعمال شرح کی قیمت۔ "
 
 #: ../data/org.sugarlabs.gschema.xml.h:95 ../data/sugar.schemas.in.h:69
 msgid "Activity update backend."
-msgstr ""
+msgstr "سرگرمی اپ ڈیٹ بیک اینڈ ۔"
 
 #: ../data/org.sugarlabs.gschema.xml.h:96 ../data/sugar.schemas.in.h:70
 msgid ""
 "Activity update backend module, followed by a period, followed by the class "
 "name."
-msgstr ""
+msgstr "سرگرمی اپ ڈیٹ بیک اینڈ ماڈیول، ایک مدت کے بعد، کلاس کے نام کے بعد"
 
 #: ../data/org.sugarlabs.gschema.xml.h:97 ../data/sugar.schemas.in.h:71
 msgid "Microformat update URL."
-msgstr ""
+msgstr "مائکروفارمیٹ اپ ڈیٹ یو آر ایل۔"
 
 #: ../data/org.sugarlabs.gschema.xml.h:98 ../data/sugar.schemas.in.h:72
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
+"سرگرمی اپ ڈیٹ کی معلومات کے لئے مائکروفارمیٹ اپ ڈیٹ بیکڈ اینڈ کی طرف سے "
+"استعمال کیا جاتا یو آر ایل۔"
 
 #: ../data/org.sugarlabs.gschema.xml.h:99 ../data/sugar.schemas.in.h:73
 msgid "Automatic update frequency."
-msgstr ""
+msgstr "خودکار اپ ڈیٹ فریکوئنسی"
 
 #: ../data/org.sugarlabs.gschema.xml.h:100 ../data/sugar.schemas.in.h:74
 msgid ""
 "Frequency of automatic activity updates, measured in days. 0 means disabled."
 msgstr ""
+"خود کار طریقے سے سرگرمیوں کی اپ ڈیٹس کی فریکوئینسی، دنوں میں ماپا. 0 کا مطلب "
+"غیر فعال۔"
 
 #: ../data/org.sugarlabs.gschema.xml.h:101 ../data/sugar.schemas.in.h:75
 msgid "Timestamp of last activity update."
-msgstr ""
+msgstr "آخری سرگرمی کی تازہ کاری کا ٹائمسٹیمپ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:102 ../data/sugar.schemas.in.h:76
 msgid ""
 "A unix timestamp (seconds since epoch) of the last successful activity "
 "update."
 msgstr ""
+"آخری کامیاب سرگرمی کی تازہ کاری کے ایک یونیکس ٹائمسٹیمپ (اختتام سے سیکنڈ)."
 
 #: ../data/org.sugarlabs.gschema.xml.h:103
 msgid "New ASLO update.json URL."
-msgstr ""
+msgstr "نیا ASLO update.json یو آر ایل."
 
 #: ../data/org.sugarlabs.gschema.xml.h:104
 msgid "URL used by the new ASLO updater to download activity data."
 msgstr ""
+"سرگرمی ڈیٹا ڈاؤن لوڈ کرنے کے لئے نئے ASLO اپ ڈیٹٹر کے ذریعہ URL استعمال کیا "
+"جاتا ہے."
 
 #: ../data/org.sugarlabs.gschema.xml.h:105 ../data/sugar.schemas.in.h:77
 msgid "A description of the hardware available to the user."
-msgstr ""
+msgstr "صارف کے لیے موجود ھارڈویر کی تفسیلات۔"
 
 #: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
-msgstr ""
+msgstr "یہ اسٹرنگ کمپیوٹر کے سیکشن کے بارے میں، کنٹرول پینل میں ظاہر ہوتا ہے."
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
@@ -559,7 +555,7 @@ msgstr "رنگ تبديل کرنے کے ليے کلک کريں:"
 #: ../extensions/cpsection/aboutme/view.py:294
 #: ../src/jarabe/intro/window.py:203
 msgid "Select gender:"
-msgstr ""
+msgstr ":جنس منتخب کریں"
 
 # کمپیوٹر کے بارے میں
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
@@ -608,17 +604,16 @@ msgstr "وائرلیس فرم وئر:"
 #: ../extensions/cpsection/aboutcomputer/view.py:134
 #, python-format
 msgid "%d days ago"
-msgstr ""
+msgstr "%d دن پہلے"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:136
 #: ../src/jarabe/journal/journaltoolbox.py:169
-#, fuzzy
 msgid "Today"
 msgstr "آج"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:139
 msgid "Last system update:"
-msgstr ""
+msgstr ":سسٹم کی آخری اپ ڈیٹ"
 
 # کاپی رائٹ اور لائسنس
 #: ../extensions/cpsection/aboutcomputer/view.py:150
@@ -644,17 +639,16 @@ msgid "Full license:"
 msgstr "مکمل لائسنس :"
 
 #: ../extensions/cpsection/background/__init__.py:21
-#, fuzzy
 msgid "Background"
 msgstr "پس منظر"
 
 #: ../extensions/cpsection/background/view.py:48
 msgid "Select a background:"
-msgstr ""
+msgstr "پس منظر منتخب کریں"
 
 #: ../extensions/cpsection/background/view.py:57
 msgid "Clear background"
-msgstr ""
+msgstr "پس منظر کو صاف کریں"
 
 # تاريخ & وقت
 #: ../extensions/cpsection/datetime/__init__.py:21
@@ -663,7 +657,6 @@ msgstr "تاريخ & وقت"
 
 # نقص، ٹائم زون موجود نہیں ہے۔
 #: ../extensions/cpsection/datetime/model.py:100
-#, fuzzy
 msgid "Error: timezone does not exist."
 msgstr "نقص، ٹائم زون موجود نہیں ہے۔"
 
@@ -695,7 +688,6 @@ msgstr "چالو کرنے میں تاخیر"
 
 # چالو کرنے میں تاخیر
 #: ../extensions/cpsection/frame/view.py:68
-#, fuzzy
 msgid "Activation Area"
 msgstr "چالو کرنے میں تاخیر"
 
@@ -794,11 +786,11 @@ msgstr ""
 #: ../extensions/cpsection/language/view.py:383
 #, python-format
 msgid "Error writting language configuration (%s)"
-msgstr ""
+msgstr "زبان کی کونفگریشن لکھنے میں خرابی (%s)"
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem"
-msgstr ""
+msgstr "موڈیم"
 
 # سیلولر نیٹ ورک (3G) اور موبائل براڈبینڈ کنکشن قائم کرنے کے لئے آپ کو مندجہ زیل معلومات فرہم کرنا ہونگی۔
 #: ../extensions/cpsection/modemconfiguration/view.py:94
@@ -811,15 +803,15 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr ""
+msgstr ":ملک"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr ""
+msgstr ":مہیا کرنے والا"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr ""
+msgstr ":منصوبہ"
 
 # صارف کا نام
 #: ../extensions/cpsection/modemconfiguration/view.py:160
@@ -849,12 +841,12 @@ msgstr "ذاتی شناختی نمبر (PIN)"
 #: ../extensions/cpsection/modemconfiguration/model.py:162
 #, python-format
 msgid "Plan #%s"
-msgstr ""
+msgstr " s%# منصوبہ"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:292
 #, python-format
 msgid "Provider %s"
-msgstr ""
+msgstr "s% مہیا کرنے والا"
 
 # نيٹ ورک
 #: ../extensions/cpsection/network/__init__.py:21
@@ -884,10 +876,9 @@ msgstr "وائرلیس"
 
 #: ../extensions/cpsection/network/view.py:73
 msgid "The wireless radio may be turned off to save battery life."
-msgstr ""
+msgstr "بیٹری کے لمبے دورانیے کے لئے وائرلیس ریڈیو بند کر دیا جا سکتا ہے۔"
 
 #: ../extensions/cpsection/network/view.py:86
-#, fuzzy
 msgid "Radio"
 msgstr "ریڈیو"
 
@@ -895,10 +886,12 @@ msgstr "ریڈیو"
 msgid ""
 "Discard wireless connections if you have trouble connecting to the network"
 msgstr ""
+"اگر آپ کو نیٹ ورک سے منسلک کرنے میں دشواری ہوتی ہے تو وائرلیس کنکشن کو مسترد "
+"کریں"
 
 #: ../extensions/cpsection/network/view.py:113
 msgid "Discard wireless connections"
-msgstr ""
+msgstr "وائرلیس کنکشن کو مسترد کریں"
 
 # تعاون
 #: ../extensions/cpsection/network/view.py:129
@@ -925,10 +918,13 @@ msgid ""
 "Sugar Activities.  Changing servers means discussions will happen in a "
 "different place with different people."
 msgstr ""
+"سوشل مدد ایک ایسا فورم ہے جو آپ کو ڈویلپرز سے منسلک کرنے اور شوگر سرگرمیوں "
+"پر تبادلہ خیال کرنے میں مدد دیتا ہے۔ سرور تبدیل کرنے کا مطلب مختلف لوگوں کے "
+"ساتھ مختلف جگہ پر بات چیت ہو گی۔"
 
 #: ../extensions/cpsection/network/view.py:173
 msgid "Social Help Server:"
-msgstr ""
+msgstr ":سماجی مدد کا سرور"
 
 #: ../extensions/cpsection/power/__init__.py:24
 msgid "Power"
@@ -944,7 +940,6 @@ msgstr "پاور کنٹرول"
 
 # سافٹ ویئر اپ ڈیٹ
 #: ../extensions/cpsection/updater/__init__.py:21
-#, fuzzy
 msgid "Software Update"
 msgstr "سافٹ ویئر اپ ڈیٹ"
 
@@ -959,7 +954,7 @@ msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:84
 msgid "Update in progress..."
-msgstr ""
+msgstr "اپ ڈیٹ پیش رفت میں ھے۔۔۔"
 
 # اپ ڈیٹس کے لئے جانچ کی جا رہی...
 #: ../extensions/cpsection/updater/view.py:119
@@ -979,9 +974,8 @@ msgstr "..%s جانچ کی جا رہی"
 
 # اپ ڈیٹس کے لئے جانچ کی جا رہی...
 #: ../extensions/cpsection/updater/view.py:152
-#, fuzzy
 msgid "Looking for updates..."
-msgstr "اپ ڈیٹس کے لئے جانچ کی جا رہی..."
+msgstr "اپ ڈیٹس کے لئے جانچ پڑتال کی جا رہی..."
 
 # s٪  ڈاؤن لوڈ کیا جا رہا ہے...
 #: ../extensions/cpsection/updater/view.py:154
@@ -1001,27 +995,27 @@ msgid "Your software is up-to-date"
 msgstr "آپ کا سافٹ ویئر اپ ڈیٹ ہے"
 
 #: ../extensions/cpsection/updater/view.py:168
-#, python-format
-#, python-format, fuzzy
+#, python-format, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] "آپ %sاپ ڈيٹ انسٹال کر سکتے ہو"
-msgstr[1] "آپ %sاپ ڈيٹ انسٹال کر سکتے ہو"
+msgstr[0] "آپ %s اپ ڈيٹ انسٹال کر سکتے ہو"
+msgstr[1] "آپ %s اپ ڈيٹیں انسٹال کر سکتے ہو"
 
 #: ../extensions/cpsection/updater/view.py:183
 msgid "Can't connect to the activity server"
-msgstr ""
+msgstr "سرگرمی کے سرور سے رابتہ منسلک نہیں ہو رہا"
 
 #: ../extensions/cpsection/updater/view.py:186
 msgid "Verify your connection to internet and try again, or try again later"
 msgstr ""
+"اپنا انٹرنیٹ سے رابتہ یکینی بناٸیں اور دوبارہ کوشش کریں، یا دوبارہ کوشش کریں "
 
 #: ../extensions/cpsection/updater/view.py:206
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s اپ ڈیٹ انسٹال ھو گی ھے"
+msgstr[1] "%s اپ ڈیٹیں انسٹال ھو گی ھیں"
 
 #  منتخب کردہ انسٹال کریں
 #: ../extensions/cpsection/updater/view.py:288
@@ -1188,7 +1182,6 @@ msgstr "چينل"
 #: ../src/jarabe/journal/expandedentry.py:386
 #: ../src/jarabe/journal/listmodel.py:191
 #: ../src/jarabe/journal/listmodel.py:199
-#, fuzzy
 msgid "Unknown"
 msgstr "نامعلوم"
 
@@ -1266,7 +1259,6 @@ msgstr "%d KB"
 
 # اپنا PIN / Puk ترتیب چیک کریں.
 #: ../extensions/deviceicon/network.py:355
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
 msgstr "اپنا PIN / PUK ترتیب چیک کریں."
 
@@ -1305,7 +1297,6 @@ msgid "Create a connection in My Settings."
 msgstr ""
 
 #: ../extensions/deviceicon/speech.py:49
-#, fuzzy
 msgid "Speech"
 msgstr "گفتگو"
 
@@ -1441,7 +1432,7 @@ msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:420 ../src/jarabe/view/buddymenu.py:138
 msgid "You may lose unsaved work if you continue."
-msgstr ""
+msgstr "ایک سرگرمی جواب نہیں دے رہی ہے"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
@@ -1530,27 +1521,26 @@ msgstr "پليٹ"
 
 #. TRANS: label for the spiral layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:469
-#, fuzzy
 msgid "Spiral"
 msgstr "سپائرل"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:537
 msgid "Box"
-msgstr ""
+msgstr "ڈبا"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:580
 msgid "Triangle"
-msgstr ""
+msgstr "مثلث"
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
-msgstr ""
+msgstr "اندراج"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
-msgstr ""
+msgstr "براہ مہربانی انتظار کریں، آپ کے سکول کی تشخیس کی جا رہی ہے"
 
 #: ../src/jarabe/desktop/favoritesview.py:387
 msgid "Registration Failed"
@@ -1570,7 +1560,7 @@ msgstr "رجسٹر کريں"
 
 #: ../src/jarabe/desktop/favoritesview.py:682
 msgid "Register again"
-msgstr ""
+msgstr "دوبارہ اندراج کریں"
 
 #: ../src/jarabe/desktop/homewindow.py:255
 #: ../src/jarabe/desktop/viewtoolbar.py:73
@@ -1595,7 +1585,7 @@ msgstr "ميرے پڑوسی"
 msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
-msgstr ""
+msgstr "وایرلس نیٹورک کے لیے ایک وایرلس چابی درکار ہے '%s'۔"
 
 #: ../src/jarabe/desktop/keydialog.py:141
 msgid "Key Type:"
@@ -1611,9 +1601,8 @@ msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 ذاتی"
 
 #: ../src/jarabe/desktop/keydialog.py:233
-#, fuzzy
 msgid "Wireless Security:"
-msgstr "وائیرلیس سیکورٹی"
+msgstr ":وائیرلیس سیکورٹی"
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
@@ -1628,9 +1617,9 @@ msgid "Join"
 msgstr "شرکت کريں"
 
 #: ../src/jarabe/desktop/networkviews.py:499
-#, python-format
+#, fuzzy, python-format
 msgid "Ad-hoc Network %d"
-msgstr ""
+msgstr "ایڈہاک نیٹورک %d"
 
 #: ../src/jarabe/desktop/networkviews.py:643
 #, python-format
@@ -1640,11 +1629,11 @@ msgstr "ميش نيٹ ورک %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
-msgstr ""
+msgstr "سرور سے رابتہ نہیں ہو رہا۔"
 
 #: ../src/jarabe/desktop/schoolserver.py:151
 msgid "The server could not complete the request."
-msgstr ""
+msgstr "سرور آپ کی درخواست پوری نہیں کر سکا۔"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:95
 msgid "List view"
@@ -1699,7 +1688,6 @@ msgstr ""
 #: ../src/jarabe/frame/activitiestray.py:722
 #: ../src/jarabe/frame/activitiestray.py:736
 #: ../src/jarabe/frame/activitiestray.py:878
-#, fuzzy
 msgid "Dismiss"
 msgstr "برخاست کریں"
 
@@ -1714,7 +1702,6 @@ msgstr ""
 
 # خارج کر دیا
 #: ../src/jarabe/frame/clipboardmenu.py:54
-#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
 msgstr "خارج کر دیا"
@@ -1729,21 +1716,21 @@ msgid "Open with"
 msgstr "اس کے ساتھہ کھولیں"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
-#, python-format
+#, fuzzy, python-format
 msgid "%s clipping"
-msgstr ""
+msgstr "%s کٹای"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
-msgstr ""
+msgstr "ٖF1"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
-msgstr ""
+msgstr "F3"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:62 ../src/jarabe/model/screenshot.py:69
 msgid "Activity"
@@ -1751,7 +1738,7 @@ msgstr "سرگرمی"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
-msgstr ""
+msgstr "F4"
 
 #: ../src/jarabe/intro/window.py:135
 msgid "Name:"
@@ -1771,111 +1758,106 @@ msgstr "آگے"
 
 #: ../src/jarabe/intro/agepicker.py:38
 msgid "Select grade:"
-msgstr ""
+msgstr ":جنس منتخب کریں"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Preschool"
-msgstr ""
+msgstr "پری سکول"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Kindergarten"
-msgstr ""
+msgstr "کنڈرگارٹن"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "1st Grade"
-msgstr ""
+msgstr "پہلا درجہ"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "2nd Grade"
-msgstr ""
+msgstr "دوسرا درجہ"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "3rd Grade"
-msgstr ""
+msgstr "تیسرا درجہ"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "4th Grade"
-msgstr ""
+msgstr "چوتھا درجہ"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "5th Grade"
-msgstr ""
+msgstr "پانچواں درجہ"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "6th Grade"
-msgstr ""
+msgstr "چھٹا درجہ"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "7th Grade"
-msgstr ""
+msgstr "ساتواں درجہ"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "High School"
-msgstr ""
+msgstr "کالج"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "Adult"
-msgstr ""
+msgstr "بالغ"
 
 #: ../src/jarabe/journal/expandedentry.py:153
 #: ../src/jarabe/journal/journaltoolbox.py:584
 #: ../src/jarabe/journal/palettes.py:163
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
-msgstr ""
+msgstr "کیا آپ \"%s\" ہمیشہ کے لیے ختم کرنا چاہتے ہیں؟"
 
 #: ../src/jarabe/journal/expandedentry.py:296
 #: ../src/jarabe/journal/listmodel.py:185 ../src/jarabe/journal/model.py:794
 #: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/journal/palettes.py:621
 #: ../src/jarabe/journal/volumestoolbar.py:134
 #: ../src/jarabe/journal/iconmodel.py:110
-#, fuzzy
 msgid "Untitled"
 msgstr "بلا عنوان"
 
 #: ../src/jarabe/journal/expandedentry.py:366
 msgid "No preview"
-msgstr ""
+msgstr "کوی جہلک نہیں"
 
 #: ../src/jarabe/journal/expandedentry.py:386
 #, python-format
 msgid "Kind: %s"
-msgstr ""
+msgstr "قسم: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:387
-#, python-format
-#, python-format, fuzzy
+#, python-format, python-format
 msgid "Date: %s"
 msgstr "تاریخ: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:388
 #, python-format
 msgid "Size: %s"
-msgstr ""
+msgstr "سائز: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:412
 #: ../src/jarabe/journal/misc.py:131
 msgid "No date"
-msgstr ""
+msgstr "کوی تاریخ نہیں"
 
 #: ../src/jarabe/journal/expandedentry.py:421
 msgid "Participants:"
-msgstr ""
+msgstr ":شمولیت اختیار کرنے والے"
 
 #: ../src/jarabe/journal/expandedentry.py:459
-#, fuzzy
 msgid "Description:"
-msgstr "تفصیل:"
+msgstr ":تفصیل"
 
 #: ../src/jarabe/journal/expandedentry.py:465
-#, fuzzy
 msgid "Tags:"
-msgstr "ٹیگ:"
+msgstr ":ٹیگ"
 
 #: ../src/jarabe/journal/expandedentry.py:470
-#, fuzzy
 msgid "Comments:"
-msgstr "تبصرہ جات:"
+msgstr ":تبصرہ جات"
 
 #: ../src/jarabe/journal/journalactivity.py:182
 #: ../src/jarabe/journal/journaltoolbox.py:94
@@ -1883,17 +1865,16 @@ msgstr "تبصرہ جات:"
 #: ../src/jarabe/journal/volumestoolbar.py:349
 #: ../src/jarabe/view/viewhelp.py:79
 msgid "Journal"
-msgstr ""
+msgstr "جرنل"
 
 #: ../src/jarabe/journal/journaltoolbox.py:103
 msgid "Favorite entries"
-msgstr ""
+msgstr "پسندیدہ اندراجات"
 
 #. TRANS: Item on a palette that filters by entry type.
 #: ../src/jarabe/journal/journaltoolbox.py:112
 #: ../src/jarabe/journal/journaltoolbox.py:403
 #: ../src/jarabe/journal/journaltoolbox.py:479
-#, fuzzy
 msgid "Anything"
 msgstr "کوئی شے"
 
@@ -1901,34 +1882,34 @@ msgstr "کوئی شے"
 #: ../src/jarabe/journal/journaltoolbox.py:165
 #: ../src/jarabe/journal/journaltoolbox.py:483
 msgid "Anytime"
-msgstr ""
+msgstr "کبھی بھی"
 
 #: ../src/jarabe/journal/journaltoolbox.py:172
 msgid "Since yesterday"
-msgstr ""
+msgstr "کل سے"
 
 #: ../src/jarabe/journal/journaltoolbox.py:175
 msgid "Past week"
-msgstr ""
+msgstr "پچھلے ہفتے"
 
 #: ../src/jarabe/journal/journaltoolbox.py:178
 msgid "Past month"
-msgstr ""
+msgstr "پچھلے ماہ"
 
 #: ../src/jarabe/journal/journaltoolbox.py:181
 msgid "Past year"
-msgstr ""
+msgstr "پچھلے سال"
 
 #: ../src/jarabe/journal/journaltoolbox.py:521
 #: ../src/jarabe/journal/palettes.py:105
 #, fuzzy
 msgid "Copy to"
-msgstr "نقل کریں بطرف"
+msgstr " بطرف نقل کریں"
 
 #: ../src/jarabe/journal/journaltoolbox.py:529
 #: ../src/jarabe/journal/palettes.py:116 ../src/jarabe/view/viewsource.py:379
 msgid "Duplicate"
-msgstr ""
+msgstr "نقل"
 
 #: ../src/jarabe/journal/journaltoolbox.py:535
 #, fuzzy
@@ -1940,13 +1921,14 @@ msgstr "تازہ کریں"
 #: ../src/jarabe/journal/volumestoolbar.py:312
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr ""
+msgstr "انداجات کاپی کرتے ہوے مسلہ۔ %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:578
 #: ../src/jarabe/journal/palettes.py:157 ../src/jarabe/journal/palettes.py:375
 #: ../src/jarabe/journal/volumestoolbar.py:313
+#, fuzzy
 msgid "Error"
-msgstr ""
+msgstr "مسلہ"
 
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:662
@@ -1957,43 +1939,45 @@ msgstr "شروع کريں"
 #: ../src/jarabe/journal/journaltoolbox.py:682
 #: ../src/jarabe/journal/palettes.py:100 ../src/jarabe/journal/palettes.py:513
 msgid "No activity to start entry"
-msgstr ""
+msgstr "اندراج شروع کرنے کے لئے کوئی سرگرمی نہیں ہے"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 msgid "Sort view"
 msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:711
+#, fuzzy
 msgid "Sort by date modified"
-msgstr ""
+msgstr "درستگی کی تاریخ کے حساب سے ترتیب دیں"
 
 #: ../src/jarabe/journal/journaltoolbox.py:712
 msgid "Sort by date created"
-msgstr ""
+msgstr "اندراج کی تاریخ کے حساب سے ترتیب دیں"
 
 #: ../src/jarabe/journal/journaltoolbox.py:713
 msgid "Sort by size"
-msgstr ""
+msgstr "ساٸز کے حساب سے ترتیب دیں"
 
 #: ../src/jarabe/journal/journaltoolbox.py:778
+#, fuzzy
 msgid "Deselect all"
-msgstr ""
+msgstr "سب نامنتخب کریں"
 
 #: ../src/jarabe/journal/journaltoolbox.py:791
 msgid "Select all"
-msgstr ""
+msgstr "سب منتخب کریں"
 
 #: ../src/jarabe/journal/journaltoolbox.py:817
 #, python-format
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "کیا آپ %d انداج مٹانا چاھتے ہیں؟"
+msgstr[1] "کیا آپ %d انداجات مٹانا چاھتے ہیں؟"
 
 #: ../src/jarabe/journal/journaltoolbox.py:831
 #: ../src/jarabe/journal/palettes.py:378
 msgid "Copy"
-msgstr ""
+msgstr "کاپی"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:882
@@ -2003,71 +1987,72 @@ msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:917
 msgid "Select filter"
-msgstr ""
+msgstr "فلٹر منتخب کریں"
 
 #: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
 msgid "Your Journal is empty"
-msgstr ""
+msgstr "آپ کا جرنل خالی ہے"
 
 #: ../src/jarabe/journal/listview.py:476 ../src/jarabe/journal/iconview.py:215
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "آپ کے دستاویزات کا فولڈر خالی ہے۔"
 
 #: ../src/jarabe/journal/listview.py:478 ../src/jarabe/journal/iconview.py:217
 msgid "The device is empty"
-msgstr ""
+msgstr "آلہ خالی ہے"
 
 #: ../src/jarabe/journal/listview.py:480 ../src/jarabe/journal/iconview.py:220
 msgid "No matching entries"
-msgstr ""
+msgstr "کوئی مماثل اندراج نہیں"
 
 #: ../src/jarabe/journal/misc.py:313
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr ""
+msgstr "%s سرگرمی کا پرانا ورژن"
 
 #: ../src/jarabe/journal/misc.py:314
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr ""
+msgstr "میں کمی کرنا چاہتے ہیں۔ ٪ s کیا آپ ورژن"
 
 #: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
-msgstr ""
+msgstr "آپ کا جرنل مکمل ہے"
 
 #: ../src/jarabe/journal/modalalert.py:68
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
+"براہ کرم کچھ پرانے جرنل اندراج کو حذف کریں نئے اندراج کےلئے جگہ بنانےکےلئے ۔"
 
 #: ../src/jarabe/journal/modalalert.py:82
 msgid "Show Journal"
-msgstr ""
+msgstr "جرنل دکھائیں"
 
 #: ../src/jarabe/journal/objectchooser.py:171
 msgid "Choose an object"
-msgstr ""
+msgstr "ایک چیز منتخب کریں"
 
 #: ../src/jarabe/journal/objectchooser.py:176
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr ""
+msgstr "%s سرگرمی کھولنے کےلئے ایک چیز منتخب کریں۔ "
 
 #: ../src/jarabe/journal/objectchooser.py:184
 #: ../src/jarabe/view/viewhelp.py:335 ../src/jarabe/view/viewsource.py:579
 msgid "Close"
-msgstr ""
+msgstr "بند کریں"
 
 #: ../src/jarabe/journal/palettes.py:84
 msgid "Resume with"
-msgstr ""
+msgstr "کے ساتھ دوبارہ شروع کریں"
 
 #: ../src/jarabe/journal/palettes.py:87
 msgid "Start with"
-msgstr ""
+msgstr "کے ساتھ شروع کریں"
 
 #: ../src/jarabe/journal/palettes.py:124
 msgid "Send to"
-msgstr ""
+msgstr "کو  بھیجیں۔"
 
 #: ../src/jarabe/journal/palettes.py:133
 #, fuzzy
@@ -2076,7 +2061,7 @@ msgstr "تفاصیل نظارہ"
 
 #: ../src/jarabe/journal/palettes.py:193
 msgid "Entries without a file cannot be sent."
-msgstr ""
+msgstr "فائل کے بغیر اندراج بھیجا نہیں جا سکتا"
 
 #: ../src/jarabe/journal/palettes.py:272
 #: ../src/jarabe/journal/volumestoolbar.py:214
@@ -2087,30 +2072,30 @@ msgstr "دستاویزات"
 #: ../src/jarabe/journal/palettes.py:363 ../src/jarabe/journal/palettes.py:423
 #: ../src/jarabe/journal/volumestoolbar.py:303
 msgid "Entries without a file cannot be copied."
-msgstr ""
+msgstr "فائل کے بغیر اندراج کاپی نہیں کیا جا سکتا"
 
 #: ../src/jarabe/journal/palettes.py:383
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] ""
+msgstr[0] " کیا آپ %d اندراج کاپی کرنا چاہتے ہیں؟"
 msgstr[1] ""
 
 #: ../src/jarabe/journal/palettes.py:408
 msgid "Clipboard"
-msgstr ""
+msgstr "کلپ بورڈ"
 
 #: ../src/jarabe/journal/palettes.py:478
 msgid "No friends present"
-msgstr ""
+msgstr "کوئی دوست موجود نہیں"
 
 #: ../src/jarabe/journal/palettes.py:483
 msgid "No valid connection found"
-msgstr ""
+msgstr "کوئی درست کنکشن نہیں ملا"
 
 #: ../src/jarabe/journal/palettes.py:511
 msgid "No activity to resume entry"
-msgstr ""
+msgstr "اندراج دوبارہ شروع کرنے کیلئے کوئی سرگرمی نہیں"
 
 #: ../src/jarabe/journal/palettes.py:580 ../src/jarabe/view/palettes.py:133
 msgid "Stop"
@@ -2120,7 +2105,7 @@ msgstr "روکیں"
 #: ../extensions/cpsection/backup/view.py:212
 #: ../extensions/cpsection/backup/view.py:265
 msgid "Continue"
-msgstr ""
+msgstr "جاری رکھیں۔"
 
 #: ../src/jarabe/journal/palettes.py:622
 #, python-format
@@ -2134,42 +2119,43 @@ msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB dخالی"
 
 #: ../src/jarabe/model/desktop.py:85
-#, fuzzy, python-format
+#, python-format
 msgid "Favorites view %d"
 msgstr "پسندیدگان نظارہ %d"
 
 #: ../src/jarabe/model/network.py:217
 msgid "The reason for the device state change is unknown."
-msgstr ""
+msgstr "ڈیوائس کی حالت کی تبدیلی کا سبب نامعلوم  ہے۔"
 
 #: ../src/jarabe/model/network.py:219
 msgid "The state change is normal."
-msgstr ""
+msgstr "حالت کی تبدیلی عام ہے۔"
 
 #: ../src/jarabe/model/network.py:221
 msgid "The device is now managed."
-msgstr ""
+msgstr "یہ آلہ ابھی منظم ہے"
 
 #: ../src/jarabe/model/network.py:223
 msgid "The device is no longer managed."
-msgstr ""
+msgstr "یہ آلہ مزید منظم نہیں ہے۔"
 
 #: ../src/jarabe/model/network.py:225
 msgid "The device could not be readied for configuration."
-msgstr ""
+msgstr "آلہ ترتیب کے لئے پڑھا نہیں جا سکتا۔"
 
 #: ../src/jarabe/model/network.py:227
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
+"آئی پی کی ترتیب کو محفوظ نہیں کیا جا سکتا (دستیاب ایڈریس، ٹائم آؤٹ، وغیرہ)"
 
 #: ../src/jarabe/model/network.py:230
 msgid "The IP configuration is no longer valid."
-msgstr ""
+msgstr "آئی پی کی ترتیب اب مزید درست نہیں ہے ۔"
 
 #: ../src/jarabe/model/network.py:232
 msgid "Secrets were required, but not provided."
-msgstr ""
+msgstr "راز کی ضرورت تھی، لیکن فراہم نہیں کی گئی"
 
 #: ../src/jarabe/model/network.py:234
 msgid ""
@@ -2191,139 +2177,140 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:243
 msgid "The PPP service failed to start within the allowed time."
-msgstr ""
+msgstr "پی پی پی سروس اجازت کے وقت کے اندر اندر شروع ہونے میں ناکام رہی۔"
 
 #: ../src/jarabe/model/network.py:245
 msgid "The PPP service disconnected unexpectedly."
-msgstr ""
+msgstr "پی پی پی سروس غیر متوقع طور پر منقطع ہو گئی"
 
 #: ../src/jarabe/model/network.py:247
+#, fuzzy
 msgid "The PPP service quit or failed unexpectedly."
-msgstr ""
+msgstr "پی پی پی سروس ختم یا غیر متوقع طور پر ناکام ہو گئی"
 
 #: ../src/jarabe/model/network.py:249
 msgid "The DHCP service failed to start within the allowed time."
-msgstr ""
+msgstr "ڈی ایچ سی پی سروس اجازت کے وقت کے اندر اندر شروع ہونے میں ناکام رہی۔"
 
 #: ../src/jarabe/model/network.py:251
 msgid "The DHCP service reported an unexpected error."
-msgstr ""
+msgstr "ڈی ایچ سی پی سروس نے غیر متوقع غلطی کی اطلاع دی۔"
 
 #: ../src/jarabe/model/network.py:253
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr ""
+msgstr "ڈی ایچ سی پی سروس بند یا غیر متوقع طور پر ناکام ہوگئ۔"
 
 #: ../src/jarabe/model/network.py:255
 msgid "The shared connection service failed to start."
-msgstr ""
+msgstr "مشترکہ کنکشن سروس شروع کرنے میں ناکام رہا"
 
 #: ../src/jarabe/model/network.py:257
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr ""
+msgstr "مشترکہ کنکشن سروس بند یا غیر متوقع طور پر ناکام ہوگئ۔"
 
 #: ../src/jarabe/model/network.py:260
 msgid "The AutoIP service failed to start."
-msgstr ""
+msgstr "آٹوآئی پی سروس شروع ہونے میں ناکام رہی۔"
 
 #: ../src/jarabe/model/network.py:262
 msgid "The AutoIP service reported an unexpected error."
-msgstr ""
+msgstr "آٹوآئی پی سروس نے غیر متوقع غلطی کی اطلاع دی۔"
 
 #: ../src/jarabe/model/network.py:264
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr ""
+msgstr "آٹوآئی پی سروس بند یا غیر متوقع طور پر ناکام ہوگئ۔"
 
 #: ../src/jarabe/model/network.py:266
 msgid "Dialing failed because the line was busy."
-msgstr ""
+msgstr "ڈائلنگ ناکام ہو گئ کیونکہ لائن مصروف تھی۔"
 
 #: ../src/jarabe/model/network.py:268
 msgid "Dialing failed because there was no dial tone."
-msgstr ""
+msgstr "ڈائلنگ ناکام ہو گئ کیونکہ وہاں کوئی ڈائل ٹون  نہیں تھی۔"
 
 #: ../src/jarabe/model/network.py:270
 msgid "Dialing failed because there was no carrier."
-msgstr ""
+msgstr "ڈائلنگ ناکام ہو گئ کیونکہ وہاں کیریئر نہیں تھا۔"
 
 #: ../src/jarabe/model/network.py:272
 msgid "Dialing timed out."
-msgstr ""
+msgstr "ڈائلنگ ٹائم آؤٹ ہوگیا"
 
 #: ../src/jarabe/model/network.py:274
 msgid "Dialing failed."
-msgstr ""
+msgstr "ڈائلنگ ناکام ہوگیا"
 
 #: ../src/jarabe/model/network.py:276
 msgid "Modem initialization failed."
-msgstr ""
+msgstr "موڈیم کی شروعات ناکام ہوگئی"
 
 #: ../src/jarabe/model/network.py:278
 msgid "Failed to select the specified GSM APN"
-msgstr ""
+msgstr "مخصوص جی ایس ایم اے پی این کو منتخب کرنے میں ناکام"
 
 #: ../src/jarabe/model/network.py:280
 msgid "Not searching for networks."
-msgstr ""
+msgstr "نیٹ ورکوں کی تلاش نہیں ہو رہی۔"
 
 #: ../src/jarabe/model/network.py:282
 msgid "Network registration was denied."
-msgstr ""
+msgstr "نیٹ ورک کا رجسٹریشن رد کر دیا گیا تھا"
 
 #: ../src/jarabe/model/network.py:284
 msgid "Network registration timed out."
-msgstr ""
+msgstr "نیٹ ورک کا رجسٹریشن ختم ہوگیا"
 
 #: ../src/jarabe/model/network.py:286
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "درخواست شدہ جی ایس ایم نیٹ ورک کے ساتھ رجسٹر کرنے میں ناکام"
 
 #: ../src/jarabe/model/network.py:288
 msgid "PIN check failed."
-msgstr ""
+msgstr "پن چیک ناکام ہوگیا۔"
 
 #: ../src/jarabe/model/network.py:290
 msgid "Necessary firmware for the device may be missing."
-msgstr ""
+msgstr "آلہ کے لئے ضروری فرم ویئر لاپتہ ہوسکتا ہے"
 
 #: ../src/jarabe/model/network.py:292
 msgid "The device was removed."
-msgstr ""
+msgstr "آلہ ہٹا دیا گیا تھا"
 
 #: ../src/jarabe/model/network.py:294
 msgid "NetworkManager went to sleep."
-msgstr ""
+msgstr "نیٹ ورک مینجر سو گیا"
 
 #: ../src/jarabe/model/network.py:296
 msgid "The device's active connection was removed or disappeared."
-msgstr ""
+msgstr "آلہ کا فعال کنکشن ہٹایا گیا یا غائب ہو گیا تھا"
 
 #: ../src/jarabe/model/network.py:299
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "ایک صارف یا کلائنٹ نے منقطع کا مطالبہ کیا"
 
 #: ../src/jarabe/model/network.py:301
 msgid "The device's carrier/link changed."
-msgstr ""
+msgstr "آلہ کا کیریئر / لنک تبدیل ہوگیا"
 
 #: ../src/jarabe/model/network.py:303
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "آلہ کا موجودہ کنکشن فرض کیا گیا تھا"
 
 #: ../src/jarabe/model/network.py:305
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "درخواست گزار اب دستیاب ہے۔"
 
 #: ../src/jarabe/model/network.py:307
 msgid "The modem could not be found."
-msgstr ""
+msgstr "موڈیم نہیں مل سکا"
 
 #: ../src/jarabe/model/network.py:309
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "بلوٹوتھ کنکشن ناکام یا اسکا  وقت ختم ہوگیا۔ "
 
 #: ../src/jarabe/model/network.py:311
 msgid "Unused."
-msgstr ""
+msgstr "غیر استعمال شدہ"
 
 #: ../src/jarabe/model/screenshot.py:59 ../src/jarabe/view/viewhelp.py:70
 msgid "Mesh"
@@ -2341,18 +2328,20 @@ msgstr "\"%s\" کے اسکرین شاٹ"
 
 #: ../src/jarabe/view/alerts.py:38 ../src/jarabe/view/alerts.py:48
 msgid "Activity launcher"
-msgstr ""
+msgstr "سرگرمی لانچر"
 
 #: ../src/jarabe/view/alerts.py:39
 #, python-format
 msgid "%s is already running. Please stop %s before launching it again."
-msgstr ""
+msgstr "%s پہلے سے ہی چل رہا ہے ۔ دوبارہ شروع کرنے سے پہلے %s کو روکیں۔"
 
 #: ../src/jarabe/view/alerts.py:49
 msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
 msgstr ""
+"کھلی سرگرمیوں کی تعداد زیادہ سے زیادہ تعداد تک پہنچ گئی ہے. ایک نئ شروع کرنے "
+"سے قبل ایک سرگرمی کو بند کریں"
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
@@ -2371,13 +2360,12 @@ msgid "Restart"
 msgstr "دوبارہ چلائيں"
 
 #: ../src/jarabe/view/buddymenu.py:119
-#, fuzzy
 msgid "Logout"
 msgstr "لاگ آوٹ کریں"
 
 #: ../src/jarabe/view/buddymenu.py:124
 msgid "My Settings"
-msgstr ""
+msgstr "میری ترتیبات"
 
 #: ../src/jarabe/view/buddymenu.py:183
 #, python-format
@@ -2395,41 +2383,39 @@ msgstr "شروع ہو رہا ہے ..."
 
 #: ../src/jarabe/view/palettes.py:63
 msgid "Activity failed to start"
-msgstr ""
+msgstr "سرگرمی شروع کرنے میں ناکام رہی۔"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:105
-#, fuzzy
 msgid "View Source"
 msgstr "نظارہ ماخذ"
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
-msgstr ""
+msgstr "مدد دیکھیں"
 
 #: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
-msgstr ""
+msgstr "نیا شروع کرو"
 
 # خارج کر دیا
 #: ../src/jarabe/view/palettes.py:266
-#, fuzzy
 msgctxt "Volume"
 msgid "Remove"
 msgstr "خارج کر دیا"
 
 #: ../src/jarabe/view/viewhelp.py:304
 msgid "Help Manual"
-msgstr ""
+msgstr "مدد کا کتابچہ۔"
 
 #: ../src/jarabe/view/viewhelp.py:318
 msgid "Social Help"
-msgstr ""
+msgstr "سماجی مدد"
 
 #: ../src/jarabe/view/viewhelp.py:326
 #, python-format
 msgid "Help: %s"
-msgstr ""
+msgstr "مدد : %s"
 
 #: ../src/jarabe/view/viewsource.py:364
 msgid "Instance Source"
@@ -2438,130 +2424,128 @@ msgstr ""
 #: ../src/jarabe/view/viewsource.py:392
 #, python-format
 msgid "Do you want to duplicate %s Activity?"
-msgstr ""
+msgstr "کیا آپ %s سرگرمی کو نقل کرنا چاہتے ہیں؟"
 
 #: ../src/jarabe/view/viewsource.py:394
 msgid "This may take a few minutes"
-msgstr ""
+msgstr "یہ چند منٹ لے سکتا ہے۔"
 
 #: ../src/jarabe/view/viewsource.py:408
 msgid "Duplicating activity..."
-msgstr ""
+msgstr "سرگرمی کی نقل کرتے ہوئے..."
 
 #: ../src/jarabe/view/viewsource.py:447
 msgid "Duplicated"
-msgstr ""
+msgstr "نقل ہو گئ۔"
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
-msgstr ""
+msgstr "سرگرمی کو نقل کیا گیا ہے"
 
 #: ../src/jarabe/view/viewsource.py:462
 msgid "Duplicated activity already exists"
-msgstr ""
+msgstr "نقل شدہ سرگرمی پہلے ہی موجود ہے"
 
 #: ../src/jarabe/view/viewsource.py:463
 msgid "Delete your copy before trying to duplicate the activity again"
-msgstr ""
+msgstr "دوبارہ سرگرمی کو نقل کرنے کی کوشش کرنے سے پہلے اپنی کاپی حذف کریں"
 
 #: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
-msgstr ""
+msgstr "ماخذ"
 
 #: ../src/jarabe/view/viewsource.py:542
 msgid "Activity Bundle Source"
-msgstr ""
+msgstr "سرگرمی بنڈل  کا  ماخذ۔"
 
 #: ../src/jarabe/view/viewsource.py:561
 msgid "Sugar Toolkit Source"
-msgstr ""
+msgstr "شوگر ٹول کٹ کا ماخذ۔"
 
 #: ../src/jarabe/view/viewsource.py:568
-#, python-format
-#, python-format, fuzzy
+#, python-format, python-format
 msgid "View source: %s"
 msgstr "نظارہ ماخذ: %s"
 
 #: ../src/jarabe/view/viewsource.py:569
-#, python-format
-#, python-format, fuzzy
+#, python-format, python-format
 msgid "View source: %r"
 msgstr "نظارہ ماخذ: %r"
 
 #: ../src/jarabe/view/viewsource.py:809
 msgid "Please select a file in the left panel."
-msgstr ""
+msgstr "براہ کرم بائیں پینل میں فائل منتخب کریں"
 
 #: ../extensions/cpsection/backup/__init__.py:22
 msgid "Backup"
-msgstr ""
+msgstr "بیک اپ"
 
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171
 msgid "Please connect a device to continue"
-msgstr ""
+msgstr "براہ کرم جاری رکھنے کیلئے ایک آلہ شامل کریں"
 
 #: ../extensions/cpsection/backup/backends/volume.py:69
 #: ../extensions/cpsection/backup/backends/volume.py:178
 msgid "Select your volume"
-msgstr ""
+msgstr "اپنا حجم منتخب کریں"
 
 #: ../extensions/cpsection/backup/backends/volume.py:78
 msgid "Not enough space in volume"
-msgstr ""
+msgstr "حجم میں کافی جگہ نہیں ہے"
 
 #: ../extensions/cpsection/backup/backends/volume.py:122
 #, python-format
 msgid "Backup from user %s"
-msgstr ""
+msgstr "صارف %s سے بیک اپ"
 
 #: ../extensions/cpsection/backup/backends/volume.py:191
 msgid "No checkpoints found in the device"
-msgstr ""
+msgstr "آلہ میں کوئی چوکی نہیں پا ئی گئی۔"
 
 #: ../extensions/cpsection/backup/backends/volume.py:199
 msgid "Select your checkpoint"
-msgstr ""
+msgstr "اپنے چیک پوائنٹ کا انتخاب کریں"
 
 #: ../extensions/cpsection/backup/backends/volume.py:210
 msgid "Not enough space in disk"
-msgstr ""
+msgstr "ڈسک میں کافی جگہ نہیں ہے"
 
 #: ../extensions/cpsection/backup/backends/volume.py:329
 msgid "Local Device Backup"
-msgstr ""
+msgstr "مقامی ڈیوائس بیک اپ"
 
 #: ../extensions/cpsection/backup/view.py:133
 msgid "Save the contents of your Journal"
-msgstr ""
+msgstr "اپنے جرنل کے مواد کو محفوظ کریں"
 
 #: ../extensions/cpsection/backup/view.py:141
 msgid "Restore the contents of your Journal"
-msgstr ""
+msgstr "اپنے جرنل کے مواد کو بحال کریں"
 
 #: ../extensions/cpsection/backup/view.py:223
 msgid "Please close all the activities, and start again"
-msgstr ""
+msgstr "براہ کرم تمام سرگرمیوں کو بند کریں، اور دوبارہ شروع کریں"
 
 #: ../extensions/cpsection/backup/view.py:229
 msgid "Select where you want create your backup"
-msgstr ""
+msgstr "منتخب کریں کہ آپ اپنا بیک اپ کہاں بنانا چاہتے ہیں"
 
 #: ../extensions/cpsection/backup/view.py:231
 msgid "Select where you want retrieve your restore"
-msgstr ""
+msgstr "منتخب کریں کہ جہاں آپ اپنی بحالی کو دوبارہ حاصل کر نا چا ہتے ہیں۔"
 
 #: ../extensions/cpsection/backup/view.py:271
 msgid "Retry"
-msgstr ""
+msgstr "دوبارہ کوشش کریں"
 
 #: ../extensions/cpsection/backup/view.py:290
 msgid "Starting backup..."
-msgstr ""
+msgstr "بیک اپ شروع کر رہا ہے..."
 
 #: ../extensions/cpsection/backup/view.py:294
 msgid "Starting restore..."
-msgstr ""
+msgstr "بحال کرنا شروع ہو رہا ہے..."
 
 #: ../extensions/cpsection/backup/view.py:321
 msgid ""
@@ -2569,23 +2553,26 @@ msgid ""
 "will first be emptied of all its content; then the restored content will be "
 "added."
 msgstr ""
+"میں اپنی جرنل کے مواد کو بحال کرنا چاہتا ہوں. ایسا کرنے کے لئے، میرے جرنل "
+"سے  سب سے پہلے اس کے تمام مواد کو ختم کر دیا جائے گا ؛ پھر بحال شدہ مواد "
+"شامل کیا جائے گا"
 
 #: ../extensions/cpsection/backup/view.py:327
 msgid "Confirm"
-msgstr ""
+msgstr "تصدیق کریں"
 
 #: ../extensions/cpsection/backup/view.py:365
 msgid "Operation started"
-msgstr ""
+msgstr "آپریشن شروع ہوگیا"
 
 #: ../extensions/cpsection/backup/view.py:377
 msgid "Backup finished successfully"
-msgstr ""
+msgstr "بیک اپ کامیابی سے ختم ہو گیا۔"
 
 #: ../extensions/cpsection/backup/view.py:379
 msgid "Restore realized successfully."
-msgstr ""
+msgstr "بحال ہونے میں کامیابی حاصل ہوئی"
 
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
-msgstr ""
+msgstr "اطلاعات صاف کریں"

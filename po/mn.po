@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-04-09 22:31+0000\n"
+"PO-Revision-Date: 2017-11-07 00:20+0000\n"
 "Last-Translator: anderson861 <anderson861@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: mn\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1491777074.000000\n"
+"X-POOTLE-MTIME: 1510014030.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -95,7 +95,7 @@ msgstr "Хэрэглэгчийн нэр олон байдалд ашиглаж �
 
 #: ../data/org.sugarlabs.gschema.xml.h:19 ../data/sugar.schemas.in.h:3
 msgid "Default nick"
-msgstr ""
+msgstr "Өгөгдмөл хэрэглэгчийн нэр"
 
 #: ../data/org.sugarlabs.gschema.xml.h:20 ../data/sugar.schemas.in.h:4
 msgid ""
@@ -512,7 +512,7 @@ msgstr "Товшиж өнгөө солино уу:"
 #: ../extensions/cpsection/aboutme/view.py:294
 #: ../src/jarabe/intro/window.py:203
 msgid "Select gender:"
-msgstr ""
+msgstr "Хүйс:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
@@ -528,7 +528,7 @@ msgstr "Онцлох шинж"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:87
 msgid "Model:"
-msgstr ""
+msgstr "Модель:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Serial Number:"
@@ -645,7 +645,7 @@ msgstr "Ирмэг"
 
 #: ../extensions/cpsection/frame/view.py:123
 msgid "Size"
-msgstr ""
+msgstr "Хэмжээс"
 
 #: ../extensions/cpsection/frame/view.py:221
 msgid "toolbar size"
@@ -721,7 +721,7 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem"
-msgstr ""
+msgstr "Модем"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
@@ -984,11 +984,11 @@ msgstr ""
 
 #: ../extensions/deviceicon/audio.py:330
 msgid "Speaker"
-msgstr ""
+msgstr "Чанга яригч"
 
 #: ../extensions/deviceicon/audio.py:331
 msgid "Microphone"
-msgstr ""
+msgstr "Микрофон"
 
 #: ../extensions/deviceicon/battery.py:69
 msgid "My Battery"
@@ -1453,7 +1453,6 @@ msgid "Register"
 msgstr "Бүртгүүлэх"
 
 #: ../src/jarabe/desktop/favoritesview.py:682
-#, fuzzy
 msgid "Register again"
 msgstr "Дахиад бүртгүүлэх"
 

@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-05-06 16:56+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"PO-Revision-Date: 2018-02-10 16:02+0000\n"
+"Last-Translator: Besnik_b <besnik@programeshqip.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sq\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1494089793.000000\n"
+"X-POOTLE-MTIME: 1518278544.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -60,7 +60,7 @@ msgstr "Në qoftë TRUE, Sugar do të shfaqë një mundësi \"Fikeni\"."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
-msgstr "Shfaq Regjistër"
+msgstr "Shfaq Regjistrohuni"
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
@@ -76,7 +76,8 @@ msgstr "ID grupesh veprimtarish të mbrojtura"
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
-"Përdoruesi nuk të lejohen t’i fshijnë këto veprimtari përmes pamjes listë."
+"Përdoruesit nuk do të lejohen t’i fshijnë këto veprimtari përmes pamjes "
+"listë."
 
 #: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
 msgid "A limit to the number of simultaneously open activities."
@@ -108,7 +109,7 @@ msgid ""
 "long name."
 msgstr ""
 "\"disabled\" që të kërkohet nofkë gjatë gatitjes; \"system\" që të "
-"ripërdoret emri i gjatë llogarish UNIX."
+"ripërdoret emër i gjatë llogarish UNIX."
 
 #: ../data/org.sugarlabs.gschema.xml.h:21 ../data/sugar.schemas.in.h:5
 msgid "User Color"
@@ -121,7 +122,7 @@ msgid ""
 "Example: #AC32FF,#9A5200"
 msgstr ""
 "Ngjyrë për ikonën XO që përdoret nëpër desktop. Vargu përbëhet nga ngjyra e "
-"penelit dhe ngjra e mbushjes, formati është ai për ngjyrat rgb. Shembull: "
+"penelit dhe ngjyra e mbushjes, formati është ai për ngjyrat rgb. Shembull: "
 "#AC32FF,#9A5200"
 
 #: ../data/org.sugarlabs.gschema.xml.h:23
@@ -134,7 +135,7 @@ msgstr "Gjini e përdoruesit të Sugar-it, mashkull, femër, ose e pacaktuar"
 
 #: ../data/org.sugarlabs.gschema.xml.h:25
 msgid "User Birth Timestamp"
-msgstr "Përdor Vulë kohore Lindjeje"
+msgstr "Vulë kohore Lindjeje Përdoruesi"
 
 #: ../data/org.sugarlabs.gschema.xml.h:26
 msgid "Birth timestamp (seconds since the epoch)"
@@ -146,7 +147,7 @@ msgstr "Etiketë Grupi"
 
 #: ../data/org.sugarlabs.gschema.xml.h:28
 msgid "Label associated with age, e.g., '2nd Grade'"
-msgstr "Etiketë e përshoqëruar me moshën, p.sh., 'Klasa IIe'"
+msgstr "Etiketë e përshoqëruar me moshën, p.sh., 'Klasa II-të'"
 
 #: ../data/org.sugarlabs.gschema.xml.h:29
 msgid "Background image path"
@@ -166,11 +167,11 @@ msgstr "Patejdukshmëria e figurës së sfondit."
 
 #: ../data/org.sugarlabs.gschema.xml.h:33
 msgid "Mimetype registry"
-msgstr "Regjistër llojesh MIMe"
+msgstr "Regjistër llojesh MIME"
 
 #: ../data/org.sugarlabs.gschema.xml.h:34
 msgid "Consists of key-value pairs mimetypes and their corresponding activity"
-msgstr "Përbëhet nga dyshe kyç-vlerë llojesh MIME dhe veprimtarisë përkatëse"
+msgstr "Përbëhet nga dyshe kyç-vlerë llojesh MIME dhe veprimtarish përkatëse"
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
@@ -182,7 +183,7 @@ msgstr "Nivel volumi për pajisjen zanore."
 
 #: ../data/org.sugarlabs.gschema.xml.h:37 ../data/sugar.schemas.in.h:9
 msgid "Sound Muted"
-msgstr "Zëri u Hoq"
+msgstr "Zë i Heshtuar"
 
 #: ../data/org.sugarlabs.gschema.xml.h:38 ../data/sugar.schemas.in.h:10
 msgid "Setting for muting the sound device."
@@ -203,11 +204,11 @@ msgstr "Zonë kohore"
 
 #: ../data/org.sugarlabs.gschema.xml.h:42 ../data/sugar.schemas.in.h:14
 msgid "Timezone setting for the system."
-msgstr "Rregullim Zone Kohore për sistemin."
+msgstr "Rregullim zone kohore për sistemin."
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr ""
+msgstr "Pamje kreu"
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
@@ -223,6 +224,8 @@ msgstr "Interval animacioni nisësi"
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
 msgstr ""
+"Vonesë në milisekonda mes përditësimesh të animacionit për xixëllimin e "
+"ikonës së nisësit."
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
@@ -242,7 +245,7 @@ msgstr "Vonesë aktivizimi kornize duke përdorur cepat."
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr "Madhësi Zone të Ndjeshme"
+msgstr "Madhësi Zone Ndjeshmërie"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
@@ -293,7 +296,7 @@ msgstr "Energji Shumë e Rreptë"
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
-"Administrim shumë i rreptë energjie (çaktivizon radion pa fill, i zgjat "
+"Administrim shumë i rreptë energjie (çaktivizon komunikim pa fill, i zgjat "
 "jetën baterisë)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:63 ../data/sugar.schemas.in.h:39
@@ -348,7 +351,7 @@ msgid ""
 "hoc network."
 msgstr ""
 "Në qoftë TRUE, Sugar do të shfaqë rrjete Ad-hoc për kanalet 1,6 dhe 11. Nëse "
-"Sugar-i nuk sheh rrjete \"të njohur\" kur niset, ai vetëlidhe te një rrjet "
+"Sugar-i nuk sheh rrjete \"të njohur\" kur niset, ai vetëlidhet te një rrjet "
 "Ad-hoc."
 
 #: ../data/org.sugarlabs.gschema.xml.h:75
@@ -374,7 +377,7 @@ msgstr "Fjalëkalim rrjeti GSM (NXJERRË NGA PËRDORIMI/E PAPËRPDORUR)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:80 ../data/sugar.schemas.in.h:52
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr "Formësim fjalëkalim rrjeti GSM (NXJERRË NGA PËRDORIMI/E PAPËRPDORUR)"
+msgstr "Formësim fjalëkalimi rrjeti GSM (NXJERRË NGA PËRDORIMI/E PAPËRPDORUR)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:81 ../data/sugar.schemas.in.h:53
 msgid "GSM network number (DEPRECATED/UNUSED)"
@@ -402,7 +405,7 @@ msgstr "PIN rrjeti GSM (NXJERRË NGA PËRDORIMI/E PAPËRPDORUR)"
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
-"Formësim numri personal identifikimi te rrjet GSM (NXJERRË NGA PËRDORIMI/E "
+"Formësim numri personal identifikimi në rrjet GSM (NXJERRË NGA PËRDORIMI/E "
 "PAPËRPDORUR)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:87 ../data/sugar.schemas.in.h:59
@@ -482,12 +485,12 @@ msgid ""
 "A unix timestamp (seconds since epoch) of the last successful activity "
 "update."
 msgstr ""
-"Vulë kohore në format unix (sekonda që prej epokës) e përditësimit të fundit "
+"Vulë kohore në format Unix (sekonda që prej epokës) e përditësimit të fundit "
 "të suksesshëm të veprimtarisë."
 
 #: ../data/org.sugarlabs.gschema.xml.h:103
 msgid "New ASLO update.json URL."
-msgstr "URL e re ASLO update.json"
+msgstr "URL e re ASLO update.json."
 
 #: ../data/org.sugarlabs.gschema.xml.h:104
 msgid "URL used by the new ASLO updater to download activity data."
@@ -554,7 +557,7 @@ msgstr "Rreth Kompjuterit tim"
 
 #: ../extensions/cpsection/aboutcomputer/model.py:37
 msgid "Not available"
-msgstr "Nuk gjindet"
+msgstr "Jo i passhëm"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:76
 msgid "Identity"
@@ -574,7 +577,7 @@ msgstr "Software"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:112
 msgid "Build:"
-msgstr "Ndërto:"
+msgstr "Montim:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:117
 msgid "Sugar:"
@@ -586,7 +589,7 @@ msgstr "Firmware:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:127
 msgid "Wireless Firmware:"
-msgstr "Firmware Rrjeti pa fill:"
+msgstr "Firmware Rrjeti Pa Fill:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:134
 #, python-format
@@ -614,7 +617,7 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"Sugar-i është ndërfaqja grafike e përdoruesit të cilën jeni duke parë tani. "
+"Sugar-i është ndërfaqja grafike përdoruesi të cilën jeni duke parë tani. "
 "Sugar-i është software i lirë, i mbuluar nga GNU General Public License, dhe "
 "jeni të mirëpritur ta ndryshoni dhe/ose të shpërndani kopje të tij, sipas "
 "disa kushtesh të përshkruara në të."
@@ -670,7 +673,7 @@ msgstr "Zonë Aktivizimi"
 
 #: ../extensions/cpsection/frame/view.py:85
 msgid "Corner"
-msgstr "Qoshe"
+msgstr "Cep"
 
 #: ../extensions/cpsection/frame/view.py:104
 msgid "Edge"
@@ -698,7 +701,7 @@ msgstr "skajin e përpiktë"
 
 #: ../extensions/cpsection/frame/view.py:232
 msgid "ignored"
-msgstr "të shpërfillura"
+msgstr "të shpërfillur"
 
 #. TRANS: px as in pixels
 #: ../extensions/cpsection/frame/view.py:235
@@ -831,7 +834,7 @@ msgstr "Rrjet pa fill"
 
 #: ../extensions/cpsection/network/view.py:73
 msgid "The wireless radio may be turned off to save battery life."
-msgstr "Që të kursehet bateria, radioja pa fill mund të fiket."
+msgstr "Që të kursehet bateria, komunikimi pa fill mund të fiket."
 
 #: ../extensions/cpsection/network/view.py:86
 msgid "Radio"
@@ -856,7 +859,7 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
-"Shërbyesi është i barasvlefshëm me dhomën në të cilën gjendeni; personat në "
+"Shërbyesi është i barasvlershëm me dhomën në të cilën gjendeni; personat në "
 "të njëjtin shërbyes do të jenë në gjendje të shohin njëri-tjetrin, edhe kur "
 "s’gjenden në të njëjtin rrjet."
 
@@ -978,7 +981,7 @@ msgstr "Nga versioni %(current)s te %(new)s (Madhësi: %(size)s)"
 #: ../extensions/cpsection/updater/view.py:406
 #, python-format
 msgid "Version %(version)s (Size: %(size)s)"
-msgstr "Version %(version)s (Size: %(size)s)"
+msgstr "Version %(version)s (Madhësi: %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:423
@@ -1068,7 +1071,7 @@ msgstr "Ndriçim"
 
 #: ../extensions/deviceicon/display.py:239
 msgid "Display"
-msgstr ""
+msgstr "Ekran"
 
 #: ../extensions/deviceicon/frame.py:53
 msgid "Show my keyboard"
@@ -1116,7 +1119,7 @@ msgstr "Kanal"
 #: ../src/jarabe/journal/listmodel.py:191
 #: ../src/jarabe/journal/listmodel.py:199
 msgid "Unknown"
-msgstr "E panjohur"
+msgstr "I panjohur"
 
 #: ../extensions/deviceicon/network.py:156
 msgid "Wired Network"
@@ -1132,7 +1135,7 @@ msgstr "Modem rrjeti pa fill"
 
 #: ../extensions/deviceicon/network.py:278
 msgid "Please wait..."
-msgstr "Ju lutemi, prisni…"
+msgstr "Ju lutemi, pritni…"
 
 #: ../extensions/deviceicon/network.py:282
 #: ../src/jarabe/desktop/networkviews.py:128
@@ -1168,7 +1171,7 @@ msgstr "Gabim: %s"
 #: ../extensions/deviceicon/network.py:334
 #, python-format
 msgid "Suggestion: %s"
-msgstr "Këshillime: %s"
+msgstr "Këshillim: %s"
 
 #: ../extensions/deviceicon/network.py:344
 #, python-format
@@ -1235,7 +1238,7 @@ msgstr "Lartësi note"
 
 #: ../extensions/deviceicon/speech.py:104
 msgid "Rate"
-msgstr ""
+msgstr "Shpejtësi"
 
 #: ../extensions/deviceicon/speech.py:142
 msgid "Pause playback"
@@ -1247,7 +1250,7 @@ msgstr "gisht"
 
 #: ../extensions/deviceicon/touchpad.py:36
 msgid "stylus"
-msgstr ""
+msgstr "penë"
 
 #: ../extensions/deviceicon/touchpad.py:61
 msgid "My touchpad"
@@ -1263,18 +1266,18 @@ msgstr "Skema të Parapëlqyera"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Layout of the favorites view."
-msgstr "Skemë për pamjen e të parapëlqyerave"
+msgstr "Skemë për pamjen e të parapëlqyerave."
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Favorites resume mode"
-msgstr ""
+msgstr "Mënyra rimarrje e të parapëlqyerve"
 
 #: ../data/sugar.schemas.in.h:18
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
-"Nën mënyrën rimerr, klikimi mbi një ikonë të parapëlqyere do të bëjë "
+"Nën mënyrën rimarrje, klikimi mbi një ikonë të parapëlqyere do të bëjë "
 "rimarrjen e zërit të fundit për atë veprimtari."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
@@ -1289,7 +1292,7 @@ msgstr ""
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr "sugar-control-panel: key=%s s’është mundësi e përdorshme"
+msgstr "sugar-control-panel: key=%s s’është mundësi e passhme"
 
 #: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
@@ -1327,8 +1330,8 @@ msgid ""
 "To apply your changes you have to restart Sugar.\n"
 "Hit ctrl+alt+erase on the keyboard to trigger a restart."
 msgstr ""
-"Që të zbatoni ndryshimet tuaja, duhet të rinisni Sugar-in.\n"
-"Shtypni në tastierë Ctrl+Alt+Delete që të bëni rinisjen."
+"Që ndryshimet tuaja të zbatohen, duhet të rinisni Sugar-in.\n"
+"Shtypni në tastierë Ctrl+Alt+Delete që të bëhet një rinisje."
 
 #: ../src/jarabe/controlpanel/gui.py:373 ../src/jarabe/journal/palettes.py:194
 #: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
@@ -1422,7 +1425,7 @@ msgstr "Fshije"
 
 #: ../src/jarabe/desktop/activitieslist.py:641
 msgid "Remove favorite"
-msgstr "Fshije favoritin"
+msgstr "Fshije të parapëlqyerin"
 
 #: ../src/jarabe/desktop/activitieslist.py:645
 msgid "Make favorite"
@@ -1459,7 +1462,7 @@ msgstr "Regjistrim"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
-msgstr "Ju lutemi, prisni, po kërkohet për shërbyesin e shkollës suaj."
+msgstr "Ju lutemi, pritni, po kërkohet për shërbyesin e shkollës suaj."
 
 #: ../src/jarabe/desktop/favoritesview.py:387
 msgid "Registration Failed"
@@ -1467,7 +1470,7 @@ msgstr "Regjistrimi Dështoi"
 
 #: ../src/jarabe/desktop/favoritesview.py:390
 msgid "Registration Successful"
-msgstr "Regjistrimi u krye me Sukses"
+msgstr "Regjistrimi u Bë Me Sukses"
 
 #: ../src/jarabe/desktop/favoritesview.py:391
 msgid "You are now registered with your school server."
@@ -1479,7 +1482,7 @@ msgstr "Regjistrohuni"
 
 #: ../src/jarabe/desktop/favoritesview.py:682
 msgid "Register again"
-msgstr "Regjistrohuni sërish"
+msgstr "Ri-regjistrohuni"
 
 #: ../src/jarabe/desktop/homewindow.py:255
 #: ../src/jarabe/desktop/viewtoolbar.py:73
@@ -1522,7 +1525,7 @@ msgstr "WPA & WPA2 Personal"
 
 #: ../src/jarabe/desktop/keydialog.py:233
 msgid "Wireless Security:"
-msgstr "Siguri rrjeti pa fill:"
+msgstr "Siguri Rrjeti Pa Fill:"
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
@@ -1826,7 +1829,7 @@ msgstr "Kopjoje te"
 #: ../src/jarabe/journal/journaltoolbox.py:529
 #: ../src/jarabe/journal/palettes.py:116 ../src/jarabe/view/viewsource.py:379
 msgid "Duplicate"
-msgstr ""
+msgstr "Përsëdyte"
 
 #: ../src/jarabe/journal/journaltoolbox.py:535
 msgid "Refresh"
@@ -1858,7 +1861,7 @@ msgstr "Pa zë veprimtarie për t’u nisur"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 msgid "Sort view"
-msgstr ""
+msgstr "Pamje renditje"
 
 #: ../src/jarabe/journal/journaltoolbox.py:711
 msgid "Sort by date modified"
@@ -1926,7 +1929,7 @@ msgstr "Versione Më të Vjetër të Veprimtarisë %s"
 #: ../src/jarabe/journal/misc.py:314
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr "Doni të prapaktheheni te versioni %s?"
+msgstr "Doni të prapakthehet te versioni %s"
 
 #: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
@@ -1974,7 +1977,7 @@ msgstr "Shihni Hollësitë"
 
 #: ../src/jarabe/journal/palettes.py:193
 msgid "Entries without a file cannot be sent."
-msgstr "Zërat pa një kartela s’mund të dërgohen."
+msgstr "S’mund të dërgohen zëra pa një kartelë."
 
 #: ../src/jarabe/journal/palettes.py:272
 #: ../src/jarabe/journal/volumestoolbar.py:214
@@ -1984,7 +1987,7 @@ msgstr "Dokumente"
 #: ../src/jarabe/journal/palettes.py:363 ../src/jarabe/journal/palettes.py:423
 #: ../src/jarabe/journal/volumestoolbar.py:303
 msgid "Entries without a file cannot be copied."
-msgstr "Zërat pa një kartela s’mund të kopjohen."
+msgstr "S’mund të kopjohen zëra pa një kartelë."
 
 #: ../src/jarabe/journal/palettes.py:383
 #, python-format
@@ -2038,7 +2041,7 @@ msgstr "Shfaq favoritët %d"
 
 #: ../src/jarabe/model/network.py:217
 msgid "The reason for the device state change is unknown."
-msgstr "Arsyeja për ndryshimin e gjendjes së pajisje është e panjohur."
+msgstr "Arsyeja për ndryshimin e gjendjes së pajisjes është e panjohur."
 
 #: ../src/jarabe/model/network.py:219
 msgid "The state change is normal."
@@ -2074,7 +2077,7 @@ msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
-"Lutësi 802.1X u shkëput prej pikës së hyrjeve ose preh shërbyesit të "
+"Lutësi 802.1X u shkëput prej pikës së hyrjeve ose prej shërbyesit të "
 "mirëfilltësimeve."
 
 #: ../src/jarabe/model/network.py:237
@@ -2091,7 +2094,7 @@ msgstr "Lutësi 802.1X e zgjati shumë mirëfilltësimin."
 
 #: ../src/jarabe/model/network.py:243
 msgid "The PPP service failed to start within the allowed time."
-msgstr "Dështoi nisja brenda kohës së lejuar e shërbimit PPP."
+msgstr "Dështoi nisja e shërbimit PPP brenda kohës së lejuar."
 
 #: ../src/jarabe/model/network.py:245
 msgid "The PPP service disconnected unexpectedly."
@@ -2103,7 +2106,7 @@ msgstr "Shërbimi PPP u mbyll ose dështoi papritmas."
 
 #: ../src/jarabe/model/network.py:249
 msgid "The DHCP service failed to start within the allowed time."
-msgstr "Dështoi nisja brenda kohës së lejuar e shërbyesit DHCP."
+msgstr "Dështoi nisja e shërbyesit DHCP brenda kohës së lejuar."
 
 #: ../src/jarabe/model/network.py:251
 msgid "The DHCP service reported an unexpected error."
@@ -2216,11 +2219,11 @@ msgstr "Lutësi tani është i gatshëm."
 
 #: ../src/jarabe/model/network.py:307
 msgid "The modem could not be found."
-msgstr "Modemi s’gjet dot."
+msgstr "S’u gjet dot modemi."
 
 #: ../src/jarabe/model/network.py:309
 msgid "The Bluetooth connection failed or timed out."
-msgstr "Lidhja përmes Bluetooth dështoi ose i mbaroi koha."
+msgstr "Lidhja përmes Bluetooth-it dështoi ose i mbaroi koha."
 
 #: ../src/jarabe/model/network.py:311
 msgid "Unused."
@@ -2258,7 +2261,7 @@ msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
-msgstr "Hiqe si shok"
+msgstr "Hiqeni si shok"
 
 #: ../src/jarabe/view/buddymenu.py:76
 msgid "Make friend"
@@ -2336,7 +2339,7 @@ msgstr "Burim Instance"
 #: ../src/jarabe/view/viewsource.py:392
 #, python-format
 msgid "Do you want to duplicate %s Activity?"
-msgstr "Doni të krijoni një tjetër kopje të Veprimtarisë %s?"
+msgstr "Doni të përsëdytet Veprimtaria %s?"
 
 #: ../src/jarabe/view/viewsource.py:394
 msgid "This may take a few minutes"
@@ -2348,11 +2351,11 @@ msgstr "Po përsëdytet veprimtari…"
 
 #: ../src/jarabe/view/viewsource.py:447
 msgid "Duplicated"
-msgstr "E përsëdytur"
+msgstr "U përsëdyt"
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
-msgstr "Veprimtaria u përsëdyt."
+msgstr "Veprimtaria u përsëdyt"
 
 #: ../src/jarabe/view/viewsource.py:462
 msgid "Duplicated activity already exists"
@@ -2401,7 +2404,7 @@ msgstr "Ju lutemi, lidhni një pajisje që të vazhdohet"
 #: ../extensions/cpsection/backup/backends/volume.py:69
 #: ../extensions/cpsection/backup/backends/volume.py:178
 msgid "Select your volume"
-msgstr "Përzgjidhni volumin tuaj"
+msgstr "Përzgjidhni vëllimin tuaj"
 
 #: ../extensions/cpsection/backup/backends/volume.py:78
 msgid "Not enough space in volume"
@@ -2430,7 +2433,7 @@ msgstr "Kopjeruajtje Në Pajisje Vendore"
 
 #: ../extensions/cpsection/backup/view.py:133
 msgid "Save the contents of your Journal"
-msgstr "Ruaje lëndën te Ditari juaj"
+msgstr "Ruajeni lëndën te Ditari juaj"
 
 #: ../extensions/cpsection/backup/view.py:141
 msgid "Restore the contents of your Journal"

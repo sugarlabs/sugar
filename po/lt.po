@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-10-29 22:09+0000\n"
-"Last-Translator: Moo <hazap@hotmail.com>\n"
+"PO-Revision-Date: 2017-11-07 05:06+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "(n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1509314990.000000\n"
+"X-POOTLE-MTIME: 1510031175.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -61,30 +61,32 @@ msgstr "Jei TEIGIAMA, Sugar rodys parinktį \"Išjungti\"."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
-msgstr ""
+msgstr "Rodyti \"Registruotis\""
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
-msgstr ""
+msgstr "Jei TEIGIAMA, Sugar bičiulio paletėje rodys parinktį \"Registruotis\"."
 
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
 msgid "Bundle IDs of protected activities"
-msgstr ""
+msgstr "Apsaugotų veiklų rinkinio ID"
 
 #: ../data/org.sugarlabs.gschema.xml.h:14 ../data/sugar.schemas.in.h:64
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
-msgstr ""
+msgstr "Naudotojams nebus leidžiama ištrinti šių veiklų per sąrašo rodinį."
 
 #: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
 msgid "A limit to the number of simultaneously open activities."
-msgstr ""
+msgstr "Vienu metu atvertų veiklų skaičiaus riba."
 
 #: ../data/org.sugarlabs.gschema.xml.h:16 ../data/sugar.schemas.in.h:80
 msgid ""
 "This int is used to set a limit to the number of open activities. By default "
 "(0), there is no limit."
 msgstr ""
+"Šis sveikasis skaičius yra naudojamas atvertų veiklų skaičiaus ribai "
+"nustatyti. Pagal numatymą (0), nėra jokios ribos."
 
 #: ../data/org.sugarlabs.gschema.xml.h:17 ../data/sugar.schemas.in.h:1
 msgid "User Name"
@@ -116,6 +118,9 @@ msgid ""
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
+"Darbalaukyje naudojamos XO piktogramos spalva. Eilutė yra sudaryta iš "
+"brūkšnio ir užpildo spalvos, formatas yra toks pats kaip rgb spalvų. "
+"Pavyzdys: #AC32FF,#9A5200"
 
 #: ../data/org.sugarlabs.gschema.xml.h:23
 msgid "User Gender"
@@ -123,15 +128,15 @@ msgstr "Naudotojo lytis"
 
 #: ../data/org.sugarlabs.gschema.xml.h:24
 msgid "Gender of the Sugar user, either male, female, or unassigned"
-msgstr ""
+msgstr "Sugar naudotojo lytis, arba berniukas, arba mergaitė, arba nepriskirta"
 
 #: ../data/org.sugarlabs.gschema.xml.h:25
 msgid "User Birth Timestamp"
-msgstr ""
+msgstr "Naudotojo gimimo laiko žyma"
 
 #: ../data/org.sugarlabs.gschema.xml.h:26
 msgid "Birth timestamp (seconds since the epoch)"
-msgstr ""
+msgstr "Gimimo laiko žyma (sekundėmis nuo epochos pradžios)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:27
 msgid "Group Label"
@@ -143,11 +148,11 @@ msgstr "Su amžiumi susieta etiketė, pvz., \"2 klasė\""
 
 #: ../data/org.sugarlabs.gschema.xml.h:29
 msgid "Background image path"
-msgstr "Foninio paveikslėlio kelias"
+msgstr "Foninio paveikslo kelias"
 
 #: ../data/org.sugarlabs.gschema.xml.h:30
 msgid "Path to the image to be used as a background."
-msgstr "Kelias į paveikslėlį, kuris bus naudojamas kaip fonas."
+msgstr "Kelias į paveikslą, kuris bus naudojamas kaip fonas."
 
 #: ../data/org.sugarlabs.gschema.xml.h:31
 msgid "Background alpha level"
@@ -155,7 +160,7 @@ msgstr "Fono alfa lygis"
 
 #: ../data/org.sugarlabs.gschema.xml.h:32
 msgid "The opacity of the background image."
-msgstr "Foninio paveikslėlio nepermatomumas."
+msgstr "Foninio paveikslo nepermatomumas."
 
 #: ../data/org.sugarlabs.gschema.xml.h:33
 msgid "Mimetype registry"
@@ -163,7 +168,7 @@ msgstr "MIME tipų registras"
 
 #: ../data/org.sugarlabs.gschema.xml.h:34
 msgid "Consists of key-value pairs mimetypes and their corresponding activity"
-msgstr ""
+msgstr "Sudaryta iš rakto reikšmės porų mime tipų ir jų atitinkamos veiklos"
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
@@ -200,12 +205,14 @@ msgstr "Sistemos laiko juostos nustatymas."
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr ""
+msgstr "Namų rodiniai"
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
 "List of home views, including the view icon, the favorite icon and the layout"
 msgstr ""
+"Pradžios rodinių sąrašas, įskaitant rodinio piktogramą, mėgstamų piktogramą "
+"ir išdėstymą"
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
@@ -215,6 +222,8 @@ msgstr "Leistuko animacijos intervalas"
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
 msgstr ""
+"Delsa milisekundėmis tarp leistuko pulsavimo piktogramos animacijos "
+"atnaujinimų."
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
@@ -222,7 +231,7 @@ msgstr "Krašto delsa"
 
 #: ../data/org.sugarlabs.gschema.xml.h:48 ../data/sugar.schemas.in.h:20
 msgid "Delay for the activation of the frame using the edges."
-msgstr ""
+msgstr "Rėmelio aktyvavimo, naudojant kraštus, delsa."
 
 #: ../data/org.sugarlabs.gschema.xml.h:49 ../data/sugar.schemas.in.h:21
 msgid "Corner Delay"
@@ -230,15 +239,15 @@ msgstr "Kampo delsa"
 
 #: ../data/org.sugarlabs.gschema.xml.h:50 ../data/sugar.schemas.in.h:22
 msgid "Delay for the activation of the frame using the corners."
-msgstr "Rėmelio aktyvavimo delsa, naudojant kampus."
+msgstr "Rėmelio aktyvavimo, naudojant kampus, delsa."
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr ""
+msgstr "Paleidiklio dydis"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
-msgstr ""
+msgstr "Rėmelio paleidiklio srities dydis, pikseliais nuo kampo/krašto."
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
@@ -250,39 +259,42 @@ msgstr "Naudojamo jabber serverio URL."
 
 #: ../data/org.sugarlabs.gschema.xml.h:55 ../data/sugar.schemas.in.h:29
 msgid "Publish to Gadget"
-msgstr ""
+msgstr "Paskelbti į Gadget"
 
 #: ../data/org.sugarlabs.gschema.xml.h:56 ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
+"Jei TEIGIAMA, Sugar padarys mus randamus kitiems Jabber serverio naudotojams."
 
 #: ../data/org.sugarlabs.gschema.xml.h:57
 msgid "Social Help Server"
-msgstr ""
+msgstr "Socialinės pagalbos serveris"
 
 #: ../data/org.sugarlabs.gschema.xml.h:58
 msgid "URL of the social help server to use with protocol."
-msgstr ""
+msgstr "Naudojamo socialinės pagalbos serverio URL kartu su protokolu."
 
 #: ../data/org.sugarlabs.gschema.xml.h:59 ../data/sugar.schemas.in.h:25
 msgid "Power Automatic"
-msgstr ""
+msgstr "Energija automatiškai"
 
 #: ../data/org.sugarlabs.gschema.xml.h:60
 #: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:26
 msgid "Automatic power management (increases battery life)"
-msgstr ""
+msgstr "Automatinis energijos valdymas (padidina baterijos laiką)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:61 ../data/sugar.schemas.in.h:27
 msgid "Power Extreme"
-msgstr ""
+msgstr "Energija ekstremaliai"
 
 #: ../data/org.sugarlabs.gschema.xml.h:62 ../data/sugar.schemas.in.h:28
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
+"Ekstremalus energijos valdymas (išjungia belaidį radiją, padidina baterijos "
+"laiką)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:63 ../data/sugar.schemas.in.h:39
 msgid "Keyboard layouts"
@@ -317,7 +329,7 @@ msgstr "Numatytasis šriftas"
 
 #: ../data/org.sugarlabs.gschema.xml.h:70 ../data/sugar.schemas.in.h:46
 msgid "Font face that is used throughout the desktop."
-msgstr "Šriftas, kuris bus naudojamas visame darbalaukį."
+msgstr "Šriftas, kuris bus naudojamas visame darbalaukyje."
 
 #: ../data/org.sugarlabs.gschema.xml.h:71 ../data/sugar.schemas.in.h:47
 msgid "Default font size"
@@ -329,7 +341,7 @@ msgstr "Šrifto dydis, kuris bus naudojamas visame darbalaukyje."
 
 #: ../data/org.sugarlabs.gschema.xml.h:73 ../data/sugar.schemas.in.h:61
 msgid "Show Sugar Ad-hoc networks"
-msgstr ""
+msgstr "Rodyti Sugar laikinuosius tinklus"
 
 #: ../data/org.sugarlabs.gschema.xml.h:74 ../data/sugar.schemas.in.h:62
 msgid ""
@@ -337,14 +349,17 @@ msgid ""
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
+"Jei TEIGIAMA, Sugar rodys numatytuosius laikinuosius tinklus, kanalams 1,6 "
+"ir 11. Jeigu paleidimo metu Sugar nematys jokio \"žinomo\" tinklo, tuomet ji "
+"automatiškai prisijungs prie laikinojo tinklo."
 
 #: ../data/org.sugarlabs.gschema.xml.h:75
 msgid "Enable Ad-hoc autoconnect"
-msgstr ""
+msgstr "Įjungti automatinį prisijungimą prie laikinųjų tinklų"
 
 #: ../data/org.sugarlabs.gschema.xml.h:76
 msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
-msgstr ""
+msgstr "Jei TEIGIAMA, Sugar automatiškai jungsis prie laikinųjų tinklų."
 
 #: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
 msgid "GSM network username (DEPRECATED/UNUSED)"
@@ -401,46 +416,50 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:89
 msgid "TODO: add summary"
-msgstr ""
+msgstr "ATLIKTI: pridėti santrauką"
 
 #: ../data/org.sugarlabs.gschema.xml.h:90
 msgid "TODO: add description"
-msgstr ""
+msgstr "ATLIKTI: pridėti aprašą"
 
 #: ../data/org.sugarlabs.gschema.xml.h:91 ../data/sugar.schemas.in.h:65
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "Tono reikšmė, skirta Sugar šnekos tarnybai"
 
 #: ../data/org.sugarlabs.gschema.xml.h:92 ../data/sugar.schemas.in.h:66
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "Sugar šnekos tarnybos naudojama tono reikšmė"
 
 #: ../data/org.sugarlabs.gschema.xml.h:93 ../data/sugar.schemas.in.h:67
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Greičio reikšmė, skirta Sugar šnekos tarnybai"
 
 #: ../data/org.sugarlabs.gschema.xml.h:94 ../data/sugar.schemas.in.h:68
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "Sugar šnekos tarnybos naudojama greičio reikšmė"
 
 #: ../data/org.sugarlabs.gschema.xml.h:95 ../data/sugar.schemas.in.h:69
 msgid "Activity update backend."
-msgstr ""
+msgstr "Veiklos atnaujinimo vidinė pusė."
 
 #: ../data/org.sugarlabs.gschema.xml.h:96 ../data/sugar.schemas.in.h:70
 msgid ""
 "Activity update backend module, followed by a period, followed by the class "
 "name."
 msgstr ""
+"Veiklos atnaujinimo vidinės pusės modulis po kurio seka taškas, o po jo, "
+"klasės pavadinimas."
 
 #: ../data/org.sugarlabs.gschema.xml.h:97 ../data/sugar.schemas.in.h:71
 msgid "Microformat update URL."
-msgstr ""
+msgstr "Mikroformato atnaujinimo URL."
 
 #: ../data/org.sugarlabs.gschema.xml.h:98 ../data/sugar.schemas.in.h:72
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
+"Mikroformato atnaujinimo vidinės pusės naudojamas URL, skirtas veiklos "
+"atnaujinimo informacijai."
 
 #: ../data/org.sugarlabs.gschema.xml.h:99 ../data/sugar.schemas.in.h:73
 msgid "Automatic update frequency."
@@ -455,25 +474,29 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:101 ../data/sugar.schemas.in.h:75
 msgid "Timestamp of last activity update."
-msgstr ""
+msgstr "Paskutinio veiklos atnaujinimo laiko žyma."
 
 #: ../data/org.sugarlabs.gschema.xml.h:102 ../data/sugar.schemas.in.h:76
 msgid ""
 "A unix timestamp (seconds since epoch) of the last successful activity "
 "update."
 msgstr ""
+"Paskutinio sėkmingo veiklos atnaujinimo unix laiko žyma (sekundėmis nuo "
+"epochos pradžios)."
 
 #: ../data/org.sugarlabs.gschema.xml.h:103
 msgid "New ASLO update.json URL."
-msgstr ""
+msgstr "Naujo ASLO update.json URL."
 
 #: ../data/org.sugarlabs.gschema.xml.h:104
 msgid "URL used by the new ASLO updater to download activity data."
 msgstr ""
+"Naujos ASLO atnaujinimo programos naudojamas URL, skirtas atsisiųsti veiklos "
+"duomenis."
 
 #: ../data/org.sugarlabs.gschema.xml.h:105 ../data/sugar.schemas.in.h:77
 msgid "A description of the hardware available to the user."
-msgstr "Naudotojui prieinamos apratinės įrangos aprašas."
+msgstr "Naudotojui prieinamos aparatinės įrangos aprašas."
 
 #: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
@@ -490,22 +513,22 @@ msgstr "Privalote įrašyti vardą."
 #: ../extensions/cpsection/aboutme/model.py:83
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr ""
+msgstr "brūkšnys:   spalva=%s atspalvis=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:86
 #, python-format
 msgid "stroke:   %s"
-msgstr ""
+msgstr "brūkšnys:   %s"
 
 #: ../extensions/cpsection/aboutme/model.py:88
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr ""
+msgstr "užpildas:     spalva=%s atspalvis=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:90
 #, python-format
 msgid "fill:     %s"
-msgstr ""
+msgstr "užpildas:     %s"
 
 #: ../extensions/cpsection/aboutme/model.py:102
 msgid "Error in specified color modifiers."
@@ -517,7 +540,7 @@ msgstr "Klaida nurodytose spalvose."
 
 #: ../extensions/cpsection/aboutme/view.py:243
 msgid "Click to change your color:"
-msgstr "Spustelėkite, kad pakeistumėte spalvą:"
+msgstr "Spustelėkite, norėdami pakeisti spalvą:"
 
 #: ../extensions/cpsection/aboutme/view.py:294
 #: ../src/jarabe/intro/window.py:203
@@ -562,7 +585,7 @@ msgstr "Programinė aparatinė įranga:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:127
 msgid "Wireless Firmware:"
-msgstr "Bevielė programinė aparatinė įranga:"
+msgstr "Belaidė programinė aparatinė įranga:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:134
 #, python-format
@@ -597,7 +620,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:181
 msgid "Full license:"
-msgstr "Pilna licencija:"
+msgstr "Visa licencija:"
 
 #: ../extensions/cpsection/background/__init__.py:21
 msgid "Background"
@@ -605,7 +628,7 @@ msgstr "Fonas"
 
 #: ../extensions/cpsection/background/view.py:48
 msgid "Select a background:"
-msgstr ""
+msgstr "Pasirinkite foną:"
 
 #: ../extensions/cpsection/background/view.py:57
 msgid "Clear background"
@@ -621,7 +644,7 @@ msgstr "Klaida: laiko juostos nėra."
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
-msgstr ""
+msgstr "Rėmelis"
 
 #: ../extensions/cpsection/frame/view.py:26
 msgid "never"
@@ -629,7 +652,7 @@ msgstr "niekada"
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "instantaneous"
-msgstr ""
+msgstr "akimirksniu"
 
 #: ../extensions/cpsection/frame/view.py:28
 #, python-format
@@ -650,7 +673,7 @@ msgstr "Kampas"
 
 #: ../extensions/cpsection/frame/view.py:104
 msgid "Edge"
-msgstr ""
+msgstr "Kraštas"
 
 #: ../extensions/cpsection/frame/view.py:123
 msgid "Size"
@@ -662,24 +685,24 @@ msgstr "įrankių juostos dydis"
 
 #: ../extensions/cpsection/frame/view.py:226
 msgid "exact corner or edge"
-msgstr ""
+msgstr "tiksliai kampas ar kraštas"
 
 #: ../extensions/cpsection/frame/view.py:228
 msgid "exact corner"
-msgstr ""
+msgstr "tiksliai kampas"
 
 #: ../extensions/cpsection/frame/view.py:230
 msgid "exact edge"
-msgstr ""
+msgstr "tiksliai kraštas"
 
 #: ../extensions/cpsection/frame/view.py:232
 msgid "ignored"
-msgstr ""
+msgstr "nepaisoma"
 
 #. TRANS: px as in pixels
 #: ../extensions/cpsection/frame/view.py:235
 msgid "{}px"
-msgstr ""
+msgstr "{}piks."
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:38
@@ -705,17 +728,18 @@ msgstr "Kalba"
 
 #: ../extensions/cpsection/language/model.py:29
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "Nepavyko pasiekti ~/.i18n. Sukurkite standartinius nustatymus."
+msgstr ""
+"Nepavyko gauti prieigos prie ~/.i18n. Sukurkite standartinius nustatymus."
 
 #: ../extensions/cpsection/language/model.py:156
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr ""
+msgstr "Nepavyko nustatyti kodui=%s skirtos kalbos."
 
 #: ../extensions/cpsection/language/model.py:179
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "Atleiskite, aš nekalbu '%s' kalba."
+msgstr "Atleiskite, aš nekalbu \"%s\" kalba."
 
 #: ../extensions/cpsection/language/view.py:75
 msgid ""
@@ -777,7 +801,7 @@ msgstr "Asmens tapatybės numeris (PIN):"
 #: ../extensions/cpsection/modemconfiguration/model.py:162
 #, python-format
 msgid "Plan #%s"
-msgstr ""
+msgstr "Planas #%s"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:292
 #, python-format
@@ -795,36 +819,36 @@ msgstr "Būsena nežinoma."
 
 #: ../extensions/cpsection/network/model.py:104
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "Klaida nurodytame akutės argumente, naudokite įjungti/išjungti."
 
 #: ../extensions/cpsection/network/model.py:197
 msgid "Error in specified argument use 0/1."
-msgstr ""
+msgstr "Klaida nurodytame argumente 0/1."
 
 #: ../extensions/cpsection/network/view.py:65
 msgid "Wireless"
-msgstr ""
+msgstr "Belaidis"
 
 #: ../extensions/cpsection/network/view.py:73
 msgid "The wireless radio may be turned off to save battery life."
-msgstr ""
+msgstr "Norint taupyti baterijos laiką, gali būti išjungtas belaidis radijas."
 
 #: ../extensions/cpsection/network/view.py:86
 msgid "Radio"
-msgstr ""
+msgstr "Radijas"
 
 #: ../extensions/cpsection/network/view.py:103
 msgid ""
 "Discard wireless connections if you have trouble connecting to the network"
-msgstr ""
+msgstr "Jei jungiantis prie tinklo turite problemų, atmeskite belaidžius ryšius"
 
 #: ../extensions/cpsection/network/view.py:113
 msgid "Discard wireless connections"
-msgstr ""
+msgstr "Atmesti belaidžius ryšius"
 
 #: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
-msgstr ""
+msgstr "Bendradarbiavimas"
 
 #: ../extensions/cpsection/network/view.py:137
 msgid ""
@@ -832,6 +856,8 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
+"Serveris yra lygiavertis tam, kuriame kambaryje esate; žmonės tame pačiame "
+"serveryje galės matyti vieni kitus, net jeigu jie nėra tame pačiame tinkle."
 
 #: ../extensions/cpsection/network/view.py:147
 msgid "Server:"
@@ -843,22 +869,26 @@ msgid ""
 "Sugar Activities.  Changing servers means discussions will happen in a "
 "different place with different people."
 msgstr ""
+"Socialinė pagalba yra forumas, leidžiantis jums susisiekti su kūrėjais ir "
+"diskutuoti apie Sugar veiklas.  Serverių pakeitimas reiškia, kad diskusijos "
+"vyks skirtingose vietose, su skirtingais žmonėmis."
 
 #: ../extensions/cpsection/network/view.py:173
 msgid "Social Help Server:"
-msgstr ""
+msgstr "Socialinės pagalbos serveris:"
 
 #: ../extensions/cpsection/power/__init__.py:24
 msgid "Power"
-msgstr ""
+msgstr "Energija"
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
 msgstr ""
+"Klaida automatinio energijos valdymo argumente, naudokite įjungti/išjungti."
 
 #: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
-msgstr ""
+msgstr "Energijos valdymas"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software Update"
@@ -911,13 +941,13 @@ msgstr "Jūsų programinė įranga yra naujausia"
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] "Jūs galite įdiegti %s atnaujinimą"
-msgstr[1] "Jūs galite įdiegti %s atnaujinimus"
-msgstr[2] "Jūs galite įdiegti %s atnaujinimų"
+msgstr[0] "Galite įdiegti %s atnaujinimą"
+msgstr[1] "Galite įdiegti %s atnaujinimus"
+msgstr[2] "Galite įdiegti %s atnaujinimų"
 
 #: ../extensions/cpsection/updater/view.py:183
 msgid "Can't connect to the activity server"
-msgstr ""
+msgstr "Nepavyksta prisijungti prie veiklos serverio"
 
 #: ../extensions/cpsection/updater/view.py:186
 msgid "Verify your connection to internet and try again, or try again later"
@@ -935,7 +965,7 @@ msgstr[2] "Buvo įdiegta %s atnaujinimų"
 
 #: ../extensions/cpsection/updater/view.py:288
 msgid "Install selected"
-msgstr ""
+msgstr "Įdiegti pažymėtus"
 
 #: ../extensions/cpsection/updater/view.py:307
 #, python-format
@@ -976,7 +1006,7 @@ msgstr "%.1f MB"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Web Services"
-msgstr ""
+msgstr "Saityno paslaugos"
 
 #: ../extensions/cpsection/webaccount/view.py:65
 #, python-format
@@ -984,10 +1014,12 @@ msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
 msgstr ""
+"Nėra įdiegta jokių saityno paslaugų.\n"
+"Išsamesnei informacijai, apsilankykite %s."
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
-msgstr ""
+msgstr "Mano garsas"
 
 #: ../extensions/deviceicon/audio.py:330
 msgid "Speaker"
@@ -999,7 +1031,7 @@ msgstr "Mikrofonas"
 
 #: ../extensions/deviceicon/battery.py:69
 msgid "My Battery"
-msgstr ""
+msgstr "Mano baterija"
 
 #: ../extensions/deviceicon/battery.py:151
 msgid "Removed"
@@ -1038,7 +1070,7 @@ msgstr "Ryškumas"
 
 #: ../extensions/deviceicon/display.py:239
 msgid "Display"
-msgstr ""
+msgstr "Ekranas"
 
 #: ../extensions/deviceicon/frame.py:53
 msgid "Show my keyboard"
@@ -1074,7 +1106,7 @@ msgstr "Prisijungta"
 
 #: ../extensions/deviceicon/network.py:123
 msgid "No wireless connection"
-msgstr ""
+msgstr "Nėra belaidžio ryšio"
 
 #: ../extensions/deviceicon/network.py:137
 #: ../extensions/deviceicon/network.py:140
@@ -1098,7 +1130,7 @@ msgstr "Sparta"
 
 #: ../extensions/deviceicon/network.py:209
 msgid "Wireless modem"
-msgstr "Bevielis modemas"
+msgstr "Belaidis modemas"
 
 #: ../extensions/deviceicon/network.py:278
 msgid "Please wait..."
@@ -1128,7 +1160,7 @@ msgstr "Atsisakyti"
 
 #: ../extensions/deviceicon/network.py:327
 msgid "Try connection again"
-msgstr ""
+msgstr "Bandyti ryšį dar kartą"
 
 #: ../extensions/deviceicon/network.py:330
 #, python-format
@@ -1143,7 +1175,7 @@ msgstr "Pasiūlymas: %s"
 #: ../extensions/deviceicon/network.py:344
 #, python-format
 msgid "Connected for %s"
-msgstr ""
+msgstr "Prisijungta prie %s"
 
 #: ../extensions/deviceicon/network.py:349
 #: ../extensions/deviceicon/network.py:350
@@ -1153,28 +1185,28 @@ msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:355
 msgid "Check your PIN/PUK configuration."
-msgstr ""
+msgstr "Patikrinkite savo PIN/PUK konfigūraciją."
 
 #: ../extensions/deviceicon/network.py:358
 msgid "Check your Access Point Name (APN) configuration"
-msgstr ""
+msgstr "Patikrinkite savo prieigos taško pavadinimo (APN) konfigūraciją"
 
 #: ../extensions/deviceicon/network.py:362
 msgid "Check the Number configuration."
-msgstr ""
+msgstr "Patikrinkite numerio konfigūraciją."
 
 #: ../extensions/deviceicon/network.py:364
 msgid "Check your configuration."
-msgstr ""
+msgstr "Patikrinkite savo konfigūraciją."
 
 #: ../extensions/deviceicon/network.py:619
 msgid "Mesh Network"
-msgstr ""
+msgstr "Junglusis tinklas"
 
 #: ../extensions/deviceicon/network.py:665
 #, python-format
 msgid "Mesh Network %s"
-msgstr ""
+msgstr "Junglusis tinklas %s"
 
 #: ../extensions/deviceicon/network.py:782
 msgid "No GSM connection available."
@@ -1182,17 +1214,17 @@ msgstr "Nėra prieinamo GSM ryšio."
 
 #: ../extensions/deviceicon/network.py:783
 msgid "Create a connection in My Settings."
-msgstr ""
+msgstr "Sukurti ryšį mano nustatymuose."
 
 #: ../extensions/deviceicon/speech.py:49
 msgid "Speech"
-msgstr ""
+msgstr "Šneka"
 
 #: ../extensions/deviceicon/speech.py:72
 #: ../extensions/deviceicon/speech.py:147
 #: ../extensions/deviceicon/speech.py:152
 msgid "Say selected text"
-msgstr ""
+msgstr "Sakyti pažymėtą tekstą"
 
 #: ../extensions/deviceicon/speech.py:80
 msgid "Stop playback"
@@ -1200,11 +1232,11 @@ msgstr "Stabdyti atkūrimą"
 
 #: ../extensions/deviceicon/speech.py:89
 msgid "Pitch"
-msgstr ""
+msgstr "Tonas"
 
 #: ../extensions/deviceicon/speech.py:104
 msgid "Rate"
-msgstr ""
+msgstr "Greitis"
 
 #: ../extensions/deviceicon/speech.py:142
 msgid "Pause playback"
@@ -1212,11 +1244,11 @@ msgstr "Pristabdyti atkūrimą"
 
 #: ../extensions/deviceicon/touchpad.py:36
 msgid "finger"
-msgstr ""
+msgstr "pirštas"
 
 #: ../extensions/deviceicon/touchpad.py:36
 msgid "stylus"
-msgstr ""
+msgstr "rašiklis"
 
 #: ../extensions/deviceicon/touchpad.py:61
 msgid "My touchpad"
@@ -1228,21 +1260,23 @@ msgstr "Rodyti turinį"
 
 #: ../data/sugar.schemas.in.h:15
 msgid "Favorites Layout"
-msgstr ""
+msgstr "Mėgstamų išdėstymas"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Layout of the favorites view."
-msgstr ""
+msgstr "Mėgstamų rodinio išdėstymas."
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Favorites resume mode"
-msgstr ""
+msgstr "Mėgstamų pratęsimo veiksena"
 
 #: ../data/sugar.schemas.in.h:18
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
+"Pratęsimo veiksenoje, spustelėjus ant mėgstamos piktogramos bus pratęstas "
+"paskutinis tos veiklos įrašas."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -1250,16 +1284,18 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
+"sugar-control-panel: ĮSPĖJIMAS, rasta daugiau nei viena parinktis tokiu "
+"pačiu pavadinimu: %s modulis: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr ""
+msgstr "sugar-control-panel: key=%s neprieinama parinktis"
 
 #: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
 msgid "sugar-control-panel: %s"
-msgstr ""
+msgstr "sugar-control-panel: %s"
 
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
@@ -1276,12 +1312,24 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
+"Naudojimas: sugar-control-panel [ parinktis ] key [ argumentai ... ] \n"
+"    Sugar aplinkos valdymas. \n"
+"    Parinktys: \n"
+"    -h           rodyti šį pagalbos pranešimą ir išeiti \n"
+"    -l           išvardyti visas prieinamas parinktis \n"
+"    -h key       rodyti informaciją apie šį raktą \n"
+"    -g key       gauti dabartinę rakto reikšmę \n"
+"    -s key       nustatyti raktui dabartinę reikšmę \n"
+"    -c key       išvalyti dabartinę rakto reikšmę \n"
+"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid ""
 "To apply your changes you have to restart Sugar.\n"
 "Hit ctrl+alt+erase on the keyboard to trigger a restart."
 msgstr ""
+"Norėdami pritaikyti pakeitimus, turite paleisti Sugar iš naujo.\n"
+"Paspauskite ant klaviatūros ctrl+alt+panaikinti, norėdami paleisti iš naujo."
 
 #: ../src/jarabe/controlpanel/gui.py:373 ../src/jarabe/journal/palettes.py:194
 #: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
@@ -1308,18 +1356,18 @@ msgstr "Paleisti iš naujo dabar"
 
 #: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
 msgid "An activity is not responding."
-msgstr ""
+msgstr "Veikla neatsako."
 
 #: ../src/jarabe/controlpanel/gui.py:420 ../src/jarabe/view/buddymenu.py:138
 msgid "You may lose unsaved work if you continue."
-msgstr ""
+msgstr "Jei tęsite, galite prarasti neįrašytą darbą."
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
 #: ../src/jarabe/journal/journaltoolbox.py:94
 #, python-format
 msgid "Search in %s"
-msgstr ""
+msgstr "Ieškoti ties %s"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
@@ -1345,16 +1393,16 @@ msgstr "Išvalyti paiešką"
 
 #: ../src/jarabe/desktop/activitieslist.py:510
 msgid "No matching activities"
-msgstr ""
+msgstr "Nėra atitinkančių veiklų"
 
 #: ../src/jarabe/desktop/activitieslist.py:546
 msgid "Confirm erase"
-msgstr ""
+msgstr "Patvirtinti ištrynimą"
 
 #: ../src/jarabe/desktop/activitieslist.py:548
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr ""
+msgstr "Patvirtinti ištrynimą: Ar tikrai norite visiems laikams ištrinti %s?"
 
 #: ../src/jarabe/desktop/activitieslist.py:552
 #: ../src/jarabe/frame/clipboardmenu.py:65
@@ -1375,31 +1423,31 @@ msgstr "Ištrinti"
 
 #: ../src/jarabe/desktop/activitieslist.py:641
 msgid "Remove favorite"
-msgstr ""
+msgstr "Šalinti mėgstamą"
 
 #: ../src/jarabe/desktop/activitieslist.py:645
 msgid "Make favorite"
-msgstr ""
+msgstr "Padaryti mėgstama"
 
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:209
 msgid "Freeform"
-msgstr ""
+msgstr "Laisva forma"
 
 #. TRANS: label for the ring layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:305
 msgid "Ring"
-msgstr ""
+msgstr "Žiedas"
 
 #. TRANS: label for the spiral layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:469
 msgid "Spiral"
-msgstr ""
+msgstr "Spiralė"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:537
 msgid "Box"
-msgstr ""
+msgstr "Langas"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:580
@@ -1424,22 +1472,22 @@ msgstr "Registracija sėkminga"
 
 #: ../src/jarabe/desktop/favoritesview.py:391
 msgid "You are now registered with your school server."
-msgstr ""
+msgstr "Dabar esate prisiregistravę su suvo mokyklos serveriu."
 
 #: ../src/jarabe/desktop/favoritesview.py:680
 msgid "Register"
-msgstr ""
+msgstr "Registruotis"
 
 #: ../src/jarabe/desktop/favoritesview.py:682
 msgid "Register again"
-msgstr ""
+msgstr "Registruotis dar kartą"
 
 #: ../src/jarabe/desktop/homewindow.py:255
 #: ../src/jarabe/desktop/viewtoolbar.py:73
 #: ../src/jarabe/frame/zoomtoolbar.py:57 ../src/jarabe/model/screenshot.py:63
 #: ../src/jarabe/view/viewhelp.py:76
 msgid "Home"
-msgstr ""
+msgstr "Pradžia"
 
 #: ../src/jarabe/desktop/homewindow.py:262
 #: ../src/jarabe/frame/zoomtoolbar.py:53 ../src/jarabe/model/screenshot.py:61
@@ -1458,6 +1506,8 @@ msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
+"Belaidžiam tinklui \"%s\" yra reikalingas\n"
+" belaidžio šifravimo raktas."
 
 #: ../src/jarabe/desktop/keydialog.py:141
 msgid "Key Type:"
@@ -1465,37 +1515,37 @@ msgstr "Rakto tipas:"
 
 #: ../src/jarabe/desktop/keydialog.py:161
 msgid "Authentication Type:"
-msgstr ""
+msgstr "Tapatybės nustatymo tipas:"
 
 #: ../src/jarabe/desktop/keydialog.py:224
 msgid "WPA & WPA2 Personal"
-msgstr ""
+msgstr "WPA ir WPA2 asmeninis"
 
 #: ../src/jarabe/desktop/keydialog.py:233
 msgid "Wireless Security:"
-msgstr "Bevielis saugumas:"
+msgstr "Belaidis saugumas:"
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
 #: ../src/jarabe/journal/journaltoolbox.py:659
 #: ../src/jarabe/journal/palettes.py:83 ../src/jarabe/view/palettes.py:98
 msgid "Resume"
-msgstr ""
+msgstr "Pratęsti"
 
 #: ../src/jarabe/desktop/meshbox.py:89
 #: ../src/jarabe/frame/activitiestray.py:208
 msgid "Join"
-msgstr ""
+msgstr "Prisijungti"
 
 #: ../src/jarabe/desktop/networkviews.py:499
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr ""
+msgstr "Laikinasis tinklas %d"
 
 #: ../src/jarabe/desktop/networkviews.py:643
 #, python-format
 msgid "Mesh Network %d"
-msgstr ""
+msgstr "Junglusis tinklas %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
@@ -1507,7 +1557,7 @@ msgstr "Serveriui nepavyko užbaigti užklausos."
 
 #: ../src/jarabe/desktop/viewtoolbar.py:95
 msgid "List view"
-msgstr ""
+msgstr "Sąrašo rodinys"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:97
 #: ../src/jarabe/desktop/viewtoolbar.py:196
@@ -1545,7 +1595,7 @@ msgstr "%s iš %s"
 #: ../src/jarabe/frame/activitiestray.py:634
 #, python-format
 msgid "Transfer from %s"
-msgstr ""
+msgstr "Persiuntimas nuo %s"
 
 #: ../src/jarabe/frame/activitiestray.py:648
 #: ../extensions/cpsection/backup/view.py:324
@@ -1565,7 +1615,7 @@ msgstr "Kitas dalyvis atsisakė failo persiuntimo"
 #: ../src/jarabe/frame/activitiestray.py:800
 #, python-format
 msgid "Transfer to %s"
-msgstr ""
+msgstr "Persiuntimas dalyviui %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:54
 msgctxt "Clipboard"
@@ -1579,12 +1629,12 @@ msgstr "Atverti"
 
 #: ../src/jarabe/frame/clipboardmenu.py:88
 msgid "Open with"
-msgstr ""
+msgstr "Atverti naudojant"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
 msgid "%s clipping"
-msgstr ""
+msgstr "%s iškarpa"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
@@ -1600,7 +1650,7 @@ msgstr "F3"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:62 ../src/jarabe/model/screenshot.py:69
 msgid "Activity"
-msgstr ""
+msgstr "Veikla"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
@@ -1612,7 +1662,7 @@ msgstr "Vardas:"
 
 #: ../src/jarabe/intro/window.py:174
 msgid "Click to change color:"
-msgstr "Spustelėkite, kad pakeistumėte spalvą:"
+msgstr "Spustelėkite, norėdami pakeisti spalvą:"
 
 #: ../src/jarabe/intro/window.py:337 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
@@ -1683,16 +1733,16 @@ msgstr "Ar norite negrįžtamai ištrinti \"%s\"?"
 #: ../src/jarabe/journal/volumestoolbar.py:134
 #: ../src/jarabe/journal/iconmodel.py:110
 msgid "Untitled"
-msgstr ""
+msgstr "Be pavadinimo"
 
 #: ../src/jarabe/journal/expandedentry.py:366
 msgid "No preview"
-msgstr ""
+msgstr "Nėra peržiūros"
 
 #: ../src/jarabe/journal/expandedentry.py:386
 #, python-format
 msgid "Kind: %s"
-msgstr ""
+msgstr "Rūšis: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:387
 #, python-format
@@ -1707,11 +1757,11 @@ msgstr "Dydis: %s"
 #: ../src/jarabe/journal/expandedentry.py:412
 #: ../src/jarabe/journal/misc.py:131
 msgid "No date"
-msgstr ""
+msgstr "Nėra datos"
 
 #: ../src/jarabe/journal/expandedentry.py:421
 msgid "Participants:"
-msgstr ""
+msgstr "Dalyviai:"
 
 #: ../src/jarabe/journal/expandedentry.py:459
 msgid "Description:"
@@ -1731,24 +1781,24 @@ msgstr "Komentarai:"
 #: ../src/jarabe/journal/volumestoolbar.py:349
 #: ../src/jarabe/view/viewhelp.py:79
 msgid "Journal"
-msgstr ""
+msgstr "Žurnalas"
 
 #: ../src/jarabe/journal/journaltoolbox.py:103
 msgid "Favorite entries"
-msgstr ""
+msgstr "Mėgstami įrašai"
 
 #. TRANS: Item on a palette that filters by entry type.
 #: ../src/jarabe/journal/journaltoolbox.py:112
 #: ../src/jarabe/journal/journaltoolbox.py:403
 #: ../src/jarabe/journal/journaltoolbox.py:479
 msgid "Anything"
-msgstr ""
+msgstr "Bet kas"
 
 #: ../src/jarabe/journal/journaltoolbox.py:118
 #: ../src/jarabe/journal/journaltoolbox.py:165
 #: ../src/jarabe/journal/journaltoolbox.py:483
 msgid "Anytime"
-msgstr ""
+msgstr "Bet kada"
 
 #: ../src/jarabe/journal/journaltoolbox.py:172
 msgid "Since yesterday"
@@ -1756,15 +1806,15 @@ msgstr "Nuo vakar"
 
 #: ../src/jarabe/journal/journaltoolbox.py:175
 msgid "Past week"
-msgstr ""
+msgstr "Praeitą savaitę"
 
 #: ../src/jarabe/journal/journaltoolbox.py:178
 msgid "Past month"
-msgstr ""
+msgstr "Praeitą mėnesį"
 
 #: ../src/jarabe/journal/journaltoolbox.py:181
 msgid "Past year"
-msgstr ""
+msgstr "Praeitais metais"
 
 #: ../src/jarabe/journal/journaltoolbox.py:521
 #: ../src/jarabe/journal/palettes.py:105
@@ -1774,7 +1824,7 @@ msgstr "Kopijuoti į"
 #: ../src/jarabe/journal/journaltoolbox.py:529
 #: ../src/jarabe/journal/palettes.py:116 ../src/jarabe/view/viewsource.py:379
 msgid "Duplicate"
-msgstr ""
+msgstr "Dubliuoti"
 
 #: ../src/jarabe/journal/journaltoolbox.py:535
 msgid "Refresh"
@@ -1785,7 +1835,7 @@ msgstr "Įkelti iš naujo"
 #: ../src/jarabe/journal/volumestoolbar.py:312
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr ""
+msgstr "Klaida, kopijuojant įrašą. %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:578
 #: ../src/jarabe/journal/palettes.py:157 ../src/jarabe/journal/palettes.py:375
@@ -1797,36 +1847,36 @@ msgstr "Klaida"
 #: ../src/jarabe/journal/journaltoolbox.py:662
 #: ../src/jarabe/journal/palettes.py:86
 msgid "Start"
-msgstr ""
+msgstr "Pradėti"
 
 #: ../src/jarabe/journal/journaltoolbox.py:682
 #: ../src/jarabe/journal/palettes.py:100 ../src/jarabe/journal/palettes.py:513
 msgid "No activity to start entry"
-msgstr ""
+msgstr "Nėra veiklos, kad būtų pradėtas įrašas"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 msgid "Sort view"
-msgstr ""
+msgstr "Rikiuoti rodinį"
 
 #: ../src/jarabe/journal/journaltoolbox.py:711
 msgid "Sort by date modified"
-msgstr ""
+msgstr "Rikiuoti pagal keitimo datą"
 
 #: ../src/jarabe/journal/journaltoolbox.py:712
 msgid "Sort by date created"
-msgstr ""
+msgstr "Rikiuoti pagal sukūrimo datą"
 
 #: ../src/jarabe/journal/journaltoolbox.py:713
 msgid "Sort by size"
-msgstr ""
+msgstr "Rikiuoti pagal dydį"
 
 #: ../src/jarabe/journal/journaltoolbox.py:778
 msgid "Deselect all"
-msgstr ""
+msgstr "Nuimti žymėjimą nuo visų"
 
 #: ../src/jarabe/journal/journaltoolbox.py:791
 msgid "Select all"
-msgstr ""
+msgstr "Žymėti visus"
 
 #: ../src/jarabe/journal/journaltoolbox.py:817
 #, python-format
@@ -1845,11 +1895,11 @@ msgstr "Kopijuoti"
 #: ../src/jarabe/journal/journaltoolbox.py:882
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr ""
+msgstr "Pažymėta %(selected)d iš %(total)d"
 
 #: ../src/jarabe/journal/journaltoolbox.py:917
 msgid "Select filter"
-msgstr ""
+msgstr "Pasirinkite filtrą"
 
 #: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
 msgid "Your Journal is empty"
@@ -1875,7 +1925,7 @@ msgstr "Senesnė veiklos %s versija"
 #: ../src/jarabe/journal/misc.py:314
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr ""
+msgstr "Ar norite pasendinti į versiją %s"
 
 #: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
@@ -1893,12 +1943,12 @@ msgstr "Rodyti žurnalą"
 
 #: ../src/jarabe/journal/objectchooser.py:171
 msgid "Choose an object"
-msgstr ""
+msgstr "Pasirinkite objektą"
 
 #: ../src/jarabe/journal/objectchooser.py:176
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr ""
+msgstr "Pasirinkite objektą, kurį atverti, naudojant veiklą %s"
 
 #: ../src/jarabe/journal/objectchooser.py:184
 #: ../src/jarabe/view/viewhelp.py:335 ../src/jarabe/view/viewsource.py:579
@@ -1907,23 +1957,23 @@ msgstr "Užverti"
 
 #: ../src/jarabe/journal/palettes.py:84
 msgid "Resume with"
-msgstr ""
+msgstr "Pratęsti naudojant"
 
 #: ../src/jarabe/journal/palettes.py:87
 msgid "Start with"
-msgstr ""
+msgstr "Pradėti naudojant"
 
 #: ../src/jarabe/journal/palettes.py:124
 msgid "Send to"
-msgstr ""
+msgstr "Siųsti į"
 
 #: ../src/jarabe/journal/palettes.py:133
 msgid "View Details"
-msgstr ""
+msgstr "Rodyti išsamiau"
 
 #: ../src/jarabe/journal/palettes.py:193
 msgid "Entries without a file cannot be sent."
-msgstr ""
+msgstr "Įrašai be failų negali būti išsiųsti."
 
 #: ../src/jarabe/journal/palettes.py:272
 #: ../src/jarabe/journal/volumestoolbar.py:214
@@ -1949,19 +1999,19 @@ msgstr "Iškarpinė"
 
 #: ../src/jarabe/journal/palettes.py:478
 msgid "No friends present"
-msgstr ""
+msgstr "Draugų nėra"
 
 #: ../src/jarabe/journal/palettes.py:483
 msgid "No valid connection found"
-msgstr ""
+msgstr "Nerasta jokių tinkamų ryšių"
 
 #: ../src/jarabe/journal/palettes.py:511
 msgid "No activity to resume entry"
-msgstr ""
+msgstr "Nėra veiklos, kad būtų pratęstas įrašas"
 
 #: ../src/jarabe/journal/palettes.py:580 ../src/jarabe/view/palettes.py:133
 msgid "Stop"
-msgstr ""
+msgstr "Stabdyti"
 
 #: ../src/jarabe/journal/palettes.py:585
 #: ../extensions/cpsection/backup/view.py:212
@@ -1983,425 +2033,432 @@ msgstr "%(free_space)d MB laisva"
 #: ../src/jarabe/model/desktop.py:85
 #, python-format
 msgid "Favorites view %d"
-msgstr ""
+msgstr "Mėgstamų rodinys %d"
 
 #: ../src/jarabe/model/network.py:217
 msgid "The reason for the device state change is unknown."
-msgstr ""
+msgstr "Įrenginio būsenos pasikeitimo priežastis yra nežinoma."
 
 #: ../src/jarabe/model/network.py:219
 msgid "The state change is normal."
-msgstr ""
+msgstr "Būsenos pasikeitimas yra normalus."
 
 #: ../src/jarabe/model/network.py:221
 msgid "The device is now managed."
-msgstr ""
+msgstr "Įrenginys dabar yra tvarkomas."
 
 #: ../src/jarabe/model/network.py:223
 msgid "The device is no longer managed."
-msgstr ""
+msgstr "Įrenginys daugiau nebėra tvarkomas."
 
 #: ../src/jarabe/model/network.py:225
 msgid "The device could not be readied for configuration."
-msgstr ""
+msgstr "Įrenginio nepavyko paruošti konfigūracijai."
 
 #: ../src/jarabe/model/network.py:227
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
+"Nepavyko rezervuoti IP konfigūracijos (nėra prieinamo adreso, pasibaigė "
+"laikas ir t.t.)."
 
 #: ../src/jarabe/model/network.py:230
 msgid "The IP configuration is no longer valid."
-msgstr ""
+msgstr "IP konfigūracija daugiau nebegalioja."
 
 #: ../src/jarabe/model/network.py:232
 msgid "Secrets were required, but not provided."
-msgstr ""
+msgstr "Paslaptys buvo reikalingos, tačiau nebuvo pateiktos."
 
 #: ../src/jarabe/model/network.py:234
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
+"802.1X prašytojas atsijungė nuo prieigos taško arba tapatybės nustatymo "
+"serverio."
 
 #: ../src/jarabe/model/network.py:237
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr ""
+msgstr "802.1X prašytojo konfigūracija patyrė nesėkmę."
 
 #: ../src/jarabe/model/network.py:239
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr ""
+msgstr "802.1X prašytojas baigė darbą arba netikėtai patyrė nesėkmę."
 
 #: ../src/jarabe/model/network.py:241
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr ""
+msgstr "802.1X prašytojas per ilgai užtruko nustatinėdamas tapatybę."
 
 #: ../src/jarabe/model/network.py:243
 msgid "The PPP service failed to start within the allowed time."
-msgstr ""
+msgstr "PPP tarnybai nepavyko pasileisti per leidžiamą laiką."
 
 #: ../src/jarabe/model/network.py:245
 msgid "The PPP service disconnected unexpectedly."
-msgstr ""
+msgstr "PPP tarnyba netikėtai atsijungė."
 
 #: ../src/jarabe/model/network.py:247
 msgid "The PPP service quit or failed unexpectedly."
-msgstr ""
+msgstr "PPP tarnyba baigė darbą arba netikėtai patyrė nesėkmę."
 
 #: ../src/jarabe/model/network.py:249
 msgid "The DHCP service failed to start within the allowed time."
-msgstr ""
+msgstr "DHCP tarnybai nepavyko pasileisti per leidžiamą laiką."
 
 #: ../src/jarabe/model/network.py:251
 msgid "The DHCP service reported an unexpected error."
-msgstr ""
+msgstr "DHCP tarnyba pranešė apie netikėtą klaidą."
 
 #: ../src/jarabe/model/network.py:253
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr ""
+msgstr "DHCP tarnyba baigė darbą arba netikėtai patyrė nesėkmę."
 
 #: ../src/jarabe/model/network.py:255
 msgid "The shared connection service failed to start."
-msgstr ""
+msgstr "Bendrinamo ryšio tarnybai nepavyko pasileisti."
 
 #: ../src/jarabe/model/network.py:257
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr ""
+msgstr "Bendrinamo ryšio tarnyba baigė darbą arba netikėtai patyrė nesėkmę."
 
 #: ../src/jarabe/model/network.py:260
 msgid "The AutoIP service failed to start."
-msgstr ""
+msgstr "AutoIP tarnybai nepavyko pasileisti."
 
 #: ../src/jarabe/model/network.py:262
 msgid "The AutoIP service reported an unexpected error."
-msgstr ""
+msgstr "AutoIP tarnyba pranešė apie netikėtą klaidą."
 
 #: ../src/jarabe/model/network.py:264
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr ""
+msgstr "AutoIP tarnyba baigė darbą arba netikėtai patyrė nesėkmę."
 
 #: ../src/jarabe/model/network.py:266
 msgid "Dialing failed because the line was busy."
-msgstr ""
+msgstr "Numerio rinkimas nepavyko, nes linija buvo užimta."
 
 #: ../src/jarabe/model/network.py:268
 msgid "Dialing failed because there was no dial tone."
-msgstr ""
+msgstr "Numerio rinkimas nepavyko, nes nebuvo telefono linijos signalo."
 
 #: ../src/jarabe/model/network.py:270
 msgid "Dialing failed because there was no carrier."
-msgstr ""
+msgstr "Numerio rinkimas nepavyko, nes nebuvo signalo."
 
 #: ../src/jarabe/model/network.py:272
 msgid "Dialing timed out."
-msgstr ""
+msgstr "Pasibaigė numerio rinkimui skirtas laikas."
 
 #: ../src/jarabe/model/network.py:274
 msgid "Dialing failed."
-msgstr ""
+msgstr "Numerio rinkimas nepavyko."
 
 #: ../src/jarabe/model/network.py:276
 msgid "Modem initialization failed."
-msgstr ""
+msgstr "Modemo inicijavimas nepavyko."
 
 #: ../src/jarabe/model/network.py:278
 msgid "Failed to select the specified GSM APN"
-msgstr ""
+msgstr "Nepavyko pasirinkti nurodyto GSM APN"
 
 #: ../src/jarabe/model/network.py:280
 msgid "Not searching for networks."
-msgstr ""
+msgstr "Neieškoma tinklų."
 
 #: ../src/jarabe/model/network.py:282
 msgid "Network registration was denied."
-msgstr ""
+msgstr "Tinklo registracija buvo atmesta."
 
 #: ../src/jarabe/model/network.py:284
 msgid "Network registration timed out."
-msgstr ""
+msgstr "Pasibaigė tinklo registracijai skirtas laikas."
 
 #: ../src/jarabe/model/network.py:286
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "Nepavyko prisiregistruoti su užklaustu GSM tinklu."
 
 #: ../src/jarabe/model/network.py:288
 msgid "PIN check failed."
-msgstr ""
+msgstr "PIN patikrinimas nepavyko."
 
 #: ../src/jarabe/model/network.py:290
 msgid "Necessary firmware for the device may be missing."
 msgstr ""
+"Gali būti, kad trūksta įrenginiui reikalingos programinės aparatinės įrangos."
 
 #: ../src/jarabe/model/network.py:292
 msgid "The device was removed."
-msgstr ""
+msgstr "Įrenginys buvo pašalintas."
 
 #: ../src/jarabe/model/network.py:294
 msgid "NetworkManager went to sleep."
-msgstr ""
+msgstr "NetworkManager užmigo."
 
 #: ../src/jarabe/model/network.py:296
 msgid "The device's active connection was removed or disappeared."
-msgstr ""
+msgstr "Aktyvus įrenginio ryšys buvo pašalintas arba dingo."
 
 #: ../src/jarabe/model/network.py:299
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "Naudotojas ar klientas užklausė atsijungimo."
 
 #: ../src/jarabe/model/network.py:301
 msgid "The device's carrier/link changed."
-msgstr ""
+msgstr "Pasikeitė įrenginio signalas/nuoroda."
 
 #: ../src/jarabe/model/network.py:303
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "Esamas įrenginio ryšys buvo numanomas."
 
 #: ../src/jarabe/model/network.py:305
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "Dabar prašytojas yra prieinamas."
 
 #: ../src/jarabe/model/network.py:307
 msgid "The modem could not be found."
-msgstr ""
+msgstr "Nepavyko rasti modemo."
 
 #: ../src/jarabe/model/network.py:309
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "Bluetooth ryšys patyrė nesėkmę arba pasibaigė jam skirtas laikas."
 
 #: ../src/jarabe/model/network.py:311
 msgid "Unused."
-msgstr ""
+msgstr "Nenaudojamas."
 
 #: ../src/jarabe/model/screenshot.py:59 ../src/jarabe/view/viewhelp.py:70
 msgid "Mesh"
-msgstr ""
+msgstr "Junglusis"
 
 #: ../src/jarabe/model/screenshot.py:72
 msgid "Screenshot"
-msgstr ""
+msgstr "Ekrano kopija"
 
 #: ../src/jarabe/model/screenshot.py:74
 #, python-format
 msgid "Screenshot of \"%s\""
-msgstr ""
+msgstr "\"%s\" ekrano kopija"
 
 #: ../src/jarabe/view/alerts.py:38 ../src/jarabe/view/alerts.py:48
 msgid "Activity launcher"
-msgstr ""
+msgstr "Veiklos leistukas"
 
 #: ../src/jarabe/view/alerts.py:39
 #, python-format
 msgid "%s is already running. Please stop %s before launching it again."
-msgstr ""
+msgstr "%s jau yra paleista. Prieš paleisdami ją dar kartą, sustabdykite %s."
 
 #: ../src/jarabe/view/alerts.py:49
 msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
 msgstr ""
+"Buvo pasiektas didžiausias atvertų veiklų skaičius. Prieš paleisdami naują, "
+"užverkite veiklą."
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
-msgstr ""
+msgstr "Šalinti draugą"
 
 #: ../src/jarabe/view/buddymenu.py:76
 msgid "Make friend"
-msgstr ""
+msgstr "Sukurti draugo įrašą"
 
 #: ../src/jarabe/view/buddymenu.py:108
 msgid "Shutdown"
-msgstr ""
+msgstr "Išjungti"
 
 #: ../src/jarabe/view/buddymenu.py:113
 msgid "Restart"
-msgstr ""
+msgstr "Paleisti iš naujo"
 
 #: ../src/jarabe/view/buddymenu.py:119
 msgid "Logout"
-msgstr ""
+msgstr "Atsijungti"
 
 #: ../src/jarabe/view/buddymenu.py:124
 msgid "My Settings"
-msgstr ""
+msgstr "Mano nustatymai"
 
 #: ../src/jarabe/view/buddymenu.py:183
 #, python-format
 msgid "Invite to %s"
-msgstr ""
+msgstr "Pakviesti į %s"
 
 #: ../src/jarabe/view/launcher.py:159
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr ""
+msgstr "Nepavyko paleisti <b>%s</b>."
 
 #: ../src/jarabe/view/palettes.py:53
 msgid "Starting..."
-msgstr ""
+msgstr "Paleidžiama..."
 
 #: ../src/jarabe/view/palettes.py:63
 msgid "Activity failed to start"
-msgstr ""
+msgstr "Veiklai nepavyko pasileisti"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:105
 msgid "View Source"
-msgstr ""
+msgstr "Rodyti pirminį kodą"
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
-msgstr ""
+msgstr "Rodyti žinyną"
 
 #: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
-msgstr ""
+msgstr "Paleisti naują"
 
 #: ../src/jarabe/view/palettes.py:266
 msgctxt "Volume"
 msgid "Remove"
-msgstr ""
+msgstr "Šalinti"
 
 #: ../src/jarabe/view/viewhelp.py:304
 msgid "Help Manual"
-msgstr ""
+msgstr "Žinyno vadovas"
 
 #: ../src/jarabe/view/viewhelp.py:318
 msgid "Social Help"
-msgstr ""
+msgstr "Socialinė pagalba"
 
 #: ../src/jarabe/view/viewhelp.py:326
 #, python-format
 msgid "Help: %s"
-msgstr ""
+msgstr "Žinynas: %s"
 
 #: ../src/jarabe/view/viewsource.py:364
 msgid "Instance Source"
-msgstr ""
+msgstr "Egzemplioriaus pirminis kodas"
 
 #: ../src/jarabe/view/viewsource.py:392
 #, python-format
 msgid "Do you want to duplicate %s Activity?"
-msgstr ""
+msgstr "Ar norite dubliuoti veiklą %s?"
 
 #: ../src/jarabe/view/viewsource.py:394
 msgid "This may take a few minutes"
-msgstr ""
+msgstr "Tai gali užtrukti kelias minutes"
 
 #: ../src/jarabe/view/viewsource.py:408
 msgid "Duplicating activity..."
-msgstr ""
+msgstr "Dubliuojama veikla..."
 
 #: ../src/jarabe/view/viewsource.py:447
 msgid "Duplicated"
-msgstr ""
+msgstr "Dubliuota"
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
-msgstr ""
+msgstr "Ši veikla buvo dubliuota"
 
 #: ../src/jarabe/view/viewsource.py:462
 msgid "Duplicated activity already exists"
-msgstr ""
+msgstr "Dubliuota veikla jau yra"
 
 #: ../src/jarabe/view/viewsource.py:463
 msgid "Delete your copy before trying to duplicate the activity again"
-msgstr ""
+msgstr "Prieš bandydami dar kartą dubliuoti veiklą, ištrinkite savo kopiją"
 
 #: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
-msgstr ""
+msgstr "Pirminis kodas"
 
 #: ../src/jarabe/view/viewsource.py:542
 msgid "Activity Bundle Source"
-msgstr ""
+msgstr "Veiklos rinkinio pirminis kodas"
 
 #: ../src/jarabe/view/viewsource.py:561
 msgid "Sugar Toolkit Source"
-msgstr ""
+msgstr "Sugar priemonių komplekto pirminis kodas"
 
 #: ../src/jarabe/view/viewsource.py:568
 #, python-format
 msgid "View source: %s"
-msgstr ""
+msgstr "Rodyti pirminį kodą: %s"
 
 #: ../src/jarabe/view/viewsource.py:569
 #, python-format
 msgid "View source: %r"
-msgstr ""
+msgstr "Rodyti pirminį kodą: %r"
 
 #: ../src/jarabe/view/viewsource.py:809
 msgid "Please select a file in the left panel."
-msgstr ""
+msgstr "Pasirinkite failą kairiajame skydelyje."
 
 #: ../extensions/cpsection/backup/__init__.py:22
 msgid "Backup"
-msgstr ""
+msgstr "Atsarginė kopija"
 
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171
 msgid "Please connect a device to continue"
-msgstr ""
+msgstr "Norėdami tęsti, prijunkite įrenginį"
 
 #: ../extensions/cpsection/backup/backends/volume.py:69
 #: ../extensions/cpsection/backup/backends/volume.py:178
 msgid "Select your volume"
-msgstr ""
+msgstr "Pasirinkite tomą"
 
 #: ../extensions/cpsection/backup/backends/volume.py:78
 msgid "Not enough space in volume"
-msgstr ""
+msgstr "Tome nepakanka vietos"
 
 #: ../extensions/cpsection/backup/backends/volume.py:122
 #, python-format
 msgid "Backup from user %s"
-msgstr ""
+msgstr "Atsarginė kopija iš naudotojo %s"
 
 #: ../extensions/cpsection/backup/backends/volume.py:191
 msgid "No checkpoints found in the device"
-msgstr ""
+msgstr "Įrenginyje nerasta kontrolinių taškų"
 
 #: ../extensions/cpsection/backup/backends/volume.py:199
 msgid "Select your checkpoint"
-msgstr ""
+msgstr "Pasirinkite kontrolinį tašką"
 
 #: ../extensions/cpsection/backup/backends/volume.py:210
 msgid "Not enough space in disk"
-msgstr ""
+msgstr "Nepakanka vietos diske"
 
 #: ../extensions/cpsection/backup/backends/volume.py:329
 msgid "Local Device Backup"
-msgstr ""
+msgstr "Vietinio įrenginio atsarginė kopija"
 
 #: ../extensions/cpsection/backup/view.py:133
 msgid "Save the contents of your Journal"
-msgstr ""
+msgstr "Įrašyti savo žurnalo turinį"
 
 #: ../extensions/cpsection/backup/view.py:141
 msgid "Restore the contents of your Journal"
-msgstr ""
+msgstr "Atkurti savo žurnalo turinį"
 
 #: ../extensions/cpsection/backup/view.py:223
 msgid "Please close all the activities, and start again"
-msgstr ""
+msgstr "Užverkite visas veiklas ir pradėkite iš naujo"
 
 #: ../extensions/cpsection/backup/view.py:229
 msgid "Select where you want create your backup"
-msgstr ""
+msgstr "Pasirinkite kur norite sukurti atsarginę kopiją"
 
 #: ../extensions/cpsection/backup/view.py:231
 msgid "Select where you want retrieve your restore"
-msgstr ""
+msgstr "Pasirinkite iš kur norite atgauti savo atkūrimą"
 
 #: ../extensions/cpsection/backup/view.py:271
 msgid "Retry"
-msgstr ""
+msgstr "Bandyti dar kartą"
 
 #: ../extensions/cpsection/backup/view.py:290
 msgid "Starting backup..."
-msgstr ""
+msgstr "Pradedamas atsarginės kopijos darymas..."
 
 #: ../extensions/cpsection/backup/view.py:294
 msgid "Starting restore..."
-msgstr ""
+msgstr "Pradedamas atkūrimas..."
 
 #: ../extensions/cpsection/backup/view.py:321
 msgid ""
@@ -2409,23 +2466,26 @@ msgid ""
 "will first be emptied of all its content; then the restored content will be "
 "added."
 msgstr ""
+"Aš noriu atkurti savo žurnalo turinį. Tam, kad tai būtų padaryta, iš "
+"pradžių, visas mano žurnalo turinys bus išvalytas; tuomet bus pridėtas "
+"atkurtas turinys."
 
 #: ../extensions/cpsection/backup/view.py:327
 msgid "Confirm"
-msgstr ""
+msgstr "Patvirtinti"
 
 #: ../extensions/cpsection/backup/view.py:365
 msgid "Operation started"
-msgstr ""
+msgstr "Operacija pradėta"
 
 #: ../extensions/cpsection/backup/view.py:377
 msgid "Backup finished successfully"
-msgstr ""
+msgstr "Atsarginės kopijos darymas sėkmingai užbaigtas"
 
 #: ../extensions/cpsection/backup/view.py:379
 msgid "Restore realized successfully."
-msgstr ""
+msgstr "Atkūrimas sėkmingai įgyvendintas."
 
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
-msgstr ""
+msgstr "Išvalyti pranešimus"
