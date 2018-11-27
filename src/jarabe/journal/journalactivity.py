@@ -226,6 +226,7 @@ class JournalActivity(JournalWindow):
 
         self._dbus_service = JournalActivityDBusService(self)
 
+        self._unwanted = True  # user has not asked to see Journal
         self.iconify()
 
         self._critical_space_alert = None
@@ -520,10 +521,16 @@ class JournalActivity(JournalWindow):
         self._set_is_visible(False)
 
     def __window_state_event_cb(self, window, event):
-        logging.debug('window_state_event_cb %r', self)
+        logging.debug('window_state_event_cb %r', event.new_window_state)
         if event.changed_mask & Gdk.WindowState.ICONIFIED:
             state = event.new_window_state
             visible = not state & Gdk.WindowState.ICONIFIED
+            if self._unwanted and visible:
+                self._unwanted = False
+                self.iconify()
+                logging.warning('Journal premature deiconify '
+                                'by Metacity (RHBZ #1519042), try again.')
+                return
             self._set_is_visible(visible)
 
     def _set_is_visible(self, visible):
@@ -559,6 +566,7 @@ class JournalActivity(JournalWindow):
 
     def show_journal(self):
         """Become visible and show main view"""
+        self._unwanted = False
         self.reveal()
         self.show_main_view()
 
