@@ -19,20 +19,8 @@ Sugar 0.112 is in the archive for Ubuntu 18.04 Bionic, and can be installed by t
 
 Known problems
 
--   Sugar starts in Journal ([issue #769](https://github.com/sugarlabs/sugar/issues/769)),
--   My Settings, Network, may hang, requires reboot or forced logout to escape, fixed by 04c63f6dd2b6f10a80376a43c735822f5283bda7,
-
-Ubuntu 17.10 Artful
--------------------
-
-Sugar 0.110 is in the archive for Ubuntu 17.10 Artful, and can be installed by typing
-
-    sudo apt install sucrose gir1.2-webkit-3.0
-
--   log out,
--   log in with the Sugar desktop selected.
-
-Installing the package `gir1.2-webkit-3.0` is a workaround for [Debian bug \#877812](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=877812), which affects only Ubuntu 17.10.
+-   Sugar starts in Journal, fixed by [258235c](https://github.com/sugarlabs/sugar/commit/258235c4da3e019ee667b6cd8adf1ede7100a9da) or [Metacity 074af8f](https://github.com/GNOME/metacity/commit/074af8f87ef89b13ff326fb5d04ee424bbfd4ced),
+-   My Settings, Network, may hang, requires reboot or forced logout to escape, fixed by (04c63f6)[https://github.com/sugarlabs/sugar/commit/04c63f6dd2b6f10a80376a43c735822f5283bda7].
 
 Using Sugar inside another desktop environment on Ubuntu
 --------------------------------------------------------
@@ -41,34 +29,13 @@ Sugar is a desktop environment. For developers who use Ubuntu Unity, Gnome or an
 
 Install the Remote Desktop packages:
 
-    sudo apt install xrdp rdesktop
+    sudo apt install xrdp rdesktop
 
 Create a user for Sugar and set a default desktop environment:
 
-    sudo adduser sugar
-    sudo su - sugar -c 'echo sugar >> .xsession'
+    sudo adduser sugar
+    sudo su - sugar -c 'echo sugar >> .xsession'
 
 Start a session:
 
-    rdesktop -g 1200x900 -u sugar -p sugar 0
-
-Ubuntu 17.04 Zesty
-------------------
-
-Sugar 0.110 is in the archive for Ubuntu 17.04 Zesty, and can be installed by typing
-
-    sudo apt install sucrose
-
--   log out,
--   log in with the Sugar desktop selected.
-
-Ubuntu 16.04 Xenial LTS
------------------------
-
-Sugar 0.106 is in the archive for Ubuntu 16.04 Xenial, and can be installed by typing
-
-    sudo apt install sucrose
-
-Sugar 0.112 can be installed by careful addition of the Ubuntu 18.04 Bionic packages; temporarily change sources.list, update, and install the Sugar packages again, then restore sources.list.
-
-Organisations that require Ubuntu 16.04 support for Sugar may consider getting involved in the Ubuntu [Stable Release Updates](https://wiki.ubuntu.com/StableReleaseUpdates) process.
+    rdesktop -g 1200x900 -u sugar -p sugar 0
