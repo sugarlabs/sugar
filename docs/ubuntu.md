@@ -10,12 +10,11 @@ Ubuntu 18.04 Bionic
 
 Sugar 0.112 is in the archive for Ubuntu 18.04 Bionic, and can be installed by typing
 
-    sudo add-apt-repository universe
     sudo apt install sucrose
 
 -   log out,
 -   log in with the Sugar desktop selected,
--   press the F3 button to switch to the home view ([issue #769](https://github.com/sugarlabs/sugar/issues/769)).
+-   press the F3 key to switch to the home view, see below.
 
 Known problems
 
