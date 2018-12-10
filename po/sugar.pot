@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 14:29+1000\n"
+"POT-Creation-Date: 2018-12-10 22:42+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -209,7 +209,7 @@ msgid ""
 msgstr ""
 
 #: extensions/cpsection/backup/view.py:323
-#: src/jarabe/frame/activitiestray.py:655
+#: src/jarabe/frame/activitiestray.py:657
 msgid "Accept"
 msgstr ""
 
@@ -809,9 +809,9 @@ msgid "Disconnected"
 msgstr ""
 
 #: extensions/deviceicon/network.py:303 src/jarabe/controlpanel/toolbar.py:122
-#: src/jarabe/frame/activitiestray.py:700
-#: src/jarabe/frame/activitiestray.py:822
-#: src/jarabe/frame/activitiestray.py:855
+#: src/jarabe/frame/activitiestray.py:702
+#: src/jarabe/frame/activitiestray.py:824
+#: src/jarabe/frame/activitiestray.py:857
 #: src/jarabe/journal/expandedentry.py:160
 #: src/jarabe/journal/journaltoolbox.py:613 src/jarabe/journal/palettes.py:192
 msgid "Cancel"
@@ -920,22 +920,22 @@ msgstr ""
 #, python-format
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
-"%s module: %r"
+"%(key)s module: %(module)r"
 msgstr ""
 
-#: src/jarabe/controlpanel/cmd.py:29
+#: src/jarabe/controlpanel/cmd.py:30
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
 msgstr ""
 
-#: src/jarabe/controlpanel/cmd.py:30
+#: src/jarabe/controlpanel/cmd.py:31
 #, python-format
 msgid "sugar-control-panel: %s"
 msgstr ""
 
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
-#: src/jarabe/controlpanel/cmd.py:37
+#: src/jarabe/controlpanel/cmd.py:38
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -949,7 +949,7 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/jarabe/controlpanel/cmd.py:51
+#: src/jarabe/controlpanel/cmd.py:52
 msgid ""
 "To apply your changes you have to restart Sugar.\n"
 "Hit ctrl+alt+erase on the keyboard to trigger a restart."
@@ -1188,7 +1188,7 @@ msgid "<Ctrl>%d"
 msgstr ""
 
 #: src/jarabe/frame/activitiestray.py:213
-#: src/jarabe/frame/activitiestray.py:664
+#: src/jarabe/frame/activitiestray.py:666
 msgid "Decline"
 msgstr ""
 
@@ -1203,27 +1203,27 @@ msgid "%d MiB"
 msgstr ""
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
-#: src/jarabe/frame/activitiestray.py:627
+#: src/jarabe/frame/activitiestray.py:628
 #, python-format
-msgid "%s of %s"
+msgid "%(transferred)s of %(total)s"
 msgstr ""
 
-#: src/jarabe/frame/activitiestray.py:641
+#: src/jarabe/frame/activitiestray.py:643
 #, python-format
 msgid "Transfer from %s"
 msgstr ""
 
-#: src/jarabe/frame/activitiestray.py:729
-#: src/jarabe/frame/activitiestray.py:743
-#: src/jarabe/frame/activitiestray.py:885
+#: src/jarabe/frame/activitiestray.py:731
+#: src/jarabe/frame/activitiestray.py:745
+#: src/jarabe/frame/activitiestray.py:887
 msgid "Dismiss"
 msgstr ""
 
-#: src/jarabe/frame/activitiestray.py:757
+#: src/jarabe/frame/activitiestray.py:759
 msgid "The other participant canceled the file transfer"
 msgstr ""
 
-#: src/jarabe/frame/activitiestray.py:807
+#: src/jarabe/frame/activitiestray.py:809
 #, python-format
 msgid "Transfer to %s"
 msgstr ""
@@ -1407,11 +1407,11 @@ msgstr ""
 msgid "Journal"
 msgstr ""
 
-#: src/jarabe/journal/journalactivity.py:285
+#: src/jarabe/journal/journalactivity.py:286
 msgid "Add new project"
 msgstr ""
 
-#: src/jarabe/journal/journalactivity.py:364
+#: src/jarabe/journal/journalactivity.py:365
 #, python-format
 msgid "Choose an activity to start '%s' with"
 msgstr ""
@@ -1859,15 +1859,17 @@ msgstr ""
 msgid "Activity launcher"
 msgstr ""
 
-#: src/jarabe/view/alerts.py:38
-#, python-format
-msgid "%s is already running. Please stop %s before launching it again."
-msgstr ""
-
 #: src/jarabe/view/alerts.py:48
 msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
+msgstr ""
+
+#: src/jarabe/view/alerts.py:38
+#, python-format
+msgid ""
+"%(activity)s is already running. Please stop %(activity)s before launching "
+"it again."
 msgstr ""
 
 #: src/jarabe/view/buddymenu.py:74

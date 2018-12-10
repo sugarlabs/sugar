@@ -25,7 +25,8 @@ from jarabe import config
 _RESTART = 1
 
 _same_option_warning = _('sugar-control-panel: WARNING, found more than one'
-                         ' option with the same name: %s module: %r')
+                         ' option with the same name: %(key)s'
+                         ' module: %(module)r')
 _no_option_error = _('sugar-control-panel: key=%s not an available option')
 _general_error = _('sugar-control-panel: %s')
 
@@ -97,7 +98,8 @@ def main():
                     if found == 1:
                         print method.__doc__
                     else:
-                        print _(_same_option_warning % (key, module))
+                        print _(_same_option_warning
+                                % ('key': key, 'module': module))
             if found == 0:
                 print _(_no_option_error % key)
         if option in ('-l'):
@@ -121,7 +123,8 @@ def main():
                         except Exception as detail:
                             print _(_general_error % detail)
                     else:
-                        print _(_same_option_warning % (key, module))
+                        print _(_same_option_warning %
+                                ('key': key, 'module': module))
             if found == 0:
                 print _(_no_option_error % key)
         if option in ('-s'):
@@ -138,7 +141,8 @@ def main():
                         if note == _RESTART:
                             note_restart()
                     else:
-                        print _(_same_option_warning % (key, module))
+                        print _(_same_option_warning %
+                                ('key': key, 'module': module))
             if found == 0:
                 print _(_no_option_error % key)
         if option in ('-c'):
@@ -155,6 +159,7 @@ def main():
                         if note == _RESTART:
                             note_restart()
                     else:
-                        print _(_same_option_warning % (key, module))
+                        print _(_same_option_warning %
+                                ('key': key, 'module': module))
             if found == 0:
                 print _(_no_option_error % key)

@@ -35,8 +35,8 @@ class MultipleInstanceAlert(BaseErrorAlert):
         BaseErrorAlert.__init__(
             self,
             _('Activity launcher'),
-            _('%s is already running. \
-Please stop %s before launching it again.' % (name, name)))
+            _('%(activity)s is already running. \
+Please stop %(activity)s before launching it again.' % ({'activity':name})
 
 
 class MaxOpenActivitiesAlert(BaseErrorAlert):
