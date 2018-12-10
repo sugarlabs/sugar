@@ -624,7 +624,7 @@ class BaseTransferPalette(Palette):
             self.file_transfer.props.transferred_bytes)
         total = self._format_size(self.file_transfer.file_size)
         # TRANS: file transfer, bytes transferred, e.g. 128 of 1024
-        self.progress_label.props.label = _('%s of %s') % (transferred, total)
+        self.progress_label.props.label = _('%(transferred)s of %(total)s') % ({'transferred':transferred, 'total':total})
 
 
 class IncomingTransferPalette(BaseTransferPalette):

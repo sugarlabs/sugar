@@ -24,8 +24,8 @@ from jarabe import config
 
 _RESTART = 1
 
-_same_option_warning = _('sugar-control-panel: WARNING, found more than one'
-                         ' option with the same name: %s module: %r')
+_same_option_warning = _({'warning:sugar-control-panel: WARNING, reason:found more than one' 
+                           ' option with the same name}: %(warning)s module: %(reason)r')
 _no_option_error = _('sugar-control-panel: key=%s not an available option')
 _general_error = _('sugar-control-panel: %s')
 

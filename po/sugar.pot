@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 14:29+1000\n"
+"POT-Creation-Date: 2018-12-10 14:59+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -919,8 +919,8 @@ msgstr ""
 #: src/jarabe/controlpanel/cmd.py:27
 #, python-format
 msgid ""
-"sugar-control-panel: WARNING, found more than one option with the same name: "
-"%s module: %r"
+"warning:sugar-control-panel: WARNING, reason:found more than one option with "
+"the same name}: %(warning)s module: %(reason)r"
 msgstr ""
 
 #: src/jarabe/controlpanel/cmd.py:29
@@ -1205,7 +1205,7 @@ msgstr ""
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: src/jarabe/frame/activitiestray.py:627
 #, python-format
-msgid "%s of %s"
+msgid "%(transferred)s of %(total)s"
 msgstr ""
 
 #: src/jarabe/frame/activitiestray.py:641
@@ -1407,11 +1407,11 @@ msgstr ""
 msgid "Journal"
 msgstr ""
 
-#: src/jarabe/journal/journalactivity.py:285
+#: src/jarabe/journal/journalactivity.py:286
 msgid "Add new project"
 msgstr ""
 
-#: src/jarabe/journal/journalactivity.py:364
+#: src/jarabe/journal/journalactivity.py:365
 #, python-format
 msgid "Choose an activity to start '%s' with"
 msgstr ""
@@ -1859,15 +1859,17 @@ msgstr ""
 msgid "Activity launcher"
 msgstr ""
 
-#: src/jarabe/view/alerts.py:38
-#, python-format
-msgid "%s is already running. Please stop %s before launching it again."
-msgstr ""
-
 #: src/jarabe/view/alerts.py:48
 msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
+msgstr ""
+
+#: src/jarabe/view/alerts.py:38
+#, python-format
+msgid ""
+"%(current_activity)s is already running. Please stop %(current_activity)s "
+"before launching it again."
 msgstr ""
 
 #: src/jarabe/view/buddymenu.py:74
