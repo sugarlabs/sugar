@@ -16,7 +16,7 @@
 import os
 import unittest
 import threading
-import SimpleHTTPServer
+import http.server
 import SocketServer
 
 from gi.repository import Gtk
@@ -37,7 +37,7 @@ GLib.threads_init()
 
 class TestDownloader(unittest.TestCase):
     def setUp(self):
-        handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+        handler = http.server.BaseHTTPRequestHandler
         self._server = SocketServer.TCPServer(("", 0), handler)
         self._port = self._server.server_address[1]
         self._server_thread = threading.Thread(target=self._run_http_server)
