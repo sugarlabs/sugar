@@ -35,9 +35,9 @@ Install the Remote Desktop packages:
 
 Create a user for Sugar and set a default desktop environment:
 
-    sudo adduser sugar
-    sudo su - sugar -c 'echo sugar >> .xsession'
+    sudo adduser guest
+    sudo su - guest -c 'echo sugar >> .xsession'
 
 Start a session:
 
-    rdesktop -g 1200x900 -u sugar -p sugar 0
+    rdesktop -g 1200x900 -u guest -p password 0
