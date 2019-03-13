@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-10 22:42+0530\n"
+"POT-Creation-Date: 2019-03-13 14:29+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -928,11 +928,6 @@ msgstr ""
 msgid "sugar-control-panel: key=%s not an available option"
 msgstr ""
 
-#: src/jarabe/controlpanel/cmd.py:31
-#, python-format
-msgid "sugar-control-panel: %s"
-msgstr ""
-
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
 #: src/jarabe/controlpanel/cmd.py:38
@@ -1407,11 +1402,11 @@ msgstr ""
 msgid "Journal"
 msgstr ""
 
-#: src/jarabe/journal/journalactivity.py:286
+#: src/jarabe/journal/journalactivity.py:285
 msgid "Add new project"
 msgstr ""
 
-#: src/jarabe/journal/journalactivity.py:365
+#: src/jarabe/journal/journalactivity.py:364
 #, python-format
 msgid "Choose an activity to start '%s' with"
 msgstr ""
@@ -1859,17 +1854,17 @@ msgstr ""
 msgid "Activity launcher"
 msgstr ""
 
-#: src/jarabe/view/alerts.py:48
-msgid ""
-"The maximum number of open activities has been reached. Please close an "
-"activity before launching a new one."
-msgstr ""
-
 #: src/jarabe/view/alerts.py:38
 #, python-format
 msgid ""
 "%(activity)s is already running. Please stop %(activity)s before launching "
 "it again."
+msgstr ""
+
+#: src/jarabe/view/alerts.py:48
+msgid ""
+"The maximum number of open activities has been reached. Please close an "
+"activity before launching a new one."
 msgstr ""
 
 #: src/jarabe/view/buddymenu.py:74
