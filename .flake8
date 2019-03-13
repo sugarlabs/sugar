@@ -1,0 +1,6 @@
+[flake8]
+
+# E402 module level import not at top of file
+# gi.require_version() is required before later imports
+
+ignore = E402
