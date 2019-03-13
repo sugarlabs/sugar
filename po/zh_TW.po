@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-10-07 18:26+0000\n"
-"Last-Translator: zerngjia <pswo10680@gmail.com>\n"
+"PO-Revision-Date: 2019-02-11 20:46+0000\n"
+"Last-Translator: Yuan <yuanchao@gmail.com>\n"
 "Language-Team: Yuan CHAO <yuanchao@gmail.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1507400806.000000\n"
+"X-POOTLE-MTIME: 1549917985.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -160,7 +160,7 @@ msgstr "MIME 類型註冊"
 
 #: ../data/org.sugarlabs.gschema.xml.h:34
 msgid "Consists of key-value pairs mimetypes and their corresponding activity"
-msgstr ""
+msgstr "由鍵值對構成，紀錄 MIME 類型與其對應的活動"
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
@@ -180,11 +180,11 @@ msgstr "音效設備靜音設定。"
 
 #: ../data/org.sugarlabs.gschema.xml.h:39
 msgid "Brightness Level"
-msgstr ""
+msgstr "亮度值"
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
-msgstr ""
+msgstr "電腦螢幕的亮度設定。"
 
 #: ../data/org.sugarlabs.gschema.xml.h:41
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
@@ -197,21 +197,21 @@ msgstr "系統的時區設定"
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr ""
+msgstr "主畫面檢視模式"
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
 "List of home views, including the view icon, the favorite icon and the layout"
-msgstr ""
+msgstr "主畫面的顯示條列，包含檢視圖示、我的最愛圖示還有排列方式"
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
-msgstr ""
+msgstr "啟動列的動畫間隔"
 
 #: ../data/org.sugarlabs.gschema.xml.h:46
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
-msgstr ""
+msgstr "啟動列圖像動畫的更新間隔，延遲時間以毫秒為單位。"
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
@@ -231,11 +231,11 @@ msgstr "當游標移到畫面四角時浮現邊框的延遲時間"
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
 msgid "Trigger Size"
-msgstr ""
+msgstr "觸發區域的大小"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
-msgstr ""
+msgstr "外框顯示觸發區域的大小，由角落、邊緣起算以 px 為單位。"
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
@@ -468,7 +468,7 @@ msgstr "提供給使用者的硬體描述說明。"
 
 #: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
-msgstr ""
+msgstr "這個字串顯示在控制台，關於電腦的區域。"
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
@@ -513,7 +513,7 @@ msgstr "點選改變顏色"
 #: ../extensions/cpsection/aboutme/view.py:294
 #: ../src/jarabe/intro/window.py:203
 msgid "Select gender:"
-msgstr ""
+msgstr "設定性別："
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
@@ -529,7 +529,7 @@ msgstr "身份識別"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:87
 msgid "Model:"
-msgstr ""
+msgstr "型號："
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Serial Number:"
@@ -558,7 +558,7 @@ msgstr "無線網路韌體："
 #: ../extensions/cpsection/aboutcomputer/view.py:134
 #, python-format
 msgid "%d days ago"
-msgstr ""
+msgstr "%d 天前"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:136
 #: ../src/jarabe/journal/journaltoolbox.py:169
@@ -567,7 +567,7 @@ msgstr "今天"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:139
 msgid "Last system update:"
-msgstr ""
+msgstr "上次系統更新日期："
 
 #: ../extensions/cpsection/aboutcomputer/view.py:150
 msgid "Copyright and License"
@@ -603,9 +603,8 @@ msgid "Date & Time"
 msgstr "日期與時間"
 
 #: ../extensions/cpsection/datetime/model.py:100
-#, fuzzy
 msgid "Error: timezone does not exist."
-msgstr "錯誤,時區資料不存在."
+msgstr "錯誤：時區資料不存在。"
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
@@ -629,9 +628,8 @@ msgid "Activation Delay"
 msgstr "啟用延遲"
 
 #: ../extensions/cpsection/frame/view.py:68
-#, fuzzy
 msgid "Activation Area"
-msgstr "啟用延遲"
+msgstr "啟動區域"
 
 #: ../extensions/cpsection/frame/view.py:85
 msgid "Corner"
@@ -643,32 +641,32 @@ msgstr "邊緣"
 
 #: ../extensions/cpsection/frame/view.py:123
 msgid "Size"
-msgstr ""
+msgstr "大小"
 
 #: ../extensions/cpsection/frame/view.py:221
 msgid "toolbar size"
-msgstr ""
+msgstr "工具列大小"
 
 #: ../extensions/cpsection/frame/view.py:226
 msgid "exact corner or edge"
-msgstr ""
+msgstr "準確的角落或是邊緣"
 
 #: ../extensions/cpsection/frame/view.py:228
 msgid "exact corner"
-msgstr ""
+msgstr "準確的角落"
 
 #: ../extensions/cpsection/frame/view.py:230
 msgid "exact edge"
-msgstr ""
+msgstr "準確的邊緣"
 
 #: ../extensions/cpsection/frame/view.py:232
 msgid "ignored"
-msgstr ""
+msgstr "已忽略"
 
 #. TRANS: px as in pixels
 #: ../extensions/cpsection/frame/view.py:235
 msgid "{}px"
-msgstr ""
+msgstr "{}px"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:38
@@ -715,11 +713,11 @@ msgstr "請依序加入你使用的語言。如果優先選定的語言缺少翻
 #: ../extensions/cpsection/language/view.py:383
 #, python-format
 msgid "Error writting language configuration (%s)"
-msgstr ""
+msgstr "保存語言設定時發生錯誤 (%s)"
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem"
-msgstr ""
+msgstr "數據機"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
@@ -792,7 +790,7 @@ msgstr "無線網路"
 
 #: ../extensions/cpsection/network/view.py:73
 msgid "The wireless radio may be turned off to save battery life."
-msgstr ""
+msgstr "可以將無線網路電波關閉來節省電池壽命。"
 
 #: ../extensions/cpsection/network/view.py:86
 msgid "Radio"
@@ -801,11 +799,11 @@ msgstr "無線網路信號"
 #: ../extensions/cpsection/network/view.py:103
 msgid ""
 "Discard wireless connections if you have trouble connecting to the network"
-msgstr ""
+msgstr "忽略無線網路連線假使您無法連上網路"
 
 #: ../extensions/cpsection/network/view.py:113
 msgid "Discard wireless connections"
-msgstr ""
+msgstr "忽略無線網路連線"
 
 #: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
@@ -827,11 +825,11 @@ msgid ""
 "Social Help is a forum that lets you connect with developers and discuss "
 "Sugar Activities.  Changing servers means discussions will happen in a "
 "different place with different people."
-msgstr ""
+msgstr "社群協助是一個討論區，您可以聯繫開發人員並討論 Sugar 活動。改變伺服器代表使用不同的討論區與不同的人討論。"
 
 #: ../extensions/cpsection/network/view.py:173
 msgid "Social Help Server:"
-msgstr ""
+msgstr "社群協助伺服器："
 
 #: ../extensions/cpsection/power/__init__.py:24
 msgid "Power"
@@ -898,11 +896,11 @@ msgstr[0] "您可以安裝 %s 個更新"
 
 #: ../extensions/cpsection/updater/view.py:183
 msgid "Can't connect to the activity server"
-msgstr ""
+msgstr "無法連上活動伺服器"
 
 #: ../extensions/cpsection/updater/view.py:186
 msgid "Verify your connection to internet and try again, or try again later"
-msgstr ""
+msgstr "檢查您的網路連線再試一次，或是稍候重試"
 
 #: ../extensions/cpsection/updater/view.py:206
 #, python-format
@@ -953,7 +951,7 @@ msgstr "%.1f MB"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Web Services"
-msgstr ""
+msgstr "網頁伺服器"
 
 #: ../extensions/cpsection/webaccount/view.py:65
 #, python-format
@@ -966,15 +964,15 @@ msgstr ""
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
-msgstr ""
+msgstr "我的音效"
 
 #: ../extensions/deviceicon/audio.py:330
 msgid "Speaker"
-msgstr ""
+msgstr "喇叭"
 
 #: ../extensions/deviceicon/audio.py:331
 msgid "Microphone"
-msgstr ""
+msgstr "麥克風"
 
 #: ../extensions/deviceicon/battery.py:69
 msgid "My Battery"
@@ -1005,19 +1003,19 @@ msgstr "充電完成"
 
 #: ../extensions/deviceicon/display.py:187
 msgid "My Display"
-msgstr ""
+msgstr "我的顯示器"
 
 #: ../extensions/deviceicon/display.py:189
 msgid "Take a screenshot"
-msgstr ""
+msgstr "拍攝螢幕截圖"
 
 #: ../extensions/deviceicon/display.py:211
 msgid "Brightness"
-msgstr ""
+msgstr "亮度"
 
 #: ../extensions/deviceicon/display.py:239
 msgid "Display"
-msgstr ""
+msgstr "顯示"
 
 #: ../extensions/deviceicon/frame.py:53
 msgid "Show my keyboard"
@@ -1166,7 +1164,7 @@ msgstr "沒有gsm連線"
 
 #: ../extensions/deviceicon/network.py:783
 msgid "Create a connection in My Settings."
-msgstr ""
+msgstr "在我的設定中建立一個連線。"
 
 #: ../extensions/deviceicon/speech.py:49
 msgid "Speech"
@@ -1279,6 +1277,8 @@ msgid ""
 "To apply your changes you have to restart Sugar.\n"
 "Hit ctrl+alt+erase on the keyboard to trigger a restart."
 msgstr ""
+"您必須重新啟動 Sugar 來讓您的改變生效。\n"
+"同時按下鍵盤上的 ctrl+alt+erase 按鍵來重新啟動。"
 
 #: ../src/jarabe/controlpanel/gui.py:373 ../src/jarabe/journal/palettes.py:194
 #: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
@@ -1305,11 +1305,11 @@ msgstr "立刻重新啟動"
 
 #: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
 msgid "An activity is not responding."
-msgstr ""
+msgstr "有一個活動沒有回應。"
 
 #: ../src/jarabe/controlpanel/gui.py:420 ../src/jarabe/view/buddymenu.py:138
 msgid "You may lose unsaved work if you continue."
-msgstr ""
+msgstr "如果繼續下一步，您會失去未保存的內容。"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
@@ -1414,11 +1414,11 @@ msgstr "三角形"
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
-msgstr ""
+msgstr "註冊"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
-msgstr ""
+msgstr "請稍候，正在搜尋您的學校伺服器。"
 
 #: ../src/jarabe/desktop/favoritesview.py:387
 msgid "Registration Failed"
@@ -1634,51 +1634,51 @@ msgstr "下一步"
 
 #: ../src/jarabe/intro/agepicker.py:38
 msgid "Select grade:"
-msgstr ""
+msgstr "選擇年級："
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Preschool"
-msgstr ""
+msgstr "學齡前"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Kindergarten"
-msgstr ""
+msgstr "幼稚園"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "1st Grade"
-msgstr ""
+msgstr "一年級"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "2nd Grade"
-msgstr ""
+msgstr "二年級"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "3rd Grade"
-msgstr ""
+msgstr "三年級"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "4th Grade"
-msgstr ""
+msgstr "四年級"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "5th Grade"
-msgstr ""
+msgstr "五年級"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "6th Grade"
-msgstr ""
+msgstr "六年級"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "7th Grade"
-msgstr ""
+msgstr "七年級"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "High School"
-msgstr ""
+msgstr "高中"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "Adult"
-msgstr ""
+msgstr "成年"
 
 #: ../src/jarabe/journal/expandedentry.py:153
 #: ../src/jarabe/journal/journaltoolbox.py:584
@@ -1862,7 +1862,7 @@ msgstr "已選擇 %(selected)d 項 / 共 %(total)d 項"
 
 #: ../src/jarabe/journal/journaltoolbox.py:917
 msgid "Select filter"
-msgstr ""
+msgstr "選擇過濾器"
 
 #: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
 msgid "Your Journal is empty"
@@ -2197,18 +2197,18 @@ msgstr "%s 的畫面抓圖"
 
 #: ../src/jarabe/view/alerts.py:38 ../src/jarabe/view/alerts.py:48
 msgid "Activity launcher"
-msgstr ""
+msgstr "活動啟動列"
 
 #: ../src/jarabe/view/alerts.py:39
 #, python-format
 msgid "%s is already running. Please stop %s before launching it again."
-msgstr ""
+msgstr "%s 已經在執行中。請先停止 %s 再重新啟動。"
 
 #: ../src/jarabe/view/alerts.py:49
 msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
-msgstr ""
+msgstr "已達同時開啟活動的最大上限。請先關閉一個活動再開啟其他新的活動。"
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
@@ -2259,7 +2259,7 @@ msgstr "檢視原始碼"
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
-msgstr ""
+msgstr "檢視說明"
 
 #: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
@@ -2272,16 +2272,16 @@ msgstr "移除"
 
 #: ../src/jarabe/view/viewhelp.py:304
 msgid "Help Manual"
-msgstr ""
+msgstr "說明手冊"
 
 #: ../src/jarabe/view/viewhelp.py:318
 msgid "Social Help"
-msgstr ""
+msgstr "社群協助"
 
 #: ../src/jarabe/view/viewhelp.py:326
 #, python-format
 msgid "Help: %s"
-msgstr ""
+msgstr "輔助說明： %s"
 
 #: ../src/jarabe/view/viewsource.py:364
 msgid "Instance Source"
@@ -2290,32 +2290,31 @@ msgstr "範例原始碼"
 #: ../src/jarabe/view/viewsource.py:392
 #, python-format
 msgid "Do you want to duplicate %s Activity?"
-msgstr ""
+msgstr "您想要複製 %s 活動嗎？"
 
 #: ../src/jarabe/view/viewsource.py:394
 msgid "This may take a few minutes"
-msgstr ""
+msgstr "這將會需要幾分鐘的時間"
 
 #: ../src/jarabe/view/viewsource.py:408
 msgid "Duplicating activity..."
-msgstr ""
+msgstr "複製活動中…"
 
 #: ../src/jarabe/view/viewsource.py:447
-#, fuzzy
 msgid "Duplicated"
 msgstr "副本"
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
-msgstr ""
+msgstr "活動已經複製"
 
 #: ../src/jarabe/view/viewsource.py:462
 msgid "Duplicated activity already exists"
-msgstr ""
+msgstr "複製的活動已存在"
 
 #: ../src/jarabe/view/viewsource.py:463
 msgid "Delete your copy before trying to duplicate the activity again"
-msgstr ""
+msgstr "刪除您已經複製的活動，然後再嘗試一次"
 
 #: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
@@ -2342,102 +2341,102 @@ msgstr "查看原始碼： %r"
 
 #: ../src/jarabe/view/viewsource.py:809
 msgid "Please select a file in the left panel."
-msgstr ""
+msgstr "請由左側的面板選擇一個檔案。"
 
 #: ../extensions/cpsection/backup/__init__.py:22
 msgid "Backup"
-msgstr ""
+msgstr "備份"
 
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171
 msgid "Please connect a device to continue"
-msgstr ""
+msgstr "請先連接儲存設備再繼續"
 
 #: ../extensions/cpsection/backup/backends/volume.py:69
 #: ../extensions/cpsection/backup/backends/volume.py:178
 msgid "Select your volume"
-msgstr ""
+msgstr "選擇您的儲存設備"
 
 #: ../extensions/cpsection/backup/backends/volume.py:78
 msgid "Not enough space in volume"
-msgstr ""
+msgstr "儲存設備沒有足夠的空間"
 
 #: ../extensions/cpsection/backup/backends/volume.py:122
 #, python-format
 msgid "Backup from user %s"
-msgstr ""
+msgstr "使用者 %s 的備份"
 
 #: ../extensions/cpsection/backup/backends/volume.py:191
 msgid "No checkpoints found in the device"
-msgstr ""
+msgstr "本設備上找不到備份檢查點"
 
 #: ../extensions/cpsection/backup/backends/volume.py:199
 msgid "Select your checkpoint"
-msgstr ""
+msgstr "選擇備份檢查點"
 
 #: ../extensions/cpsection/backup/backends/volume.py:210
 msgid "Not enough space in disk"
-msgstr ""
+msgstr "磁碟空間不足"
 
 #: ../extensions/cpsection/backup/backends/volume.py:329
 msgid "Local Device Backup"
-msgstr ""
+msgstr "本機設備備份"
 
 #: ../extensions/cpsection/backup/view.py:133
 msgid "Save the contents of your Journal"
-msgstr ""
+msgstr "保存您的日誌內容"
 
 #: ../extensions/cpsection/backup/view.py:141
 msgid "Restore the contents of your Journal"
-msgstr ""
+msgstr "回復您的日誌內容"
 
 #: ../extensions/cpsection/backup/view.py:223
 msgid "Please close all the activities, and start again"
-msgstr ""
+msgstr "請關閉所有的活動，然後再試一次"
 
 #: ../extensions/cpsection/backup/view.py:229
 msgid "Select where you want create your backup"
-msgstr ""
+msgstr "選擇您想要保存備份的地方"
 
 #: ../extensions/cpsection/backup/view.py:231
 msgid "Select where you want retrieve your restore"
-msgstr ""
+msgstr "選擇您想要回復備份的來源"
 
 #: ../extensions/cpsection/backup/view.py:271
 msgid "Retry"
-msgstr ""
+msgstr "重試"
 
 #: ../extensions/cpsection/backup/view.py:290
 msgid "Starting backup..."
-msgstr ""
+msgstr "開始備份…"
 
 #: ../extensions/cpsection/backup/view.py:294
 msgid "Starting restore..."
-msgstr ""
+msgstr "開始回復…"
 
 #: ../extensions/cpsection/backup/view.py:321
 msgid ""
 "I want to restore the content of my Journal. In order to do this, my Journal "
 "will first be emptied of all its content; then the restored content will be "
 "added."
-msgstr ""
+msgstr "我想要回復我的日誌內容。首先我的日誌將會被清空，然後回復的內容會再加入日誌。"
 
 #: ../extensions/cpsection/backup/view.py:327
 msgid "Confirm"
-msgstr ""
+msgstr "確認"
 
 #: ../extensions/cpsection/backup/view.py:365
 msgid "Operation started"
-msgstr ""
+msgstr "動作開始"
 
 #: ../extensions/cpsection/backup/view.py:377
 msgid "Backup finished successfully"
-msgstr ""
+msgstr "備份已成功完成"
 
 #: ../extensions/cpsection/backup/view.py:379
 msgid "Restore realized successfully."
-msgstr ""
+msgstr "回復已成功完成"
 
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
-msgstr ""
+msgstr "清除通知"

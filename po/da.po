@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-02-26 00:57+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"PO-Revision-Date: 2018-10-22 18:35+0000\n"
+"Last-Translator: scootergrisen <scootergrisen@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1488070656.000000\n"
+"X-POOTLE-MTIME: 1540233331.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -28,11 +28,11 @@ msgstr "Denne værdi viser hvorvidt GConf værdier blev migreret til GSettings"
 
 #: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
 msgid "Backup URL"
-msgstr "Sikkerhedskopi-URL"
+msgstr "Sikkerhedskopiering-URL"
 
 #: ../data/org.sugarlabs.gschema.xml.h:4 ../data/sugar.schemas.in.h:12
 msgid "URL where the backup is saved to."
-msgstr "URL hvor sikkerhedskopi gemmes til."
+msgstr "URL hvor sikkerhedskopieringen gemmes til."
 
 #: ../data/org.sugarlabs.gschema.xml.h:5 ../data/sugar.schemas.in.h:31
 msgid "Show Log out"
@@ -298,13 +298,13 @@ msgstr "Ekstrem strømstyring (slukker trådløs radio, øger batterilevetid)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:63 ../data/sugar.schemas.in.h:39
 msgid "Keyboard layouts"
-msgstr "Udseender på tastatur"
+msgstr "Tastaturlayouts"
 
 #: ../data/org.sugarlabs.gschema.xml.h:64 ../data/sugar.schemas.in.h:40
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
-"Liste med udseender på tastatur. Hver post bør være i udseendeform(variant)"
+"Liste over tastaturlayouts. Hver post skal være i formatet layout(variant)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:65 ../data/sugar.schemas.in.h:41
 msgid "Keyboard options"
@@ -354,7 +354,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:75
 msgid "Enable Ad-hoc autoconnect"
-msgstr "Slå Ad-hoc autoforbindelse til."
+msgstr "Slå Ad-hoc autoforbindelse til"
 
 #: ../data/org.sugarlabs.gschema.xml.h:76
 msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
@@ -555,7 +555,7 @@ msgstr "Ikke tilgængelig"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:76
 msgid "Identity"
-msgstr "Identificér"
+msgstr "Identitet"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:87
 msgid "Model:"
@@ -571,7 +571,7 @@ msgstr "Software"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:112
 msgid "Build:"
-msgstr "Bygget:"
+msgstr "Bygning:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:117
 msgid "Sugar:"
@@ -633,7 +633,7 @@ msgstr "Ryd baggrunden"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr "Dato & tid"
+msgstr "Dato og klokkeslæt"
 
 #: ../extensions/cpsection/datetime/model.py:100
 msgid "Error: timezone does not exist."
@@ -712,11 +712,11 @@ msgstr "Tastaturmodel"
 
 #: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
-msgstr "Nøgle(r) til at ændre udseende"
+msgstr "Tast(er) til at skifte layout"
 
 #: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
-msgstr "Udseende(r) på tastatur"
+msgstr "Tastaturlayout(s)"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:39
@@ -889,15 +889,15 @@ msgstr "Strømstyring"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software Update"
-msgstr "Software-opdatering"
+msgstr "Softwareopdatering"
 
 #: ../extensions/cpsection/updater/view.py:70
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
-"Software-opdateringer retter fejl, fjerne sikkerhedsproblemer og tilbyder "
-"nye funktioner."
+"Softwareopdateringer retter fejl, fjerne sikkerhedsproblemer og tilbyder nye "
+"funktioner."
 
 #: ../extensions/cpsection/updater/view.py:84
 msgid "Update in progress..."
@@ -1000,7 +1000,7 @@ msgstr "%.1f MB"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Web Services"
-msgstr "Internetservice"
+msgstr "Internettjenester"
 
 #: ../extensions/cpsection/webaccount/view.py:65
 #, python-format
@@ -1013,7 +1013,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
-msgstr "Min Lyd"
+msgstr "Min lyd"
 
 #: ../extensions/deviceicon/audio.py:330
 msgid "Speaker"
@@ -1052,7 +1052,7 @@ msgstr "Opladet"
 
 #: ../extensions/deviceicon/display.py:187
 msgid "My Display"
-msgstr "Mit Display"
+msgstr "Min skærm"
 
 #: ../extensions/deviceicon/display.py:189
 msgid "Take a screenshot"
@@ -1150,7 +1150,7 @@ msgstr "Forbindelse afsluttet"
 #: ../src/jarabe/journal/journaltoolbox.py:587
 #: ../src/jarabe/journal/palettes.py:166
 msgid "Cancel"
-msgstr "Fortryd"
+msgstr "Annullér"
 
 #: ../extensions/deviceicon/network.py:327
 msgid "Try connection again"
@@ -1254,11 +1254,11 @@ msgstr "Vis indhold"
 
 #: ../data/sugar.schemas.in.h:15
 msgid "Favorites Layout"
-msgstr "Favoritter over udseende"
+msgstr "Favoritlayout"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Layout of the favorites view."
-msgstr "Udseende på favoritvisningen."
+msgstr "Layout på favoritvisningen."
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Favorites resume mode"
@@ -1338,7 +1338,7 @@ msgstr "Ændringer kræver genstart"
 
 #: ../src/jarabe/controlpanel/gui.py:379
 msgid "Cancel changes"
-msgstr "Fortryd ændringer"
+msgstr "Annullér ændringer"
 
 #: ../src/jarabe/controlpanel/gui.py:384
 msgid "Later"
@@ -1606,7 +1606,7 @@ msgstr "Afvis"
 
 #: ../src/jarabe/frame/activitiestray.py:750
 msgid "The other participant canceled the file transfer"
-msgstr "Den anden deltager afbrød filoverførslen"
+msgstr "Den anden deltager annullerede filoverførslen"
 
 #: ../src/jarabe/frame/activitiestray.py:800
 #, python-format
@@ -1675,7 +1675,7 @@ msgstr "Vælg klasse:"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Preschool"
-msgstr "Børnehaveklasse"
+msgstr "Førskole"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Kindergarten"
@@ -1730,7 +1730,7 @@ msgstr "Vil du foretage permanent sletning af \"%s\"?"
 #: ../src/jarabe/journal/volumestoolbar.py:134
 #: ../src/jarabe/journal/iconmodel.py:110
 msgid "Untitled"
-msgstr "Uden navn"
+msgstr "Unavngivet"
 
 #: ../src/jarabe/journal/expandedentry.py:366
 msgid "No preview"
@@ -1778,7 +1778,7 @@ msgstr "Kommentarer:"
 #: ../src/jarabe/journal/volumestoolbar.py:349
 #: ../src/jarabe/view/viewhelp.py:79
 msgid "Journal"
-msgstr "Logbog"
+msgstr "Journal"
 
 #: ../src/jarabe/journal/journaltoolbox.py:103
 msgid "Favorite entries"
@@ -1789,7 +1789,7 @@ msgstr "Favoritposter"
 #: ../src/jarabe/journal/journaltoolbox.py:403
 #: ../src/jarabe/journal/journaltoolbox.py:479
 msgid "Anything"
-msgstr "Hvadsomhelst"
+msgstr "Alt"
 
 #: ../src/jarabe/journal/journaltoolbox.py:118
 #: ../src/jarabe/journal/journaltoolbox.py:165
@@ -1816,7 +1816,7 @@ msgstr "Seneste år"
 #: ../src/jarabe/journal/journaltoolbox.py:521
 #: ../src/jarabe/journal/palettes.py:105
 msgid "Copy to"
-msgstr "Kopier til"
+msgstr "Kopiér til"
 
 #: ../src/jarabe/journal/journaltoolbox.py:529
 #: ../src/jarabe/journal/palettes.py:116 ../src/jarabe/view/viewsource.py:379
@@ -1899,7 +1899,7 @@ msgstr "Vælg filter"
 
 #: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
 msgid "Your Journal is empty"
-msgstr "Din logbog er tom"
+msgstr "Din journal er tom"
 
 #: ../src/jarabe/journal/listview.py:476 ../src/jarabe/journal/iconview.py:215
 msgid "Your documents folder is empty"
@@ -1925,15 +1925,15 @@ msgstr "Ønsker du at degradere til version %s"
 
 #: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
-msgstr "Din logbog er fuld"
+msgstr "Din journal er fuld"
 
 #: ../src/jarabe/journal/modalalert.py:68
 msgid "Please delete some old Journal entries to make space for new ones."
-msgstr "Slet nogle logbogsindlæg for at frigøre plads for nye indlæg."
+msgstr "Slet nogle journalposter for at gøre plads til nye."
 
 #: ../src/jarabe/journal/modalalert.py:82
 msgid "Show Journal"
-msgstr "Vis logbog"
+msgstr "Vis journal"
 
 #: ../src/jarabe/journal/objectchooser.py:171
 msgid "Choose an object"
@@ -2384,7 +2384,7 @@ msgstr "Vælg venligst en fil i venstre panel."
 
 #: ../extensions/cpsection/backup/__init__.py:22
 msgid "Backup"
-msgstr "Sikkerhedskopi"
+msgstr "Sikkerhedskopiering"
 
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171

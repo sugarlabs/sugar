@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: olpc-sugar-pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2018-06-13 21:58+0000\n"
+"PO-Revision-Date: 2019-03-09 01:25+0000\n"
 "Last-Translator: Paulo Francisco <slomp@ufrgs.br>\n"
 "Language-Team: Brazilian Portuguese <fedora-docs-br@redhat.com>\n"
 "Language: pt_BR\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1528927087.000000\n"
+"X-POOTLE-MTIME: 1552094724.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -175,7 +175,7 @@ msgstr "Cadastro de tipo MIME"
 msgid "Consists of key-value pairs mimetypes and their corresponding activity"
 msgstr ""
 "Consiste em um número de valores chave, combinados com tipos MIME, e suas "
-"atividades correspondentes."
+"atividades correspondentes"
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
@@ -219,7 +219,7 @@ msgid ""
 "List of home views, including the view icon, the favorite icon and the layout"
 msgstr ""
 "Lista de visualizações da página principal, incluindo os ícones visualizar, "
-"favoritos e layout."
+"favoritos e layout"
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
@@ -691,15 +691,15 @@ msgstr "Tamanho"
 
 #: ../extensions/cpsection/frame/view.py:221
 msgid "toolbar size"
-msgstr "Tamanho da barra de ferramentas"
+msgstr "tamanho da barra de ferramentas"
 
 #: ../extensions/cpsection/frame/view.py:226
 msgid "exact corner or edge"
-msgstr "Canto exato ou borda"
+msgstr "canto exato ou borda"
 
 #: ../extensions/cpsection/frame/view.py:228
 msgid "exact corner"
-msgstr "Canto exato"
+msgstr "canto exato"
 
 #: ../extensions/cpsection/frame/view.py:230
 msgid "exact edge"
@@ -851,7 +851,7 @@ msgstr "Rádio"
 #: ../extensions/cpsection/network/view.py:103
 msgid ""
 "Discard wireless connections if you have trouble connecting to the network"
-msgstr "Desative conexões Wi-Fi caso haja problemas ao se conectar à rede."
+msgstr "Desative conexões Wi-Fi caso haja problemas ao se conectar à rede"
 
 #: ../extensions/cpsection/network/view.py:113
 msgid "Discard wireless connections"
@@ -1716,27 +1716,27 @@ msgstr "1º Ano"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "2nd Grade"
-msgstr "2º ano"
+msgstr "2º Ano"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "3rd Grade"
-msgstr "3º ano"
+msgstr "3º Ano"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "4th Grade"
-msgstr "4º ano"
+msgstr "4º Ano"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "5th Grade"
-msgstr "5º ano"
+msgstr "5º Ano"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "6th Grade"
-msgstr "6º ano"
+msgstr "6º Ano"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "7th Grade"
-msgstr "7º ano"
+msgstr "7º Ano"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "High School"
@@ -1751,7 +1751,7 @@ msgstr "Adulto"
 #: ../src/jarabe/journal/palettes.py:163
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
-msgstr "Você deseja apagar \"%s\" permanentemente?"
+msgstr "Você deseja apagar permanentemente \"%s\"?"
 
 #: ../src/jarabe/journal/expandedentry.py:296
 #: ../src/jarabe/journal/listmodel.py:185 ../src/jarabe/journal/model.py:794
@@ -2277,7 +2277,7 @@ msgstr "Inicializador de atividade"
 #, python-format
 msgid "%s is already running. Please stop %s before launching it again."
 msgstr ""
-"%s já está em execução. Por favor encerre %s antes de iniciá-lo novamente.  "
+"%s já está em execução. Por favor encerre %s antes de iniciá-lo novamente."
 
 #: ../src/jarabe/view/alerts.py:49
 msgid ""
@@ -2319,7 +2319,7 @@ msgstr "Convidar para %s"
 #: ../src/jarabe/view/launcher.py:159
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr "Não foi possível iniciar <b>%s</b>."
+msgstr "<b>%s</b> falhou ao iniciar."
 
 #: ../src/jarabe/view/palettes.py:53
 msgid "Starting..."
@@ -2367,7 +2367,7 @@ msgstr "Instância de Fonte"
 #: ../src/jarabe/view/viewsource.py:392
 #, python-format
 msgid "Do you want to duplicate %s Activity?"
-msgstr "Deseja duplicar a atividade %s ?"
+msgstr "Deseja duplicar a atividade %s?"
 
 #: ../src/jarabe/view/viewsource.py:394
 msgid "This may take a few minutes"
@@ -2423,7 +2423,7 @@ msgstr "Por favor selecione um arquivo no painel do lado esquerdo."
 # English word "backup" is also accepted as a translation in this case.
 #: ../extensions/cpsection/backup/__init__.py:22
 msgid "Backup"
-msgstr "Cópia de Segurança"
+msgstr "Cópia de segurança"
 
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171
@@ -2447,7 +2447,7 @@ msgstr "Cópia de segurança para usuário %s"
 
 #: ../extensions/cpsection/backup/backends/volume.py:191
 msgid "No checkpoints found in the device"
-msgstr "Ponto de verificação não encontrado no dispositivo."
+msgstr "Ponto de verificação não encontrado no dispositivo"
 
 #: ../extensions/cpsection/backup/backends/volume.py:199
 msgid "Select your checkpoint"
@@ -2516,8 +2516,8 @@ msgstr "Cópia de segurança concluída com sucesso"
 
 #: ../extensions/cpsection/backup/view.py:379
 msgid "Restore realized successfully."
-msgstr "Restauração concluída com sucesso"
+msgstr "Restauração concluída com sucesso."
 
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
-msgstr "Limpar notificações "
+msgstr "Limpar notificações"
