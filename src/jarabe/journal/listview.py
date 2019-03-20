@@ -812,11 +812,9 @@ class ListView(BaseListView):
         registry = bundleregistry.get_registry()
         metadata = model.get(row[ListModel.COLUMN_UID])
         bundle = misc.get_bundle(metadata)
-       
         if bundle is not None and registry.is_installed(bundle):
             registry.uninstall(bundle)
         model.delete(metadata['uid'])
-
 
     def __icon_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
@@ -865,7 +863,7 @@ class CellRendererDetail(CellRendererIcon):
         self.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
         self.props.prelit_stroke_color = style.COLOR_TRANSPARENT.get_svg()
         self.props.prelit_fill_color = style.COLOR_BLACK.get_svg()
-        
+
 
 class CellRendererRemove(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererRemove'
@@ -920,4 +918,3 @@ class CellRendererBuddy(CellRendererIcon):
             self.props.xo_color = xo_color
 
     buddy = GObject.Property(type=object, setter=set_buddy)
-    
