@@ -36,6 +36,7 @@ from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import model
 from jarabe.journal import misc
 from jarabe.journal import journalwindow
+from jarabe.model import bundleregistry
 
 
 UPDATE_INTERVAL = 300
@@ -742,11 +743,21 @@ class ListView(BaseListView):
         cell_detail = CellRendererDetail()
         cell_detail.connect('clicked', self.__detail_cell_clicked_cb)
 
-        column = Gtk.TreeViewColumn()
-        column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
-        column.props.fixed_width = cell_detail.props.width
-        column.pack_start(cell_detail, True)
-        self.tree_view.append_column(column)
+        cell_remove = CellRendererRemove()
+        cell_remove.connect('clicked', self.__remove_cell_clicked_cb)
+
+        column_detail = Gtk.TreeViewColumn()
+        column_detail.props.sizing = Gtk.TreeViewColumnSizing.FIXED
+        column_detail.props.fixed_width = cell_detail.props.width
+        column_detail.pack_start(cell_detail, True)
+
+        column_remove = Gtk.TreeViewColumn()
+        column_remove.props.sizing = Gtk.TreeViewColumnSizing.FIXED
+        column_remove.props.fixed_width = cell_remove.props.width
+        column_remove.pack_start(cell_remove, False)
+
+        self.tree_view.append_column(column_remove)
+        self.tree_view.append_column(column_detail)
 
     def is_dragging(self):
         return self._is_dragging
@@ -796,6 +807,17 @@ class ListView(BaseListView):
         row = self.tree_view.get_model()[path]
         self.emit('detail-clicked', row[ListModel.COLUMN_UID])
 
+    def __remove_cell_clicked_cb(self, cell, path):
+        row = self._model[path]
+        registry = bundleregistry.get_registry()
+        metadata = model.get(row[ListModel.COLUMN_UID])
+        bundle = misc.get_bundle(metadata)
+       
+        if bundle is not None and registry.is_installed(bundle):
+            registry.uninstall(bundle)
+        model.delete(metadata['uid'])
+
+
     def __icon_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
@@ -843,6 +865,23 @@ class CellRendererDetail(CellRendererIcon):
         self.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
         self.props.prelit_stroke_color = style.COLOR_TRANSPARENT.get_svg()
         self.props.prelit_fill_color = style.COLOR_BLACK.get_svg()
+        
+
+class CellRendererRemove(CellRendererIcon):
+    __gtype_name__ = 'JournalCellRendererRemove'
+
+    def __init__(self):
+        CellRendererIcon.__init__(self)
+
+        self.props.width = style.GRID_CELL_SIZE
+        self.props.height = style.GRID_CELL_SIZE
+        self.props.size = style.SMALL_ICON_SIZE
+        self.props.icon_name = 'list-remove'
+        self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
+        self.props.stroke_color = style.COLOR_TRANSPARENT.get_svg()
+        self.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
+        self.props.prelit_stroke_color = style.COLOR_TRANSPARENT.get_svg()
+        self.props.prelit_fill_color = style.COLOR_BLACK.get_svg()
 
 
 class CellRendererActivityIcon(CellRendererIcon):
@@ -881,3 +920,4 @@ class CellRendererBuddy(CellRendererIcon):
             self.props.xo_color = xo_color
 
     buddy = GObject.Property(type=object, setter=set_buddy)
+    
