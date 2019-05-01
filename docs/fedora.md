@@ -26,10 +26,3 @@ Select the *GNOME on Xorg* or *GNOME Classic* desktop, then in a Terminal, type:
 Sugar will start. *Logout* from Sugar to return to the desktop environment you were previously using.
 
 Sugar is also available from *Activities* search in GNOME.
-
-Using Sugar from a USB drive - Sugar on a Stick
------------------------------------------------
-
-Sugar on a Stick (SoaS) is a Fedora spin, made from Fedora and Sugar together.
-
-SoaS starts from a USB drive ("stick"), and can be installed with the [Fedora installation process](http://docs.fedoraproject.org/en-US/Fedora/20/html/Installation_Guide/). Or, the Fedora installer may be started from the Sugar Terminal activity, with the command , or using a [tutorial](http://wiki.sugarlabs.org/go/Tutorials/Installation/Install_with_liveinst "wikilink").
