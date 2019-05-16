@@ -73,19 +73,23 @@ Clone each of the module repositories;
         git clone https://github.com/sugarlabs/$module.git
     done
 
-Install the build dependencies. There are many, and their package names vary by distribution. A good list is in the Debian or Fedora packaging files.
+Install the build dependencies. There are many, and their package
+names vary by distribution. A first start is in the Debian or Fedora
+packaging files. From 0.113, add Six.
 
 On Debian or Ubuntu;
 
     for module in sugar{-datastore,-artwork,-toolkit,-toolkit-gtk3,}; do
         sudo apt build-dep $module
     done
+    sudo apt install python{,3}-six
 
 On Fedora, use [dnf builddep](http://dnf-plugins-core.readthedocs.io/en/latest/builddep.html), like this; (If you are using GNOME's desktop environment, make sure you are using GNOME Xorg before moving forward!)
 
     for module in sugar{-datastore,-artwork,-toolkit,-toolkit-gtk3,}; do
         sudo dnf builddep $module
     done
+    sudo dnf install python{2,3}-six
 
 Autogen, configure, make, and install each module for Python 2;
 
