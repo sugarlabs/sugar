@@ -77,8 +77,9 @@ Install the build dependencies. There are many, and their package
 names vary by distribution. A first start is in the Debian or Fedora
 packaging files. From 0.113, add Six.
 
-On Debian or Ubuntu;
+On Debian or Ubuntu, ensure `deb-src` lines are enabled in `/etc/apt/sources.list`, and then;
 
+    sudo apt update
     for module in sugar{-datastore,-artwork,-toolkit,-toolkit-gtk3,}; do
         sudo apt build-dep $module
     done
@@ -111,7 +112,7 @@ When support is required for both versions of Python, build the `sugar-toolkit-g
         cd ..
     done
 
-On Fedora, add `/usr/local/lib/python2.7/site-packages/` to `sys.path` for any Python 2 programs;
+On Fedora, add `/usr/local/lib/python2.7/site-packages/` to `sys.path` for any Python 2 programs, especially `/usr/local/bin/sugar`;
 
     export PYTHONPATH=/usr/local/lib/python2.7/site-packages
     export GI_TYPELIB_PATH=/usr/local/lib/girepository-1.0
@@ -121,10 +122,9 @@ Install the run-time dependencies. There are many, and their package
 names vary by distribution. A first start is in the Debian or Fedora
 packaging files.
 
-On Debian or Ubuntu, install the packages and then remove;
+On Debian or Ubuntu, install the Sugar packages;
 
     sudo apt install sucrose
-    sudo apt remove sucrose
 
 On Fedora, use `dnf deplist` and filter by architecture;
 
@@ -139,7 +139,7 @@ On Fedora, use `dnf deplist` and filter by architecture;
 
 Add the PolicyKit files to the system-wide directory;
 
-    sudo ln -s /usr/local/share/polkit-1/actions/org.sugar.* \
+    sudo ln -sf /usr/local/share/polkit-1/actions/org.sugar.* \
         /usr/share/polkit-1/actions/
 
 Sugar is now installed in `/usr/local`.  Remove any Sugar or Toolkit packages you installed from Fedora or Debian, otherwise then you start Sugar the packaged files in `/usr/` will be run.
