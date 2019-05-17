@@ -84,7 +84,7 @@ On Debian or Ubuntu;
     done
     sudo apt install python{,3}-six
 
-On Fedora, use [dnf builddep](http://dnf-plugins-core.readthedocs.io/en/latest/builddep.html), like this; (If you are using GNOME's desktop environment, make sure you are using GNOME Xorg before moving forward!)
+On Fedora, use [dnf builddep](http://dnf-plugins-core.readthedocs.io/en/latest/builddep.html), like this;
 
     for module in sugar{-datastore,-artwork,-toolkit,-toolkit-gtk3,}; do
         sudo dnf builddep $module
@@ -110,6 +110,39 @@ When support is required for both versions of Python, build the `sugar-toolkit-g
         sudo make install
         cd ..
     done
+
+On Fedora, add `/usr/local/lib/python2.7/site-packages/` to `sys.path` for any Python 2 programs;
+
+    export PYTHONPATH=/usr/local/lib/python2.7/site-packages
+    export GI_TYPELIB_PATH=/usr/local/lib/girepository-1.0
+    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+Install the run-time dependencies. There are many, and their package
+names vary by distribution. A first start is in the Debian or Fedora
+packaging files.
+
+On Debian or Ubuntu, install the packages and then remove;
+
+    sudo apt install sucrose
+    sudo apt remove sucrose
+
+On Fedora, use `dnf deplist` and filter by architecture;
+
+    for module in sugar{-datastore,-artwork,-toolkit,-toolkit-gtk3,}; do
+        echo
+        echo $module
+        sudo dnf deplist $module | \
+            awk '/provider:/ {print $2}' | \
+            grep -v i686 | \
+            sort -u | sudo xargs dnf -y install
+    done
+
+Add the PolicyKit files to the system-wide directory;
+
+    sudo ln -s /usr/local/share/polkit-1/actions/org.sugar.* \
+        /usr/share/polkit-1/actions/
+
+Sugar is now installed in `/usr/local`.  Remove any Sugar or Toolkit packages you installed from Fedora or Debian, otherwise then you start Sugar the packaged files in `/usr/` will be run.
 
 Clone the Browse and Terminal activities;
 
