@@ -112,6 +112,8 @@ When support is required for both versions of Python, build the `sugar-toolkit-g
         cd ..
     done
 
+On Debian or Ubuntu, try `python3 -c 'import sugar3'` if fails move the `sugar3` directory from `/usr/local/lib/python3.6/site-packages/` to `/usr/local/lib/python3.6/dist-packages/`.
+
 On Fedora, add `/usr/local/lib/python2.7/site-packages/` to `sys.path` for any Python 2 programs, especially `/usr/local/bin/sugar`;
 
     export PYTHONPATH=/usr/local/lib/python2.7/site-packages
