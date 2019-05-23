@@ -40,4 +40,4 @@ Create a user for Sugar and set a default desktop environment:
 
 Start a session:
 
-    rdesktop -g 1200x900 -u guest -p password 0
+    rdesktop -g 1200x900 -u username -p password 0

@@ -58,7 +58,7 @@ Or, install `xrdp` and `rdesktop` then log in to Sugar in a window;
     sudo apt install xrdp rdesktop
     sudo adduser guest
     echo sugar | sudo tee -a /home/guest/.xsession
-    rdesktop -g 1200x900 -u guest -p guest 127.0.0.1
+    rdesktop -g 1200x900 -u username -p password 127.0.0.1
 
 Once you have a local Sugar desktop, or a remote Sugar desktop, development of activities can begin.
 
