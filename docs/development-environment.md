@@ -77,9 +77,14 @@ Install the build dependencies. There are many, and their package
 names vary by distribution. A first start is in the Debian or Fedora
 packaging files. From 0.113, add Six.
 
-On Debian or Ubuntu, ensure `deb-src` lines are enabled in `/etc/apt/sources.list`, and then;
+On Debian or Ubuntu, ensure `deb-src` lines are enabled in `/etc/apt/sources.list`,or simply do;
 
-    sudo apt update
+```
+sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
+sudo apt-get update
+```
+and then;
+
     for module in sugar{-datastore,-artwork,-toolkit,-toolkit-gtk3,}; do
         sudo apt build-dep $module
     done
