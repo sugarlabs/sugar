@@ -45,22 +45,13 @@ For Debian users, see also [Using Sugar on Debian](debian.md), or see how to ins
 
 For Ubuntu users, see also [Using Sugar on Ubuntu](ubuntu.md), or see how to install `sucrose` below.
 
-Install Debian **Stretch** or **Buster**, or Ubuntu 17.10 **Artful**.
-
 Install the `sucrose` package;
 
     sudo apt install sucrose
 
 Log out, then log in with the Sugar desktop selected.
 
-Or, install `xrdp` and `rdesktop` then log in to Sugar in a window;
-
-    sudo apt install xrdp rdesktop
-    sudo adduser guest
-    echo sugar | sudo tee -a /home/guest/.xsession
-    rdesktop -g 1200x900 -u guest -p guest 127.0.0.1
-
-Once you have a local Sugar desktop, or a remote Sugar desktop, development of activities can begin.
+Once Sugar is installed, development of activities can begin.
 
 Native Sugar
 ------------
