@@ -75,6 +75,7 @@ On Debian or Ubuntu, ensure `deb-src` lines are present and enabled in `/etc/apt
         sudo apt build-dep $module
     done
     sudo apt install python{,3}-six
+    sudo apt install python-empy
 
 On Fedora, use [dnf builddep](http://dnf-plugins-core.readthedocs.io/en/latest/builddep.html), like this;
 
@@ -82,6 +83,7 @@ On Fedora, use [dnf builddep](http://dnf-plugins-core.readthedocs.io/en/latest/b
         sudo dnf builddep $module
     done
     sudo dnf install python{2,3}-six
+    sudo dnf install python-empy
 
 Autogen, configure, make, and install each module for Python 2;
 
