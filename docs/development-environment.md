@@ -74,14 +74,14 @@ On Debian or Ubuntu, ensure `deb-src` lines are present and enabled in `/etc/apt
     for module in sugar{-datastore,-artwork,-toolkit,-toolkit-gtk3,}; do
         sudo apt build-dep $module
     done
-    sudo apt install python{,3}-six
+    sudo apt install python{,3}-six python-empy
 
 On Fedora, use [dnf builddep](http://dnf-plugins-core.readthedocs.io/en/latest/builddep.html), like this;
 
     for module in sugar{-datastore,-artwork,-toolkit,-toolkit-gtk3,}; do
         sudo dnf builddep $module
     done
-    sudo dnf install python{2,3}-six
+    sudo dnf install python{2,3}-six python2-empy
 
 Autogen, configure, make, and install each module for Python 2;
 
