@@ -21,13 +21,16 @@ from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import GLib
 import dbus
-from telepathy.interfaces import \
-    CONNECTION_INTERFACE_REQUESTS, \
-    CHANNEL, \
-    CHANNEL_DISPATCHER
-from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT,     \
-    SOCKET_ADDRESS_TYPE_UNIX,           \
-    SOCKET_ACCESS_CONTROL_LOCALHOST
+
+from gi.repository import TelepathyGLib
+CONNECTION_INTERFACE_REQUESTS = \
+    TelepathyGLib.IFACE_CONNECTION_INTERFACE_REQUESTS
+CHANNEL = TelepathyGLib.IFACE_CHANNEL
+CHANNEL_DISPATCHER = TelepathyGLib.IFACE_CHANNEL_DISPATCHER
+CONNECTION_HANDLE_TYPE_CONTACT = TelepathyGLib.HandleType.CONTACT
+SOCKET_ADDRESS_TYPE_UNIX = TelepathyGLib.SocketAddressType.UNIX 
+SOCKET_ACCESS_CONTROL_LOCALHOST = TelepathyGLib.SocketAccessControl.LOCALHOST
+CHANNEL_TYPE_FILE_TRANSFER = TelepathyGLib.IFACE_CHANNEL_TYPE_FILE_TRANSFER
 from telepathy.client import Connection, Channel
 
 from sugar3.presence import presenceservice
@@ -53,9 +56,6 @@ FT_REASON_LOCAL_ERROR = 4
 FT_REASON_LOCAL_ERROR = 5
 FT_REASON_REMOTE_ERROR = 6
 
-# FIXME: use constants from tp-python once the spec is undrafted
-CHANNEL_TYPE_FILE_TRANSFER = \
-    'org.freedesktop.Telepathy.Channel.Type.FileTransfer'
 
 new_file_transfer = dispatch.Signal()
 

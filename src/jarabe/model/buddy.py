@@ -18,8 +18,10 @@ import logging
 
 from gi.repository import GObject
 import dbus
+
+from gi.repository import TelepathyGLib
+CONNECTION = TelepathyGLib.IFACE_CONNECTION
 from telepathy.client import Connection
-from telepathy.interfaces import CONNECTION
 
 from sugar3 import profile
 

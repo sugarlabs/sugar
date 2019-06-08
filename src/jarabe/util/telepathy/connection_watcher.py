@@ -23,10 +23,11 @@ import dbus
 import dbus.mainloop.glib
 from gi.repository import GObject
 
+from gi.repository import TelepathyGLib
 from telepathy.client import Connection
-from telepathy.interfaces import CONN_INTERFACE
-from telepathy.constants import CONNECTION_STATUS_CONNECTED, \
-    CONNECTION_STATUS_DISCONNECTED
+CONN_INTERFACE = TelepathyGLib.IFACE_CONNECTION
+CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
+CONNECTION_STATUS_DISCONNECTED = TelepathyGLib.ConnectionStatus.DISCONNECTED
 
 
 _instance = None

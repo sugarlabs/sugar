@@ -17,17 +17,18 @@ import logging
 
 import dbus
 from dbus import PROPERTIES_IFACE
-from telepathy.interfaces import CLIENT, \
-    CHANNEL, \
-    CHANNEL_TYPE_TEXT, \
-    CHANNEL_TYPE_FILE_TRANSFER, \
-    CLIENT_APPROVER, \
-    CLIENT_HANDLER, \
-    CLIENT_INTERFACE_REQUESTS
-from telepathy.server import DBusProperties
 
-from telepathy.constants import CONNECTION_HANDLE_TYPE_ROOM
-from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT
+from gi.repository import TelepathyGLib
+CLIENT = TelepathyGLib.IFACE_CLIENT
+CHANNEL = TelepathyGLib.IFACE_CHANNEL
+CHANNEL_TYPE_TEXT = TelepathyGLib.IFACE_CHANNEL_TYPE_TEXT
+CHANNEL_TYPE_FILE_TRANSFER = TelepathyGLib.IFACE_CHANNEL_TYPE_FILE_TRANSFER
+CLIENT_APPROVER = TelepathyGLib.IFACE_CLIENT_APPROVER
+CLIENT_HANDLER = TelepathyGLib.IFACE_CLIENT_HANDLER
+CLIENT_INTERFACE_REQUESTS = TelepathyGLib.IFACE_CLIENT_INTERFACE_REQUESTS
+CONNECTION_HANDLE_TYPE_ROOM = TelepathyGLib.HandleType.ROOM
+CONNECTION_HANDLE_TYPE_CONTACT = TelepathyGLib.HandleType.CONTACT
+from telepathy.server import DBusProperties
 
 from sugar3 import dispatch
 
