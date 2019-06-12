@@ -28,7 +28,6 @@ CLIENT_HANDLER = TelepathyGLib.IFACE_CLIENT_HANDLER
 CLIENT_INTERFACE_REQUESTS = TelepathyGLib.IFACE_CLIENT_INTERFACE_REQUESTS
 CONNECTION_HANDLE_TYPE_ROOM = TelepathyGLib.HandleType.ROOM
 CONNECTION_HANDLE_TYPE_CONTACT = TelepathyGLib.HandleType.CONTACT
-from telepathy.server import DBusProperties
 
 from sugar3 import dispatch
 
@@ -39,7 +38,7 @@ SUGAR_CLIENT_PATH = '/org/freedesktop/Telepathy/Client/Sugar'
 _instance = None
 
 
-class TelepathyClient(dbus.service.Object, DBusProperties):
+class TelepathyClient(dbus.service.Object):
 
     def __init__(self):
         self._interfaces = set([CLIENT, CLIENT_HANDLER,
@@ -50,15 +49,15 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
         bus_name = dbus.service.BusName(SUGAR_CLIENT_SERVICE, bus=bus)
 
         dbus.service.Object.__init__(self, bus_name, SUGAR_CLIENT_PATH)
-        DBusProperties.__init__(self)
-
-        self._implement_property_get(CLIENT, {
+        
+        self._prop_getters = {}
+        self._prop_getters.setdefault(CLIENT, {}).update({
             'Interfaces': lambda: list(self._interfaces),
         })
-        self._implement_property_get(CLIENT_HANDLER, {
+        self._prop_getters.setdefault(CLIENT_HANDLER, {}).update({
             'HandlerChannelFilter': self.__get_filters_handler_cb,
         })
-        self._implement_property_get(CLIENT_APPROVER, {
+        self._prop_getters.setdefault(CLIENT_APPROVER, {}).update({
             'ApproverChannelFilter': self.__get_filters_approver_cb,
         })
 
