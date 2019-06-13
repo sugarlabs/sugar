@@ -45,7 +45,6 @@ HANDLE_TYPE_LIST = TelepathyGLib.HandleType.LIST
 CONNECTION_PRESENCE_TYPE_OFFLINE = TelepathyGLib.ConnectionPresenceType.OFFLINE
 CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
 CONNECTION_STATUS_DISCONNECTED = TelepathyGLib.ConnectionStatus.DISCONNECTED
-from telepathy.client import Connection, Channel
 
 from sugar3.graphics.xocolor import XoColor
 from sugar3.profile import get_profile
@@ -163,6 +162,106 @@ class ActivityModel(GObject.GObject):
 
     current_buddies = GObject.Property(type=object, getter=get_current_buddies)
 
+
+class Channel():
+    def __init__(self, service_name, object_path, ready_handler=None):
+
+        self.service_name = service_name
+        self.object_path = object_path
+        self._ready_handler = ready_handler
+        self._dbus_object = dbus.Bus().get_object(service_name, object_path)
+        self._interfaces = {}
+        self._valid_interfaces = set()
+        self._valid_interfaces.add(PROPERTIES_IFACE)
+        self._valid_interfaces.add(CHANNEL)
+        type = self.GetChannelType()
+        interfaces = self.GetInterfaces()
+        self._valid_interfaces.add(type)
+        self._valid_interfaces.update(interfaces)
+
+    def __getitem__(self, name):
+        if name not in self._interfaces:
+            if name not in self._valid_interfaces:
+                raise KeyError(name)
+
+            self._interfaces[name] = dbus.Interface(self._dbus_object, name)
+
+        return self._interfaces[name]
+
+    def __contains__(self, name):
+        return name in self._interfaces or name in self._valid_interfaces
+
+    def __getattr__(self, name):
+        return getattr(self[CHANNEL], name)
+
+class Connection():
+    def __init__(self, service_name, object_path=None, bus=None,
+            ready_handler=None):
+        if not bus:
+            self.bus = dbus.Bus()
+        else:
+            self.bus = bus
+
+        self.service_name = service_name
+        self.object_path = object_path
+        self._ready_handlers = []
+        self._ready_handlers.append(ready_handler)
+        self._ready = False
+        self._dbus_object = self.bus.get_object(service_name, object_path)
+        self._interfaces = {}
+        self._valid_interfaces = set()
+        self._valid_interfaces.add(PROPERTIES_IFACE)
+        self._valid_interfaces.add(CONNECTION)
+
+
+        self._status_changed_connection = \
+            self[CONNECTION].connect_to_signal('StatusChanged',
+                lambda status, reason: self._status_cb(status))
+        self[CONNECTION].GetStatus(
+            reply_handler=self._status_cb,
+            error_handler=self.default_error_handler)
+
+    def _status_cb(self, status):
+        if status == CONNECTION_STATUS_CONNECTED:
+            self._get_interfaces()
+
+            if self._status_changed_connection:
+                self._status_changed_connection.remove()
+                self._status_changed_connection = None
+
+    def _get_interfaces(self):
+        self[CONNECTION].GetInterfaces(
+            reply_handler=self._get_interfaces_reply_cb,
+            error_handler=self.default_error_handler)
+
+    def _get_interfaces_reply_cb(self, interfaces):
+        if self._ready:
+            return
+
+        self._ready = True
+
+        self._valid_interfaces.update(interfaces)
+
+        for ready_handler in self._ready_handlers:
+            ready_handler(self)
+
+    def __getitem__(self, name):
+        if name not in self._interfaces:
+            if name not in self._valid_interfaces:
+                raise KeyError(name)
+
+            self._interfaces[name] = dbus.Interface(self._dbus_object, name)
+
+        return self._interfaces[name]
+
+    def __contains__(self, name):
+        return name in self._interfaces or name in self._valid_interfaces
+
+    def __getattr__(self, name):
+        return getattr(self[CONNECTION], name)
+
+    def default_error_handler(exception):
+        logging.debug('Exception from asynchronous method call:\n%s' % exception)
 
 class _Account(GObject.GObject):
     __gsignals__ = {
