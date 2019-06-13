@@ -24,13 +24,101 @@ import dbus.mainloop.glib
 from gi.repository import GObject
 
 from gi.repository import TelepathyGLib
-from telepathy.client import Connection
 CONN_INTERFACE = TelepathyGLib.IFACE_CONNECTION
 CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
 CONNECTION_STATUS_DISCONNECTED = TelepathyGLib.ConnectionStatus.DISCONNECTED
 
 
 _instance = None
+
+
+class Connection():
+    def __init__(self, service_name, object_path=None, bus=None,
+            ready_handler=None):
+        if not bus:
+            self.bus = dbus.Bus()
+        else:
+            self.bus = bus
+
+        self.service_name = service_name
+        self.object_path = object_path
+        self._ready_handlers = []
+        if ready_handler is not None:
+            self._ready_handlers.append(ready_handler)
+        self._ready = False
+        self._dbus_object = self.bus.get_object(service_name, object_path)
+        self._interfaces = {}
+        self._valid_interfaces = set()
+        self._valid_interfaces.add(dbus.PROPERTIES_IFACE)
+        self._valid_interfaces.add(CONN_INTERFACE)
+
+
+        self._status_changed_connection = \
+            self[CONN_INTERFACE].connect_to_signal('StatusChanged',
+                lambda status, reason: self._status_cb(status))
+        self[CONN_INTERFACE].GetStatus(
+            reply_handler=self._status_cb,
+            error_handler=self.default_error_handler)
+
+    def _status_cb(self, status):
+        if status == CONNECTION_STATUS_CONNECTED:
+            self._get_interfaces()
+
+            if self._status_changed_connection:
+                self._status_changed_connection.remove()
+                self._status_changed_connection = None
+
+    def _get_interfaces(self):
+        self[CONN_INTERFACE].GetInterfaces(
+            reply_handler=self._get_interfaces_reply_cb,
+            error_handler=self.default_error_handler)
+
+    def _get_interfaces_reply_cb(self, interfaces):
+        if self._ready:
+            return
+
+        self._ready = True
+
+        self._valid_interfaces.update(interfaces)
+
+        for ready_handler in self._ready_handlers:
+            ready_handler(self)
+
+    @staticmethod
+    def get_connections(bus=None):
+        connections = []
+        if not bus:
+            bus = dbus.Bus()
+
+        bus_object = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+
+        for service in bus_object.ListNames(dbus_interface='org.freedesktop.DBus'):
+            if service.startswith('org.freedesktop.Telepathy.Connection.'):
+                connection = Connection(service, "/%s" % service.replace(".", "/"), bus)
+                connections.append(connection)
+
+        return connections
+
+    def call_when_ready(self, handler):
+        if self._ready:
+            handler(self)
+        else:
+            self._ready_handlers.append(handler)
+
+    def __getitem__(self, name):
+        if name not in self._interfaces:
+            if name not in self._valid_interfaces:
+                raise KeyError(name)
+
+            self._interfaces[name] = dbus.Interface(self._dbus_object, name)
+
+        return self._interfaces[name]
+
+    def __contains__(self, name):
+        return name in self._interfaces or name in self._valid_interfaces
+
+    def default_error_handler(exception):
+        logging.debug('Exception from asynchronous method call:\n%s' % exception)
 
 
 class ConnectionWatcher(GObject.GObject):
