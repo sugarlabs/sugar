@@ -32,95 +32,6 @@ CONNECTION_STATUS_DISCONNECTED = TelepathyGLib.ConnectionStatus.DISCONNECTED
 _instance = None
 
 
-class Connection():
-    def __init__(self, service_name, object_path=None, bus=None,
-            ready_handler=None):
-        if not bus:
-            self.bus = dbus.Bus()
-        else:
-            self.bus = bus
-
-        self.service_name = service_name
-        self.object_path = object_path
-        self._ready_handlers = []
-        if ready_handler is not None:
-            self._ready_handlers.append(ready_handler)
-        self._ready = False
-        self._dbus_object = self.bus.get_object(service_name, object_path)
-        self._interfaces = {}
-        self._valid_interfaces = set()
-        self._valid_interfaces.add(dbus.PROPERTIES_IFACE)
-        self._valid_interfaces.add(CONN_INTERFACE)
-
-
-        self._status_changed_connection = \
-            self[CONN_INTERFACE].connect_to_signal('StatusChanged',
-                lambda status, reason: self._status_cb(status))
-        self[CONN_INTERFACE].GetStatus(
-            reply_handler=self._status_cb,
-            error_handler=self.default_error_handler)
-
-    def _status_cb(self, status):
-        if status == CONNECTION_STATUS_CONNECTED:
-            self._get_interfaces()
-
-            if self._status_changed_connection:
-                self._status_changed_connection.remove()
-                self._status_changed_connection = None
-
-    def _get_interfaces(self):
-        self[CONN_INTERFACE].GetInterfaces(
-            reply_handler=self._get_interfaces_reply_cb,
-            error_handler=self.default_error_handler)
-
-    def _get_interfaces_reply_cb(self, interfaces):
-        if self._ready:
-            return
-
-        self._ready = True
-
-        self._valid_interfaces.update(interfaces)
-
-        for ready_handler in self._ready_handlers:
-            ready_handler(self)
-
-    @staticmethod
-    def get_connections(bus=None):
-        connections = []
-        if not bus:
-            bus = dbus.Bus()
-
-        bus_object = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
-
-        for service in bus_object.ListNames(dbus_interface='org.freedesktop.DBus'):
-            if service.startswith('org.freedesktop.Telepathy.Connection.'):
-                connection = Connection(service, "/%s" % service.replace(".", "/"), bus)
-                connections.append(connection)
-
-        return connections
-
-    def call_when_ready(self, handler):
-        if self._ready:
-            handler(self)
-        else:
-            self._ready_handlers.append(handler)
-
-    def __getitem__(self, name):
-        if name not in self._interfaces:
-            if name not in self._valid_interfaces:
-                raise KeyError(name)
-
-            self._interfaces[name] = dbus.Interface(self._dbus_object, name)
-
-        return self._interfaces[name]
-
-    def __contains__(self, name):
-        return name in self._interfaces or name in self._valid_interfaces
-
-    def default_error_handler(exception):
-        logging.debug('Exception from asynchronous method call:\n%s' % exception)
-
-
 class ConnectionWatcher(GObject.GObject):
     __gsignals__ = {
         'connection-added': (GObject.SignalFlags.RUN_FIRST, None,
@@ -145,8 +56,16 @@ class ConnectionWatcher(GObject.GObject):
                                      signal_name='StatusChanged',
                                      path_keyword='path')
 
-        for conn in Connection.get_connections(bus):
-            conn.call_when_ready(self._conn_ready_cb)
+        connections = []
+        bus_object = self.bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        for service in bus_object.ListNames(dbus_interface='org.freedesktop.DBus'):
+            if service.startswith('org.freedesktop.Telepathy.Connection.'):
+                obj = self.bus.get_object(service, "/%s" % service.replace(".", "/"))
+                connection = {'service' : service, 'obj' : obj }
+                connections.append(connection)
+
+        for conn in connections:
+            self._conn_ready_cb(conn)
 
     def _status_changed_cb(self, *args, **kwargs):
         path = kwargs['path']
@@ -162,10 +81,11 @@ class ConnectionWatcher(GObject.GObject):
             self._remove_connection(service_name, path)
 
     def _conn_ready_cb(self, conn):
-        if conn.object_path in self._connections:
+        object_path = '/' + conn['service'].replace('.', '/')
+        if object_path in self._connections:
             return
 
-        self._connections[conn.object_path] = conn
+        self._connections[object_path] = conn
         self.emit('connection-added', conn)
 
     def _add_connection(self, service_name, path):
@@ -173,7 +93,9 @@ class ConnectionWatcher(GObject.GObject):
             return
 
         try:
-            Connection(service_name, path, ready_handler=self._conn_ready_cb)
+            obj = dbus.Bus().get_object(service_name, path)
+            connection = {'service' : service_name, 'obj' : obj }
+            self._conn_ready_cb(connection)
         except dbus.exceptions.DBusException:
             logging.debug('%s is propably already gone.', service_name)
 
@@ -199,10 +121,10 @@ if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
     def connection_added_cb(conn_watcher, conn):
-        print 'new connection', conn.service_name
+        print 'new connection', conn['service']
 
     def connection_removed_cb(conn_watcher, conn):
-        print 'removed connection', conn.service_name
+        print 'removed connection', conn['service']
 
     watcher = ConnectionWatcher()
     watcher.connect('connection-added', connection_added_cb)

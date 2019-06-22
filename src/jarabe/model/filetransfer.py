@@ -63,9 +63,9 @@ new_file_transfer = dispatch.Signal()
 
 class BaseFileTransfer(GObject.GObject):
 
-    def __init__(self, connection):
+    def __init__(self, obj):
         GObject.GObject.__init__(self)
-        self._connection = connection
+        self._obj = obj
         self._state = FT_STATE_NONE
         self._transferred_bytes = 0
 
@@ -78,16 +78,16 @@ class BaseFileTransfer(GObject.GObject):
         self.initial_offset = 0
         self.reason_last_change = FT_REASON_NONE
 
-    def set_channel(self, channel):
-        self.channel = channel
-        self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
+    def set_channel(self, obj):
+        self.obj = obj
+        dbus.Interface(self.obj, CHANNEL_TYPE_FILE_TRANSFER).connect_to_signal(
             'FileTransferStateChanged', self.__state_changed_cb)
-        self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
+        dbus.Interface(self.obj, CHANNEL_TYPE_FILE_TRANSFER).connect_to_signal(
             'TransferredBytesChanged', self.__transferred_bytes_changed_cb)
-        self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
+        dbus.Interface(self.obj, CHANNEL_TYPE_FILE_TRANSFER).connect_to_signal(
             'InitialOffsetDefined', self.__initial_offset_defined_cb)
 
-        channel_properties = self.channel[dbus.PROPERTIES_IFACE]
+        channel_properties = dbus.Interface(self.obj, dbus.PROPERTIES_IFACE)
 
         props = channel_properties.GetAll(CHANNEL_TYPE_FILE_TRANSFER)
         self._state = props['State']
@@ -132,109 +132,17 @@ class BaseFileTransfer(GObject.GObject):
     state = GObject.Property(type=int, getter=_get_state, setter=_set_state)
 
     def cancel(self):
-        self.channel[CHANNEL].Close()
-
-
-class Channel():
-    def __init__(self, service_name, object_path, ready_handler=None):
-
-        self.service_name = service_name
-        self.object_path = object_path
-        self._ready_handler = ready_handler
-        self._dbus_object = dbus.Bus().get_object(service_name, object_path)
-        self._interfaces = {}
-        self._valid_interfaces = set()
-        self._valid_interfaces.add(dbus.PROPERTIES_IFACE)
-        self._valid_interfaces.add(CHANNEL)
-        type = self.GetChannelType()
-        interfaces = self.GetInterfaces()
-        self._valid_interfaces.add(type)
-        self._valid_interfaces.update(interfaces)
-
-    def __getitem__(self, name):
-        if name not in self._interfaces:
-            if name not in self._valid_interfaces:
-                raise KeyError(name)
-
-            self._interfaces[name] = dbus.Interface(self._dbus_object, name)
-
-        return self._interfaces[name]
-
-
-class Connection():
-    def __init__(self, service_name, object_path=None, bus=None,
-            ready_handler=None):
-        if not bus:
-            self.bus = dbus.Bus()
-        else:
-            self.bus = bus
-
-        self.service_name = service_name
-        self.object_path = object_path
-        self._ready_handlers = []
-        self._ready_handlers.append(ready_handler)
-        self._ready = False
-        self._dbus_object = self.bus.get_object(service_name, object_path)
-        self._interfaces = {}
-        self._valid_interfaces = set()
-        self._valid_interfaces.add(dbus.PROPERTIES_IFACE)
-        self._valid_interfaces.add(CONNECTION)
-
-
-        self._status_changed_connection = \
-            self[CONNECTION].connect_to_signal('StatusChanged',
-                lambda status, reason: self._status_cb(status))
-        self[CONNECTION].GetStatus(
-            reply_handler=self._status_cb,
-            error_handler=self.default_error_handler)
-
-    def _status_cb(self, status):
-        if status == CONNECTION_STATUS_CONNECTED:
-            self._get_interfaces()
-
-            if self._status_changed_connection:
-                self._status_changed_connection.remove()
-                self._status_changed_connection = None
-
-    def _get_interfaces(self):
-        self[CONNECTION].GetInterfaces(
-            reply_handler=self._get_interfaces_reply_cb,
-            error_handler=self.default_error_handler)
-
-    def _get_interfaces_reply_cb(self, interfaces):
-        if self._ready:
-            return
-
-        self._ready = True
-
-        self._valid_interfaces.update(interfaces)
-
-        for ready_handler in self._ready_handlers:
-            ready_handler(self)
-
-    def __getitem__(self, name):
-        if name not in self._interfaces:
-            if name not in self._valid_interfaces:
-                raise KeyError(name)
-
-            self._interfaces[name] = dbus.Interface(self._dbus_object, name)
-
-        return self._interfaces[name]
-
-    def __contains__(self, name):
-        return name in self._interfaces or name in self._valid_interfaces
-
-    def default_error_handler(exception):
-        logging.debug('Exception from asynchronous method call:\n%s' % exception)
+        dbus.Interface(self.obj, CHANNEL).Close()
 
 
 class IncomingFileTransfer(BaseFileTransfer):
 
     def __init__(self, connection, object_path, props):
-        BaseFileTransfer.__init__(self, connection)
+        BaseFileTransfer.__init__(self,
+            "/%s" % connection['service'].replace(".", "/"))
 
-        channel = Channel(connection.service_name, object_path)
-        self.set_channel(channel)
+        obj = dbus.Bus().get_object(connection['service'], object_path)
+        self.set_channel(obj)
 
         self.connect('notify::state', self.__notify_state_cb)
 
@@ -250,7 +158,7 @@ class IncomingFileTransfer(BaseFileTransfer):
 
         self.destination_path = destination_path
 
-        channel_ft = self.channel[CHANNEL_TYPE_FILE_TRANSFER]
+        channel_ft = dbus.Interface(self.obj, CHANNEL_TYPE_FILE_TRANSFER)
         self._socket_address = channel_ft.AcceptFile(
             SOCKET_ADDRESS_TYPE_UNIX,
             SOCKET_ACCESS_CONTROL_LOCALHOST,
@@ -287,10 +195,10 @@ class OutgoingFileTransfer(BaseFileTransfer):
 
         presence_service = presenceservice.get_instance()
         name, path = presence_service.get_preferred_connection()
-        connection = Connection(name, path,
-                                ready_handler=self.__connection_ready_cb)
+        self._obj = dbus.Bus().get_object(name, path)
+        self.__connection_ready_cb()
 
-        BaseFileTransfer.__init__(self, connection)
+        BaseFileTransfer.__init__(self, self._obj)
         self.connect('notify::state', self.__notify_state_cb)
 
         self._file_name = file_name
@@ -305,8 +213,8 @@ class OutgoingFileTransfer(BaseFileTransfer):
         self.description = description
         self.mime_type = mime_type
 
-    def __connection_ready_cb(self, connection):
-        requests = connection[CONNECTION_INTERFACE_REQUESTS]
+    def __connection_ready_cb(self):
+        requests = dbus.Interface(self._obj, CONNECTION_INTERFACE_REQUESTS)
         object_path, properties_ = requests.CreateChannel({
             CHANNEL + '.ChannelType': CHANNEL_TYPE_FILE_TRANSFER,
             CHANNEL + '.TargetHandleType': CONNECTION_HANDLE_TYPE_CONTACT,
@@ -317,9 +225,9 @@ class OutgoingFileTransfer(BaseFileTransfer):
             CHANNEL_TYPE_FILE_TRANSFER + '.Description': self.description,
             CHANNEL_TYPE_FILE_TRANSFER + '.InitialOffset': 0})
 
-        self.set_channel(Channel(connection.service_name, object_path))
+        self.set_channel(self._obj)
 
-        channel_file_transfer = self.channel[CHANNEL_TYPE_FILE_TRANSFER]
+        channel_file_transfer = dbus.Interface(self._obj, CHANNEL_TYPE_FILE_TRANSFER)
         self._socket_address = channel_file_transfer.ProvideFile(
             SOCKET_ADDRESS_TYPE_UNIX, SOCKET_ACCESS_CONTROL_LOCALHOST, '',
             byte_arrays=True)
@@ -346,7 +254,7 @@ class OutgoingFileTransfer(BaseFileTransfer):
                 GLib.PRIORITY_LOW, None, None, None)
 
     def cancel(self):
-        self.channel[CHANNEL].Close()
+        dbus.Interface(self._obj, CHANNEL).Close()
 
 
 def _new_channels_cb(connection, channels):
@@ -363,7 +271,7 @@ def _new_channels_cb(connection, channels):
 
 def _monitor_connection(connection):
     logging.debug('connection added %r', connection)
-    connection[CONNECTION_INTERFACE_REQUESTS].connect_to_signal(
+    dbus.Interface(connection['obj'], CONNECTION_INTERFACE_REQUESTS).connect_to_signal(
         'NewChannels',
         lambda channels: _new_channels_cb(connection, channels))
 
@@ -413,8 +321,7 @@ def file_transfer_available():
     for connection in conn_watcher.get_connections():
 
         try:
-            properties_iface = connection[
-                dbus.PROPERTIES_IFACE]
+            properties_iface = dbus.Interface(connection['obj'], dbus.PROPERTIES_IFACE)
             properties = properties_iface.GetAll(
                 CONNECTION_INTERFACE_REQUESTS)
         except dbus.DBusException as e:

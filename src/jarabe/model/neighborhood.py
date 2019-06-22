@@ -163,106 +163,6 @@ class ActivityModel(GObject.GObject):
     current_buddies = GObject.Property(type=object, getter=get_current_buddies)
 
 
-class Channel():
-    def __init__(self, service_name, object_path, ready_handler=None):
-
-        self.service_name = service_name
-        self.object_path = object_path
-        self._ready_handler = ready_handler
-        self._dbus_object = dbus.Bus().get_object(service_name, object_path)
-        self._interfaces = {}
-        self._valid_interfaces = set()
-        self._valid_interfaces.add(PROPERTIES_IFACE)
-        self._valid_interfaces.add(CHANNEL)
-        type = self.GetChannelType()
-        interfaces = self.GetInterfaces()
-        self._valid_interfaces.add(type)
-        self._valid_interfaces.update(interfaces)
-
-    def __getitem__(self, name):
-        if name not in self._interfaces:
-            if name not in self._valid_interfaces:
-                raise KeyError(name)
-
-            self._interfaces[name] = dbus.Interface(self._dbus_object, name)
-
-        return self._interfaces[name]
-
-    def __contains__(self, name):
-        return name in self._interfaces or name in self._valid_interfaces
-
-    def __getattr__(self, name):
-        return getattr(self[CHANNEL], name)
-
-class Connection():
-    def __init__(self, service_name, object_path=None, bus=None,
-            ready_handler=None):
-        if not bus:
-            self.bus = dbus.Bus()
-        else:
-            self.bus = bus
-
-        self.service_name = service_name
-        self.object_path = object_path
-        self._ready_handlers = []
-        self._ready_handlers.append(ready_handler)
-        self._ready = False
-        self._dbus_object = self.bus.get_object(service_name, object_path)
-        self._interfaces = {}
-        self._valid_interfaces = set()
-        self._valid_interfaces.add(PROPERTIES_IFACE)
-        self._valid_interfaces.add(CONNECTION)
-
-
-        self._status_changed_connection = \
-            self[CONNECTION].connect_to_signal('StatusChanged',
-                lambda status, reason: self._status_cb(status))
-        self[CONNECTION].GetStatus(
-            reply_handler=self._status_cb,
-            error_handler=self.default_error_handler)
-
-    def _status_cb(self, status):
-        if status == CONNECTION_STATUS_CONNECTED:
-            self._get_interfaces()
-
-            if self._status_changed_connection:
-                self._status_changed_connection.remove()
-                self._status_changed_connection = None
-
-    def _get_interfaces(self):
-        self[CONNECTION].GetInterfaces(
-            reply_handler=self._get_interfaces_reply_cb,
-            error_handler=self.default_error_handler)
-
-    def _get_interfaces_reply_cb(self, interfaces):
-        if self._ready:
-            return
-
-        self._ready = True
-
-        self._valid_interfaces.update(interfaces)
-
-        for ready_handler in self._ready_handlers:
-            ready_handler(self)
-
-    def __getitem__(self, name):
-        if name not in self._interfaces:
-            if name not in self._valid_interfaces:
-                raise KeyError(name)
-
-            self._interfaces[name] = dbus.Interface(self._dbus_object, name)
-
-        return self._interfaces[name]
-
-    def __contains__(self, name):
-        return name in self._interfaces or name in self._valid_interfaces
-
-    def __getattr__(self, name):
-        return getattr(self[CONNECTION], name)
-
-    def default_error_handler(exception):
-        logging.debug('Exception from asynchronous method call:\n%s' % exception)
-
 class _Account(GObject.GObject):
     __gsignals__ = {
         'activity-added': (GObject.SignalFlags.RUN_FIRST, None,
@@ -292,6 +192,7 @@ class _Account(GObject.GObject):
 
         self.object_path = account_path
 
+        self._valid_interfaces = set()
         self._connection = None
         self._buddy_handles = {}
         self._activity_handles = {}
@@ -369,16 +270,26 @@ class _Account(GObject.GObject):
     def _prepare_connection(self, connection_path):
         connection_name = connection_path.replace('/', '.')[1:]
 
-        self._connection = Connection(connection_name, connection_path,
-                                      ready_handler=self.__connection_ready_cb)
+        self._object_path = connection_path
+        self._obj = dbus.Bus().get_object(connection_name, connection_path)
+        dbus.Interface(self._obj, CONNECTION).GetInterfaces(
+            reply_handler=self._get_interfaces_reply_cb,
+            error_handler= partial(
+                    self.__error_handler_cb,
+                    'dbus.GetInterfaces'))
+        self.__connection_ready_cb()
 
-    def __connection_ready_cb(self, connection):
+    def _get_interfaces_reply_cb(self, interfaces):
+        self._valid_interfaces = set()
+        self._valid_interfaces.update(interfaces)
+
+    def __connection_ready_cb(self):
         logging.debug('_Account.__connection_ready_cb %r',
-                      connection.object_path)
-        connection.connect_to_signal('StatusChanged',
+                      self._object_path)
+        dbus.Interface(self._obj, CONNECTION).connect_to_signal('StatusChanged',
                                      self.__status_changed_cb)
 
-        connection[PROPERTIES_IFACE].Get(CONNECTION,
+        dbus.Interface(self._obj, PROPERTIES_IFACE).Get(CONNECTION,
                                          'Status',
                                          reply_handler=self.__get_status_cb,
                                          error_handler=partial(
@@ -387,7 +298,7 @@ class _Account(GObject.GObject):
 
     def __get_status_cb(self, status):
         logging.debug('_Account.__get_status_cb %r %r',
-                      self._connection.object_path, status)
+                      self._object_path, status)
         self._update_status(status)
 
     def __status_changed_cb(self, status, reason):
@@ -396,7 +307,7 @@ class _Account(GObject.GObject):
 
     def _update_status(self, status):
         if status == CONNECTION_STATUS_CONNECTED:
-            self._connection[PROPERTIES_IFACE].Get(
+            dbus.Interface(self._obj, PROPERTIES_IFACE).Get(
                 CONNECTION,
                 'SelfHandle',
                 reply_handler=self.__get_self_handle_cb,
@@ -425,9 +336,9 @@ class _Account(GObject.GObject):
     def __get_self_handle_cb(self, self_handle):
         self._self_handle = self_handle
 
-        if CONNECTION_INTERFACE_CONTACT_CAPABILITIES in self._connection:
+        if CONNECTION_INTERFACE_CONTACT_CAPABILITIES in self._valid_interfaces:
             interface = CONNECTION_INTERFACE_CONTACT_CAPABILITIES
-            connection = self._connection[interface]
+            connection = dbus.Interface(self._obj, interface)
             client_name = CLIENT + '.Sugar.FileTransfer'
             file_transfer_channel_class = {
                 CHANNEL + '.ChannelType': CHANNEL_TYPE_FILE_TRANSFER,
@@ -439,16 +350,16 @@ class _Account(GObject.GObject):
                 error_handler=partial(self.__error_handler_cb,
                                       'Connection.UpdateCapabilities'))
 
-        connection = self._connection[CONNECTION_INTERFACE_ALIASING]
+        connection = dbus.Interface(self._obj, CONNECTION_INTERFACE_ALIASING)
         connection.connect_to_signal('AliasesChanged',
                                      self.__aliases_changed_cb)
 
-        connection = self._connection[CONNECTION_INTERFACE_SIMPLE_PRESENCE]
+        connection = dbus.Interface(self._obj, CONNECTION_INTERFACE_SIMPLE_PRESENCE)
         connection.connect_to_signal('PresencesChanged',
                                      self.__presences_changed_cb)
 
-        if CONNECTION_INTERFACE_BUDDY_INFO in self._connection:
-            connection = self._connection[CONNECTION_INTERFACE_BUDDY_INFO]
+        if CONNECTION_INTERFACE_BUDDY_INFO in self._valid_interfaces:
+            connection = dbus.Interface(self._obj, CONNECTION_INTERFACE_BUDDY_INFO)
             connection.connect_to_signal('PropertiesChanged',
                                          self.__buddy_info_updated_cb,
                                          byte_arrays=True)
@@ -466,17 +377,17 @@ class _Account(GObject.GObject):
                     self.__active_activity_changed_cb)
         else:
             logging.warning('Connection %s does not support OLPC buddy '
-                            'properties', self._connection.object_path)
+                            'properties', self._object_path)
 
-        if CONNECTION_INTERFACE_ACTIVITY_PROPERTIES in self._connection:
-            connection = self._connection[
-                CONNECTION_INTERFACE_ACTIVITY_PROPERTIES]
+        if CONNECTION_INTERFACE_ACTIVITY_PROPERTIES in self._valid_interfaces:
+            connection = dbus.Interface(self._obj,
+                CONNECTION_INTERFACE_ACTIVITY_PROPERTIES)
             connection.connect_to_signal(
                 'ActivityPropertiesChanged',
                 self.__activity_properties_changed_cb)
         else:
             logging.warning('Connection %s does not support OLPC activity '
-                            'properties', self._connection.object_path)
+                            'properties', self._object_path)
 
         properties = {
             CHANNEL + '.ChannelType': CHANNEL_TYPE_CONTACT_LIST,
@@ -484,15 +395,16 @@ class _Account(GObject.GObject):
             CHANNEL + '.TargetID': 'subscribe',
         }
         properties = dbus.Dictionary(properties, signature='sv')
-        connection = self._connection[CONNECTION_INTERFACE_REQUESTS]
+        connection = dbus.Interface(self._obj, CONNECTION_INTERFACE_REQUESTS)
         is_ours, channel_path, properties = \
             connection.EnsureChannel(properties)
 
-        channel = Channel(self._connection.service_name, channel_path)
-        channel[CHANNEL_INTERFACE_GROUP].connect_to_signal(
+        service_name = self._object_path.replace('/', '.')[1:]    
+        obj = dbus.Bus().get_object(service_name, channel_path)
+        dbus.Interface(obj, CHANNEL_INTERFACE_GROUP).connect_to_signal(
             'MembersChanged', self.__members_changed_cb)
 
-        channel[PROPERTIES_IFACE].Get(
+        dbus.Interface(obj, PROPERTIES_IFACE).Get(
             CHANNEL_INTERFACE_GROUP,
             'Members',
             reply_handler=self.__get_members_ready_cb,
@@ -513,7 +425,7 @@ class _Account(GObject.GObject):
         if room_handle == 0:
             home_activity_id = ''
 
-        connection = self._connection[CONNECTION_INTERFACE_BUDDY_INFO]
+        connection = dbus.Interface(self._obj, CONNECTION_INTERFACE_BUDDY_INFO)
         connection.SetCurrentActivity(
             home_activity_id,
             room_handle,
@@ -592,8 +504,9 @@ class _Account(GObject.GObject):
                     home_model = shell.get_model()
                     activity = home_model.get_active_activity()
                     if activity.get_activity_id() == activity_id:
-                        connection = self._connection[
-                            CONNECTION_INTERFACE_BUDDY_INFO]
+                        connection =dbus.Interface(self._obj,
+                            CONNECTION_INTERFACE_BUDDY_INFO)
+                        self._valid_interfaces.add(CONNECTION_INTERFACE_BUDDY_INFO)
                         connection.SetCurrentActivity(
                             activity_id,
                             room_handle,
@@ -602,8 +515,8 @@ class _Account(GObject.GObject):
 
                 self.emit('activity-added', room_handle, activity_id)
 
-                connection = self._connection[
-                    CONNECTION_INTERFACE_ACTIVITY_PROPERTIES]
+                connection = dbus.Interface(self._obj,
+                    CONNECTION_INTERFACE_ACTIVITY_PROPERTIES)
                 connection.GetProperties(
                     room_handle,
                     reply_handler=partial(self.__get_properties_cb,
@@ -615,8 +528,8 @@ class _Account(GObject.GObject):
                     # Sometimes we'll get CurrentActivityChanged before we get
                     # to know about the activity so we miss the event. In that
                     # case, request again the current activity for this buddy.
-                    connection = self._connection[
-                        CONNECTION_INTERFACE_BUDDY_INFO]
+                    connection = dbus.Interface(self._obj,
+                        CONNECTION_INTERFACE_BUDDY_INFO)
                     connection.GetCurrentActivity(
                         buddy_handle,
                         reply_handler=partial(self.__get_current_activity_cb,
@@ -682,9 +595,9 @@ class _Account(GObject.GObject):
                           'activity')
             # We don't get ActivitiesChanged for the owner of the connection,
             # so we query for its activities in order to find out.
-            if CONNECTION_INTERFACE_BUDDY_INFO in self._connection:
+            if CONNECTION_INTERFACE_BUDDY_INFO in self._valid_interfaces:
                 handle = self._self_handle
-                connection = self._connection[CONNECTION_INTERFACE_BUDDY_INFO]
+                connection = dbus.Interface(self._obj, CONNECTION_INTERFACE_BUDDY_INFO)
                 connection.GetActivities(
                     handle,
                     reply_handler=partial(self.__got_activities_cb, handle),
@@ -705,7 +618,7 @@ class _Account(GObject.GObject):
     def _add_buddy_handles(self, handles):
         logging.debug('_Account._add_buddy_handles %r', handles)
         interfaces = [CONNECTION, CONNECTION_INTERFACE_ALIASING]
-        self._connection[CONNECTION_INTERFACE_CONTACTS].GetContactAttributes(
+        dbus.Interface(self._obj, CONNECTION_INTERFACE_CONTACTS).GetContactAttributes(
             handles, interfaces, False,
             reply_handler=self.__get_contact_attributes_cb,
             error_handler=partial(self.__error_handler_cb,
@@ -740,9 +653,9 @@ class _Account(GObject.GObject):
                 contact_id = attributes[handle][CONNECTION + '/contact-id']
                 self._buddy_handles[handle] = contact_id
 
-                if CONNECTION_INTERFACE_BUDDY_INFO in self._connection:
+                if CONNECTION_INTERFACE_BUDDY_INFO in self._valid_interfaces:
                     connection = \
-                        self._connection[CONNECTION_INTERFACE_BUDDY_INFO]
+                        dbus.Interface(self._obj, CONNECTION_INTERFACE_BUDDY_INFO)
 
                     connection.GetProperties(
                         handle,
