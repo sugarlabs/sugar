@@ -273,17 +273,15 @@ class _Account(GObject.GObject):
         self._object_path = connection_path
         self._obj = dbus.Bus().get_object(connection_name, connection_path)
         dbus.Interface(self._obj, CONNECTION).GetInterfaces(
-            reply_handler=self._get_interfaces_reply_cb,
-            error_handler= partial(
+            reply_handler=self.__connection_ready_cb,
+            error_handler=partial(
                     self.__error_handler_cb,
                     'dbus.GetInterfaces'))
-        self.__connection_ready_cb()
 
-    def _get_interfaces_reply_cb(self, interfaces):
+    def __connection_ready_cb(self, interfaces):
         self._valid_interfaces = set()
         self._valid_interfaces.update(interfaces)
 
-    def __connection_ready_cb(self):
         logging.debug('_Account.__connection_ready_cb %r',
                       self._object_path)
         dbus.Interface(self._obj, CONNECTION).connect_to_signal('StatusChanged',
@@ -506,7 +504,6 @@ class _Account(GObject.GObject):
                     if activity.get_activity_id() == activity_id:
                         connection =dbus.Interface(self._obj,
                             CONNECTION_INTERFACE_BUDDY_INFO)
-                        self._valid_interfaces.add(CONNECTION_INTERFACE_BUDDY_INFO)
                         connection.SetCurrentActivity(
                             activity_id,
                             room_handle,

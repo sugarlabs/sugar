@@ -116,40 +116,36 @@ class OwnerBuddyModel(BaseBuddyModel):
                 dbus_interface=dbus.BUS_DAEMON_IFACE):
             if service.startswith(CONNECTION + '.'):
                 path = '/%s' % service.replace('.', '/')
-                obj = bus.get_object(service, path)
-                dbus.Interface(obj, CONNECTION).GetInterfaces(
-                    reply_handler=self._get_interfaces_reply_cb,
+                self.obj = bus.get_object(service, path)
+                dbus.Interface(self.obj, CONNECTION).GetInterfaces(
+                    reply_handler=self.__connection_ready_cb,
                     error_handler=self.__error_handler_cb)
-                self.__connection_ready_cb(obj)
 
-    def _get_interfaces_reply_cb(self, interfaces):
-        self._valid_interfaces = set()
-        self._valid_interfaces.update(interfaces)
-
-    def __connection_ready_cb(self, obj):
-        self._sync_properties_on_connection(obj)
+    def __connection_ready_cb(self, interfaces):
+        self._sync_properties_on_connection(interfaces)
  
     def __name_owner_changed_cb(self, name, old, new):
         if name.startswith(CONNECTION + '.') and not old and new:
             path = '/' + name.replace('.', '/')
-            obj = dbus.Bus().get_object(name, path)
-            dbus.Interface(obj, CONNECTION).GetInterfaces(
-                    reply_handler=self._get_interfaces_reply_cb,
+            self.obj = dbus.Bus().get_object(name, path)
+            dbus.Interface(self.obj, CONNECTION).GetInterfaces(
+                    reply_handler=self.__connection_ready_cb,
                     error_handler=self.__error_handler_cb)
-            self.__connection_ready_cb(obj)
 
     def __property_changed_cb(self, buddy, pspec):
         self._sync_properties()
 
     def _sync_properties(self):
         conn_watcher = connection_watcher.get_instance()
+        self.obj = connection['obj']
         for connection in conn_watcher.get_connections():
             dbus.Interface(connection['obj'], CONNECTION).GetInterfaces(
-                    reply_handler=self._get_interfaces_reply_cb,
+                    reply_handler=self._sync_properties_on_connection,
                     error_handler=self.__error_handler_cb)
-            self._sync_properties_on_connection(connection['obj'])
 
-    def _sync_properties_on_connection(self, obj):
+    def _sync_properties_on_connection(self, interfaces):
+        self._valid_interfaces = set()
+        self._valid_interfaces.update(interfaces)
         if CONNECTION_INTERFACE_BUDDY_INFO in self._valid_interfaces:
             properties = {}
             if self.props.key is not None:
@@ -158,7 +154,7 @@ class OwnerBuddyModel(BaseBuddyModel):
                 properties['color'] = self.props.color.to_string()
 
             logging.debug('calling SetProperties with %r', properties)
-            dbus.Interface(obj, CONNECTION_INTERFACE_BUDDY_INFO).SetProperties(
+            dbus.Interface(self.obj, CONNECTION_INTERFACE_BUDDY_INFO).SetProperties(
                 properties,
                 reply_handler=self.__set_properties_cb,
                 error_handler=self.__error_handler_cb)
@@ -170,10 +166,11 @@ class OwnerBuddyModel(BaseBuddyModel):
         raise RuntimeError(error)
 
     def __connection_added_cb(self, conn_watcher, connection):
-        dbus.Interface(connection['obj'], CONNECTION).GetInterfaces(
-                    reply_handler=self._get_interfaces_reply_cb,
-                    error_handler=self.__error_handler_cb)
-        self._sync_properties_on_connection(connection['obj'])
+        self.obj = connection['obj']
+        dbus.Interface(connection['obj'],CONNECTION).GetInterfaces(
+            reply_handler=self._sync_properties_on_connection,
+            error_handler=self.__error_handler_cb)
+
 
     def is_owner(self):
         return True
