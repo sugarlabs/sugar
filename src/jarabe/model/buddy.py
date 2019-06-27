@@ -96,7 +96,6 @@ class OwnerBuddyModel(BaseBuddyModel):
     def __init__(self):
         BaseBuddyModel.__init__(self)
 
-        self._valid_interfaces = set()
         self.props.nick = profile.get_nick_name()
         self.props.color = profile.get_color()
 

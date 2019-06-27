@@ -65,7 +65,7 @@ class BaseFileTransfer(GObject.GObject):
 
     def __init__(self, connection):
         GObject.GObject.__init__(self)
-        self._conection = connection
+        self._connection = connection
         self._state = FT_STATE_NONE
         self._transferred_bytes = 0
 
