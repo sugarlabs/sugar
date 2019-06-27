@@ -116,37 +116,49 @@ class OwnerBuddyModel(BaseBuddyModel):
                 dbus_interface=dbus.BUS_DAEMON_IFACE):
             if service.startswith(CONNECTION + '.'):
                 path = '/%s' % service.replace('.', '/')
-                self.obj = bus.get_object(service, path)
-                dbus.Interface(self.obj, CONNECTION).GetInterfaces(
-                    reply_handler=self.__connection_ready_cb,
-                    error_handler=self.__error_handler_cb)
+                conn_proxy = bus.get_object(service, path)
+                self._prepare_conn_cb(path, conn_proxy)
 
-    def __connection_ready_cb(self, interfaces):
-        self._sync_properties_on_connection(interfaces)
- 
+    def _prepare_conn_cb(self, object_path, conn_proxy):
+        self.connection = {}
+        self.object_path = object_path
+        self.conn_proxy = conn_proxy
+        self.conn_ready = False
+        self.connection[CONNECTION] = \
+            dbus.Interface(self.conn_proxy, CONNECTION)
+        self.connection[CONNECTION].GetInterfaces(
+            reply_handler=self.__conn_get_interfaces_reply_cb,
+            error_handler=self.__error_handler_cb)
+
+    def __conn_get_interfaces_reply_cb(self, interfaces):
+        for interface in interfaces:
+            self.connection[interface] = dbus.Interface(
+                self.conn_proxy, interface)
+        self.conn_ready = True
+        self.__connection_ready_cb(self.connection)
+
+    def __connection_ready_cb(self, connection):
+        if not self.conn_ready:
+            return
+
+        self._sync_properties_on_connection(connection)
+
     def __name_owner_changed_cb(self, name, old, new):
         if name.startswith(CONNECTION + '.') and not old and new:
             path = '/' + name.replace('.', '/')
-            self.obj = dbus.Bus().get_object(name, path)
-            dbus.Interface(self.obj, CONNECTION).GetInterfaces(
-                    reply_handler=self.__connection_ready_cb,
-                    error_handler=self.__error_handler_cb)
+            self.conn_proxy = dbus.Bus().get_object(name, path)
+            self._prepare_conn_cb(path, self.conn_proxy)
 
     def __property_changed_cb(self, buddy, pspec):
         self._sync_properties()
 
     def _sync_properties(self):
         conn_watcher = connection_watcher.get_instance()
-        self.obj = connection['obj']
         for connection in conn_watcher.get_connections():
-            dbus.Interface(connection['obj'], CONNECTION).GetInterfaces(
-                    reply_handler=self._sync_properties_on_connection,
-                    error_handler=self.__error_handler_cb)
+            self._sync_properties_on_connection(connection)
 
-    def _sync_properties_on_connection(self, interfaces):
-        self._valid_interfaces = set()
-        self._valid_interfaces.update(interfaces)
-        if CONNECTION_INTERFACE_BUDDY_INFO in self._valid_interfaces:
+    def _sync_properties_on_connection(self, connection):
+        if CONNECTION_INTERFACE_BUDDY_INFO in connection:
             properties = {}
             if self.props.key is not None:
                 properties['key'] = dbus.ByteArray(self.props.key)
@@ -154,7 +166,7 @@ class OwnerBuddyModel(BaseBuddyModel):
                 properties['color'] = self.props.color.to_string()
 
             logging.debug('calling SetProperties with %r', properties)
-            dbus.Interface(self.obj, CONNECTION_INTERFACE_BUDDY_INFO).SetProperties(
+            connection[CONNECTION_INTERFACE_BUDDY_INFO].SetProperties(
                 properties,
                 reply_handler=self.__set_properties_cb,
                 error_handler=self.__error_handler_cb)
@@ -166,11 +178,7 @@ class OwnerBuddyModel(BaseBuddyModel):
         raise RuntimeError(error)
 
     def __connection_added_cb(self, conn_watcher, connection):
-        self.obj = connection['obj']
-        dbus.Interface(connection['obj'],CONNECTION).GetInterfaces(
-            reply_handler=self._sync_properties_on_connection,
-            error_handler=self.__error_handler_cb)
-
+        self._sync_properties_on_connection(connection)
 
     def is_owner(self):
         return True
