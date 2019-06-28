@@ -205,7 +205,6 @@ class OutgoingFileTransfer(BaseFileTransfer):
         conn_proxy = dbus.Bus().get_object(name, path)
         connection[CONNECTION_INTERFACE_REQUESTS] = \
             dbus.Interface(conn_proxy, CONNECTION_INTERFACE_REQUESTS)
-        self.__connection_ready_cb(connection)
 
         BaseFileTransfer.__init__(self, connection)
         self.connect('notify::state', self.__notify_state_cb)
@@ -222,6 +221,8 @@ class OutgoingFileTransfer(BaseFileTransfer):
         self.file_size = os.stat(file_name).st_size
         self.description = description
         self.mime_type = mime_type
+
+        self.__connection_ready_cb(connection)
 
     def __connection_ready_cb(self, connection):
         requests = connection[CONNECTION_INTERFACE_REQUESTS]
