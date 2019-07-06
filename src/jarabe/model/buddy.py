@@ -116,9 +116,9 @@ class OwnerBuddyModel(BaseBuddyModel):
             if service.startswith(CONNECTION + '.'):
                 path = '/%s' % service.replace('.', '/')
                 conn_proxy = bus.get_object(service, path)
-                self._prepare_conn_cb(path, conn_proxy)
+                self._prepare_conn(path, conn_proxy)
 
-    def _prepare_conn_cb(self, object_path, conn_proxy):
+    def _prepare_conn(self, object_path, conn_proxy):
         self.connection = {}
         self.object_path = object_path
         self.conn_proxy = conn_proxy
@@ -146,7 +146,7 @@ class OwnerBuddyModel(BaseBuddyModel):
         if name.startswith(CONNECTION + '.') and not old and new:
             path = '/' + name.replace('.', '/')
             self.conn_proxy = dbus.Bus().get_object(name, path)
-            self._prepare_conn_cb(path, self.conn_proxy)
+            self._prepare_conn(path, self.conn_proxy)
 
     def __property_changed_cb(self, buddy, pspec):
         self._sync_properties()
