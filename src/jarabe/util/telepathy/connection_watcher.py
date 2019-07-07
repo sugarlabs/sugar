@@ -61,7 +61,13 @@ class ConnectionWatcher(GObject.GObject):
                                      path_keyword='path')
 
         bus_object = self.bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
-        for service in bus_object.ListNames(dbus_interface='org.freedesktop.DBus'):
+        bus_object.ListNames(
+            dbus_interface='org.freedesktop.DBus',
+            reply_handler=self.__get_services_reply_cb,
+            error_handler=self.__error_handler_cb)
+
+    def __get_services_reply_cb(self, services):
+        for service in services:
             if service.startswith('org.freedesktop.Telepathy.Connection.'):
                 object_path = "/%s" % service.replace(".", "/")
                 conn_proxy = self.bus.get_object(service, object_path)
