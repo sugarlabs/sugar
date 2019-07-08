@@ -104,7 +104,7 @@ class ActivityInvite(BaseInvite):
         return self._activity_properties.get('name')
 
     def join(self):
-        logging.error('ActivityInvite.join handler %r', self._handler)
+        logging.debug('ActivityInvite.join handler %r', self._handler)
 
         registry = bundleregistry.get_registry()
         bundle_id = self.get_bundle_id()
