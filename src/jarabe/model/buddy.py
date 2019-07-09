@@ -18,8 +18,10 @@ import logging
 
 from gi.repository import GObject
 import dbus
-from telepathy.client import Connection
-from telepathy.interfaces import CONNECTION
+
+from gi.repository import TelepathyGLib
+CONNECTION = TelepathyGLib.IFACE_CONNECTION
+CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
 
 from sugar3 import profile
 
@@ -113,16 +115,38 @@ class OwnerBuddyModel(BaseBuddyModel):
                 dbus_interface=dbus.BUS_DAEMON_IFACE):
             if service.startswith(CONNECTION + '.'):
                 path = '/%s' % service.replace('.', '/')
-                Connection(service, path, bus,
-                           ready_handler=self.__connection_ready_cb)
+                conn_proxy = bus.get_object(service, path)
+                self._prepare_conn(path, conn_proxy)
+
+    def _prepare_conn(self, object_path, conn_proxy):
+        self.connection = {}
+        self.object_path = object_path
+        self.conn_proxy = conn_proxy
+        self.conn_ready = False
+        self.connection[CONNECTION] = \
+            dbus.Interface(self.conn_proxy, CONNECTION)
+        self.connection[CONNECTION].GetInterfaces(
+            reply_handler=self.__conn_get_interfaces_reply_cb,
+            error_handler=self.__error_handler_cb)
+
+    def __conn_get_interfaces_reply_cb(self, interfaces):
+        for interface in interfaces:
+            self.connection[interface] = dbus.Interface(
+                self.conn_proxy, interface)
+        self.conn_ready = True
+        self.__connection_ready_cb(self.connection)
 
     def __connection_ready_cb(self, connection):
+        if not self.conn_ready:
+            return
+
         self._sync_properties_on_connection(connection)
 
     def __name_owner_changed_cb(self, name, old, new):
         if name.startswith(CONNECTION + '.') and not old and new:
             path = '/' + name.replace('.', '/')
-            Connection(name, path, ready_handler=self.__connection_ready_cb)
+            self.conn_proxy = dbus.Bus().get_object(name, path)
+            self._prepare_conn(path, self.conn_proxy)
 
     def __property_changed_cb(self, buddy, pspec):
         self._sync_properties()

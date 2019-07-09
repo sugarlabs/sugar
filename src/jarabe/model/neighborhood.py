@@ -21,25 +21,30 @@ from gi.repository import GObject
 from gi.repository import Gio
 import dbus
 from dbus import PROPERTIES_IFACE
-from telepathy.interfaces import ACCOUNT, \
-    ACCOUNT_MANAGER, \
-    CHANNEL, \
-    CHANNEL_INTERFACE_GROUP, \
-    CHANNEL_TYPE_CONTACT_LIST, \
-    CHANNEL_TYPE_FILE_TRANSFER, \
-    CLIENT, \
-    CONNECTION, \
-    CONNECTION_INTERFACE_ALIASING, \
-    CONNECTION_INTERFACE_CONTACTS, \
-    CONNECTION_INTERFACE_CONTACT_CAPABILITIES, \
-    CONNECTION_INTERFACE_REQUESTS, \
-    CONNECTION_INTERFACE_SIMPLE_PRESENCE
-from telepathy.constants import HANDLE_TYPE_CONTACT, \
-    HANDLE_TYPE_LIST, \
-    CONNECTION_PRESENCE_TYPE_OFFLINE, \
-    CONNECTION_STATUS_CONNECTED, \
-    CONNECTION_STATUS_DISCONNECTED
-from telepathy.client import Connection, Channel
+from gi.repository import TelepathyGLib
+ACCOUNT = TelepathyGLib.IFACE_ACCOUNT
+ACCOUNT_MANAGER = TelepathyGLib.IFACE_ACCOUNT_MANAGER
+CHANNEL = TelepathyGLib.IFACE_CHANNEL
+CHANNEL_INTERFACE_GROUP = TelepathyGLib.IFACE_CHANNEL_INTERFACE_GROUP
+CHANNEL_TYPE_CONTACT_LIST = TelepathyGLib.IFACE_CHANNEL_TYPE_CONTACT_LIST
+CHANNEL_TYPE_FILE_TRANSFER = TelepathyGLib.IFACE_CHANNEL_TYPE_FILE_TRANSFER
+CLIENT = TelepathyGLib.IFACE_CLIENT
+CONNECTION = TelepathyGLib.IFACE_CONNECTION
+CONNECTION_INTERFACE_ALIASING = \
+    TelepathyGLib.IFACE_CONNECTION_INTERFACE_ALIASING
+CONNECTION_INTERFACE_CONTACTS = \
+    TelepathyGLib.IFACE_CONNECTION_INTERFACE_CONTACTS
+CONNECTION_INTERFACE_CONTACT_CAPABILITIES = \
+    TelepathyGLib.IFACE_CONNECTION_INTERFACE_CONTACT_CAPABILITIES
+CONNECTION_INTERFACE_REQUESTS = \
+    TelepathyGLib.IFACE_CONNECTION_INTERFACE_REQUESTS
+CONNECTION_INTERFACE_SIMPLE_PRESENCE = \
+    TelepathyGLib.IFACE_CONNECTION_INTERFACE_SIMPLE_PRESENCE
+HANDLE_TYPE_CONTACT = TelepathyGLib.HandleType.CONTACT
+HANDLE_TYPE_LIST = TelepathyGLib.HandleType.LIST
+CONNECTION_PRESENCE_TYPE_OFFLINE = TelepathyGLib.ConnectionPresenceType.OFFLINE
+CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
+CONNECTION_STATUS_DISCONNECTED = TelepathyGLib.ConnectionStatus.DISCONNECTED
 
 from sugar3.graphics.xocolor import XoColor
 from sugar3.profile import get_profile
@@ -264,13 +269,43 @@ class _Account(GObject.GObject):
     def _prepare_connection(self, connection_path):
         connection_name = connection_path.replace('/', '.')[1:]
 
-        self._connection = Connection(connection_name, connection_path,
-                                      ready_handler=self.__connection_ready_cb)
+        self._connection = {}
+        self._object_path = connection_path
+        self.conn_ready = False
+        self.conn_proxy = dbus.Bus().get_object(connection_name, connection_path)
+        self._connection[PROPERTIES_IFACE] = dbus.Interface(
+            self.conn_proxy, PROPERTIES_IFACE)
+        self._connection[CONNECTION_INTERFACE_ALIASING] = \
+            dbus.Interface(self.conn_proxy, CONNECTION_INTERFACE_ALIASING)
+        self._connection[CONNECTION_INTERFACE_SIMPLE_PRESENCE] = \
+            dbus.Interface(self.conn_proxy, CONNECTION_INTERFACE_SIMPLE_PRESENCE)
+        self._connection[CONNECTION_INTERFACE_REQUESTS] = \
+            dbus.Interface(self.conn_proxy, CONNECTION_INTERFACE_REQUESTS)
+        self._connection[CONNECTION_INTERFACE_ACTIVITY_PROPERTIES] = \
+            dbus.Interface(self.conn_proxy, CONNECTION_INTERFACE_ACTIVITY_PROPERTIES)
+        self._connection[CONNECTION_INTERFACE_CONTACTS] = \
+            dbus.Interface(self.conn_proxy, CONNECTION_INTERFACE_CONTACTS)
+        self._connection[CONNECTION] = dbus.Interface(self.conn_proxy, CONNECTION)
+        self._connection[CONNECTION].GetInterfaces(
+            reply_handler=self.__conn_get_interfaces_reply_cb,
+            error_handler=partial(
+                    self.__error_handler_cb,
+                    'dbus.GetInterfaces'))
+
+    def __conn_get_interfaces_reply_cb(self, interfaces):
+        for interface in interfaces:
+            self._connection[interface] = dbus.Interface(
+                self.conn_proxy, interface)
+        self.conn_ready = True
+        self.__connection_ready_cb(self._connection)
 
     def __connection_ready_cb(self, connection):
+        if not self.conn_ready:
+            return
+
         logging.debug('_Account.__connection_ready_cb %r',
-                      connection.object_path)
-        connection.connect_to_signal('StatusChanged',
+                      self._object_path)
+        connection[CONNECTION].connect_to_signal('StatusChanged',
                                      self.__status_changed_cb)
 
         connection[PROPERTIES_IFACE].Get(CONNECTION,
@@ -282,7 +317,7 @@ class _Account(GObject.GObject):
 
     def __get_status_cb(self, status):
         logging.debug('_Account.__get_status_cb %r %r',
-                      self._connection.object_path, status)
+                      self._object_path, status)
         self._update_status(status)
 
     def __status_changed_cb(self, status, reason):
@@ -361,7 +396,7 @@ class _Account(GObject.GObject):
                     self.__active_activity_changed_cb)
         else:
             logging.warning('Connection %s does not support OLPC buddy '
-                            'properties', self._connection.object_path)
+                            'properties', self._object_path)
 
         if CONNECTION_INTERFACE_ACTIVITY_PROPERTIES in self._connection:
             connection = self._connection[
@@ -371,7 +406,7 @@ class _Account(GObject.GObject):
                 self.__activity_properties_changed_cb)
         else:
             logging.warning('Connection %s does not support OLPC activity '
-                            'properties', self._connection.object_path)
+                            'properties', self._object_path)
 
         properties = {
             CHANNEL + '.ChannelType': CHANNEL_TYPE_CONTACT_LIST,
@@ -383,7 +418,13 @@ class _Account(GObject.GObject):
         is_ours, channel_path, properties = \
             connection.EnsureChannel(properties)
 
-        channel = Channel(self._connection.service_name, channel_path)
+        channel = {}
+        service_name = self._object_path.replace('/', '.')[1:]
+        text_proxy = dbus.Bus().get_object(service_name, channel_path)
+        channel[PROPERTIES_IFACE] = dbus.Interface(text_proxy, PROPERTIES_IFACE)
+        channel[CHANNEL_INTERFACE_GROUP] = \
+            dbus.Interface(text_proxy, CHANNEL_INTERFACE_GROUP)
+
         channel[CHANNEL_INTERFACE_GROUP].connect_to_signal(
             'MembersChanged', self.__members_changed_cb)
 

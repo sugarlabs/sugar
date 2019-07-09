@@ -21,14 +21,18 @@ from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import GLib
 import dbus
-from telepathy.interfaces import \
-    CONNECTION_INTERFACE_REQUESTS, \
-    CHANNEL, \
-    CHANNEL_DISPATCHER
-from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT,     \
-    SOCKET_ADDRESS_TYPE_UNIX,           \
-    SOCKET_ACCESS_CONTROL_LOCALHOST
-from telepathy.client import Connection, Channel
+
+from gi.repository import TelepathyGLib
+CONNECTION_INTERFACE_REQUESTS = \
+    TelepathyGLib.IFACE_CONNECTION_INTERFACE_REQUESTS
+CHANNEL = TelepathyGLib.IFACE_CHANNEL
+CHANNEL_DISPATCHER = TelepathyGLib.IFACE_CHANNEL_DISPATCHER
+CONNECTION_HANDLE_TYPE_CONTACT = TelepathyGLib.HandleType.CONTACT
+SOCKET_ADDRESS_TYPE_UNIX = TelepathyGLib.SocketAddressType.UNIX 
+SOCKET_ACCESS_CONTROL_LOCALHOST = TelepathyGLib.SocketAccessControl.LOCALHOST
+CHANNEL_TYPE_FILE_TRANSFER = TelepathyGLib.IFACE_CHANNEL_TYPE_FILE_TRANSFER
+CONNECTION = TelepathyGLib.IFACE_CONNECTION
+CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
 
 from sugar3.presence import presenceservice
 from sugar3 import dispatch
@@ -53,9 +57,6 @@ FT_REASON_LOCAL_ERROR = 4
 FT_REASON_LOCAL_ERROR = 5
 FT_REASON_REMOTE_ERROR = 6
 
-# FIXME: use constants from tp-python once the spec is undrafted
-CHANNEL_TYPE_FILE_TRANSFER = \
-    'org.freedesktop.Telepathy.Channel.Type.FileTransfer'
 
 new_file_transfer = dispatch.Signal()
 
@@ -139,7 +140,14 @@ class IncomingFileTransfer(BaseFileTransfer):
     def __init__(self, connection, object_path, props):
         BaseFileTransfer.__init__(self, connection)
 
-        channel = Channel(connection.service_name, object_path)
+        channel = {}
+        text_proxy = dbus.Bus().get_object(connection["service_name"], object_path)
+        channel[dbus.PROPERTIES_IFACE] = \
+            dbus.Interface(text_proxy, dbus.PROPERTIES_IFACE)
+        channel[CHANNEL_TYPE_FILE_TRANSFER] = \
+            dbus.Interface(text_proxy, CHANNEL_TYPE_FILE_TRANSFER)
+        channel[CHANNEL] = dbus.Interface(text_proxy, CHANNEL)
+
         self.set_channel(channel)
 
         self.connect('notify::state', self.__notify_state_cb)
@@ -193,12 +201,15 @@ class OutgoingFileTransfer(BaseFileTransfer):
 
         presence_service = presenceservice.get_instance()
         name, path = presence_service.get_preferred_connection()
-        connection = Connection(name, path,
-                                ready_handler=self.__connection_ready_cb)
+        connection = {}
+        conn_proxy = dbus.Bus().get_object(name, path)
+        connection[CONNECTION_INTERFACE_REQUESTS] = \
+            dbus.Interface(conn_proxy, CONNECTION_INTERFACE_REQUESTS)
 
         BaseFileTransfer.__init__(self, connection)
         self.connect('notify::state', self.__notify_state_cb)
 
+        self._service_name = name
         self._file_name = file_name
         self._socket_address = None
         self._socket = None
@@ -210,6 +221,8 @@ class OutgoingFileTransfer(BaseFileTransfer):
         self.file_size = os.stat(file_name).st_size
         self.description = description
         self.mime_type = mime_type
+
+        self.__connection_ready_cb(connection)
 
     def __connection_ready_cb(self, connection):
         requests = connection[CONNECTION_INTERFACE_REQUESTS]
@@ -223,7 +236,14 @@ class OutgoingFileTransfer(BaseFileTransfer):
             CHANNEL_TYPE_FILE_TRANSFER + '.Description': self.description,
             CHANNEL_TYPE_FILE_TRANSFER + '.InitialOffset': 0})
 
-        self.set_channel(Channel(connection.service_name, object_path))
+        channel = {}
+        text_proxy = dbus.Bus().get_object(self._service_name, object_path)
+        channel[dbus.PROPERTIES_IFACE] = \
+            dbus.Interface(text_proxy, dbus.PROPERTIES_IFACE)
+        channel[CHANNEL_TYPE_FILE_TRANSFER] = \
+            dbus.Interface(text_proxy, CHANNEL_TYPE_FILE_TRANSFER)
+        channel[CHANNEL] = dbus.Interface(text_proxy, CHANNEL)
+        self.set_channel(channel)
 
         channel_file_transfer = self.channel[CHANNEL_TYPE_FILE_TRANSFER]
         self._socket_address = channel_file_transfer.ProvideFile(
@@ -319,8 +339,7 @@ def file_transfer_available():
     for connection in conn_watcher.get_connections():
 
         try:
-            properties_iface = connection[
-                dbus.PROPERTIES_IFACE]
+            properties_iface = connection[dbus.PROPERTIES_IFACE]
             properties = properties_iface.GetAll(
                 CONNECTION_INTERFACE_REQUESTS)
         except dbus.DBusException as e:

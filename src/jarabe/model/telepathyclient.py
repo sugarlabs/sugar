@@ -17,17 +17,17 @@ import logging
 
 import dbus
 from dbus import PROPERTIES_IFACE
-from telepathy.interfaces import CLIENT, \
-    CHANNEL, \
-    CHANNEL_TYPE_TEXT, \
-    CHANNEL_TYPE_FILE_TRANSFER, \
-    CLIENT_APPROVER, \
-    CLIENT_HANDLER, \
-    CLIENT_INTERFACE_REQUESTS
-from telepathy.server import DBusProperties
 
-from telepathy.constants import CONNECTION_HANDLE_TYPE_ROOM
-from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT
+from gi.repository import TelepathyGLib
+CLIENT = TelepathyGLib.IFACE_CLIENT
+CHANNEL = TelepathyGLib.IFACE_CHANNEL
+CHANNEL_TYPE_TEXT = TelepathyGLib.IFACE_CHANNEL_TYPE_TEXT
+CHANNEL_TYPE_FILE_TRANSFER = TelepathyGLib.IFACE_CHANNEL_TYPE_FILE_TRANSFER
+CLIENT_APPROVER = TelepathyGLib.IFACE_CLIENT_APPROVER
+CLIENT_HANDLER = TelepathyGLib.IFACE_CLIENT_HANDLER
+CLIENT_INTERFACE_REQUESTS = TelepathyGLib.IFACE_CLIENT_INTERFACE_REQUESTS
+CONNECTION_HANDLE_TYPE_ROOM = TelepathyGLib.HandleType.ROOM
+CONNECTION_HANDLE_TYPE_CONTACT = TelepathyGLib.HandleType.CONTACT
 
 from sugar3 import dispatch
 
@@ -38,7 +38,7 @@ SUGAR_CLIENT_PATH = '/org/freedesktop/Telepathy/Client/Sugar'
 _instance = None
 
 
-class TelepathyClient(dbus.service.Object, DBusProperties):
+class TelepathyClient(dbus.service.Object):
 
     def __init__(self):
         self._interfaces = set([CLIENT, CLIENT_HANDLER,
@@ -49,15 +49,16 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
         bus_name = dbus.service.BusName(SUGAR_CLIENT_SERVICE, bus=bus)
 
         dbus.service.Object.__init__(self, bus_name, SUGAR_CLIENT_PATH)
-        DBusProperties.__init__(self)
-
-        self._implement_property_get(CLIENT, {
+        
+        self._prop_getters = {}
+        self._prop_setters = {}
+        self._prop_getters.setdefault(CLIENT, {}).update({
             'Interfaces': lambda: list(self._interfaces),
         })
-        self._implement_property_get(CLIENT_HANDLER, {
+        self._prop_getters.setdefault(CLIENT_HANDLER, {}).update({
             'HandlerChannelFilter': self.__get_filters_handler_cb,
         })
-        self._implement_property_get(CLIENT_APPROVER, {
+        self._prop_getters.setdefault(CLIENT_APPROVER, {}).update({
             'ApproverChannelFilter': self.__get_filters_approver_cb,
         })
 
@@ -126,6 +127,35 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
                 properties=properties)
         except Exception as e:
             logging.exception(e)
+
+    @dbus.service.method(dbus_interface=dbus.PROPERTIES_IFACE,
+                         in_signature='ss', out_signature='v')
+    def Get(self, interface_name, property_name):
+        if interface_name in self._prop_getters \
+            and property_name in self._prop_getters[interface_name]:
+                return self._prop_getters[interface_name][property_name]()
+        else:
+            logging.debug('InvalidArgument')
+
+    @dbus.service.method(dbus_interface=dbus.PROPERTIES_IFACE,
+                         in_signature='ssv', out_signature='')
+    def Set(self, interface_name, property_name, value):
+        if interface_name in self._prop_setters \
+            and property_name in self._prop_setters[interface_name]:
+                self._prop_setters[interface_name][property_name](value)
+        else:
+            logging.debug('PermissionDenied')
+
+    @dbus.service.method(dbus_interface=dbus.PROPERTIES_IFACE,
+                         in_signature='s', out_signature='a{sv}')
+    def GetAll(self, interface_name):
+        if interface_name in self._prop_getters:
+            r = {}
+            for k, v in self._prop_getters[interface_name].items():
+                r[k] = v()
+            return r
+        else:
+            logging.debug('InvalidArgument')
 
 
 def get_instance():

@@ -20,13 +20,15 @@ import json
 
 from gi.repository import GObject
 import dbus
-from telepathy.interfaces import CHANNEL, \
-    CHANNEL_DISPATCHER, \
-    CHANNEL_DISPATCH_OPERATION, \
-    CHANNEL_TYPE_CONTACT_LIST, \
-    CHANNEL_TYPE_TEXT, \
-    CLIENT
-from telepathy.constants import HANDLE_TYPE_ROOM
+
+from gi.repository import TelepathyGLib
+CHANNEL = TelepathyGLib.IFACE_CHANNEL
+CHANNEL_DISPATCHER = TelepathyGLib.IFACE_CHANNEL_DISPATCHER
+CHANNEL_DISPATCH_OPERATION = TelepathyGLib.IFACE_CHANNEL_DISPATCH_OPERATION
+CHANNEL_TYPE_CONTACT_LIST = TelepathyGLib.IFACE_CHANNEL_TYPE_CONTACT_LIST
+CHANNEL_TYPE_TEXT = TelepathyGLib.IFACE_CHANNEL_TYPE_TEXT
+CLIENT = TelepathyGLib.IFACE_CLIENT
+HANDLE_TYPE_ROOM = TelepathyGLib.HandleType.ROOM
 
 from sugar3.graphics.xocolor import XoColor
 from sugar3 import profile

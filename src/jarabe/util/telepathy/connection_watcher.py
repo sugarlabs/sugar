@@ -20,13 +20,17 @@
 import logging
 
 import dbus
+from dbus import PROPERTIES_IFACE
 import dbus.mainloop.glib
 from gi.repository import GObject
 
-from telepathy.client import Connection
-from telepathy.interfaces import CONN_INTERFACE
-from telepathy.constants import CONNECTION_STATUS_CONNECTED, \
-    CONNECTION_STATUS_DISCONNECTED
+from gi.repository import TelepathyGLib
+CONN_INTERFACE = TelepathyGLib.IFACE_CONNECTION
+CONNECTION_INTERFACE_REQUESTS = \
+    TelepathyGLib.IFACE_CONNECTION_INTERFACE_REQUESTS
+
+CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
+CONNECTION_STATUS_DISCONNECTED = TelepathyGLib.ConnectionStatus.DISCONNECTED
 
 
 _instance = None
@@ -56,8 +60,18 @@ class ConnectionWatcher(GObject.GObject):
                                      signal_name='StatusChanged',
                                      path_keyword='path')
 
-        for conn in Connection.get_connections(bus):
-            conn.call_when_ready(self._conn_ready_cb)
+        bus_object = self.bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        bus_object.ListNames(
+            dbus_interface='org.freedesktop.DBus',
+            reply_handler=self.__get_services_reply_cb,
+            error_handler=self.__error_handler_cb)
+
+    def __get_services_reply_cb(self, services):
+        for service in services:
+            if service.startswith('org.freedesktop.Telepathy.Connection.'):
+                object_path = "/%s" % service.replace(".", "/")
+                conn_proxy = self.bus.get_object(service, object_path)
+                self._prepare_conn_cb(object_path, conn_proxy)
 
     def _status_changed_cb(self, *args, **kwargs):
         path = kwargs['path']
@@ -72,19 +86,46 @@ class ConnectionWatcher(GObject.GObject):
         elif status == CONNECTION_STATUS_DISCONNECTED:
             self._remove_connection(service_name, path)
 
-    def _conn_ready_cb(self, conn):
-        if conn.object_path in self._connections:
+    def _prepare_conn_cb(self, object_path, conn_proxy):
+        self.connection = {}
+        self.object_path = object_path
+        self.conn_proxy = conn_proxy
+        self.conn_ready = False
+        self.connection["service_name"] = object_path.replace('/', '.')[1:]
+        self.connection[PROPERTIES_IFACE] = dbus.Interface(
+            self.conn_proxy, PROPERTIES_IFACE)
+        self.connection[CONNECTION_INTERFACE_REQUESTS] = \
+            dbus.Interface(self.conn_proxy, CONNECTION_INTERFACE_REQUESTS)
+        self.connection[CONN_INTERFACE] = \
+            dbus.Interface(self.conn_proxy, CONN_INTERFACE)
+        self.connection[CONN_INTERFACE].GetInterfaces(
+            reply_handler=self.__conn_get_interfaces_reply_cb,
+            error_handler=self.__error_handler_cb)
+
+    def __conn_get_interfaces_reply_cb(self, interfaces):
+        for interface in interfaces:
+            self.connection[interface] = dbus.Interface(
+                self.conn_proxy, interface)
+        self.conn_ready = True
+        self._conn_ready_cb()
+
+    def _conn_ready_cb(self):
+        if not self.conn_ready:
             return
 
-        self._connections[conn.object_path] = conn
-        self.emit('connection-added', conn)
+        if self.object_path in self._connections:
+            return
+
+        self._connections[self.object_path] = self.connection
+        self.emit('connection-added', self.connection)
 
     def _add_connection(self, service_name, path):
         if path in self._connections:
             return
 
         try:
-            Connection(service_name, path, ready_handler=self._conn_ready_cb)
+            conn_proxy = dbus.Bus().get_object(service_name, path)
+            self._prepare_conn_cb(path, conn_proxy)
         except dbus.exceptions.DBusException:
             logging.debug('%s is propably already gone.', service_name)
 
@@ -98,6 +139,9 @@ class ConnectionWatcher(GObject.GObject):
     def get_connections(self):
         return self._connections.values()
 
+    def __error_handler_cb(exception):
+        logging.debug('Exception from asynchronous method call:\n%s' % exception)
+
 
 def get_instance():
     global _instance
@@ -110,10 +154,10 @@ if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
     def connection_added_cb(conn_watcher, conn):
-        print 'new connection', conn.service_name
+        print 'new connection', conn["service_name"]
 
     def connection_removed_cb(conn_watcher, conn):
-        print 'removed connection', conn.service_name
+        print 'removed connection', conn["service_name"]
 
     watcher = ConnectionWatcher()
     watcher.connect('connection-added', connection_added_cb)
