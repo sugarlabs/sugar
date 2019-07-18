@@ -9,7 +9,9 @@ EXTRA_DIST =                    \
 	$(bin_SCRIPTS)		\
 	intltool-merge.in       \
 	intltool-update.in      \
-	intltool-extract.in
+	intltool-extract.in	\
+	docs			\
+	README.md
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-update-mimedb
 
