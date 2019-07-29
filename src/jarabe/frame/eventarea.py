@@ -60,8 +60,8 @@ class EventArea(GObject.GObject):
         box.connect('enter-notify-event', self._enter_notify_cb)
         box.connect('leave-notify-event', self._leave_notify_cb)
         box.drag_dest_set(0, [], 0)
-        box.connect('drag_motion', self._drag_motion_cb)
-        box.connect('drag_leave', self._drag_leave_cb)
+        box.connect('drag-motion', self._drag_motion_cb)
+        box.connect('drag-leave', self._drag_leave_cb)
         box.realize()
         return box
 

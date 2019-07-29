@@ -115,8 +115,8 @@ class SpeechPalette(Palette):
         box.append_item(hscale_rate, vertical_padding=0)
         hscale_rate.show()
 
-        self._adj_pitch.connect('value_changed', self.__adj_pitch_changed_cb)
-        self._adj_rate.connect('value_changed', self.__adj_rate_changed_cb)
+        self._adj_pitch.connect('value-changed', self.__adj_pitch_changed_cb)
+        self._adj_rate.connect('value-changed', self.__adj_rate_changed_cb)
 
     def __adj_pitch_changed_cb(self, adjustment):
         self._manager.set_pitch(int(adjustment.get_value()))

@@ -205,7 +205,7 @@ class ControlPanel(Gtk.Window):
                                        title=self._options[option]['title'],
                                        xo_color=self._options[option]['color'],
                                        pixel_size=style.GRID_CELL_SIZE)
-            sectionicon.connect('button_press_event',
+            sectionicon.connect('button-press-event',
                                 self.__select_option_cb, option)
             sectionicon.show()
 

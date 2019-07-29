@@ -162,7 +162,7 @@ class AudioManagerWidget(Gtk.VBox):
         self.add(alignment)
 
         self._adjustment_hid = \
-            self._adjustment.connect('value_changed',
+            self._adjustment.connect('value-changed',
                                      self.__level_adjusted_cb)
 
     def update_level(self):

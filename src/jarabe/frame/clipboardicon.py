@@ -62,7 +62,7 @@ class ClipboardIcon(RadioToolButton):
         cb_service.connect('object-selected', self._object_selected_cb)
 
         child = self.get_child()
-        child.connect('drag_data_get', self._drag_data_get_cb)
+        child.connect('drag-data-get', self._drag_data_get_cb)
         self.connect('notify::active', self._notify_active_cb)
 
     def create_palette(self):
@@ -174,7 +174,7 @@ class ClipboardIcon(RadioToolButton):
         frame = jarabe.frame.get_view()
         self._timeout_id = frame.add_notification(
             self._notif_icon, Gtk.CornerType.BOTTOM_LEFT)
-        self._notif_icon.connect('drag_data_get', self._drag_data_get_cb)
+        self._notif_icon.connect('drag-data-get', self._drag_data_get_cb)
         self._notif_icon.connect('drag-begin', self._drag_begin_cb)
         self._notif_icon.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                                          self._get_targets(),
