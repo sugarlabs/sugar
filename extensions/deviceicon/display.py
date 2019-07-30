@@ -130,7 +130,7 @@ class BrightnessManagerWidget(Gtk.VBox):
 
             self._adjustment_timeout_id = None
             self._adjustment_hid = \
-                self._adjustment.connect('value_changed', self.__adjusted_cb)
+                self._adjustment.connect('value-changed', self.__adjusted_cb)
 
             hscale = Gtk.HScale()
             hscale.props.draw_value = False

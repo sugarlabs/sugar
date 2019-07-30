@@ -56,7 +56,7 @@ class SessionManager(GObject.GObject):
 
     def start(self):
         self.session.start()
-        self.session.connect('shutdown_completed',
+        self.session.connect('shutdown-completed',
                              self.__shutdown_completed_cb)
 
     def initiate_shutdown(self, logout_mode):

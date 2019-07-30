@@ -149,7 +149,7 @@ class MainToolbox(ToolbarBox):
 
         self.refresh_filters()
 
-        self.connect('size_allocate', self.__size_allocate_cb)
+        self.connect('size-allocate', self.__size_allocate_cb)
 
     def __size_allocate_cb(self, widget, allocation):
         GLib.idle_add(self._update_buttons, allocation.width)

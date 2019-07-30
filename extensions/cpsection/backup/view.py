@@ -131,7 +131,7 @@ class SelectBackupRestorePanel(Gtk.VBox):
             icon_name='backup-backup',
             title=_('Save the contents of your Journal'),
             pixel_size=style.GRID_CELL_SIZE)
-        self.backup_btn.connect('button_press_event',
+        self.backup_btn.connect('button-press-event',
                                 self.__backup_button_press_cb)
         hbox.pack_start(self.backup_btn, False, False, style.DEFAULT_SPACING)
 
@@ -139,7 +139,7 @@ class SelectBackupRestorePanel(Gtk.VBox):
             icon_name='backup-restore',
             title=_('Restore the contents of your Journal'),
             pixel_size=style.GRID_CELL_SIZE)
-        self.restore_btn.connect('button_press_event',
+        self.restore_btn.connect('button-press-event',
                                  self.__restore_button_press_cb)
         hbox.pack_start(self.restore_btn, False, False, style.DEFAULT_SPACING)
 

@@ -690,7 +690,7 @@ class ActivityListPalette(ActivityPalette):
         self._activity_changed_sid = []
         for i in range(desktop.get_number_of_views()):
             self._activity_changed_sid.append(
-                registry.connect('bundle_changed',
+                registry.connect('bundle-changed',
                                  self.__activity_changed_cb, i))
             self._update_favorite_item(i)
 
