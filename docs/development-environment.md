@@ -85,7 +85,7 @@ On Fedora, use [dnf builddep](http://dnf-plugins-core.readthedocs.io/en/latest/b
 
 Autogen, configure, make, and install each module for Python 2;
 
-    for module in sugar{-datastore,-artwork,-toolkit,-toolkit-gtk3,}; do
+    for module in sugar{-artwork,-toolkit,-toolkit-gtk3,}; do
         cd $module
         ./autogen.sh
         make
@@ -93,9 +93,9 @@ Autogen, configure, make, and install each module for Python 2;
         cd ..
     done
 
-When support is required for both versions of Python, build the `sugar-toolkit-gtk3` module again with the `--with-python3` option;
+Autogen, configure, make, and install modules for Python 3;
 
-    for module in sugar-toolkit-gtk3; do
+    for module in sugar{-toolkit-gtk3,-datastore}; do
         cd $module
         ./autogen.sh --with-python3
         make
