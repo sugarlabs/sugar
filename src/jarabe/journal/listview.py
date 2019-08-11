@@ -455,6 +455,7 @@ class BaseListView(Gtk.Bin):
         window = self.get_toplevel().get_window()
         if window is not None:
             window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+            Gdk.flush()
         GLib.idle_add(self._do_refresh, new_query)
 
     def _do_refresh(self, new_query=False):
@@ -473,6 +474,7 @@ class BaseListView(Gtk.Bin):
         window = self.get_toplevel().get_window()
         if window is not None:
             window.set_cursor(None)
+            Gdk.flush()
 
     def __model_ready_cb(self, tree_model):
         self._stop_progress_bar()

@@ -335,6 +335,7 @@ class ViewSource(Gtk.Window):
             os.unlink(document_path)
 
         self._gdk_window.set_cursor(Gdk.Cursor(Gdk.CursorType.LEFT_PTR))
+        Gdk.flush()
 
     def __key_press_event_cb(self, window, event):
         keyname = Gdk.keyval_name(event.keyval)
@@ -423,6 +424,7 @@ class DocumentButton(RadioToolButton):
 
         gdk_window = self.get_root_window()
         gdk_window.set_cursor(cursor)
+        Gdk.flush()
 
     def __copy_to_home_cb(self, menu_item, copy_alert=None):
         """Make a local copy of the activity bundle in user_activities_path"""

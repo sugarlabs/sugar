@@ -143,6 +143,7 @@ class Background(SectionView):
             window = self.get_window()
             if window is not None:
                 window.set_cursor(None)
+                Gdk.flush()
             self._append_to_store_sid = None
 
     def _cancel_append_to_store(self):
@@ -155,9 +156,11 @@ class Background(SectionView):
             self.get_window().set_cursor(None)
         else:
             self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+        Gdk.flush()
 
     def __unrealize_cb(self, widget):
         self.get_window().set_cursor(None)
+        Gdk.flush()
 
     def _set_alpha_cb(self, widget):
         if widget.get_active():

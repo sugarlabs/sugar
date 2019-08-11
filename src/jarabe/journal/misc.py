@@ -392,6 +392,7 @@ def handle_bundle_installation(metadata, force_downgrade=False):
         return None, False
     finally:
         window.set_cursor(None)
+        Gdk.flush()
 
     # If we just installed a bundle, update the datastore accordingly.
     # We do not do this for JournalEntryBundles because the JEB code transforms
