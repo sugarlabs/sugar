@@ -73,7 +73,7 @@ class BuddyIcon(CanvasIcon):
         self.__tamagotchi_thread()
 
     def __tamagotchi_thread(self):
-        GObject.timeout_add(60000, self.__tamagotchi_thread)
+        GLib.timeout_add(60000, self.__tamagotchi_thread)
         self.__datastore_query()
 
         user_type = None
@@ -102,7 +102,6 @@ class BuddyIcon(CanvasIcon):
         self.__status_tooltip(self.has_battery)
 
     def __get_battery(self):
-        # GObject.timeout_add(10000, self.__get_battery)
         bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)
         up_proxy = bus.get_object('org.freedesktop.UPower',
                                   '/org/freedesktop/UPower')
@@ -126,7 +125,6 @@ class BuddyIcon(CanvasIcon):
                 self.props.badge_name = icon_name
 
     def __status_tooltip(self, has_battery=False):
-        # GObject.timeout_add(10000, self.__status_tooltip_thread)
         disk_usage = (self.used * 100) / self.total
         battery = ''
         if has_battery:
@@ -135,7 +133,6 @@ class BuddyIcon(CanvasIcon):
         self.set_tooltip_text(tooltip_str)
 
     def __datastore_query(self):
-        # GObject.timeout_add(100000, self.__datastore_query)
         test, entries = datastore.find({})
         self.journal_entries = entries
 
