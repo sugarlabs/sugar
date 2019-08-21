@@ -28,6 +28,7 @@ from sugar3.datastore import datastore
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.util.normalize import normalize_string
 from jarabe.model.session import get_session_manager
+from jarabe import config
 
 import os
 import statvfs
@@ -56,10 +57,12 @@ class BuddyIcon(CanvasIcon):
         self.palette_invoker.cache_palette = False
 
         self._update_color()
-        self.journal_entries = 0
-        self.has_battery = None
 
-        self.icon_dict = {'embryo': {'normal': 'embryo-test',
+        settings = Gio.Settings('org.sugarlabs')
+        variable_apr = settings.get_boolean('variable-buddy-icon')
+
+        if variable_apr:
+            self.icon_dict = {'embryo': {'normal': 'embryo-test',
                                      'disk_50': 'embryo-disk50',
                                      'disk_90': 'embryo-disk90'},
                           'teen': {'normal': 'teen',
@@ -69,9 +72,10 @@ class BuddyIcon(CanvasIcon):
                                     'disk_50': 'adult-disk50',
                                     'disk_90': 'adult-disk90'}
                           }
-
-        self.__tamagotchi_thread()
-
+            self.journal_entries = 0
+            self.has_battery = None    
+            self.__tamagotchi_thread()
+            
     def __tamagotchi_thread(self):
         GLib.timeout_add(60000, self.__tamagotchi_thread)
         self.__datastore_query()
@@ -133,7 +137,7 @@ class BuddyIcon(CanvasIcon):
         self.set_tooltip_text(tooltip_str)
 
     def __datastore_query(self):
-        test, entries = datastore.find({})
+        _, entries = datastore.find({})
         self.journal_entries = entries
 
     def _get_space(self):
