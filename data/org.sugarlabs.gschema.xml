@@ -223,6 +223,16 @@
             <summary>Grace Time</summary>
             <description>Defer forced shutdown to at least this many seconds since Sugar was started.</description>
         </key>
+        <key name="battery-present" type="b">
+            <default>false</default>
+            <summary>Battery Presence</summary>
+            <description>Whether the machine is battery equipped or not.</description>
+        </key>
+        <key name="battery-level" type="d">
+            <default>100</default>
+            <summary>Battery Level</summary>
+            <description>Current battery level of the machine.</description>
+        </key>
     </schema>
     <schema id="org.sugarlabs.peripherals" path="/org/sugarlabs/peripherals/">
         <child name="keyboard" schema="org.sugarlabs.peripherals.keyboard" />
