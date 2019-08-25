@@ -14,8 +14,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gi
-gi.require_version('UPowerGlib', '1.0')
-from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import GLib
 
@@ -26,7 +24,6 @@ from sugar3.datastore import datastore
 
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.util.normalize import normalize_string
-from jarabe import config
 
 import os
 import statvfs
