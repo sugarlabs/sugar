@@ -65,10 +65,12 @@ class BuddyIcon(CanvasIcon):
             self.journal_entries = 0
             self.has_battery = None
             self.__tamagotchi_thread()
+            _, self.journal_entries = datastore.find({})
+            datastore.updated.connect(self.__datastore_listener_updated_cb)
+            datastore.deleted.connect(self.__datastore_listener_deleted_cb)
 
     def __tamagotchi_thread(self):
         GLib.timeout_add(60000, self.__tamagotchi_thread)
-        self.__datastore_query()
 
         user_type = None
         disk_space_type = None
@@ -95,6 +97,12 @@ class BuddyIcon(CanvasIcon):
         self.__get_battery()
         self.__status_tooltip(self.has_battery)
 
+    def __datastore_listener_updated_cb(self, **kwargs):
+        self.journal_entries += 1
+
+    def __datastore_listener_deleted_cb(self, **kwargs):
+        self.journal_entries -= 1
+
     def __get_battery(self):
         settings = Gio.Settings('org.sugarlabs.power')
         self.has_battery = settings.get_boolean('battery-present')
@@ -109,7 +117,7 @@ class BuddyIcon(CanvasIcon):
     def __status_tooltip(self, has_battery=False):
         disk_usage = (self.used * 100) / self.total
         battery = ''
-        if has_battery:
+        if self.has_battery:
             battery = "\n{} Battery".format(str(self.level))
         tooltip_str = "{}% Disk space used {}".format(str(disk_usage), battery)
         self.set_tooltip_text(tooltip_str)
