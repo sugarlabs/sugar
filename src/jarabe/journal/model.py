@@ -856,7 +856,7 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
         logging.error('Could not convert metadata to json.')
     else:
         (fh, fn) = tempfile.mkstemp(dir=metadata['mountpoint'])
-        os.write(fh, metadata_json)
+        os.write(fh, metadata_json.encode())
         os.close(fh)
         os.rename(fn, os.path.join(metadata_dir_path, file_name + '.metadata'))
 
