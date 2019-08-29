@@ -143,7 +143,7 @@ class BaseResultSet(object):
 
             # Total cache miss: remake it
             limit = self._page_size * MIN_PAGES_TO_CACHE
-            offset = max(0, self._position - limit / 2)
+            offset = max(0, self._position - limit // 2)
             logging.debug('remaking cache, offset: %r limit: %r', offset,
                           limit)
             query = self._query.copy()
