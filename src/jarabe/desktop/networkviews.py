@@ -405,7 +405,7 @@ class WirelessNetworkView(EventPulsingIcon):
                                             self.get_first_ap().model)
 
     def set_filter(self, query):
-        normalized_name = normalize_string(self._display_name.decode('utf-8'))
+        normalized_name = normalize_string(self._display_name)
         self._filtered = normalized_name.find(query) == -1
         self._update_icon()
         self._update_color()
