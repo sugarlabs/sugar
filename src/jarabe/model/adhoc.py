@@ -196,7 +196,7 @@ class AdHocManager(GObject.GObject):
         settings.connection.uuid = str(uuid.uuid4())
         settings.connection.type = '802-11-wireless'
         settings.connection.autoconnect = False
-        settings.wireless.ssid = dbus.ByteArray(ssid)
+        settings.wireless.ssid = dbus.ByteArray(ssid.encode())
         settings.wireless.band = 'bg'
         settings.wireless.channel = channel
         settings.wireless.mode = 'adhoc'
