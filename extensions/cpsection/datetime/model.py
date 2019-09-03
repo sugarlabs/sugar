@@ -62,7 +62,7 @@ def read_all_timezones(fn=_zone_tab):
 
 
 def get_timezone():
-    settings = Gio.Settings('org.sugarlabs.date')
+    settings = Gio.Settings.new('org.sugarlabs.date')
     return settings.get_string('timezone')
 
 
@@ -93,7 +93,7 @@ def set_timezone(timezone):
         if timezone.startswith('UTC'):
             timezone = fix_UTC_time_zone(timezone)
         os.environ['TZ'] = timezone
-        settings = Gio.Settings('org.sugarlabs.date')
+        settings = Gio.Settings.new('org.sugarlabs.date')
         settings.set_string('timezone', timezone)
     else:
         raise ValueError(_('Error: timezone does not exist.'))

@@ -68,7 +68,7 @@ class Updater(GObject.GObject):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        settings = Gio.Settings(_UPDATE_KEYS_PATH)
+        settings = Gio.Settings.new(_UPDATE_KEYS_PATH)
         backend = settings.get_string(_UPDATE_BACKEND_KEY)
         module_name, class_name = backend.rsplit('.', 1)
         _logger.debug("Use backend %s.%s", module_name, class_name)
@@ -236,7 +236,7 @@ class Updater(GObject.GObject):
         self.emit('finished', self._bundles_updated, self._bundles_failed,
                   cancelled)
         if not cancelled and len(self._bundles_failed) == 0:
-            settings = Gio.Settings(_UPDATE_KEYS_PATH)
+            settings = Gio.Settings.new(_UPDATE_KEYS_PATH)
             settings.set_int(_LAST_UPDATE_KEY, time.time())
             try:
                 os.unlink(_URGENT_TRIGGER_FILE)
@@ -288,7 +288,7 @@ def _check_periodic_update():
     if check_urgent_update():
         return True
 
-    settings = Gio.Settings(_UPDATE_KEYS_PATH)
+    settings = Gio.Settings.new(_UPDATE_KEYS_PATH)
     update_frequency = settings.get_int(_UPDATE_FREQUENCY_KEY)
     if update_frequency == 0:
         # automatic update disabled

@@ -50,13 +50,13 @@ def set_nick(nick):
         raise ValueError(_('You must enter a name.'))
     if not isinstance(nick, str):
         nick = str(nick, 'utf-8')
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
     settings.set_string('nick', nick)
     return 1
 
 
 def get_color():
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
     return settings.get_string('color')
 
 
@@ -108,13 +108,13 @@ def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
     color = _COLORS[stroke][stroke_modifier] + ',' \
         + _COLORS[fill][fill_modifier]
 
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
     settings.set_string('color', color)
     return 1
 
 
 def get_color_xo():
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
     return settings.get_string('color')
 
 
@@ -122,6 +122,6 @@ def set_color_xo(color):
     """Set a color with an XoColor
     This method is used by the graphical user interface
     """
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
     settings.set_string('color', color)
     return 1

@@ -621,7 +621,7 @@ def initialize_journal_object(title=None, bundle_id=None,
                               icon_color=None, invited=False):
 
     if not icon_color:
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
         icon_color = settings.get_string('color')
 
     if not activity_id:

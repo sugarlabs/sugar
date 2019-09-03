@@ -63,7 +63,7 @@ class ActivityAPI(API):
             self._session_manager_shutdown_cb)
 
     def get_xo_color(self, request):
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
         color_string = settings.get_string('color')
 
         self._client.send_result(request, [color_string.split(",")])

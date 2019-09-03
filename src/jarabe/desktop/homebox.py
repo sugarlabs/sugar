@@ -59,7 +59,7 @@ class HomeBox(Gtk.VBox):
 
         self._set_view(self._favorites_views_indicies[0])
         self._query = ''
-        self._resume_mode = Gio.Settings(
+        self._resume_mode = Gio.Settings.new(
             'org.sugarlabs.user').get_boolean('resume-activity')
 
     def __desktop_view_icons_changed_cb(self, model):

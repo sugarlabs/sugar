@@ -29,7 +29,7 @@ DEFAULT_BACKGROUND_ALPHA_LEVEL = 0.20
 
 
 def get_background_image_path():
-    settings = Gio.Settings(BACKGROUND_DIR)
+    settings = Gio.Settings.new(BACKGROUND_DIR)
     path = settings.get_string(BACKGROUND_IMAGE_PATH_KEY)
     if path is None:
         return ''
@@ -37,7 +37,7 @@ def get_background_image_path():
 
 
 def get_background_alpha_level():
-    settings = Gio.Settings(BACKGROUND_DIR)
+    settings = Gio.Settings.new(BACKGROUND_DIR)
     alpha = settings.get_string(BACKGROUND_ALPHA_LEVEL_KEY)
     if alpha is None:
         alpha = DEFAULT_BACKGROUND_ALPHA_LEVEL
@@ -61,7 +61,7 @@ class HomeBackgroundBox(Gtk.VBox):
         self._update_background_image()
         self.connect('draw', self.__draw_cb)
 
-        self._settings = Gio.Settings(BACKGROUND_DIR)
+        self._settings = Gio.Settings.new(BACKGROUND_DIR)
         self._settings.connect('changed', self.__conf_changed_cb, None)
 
     def __draw_cb(self, widget, context):

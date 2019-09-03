@@ -427,7 +427,7 @@ class ShellModel(GObject.GObject):
 
         self._screen.toggle_showing_desktop(True)
 
-        settings = Gio.Settings('org.sugarlabs')
+        settings = Gio.Settings.new('org.sugarlabs')
         self._maximum_open_activities = settings.get_int(
             'maximum-number-of-open-activities')
 

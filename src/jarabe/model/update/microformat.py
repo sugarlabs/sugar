@@ -195,7 +195,7 @@ class MicroformatUpdater(object):
 
     def _query(self):
         self.clean()
-        settings = Gio.Settings(_MICROFORMAT_URL_PATH)
+        settings = Gio.Settings.new(_MICROFORMAT_URL_PATH)
         url = settings.get_string(_MICROFORMAT_URL_KEY)
         _logger.debug("Query %s %r", url, url)
         if url == "":

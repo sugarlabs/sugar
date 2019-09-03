@@ -46,7 +46,7 @@ def take_screenshot():
     cr.paint()
     screenshot_surface.write_to_png(file_path)
 
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
     color = settings.get_string('color')
 
     content_title = None

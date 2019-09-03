@@ -238,7 +238,7 @@ class NetworkManagerObserver(object):
         self._netmgr = None
         self._olpc_mesh_device_o = None
 
-        settings = Gio.Settings(self._SHOW_ADHOC_CONF_DIR)
+        settings = Gio.Settings.new(self._SHOW_ADHOC_CONF_DIR)
         self._have_adhoc_networks = \
             settings.get_boolean(self._SHOW_ADHOC_CONF_KEY)
 

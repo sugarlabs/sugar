@@ -687,7 +687,7 @@ def copy(metadata, mount_point, ready_callback=None):
     """
     metadata = get(metadata['uid'])
     if mount_point == '/' and metadata.get('icon-color') == '#000000,#ffffff':
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
         metadata['icon-color'] = settings.get_string('color')
     file_path = get_file(metadata['uid'])
     if file_path is None:

@@ -40,7 +40,7 @@ class DesktopViewModel(GObject.GObject):
         self._favorite_icons = None
         self._view_labels = None
 
-        self._settings = Gio.Settings(_DESKTOP_CONF_DIR)
+        self._settings = Gio.Settings.new(_DESKTOP_CONF_DIR)
         self._ensure_view_icons()
         self._settings.connect(
             'changed::%s' % _HOMEVIEWS_KEY, self.__conf_changed_cb)

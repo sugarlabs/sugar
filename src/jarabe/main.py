@@ -246,14 +246,14 @@ def cleanup_temporary_files():
 
 
 def setup_timezone():
-    settings = Gio.Settings('org.sugarlabs.date')
+    settings = Gio.Settings.new('org.sugarlabs.date')
     timezone = settings.get_string('timezone')
     if timezone is not None and timezone:
         os.environ['TZ'] = timezone
 
 
 def setup_fonts():
-    settings = Gio.Settings('org.sugarlabs.font')
+    settings = Gio.Settings.new('org.sugarlabs.font')
     face = settings.get_string('default-face')
     size = settings.get_double('default-size')
 
@@ -267,11 +267,11 @@ def setup_proxy():
     schemas = ['org.sugarlabs.system.proxy.{}'.format(
         proto) for proto in protos]
 
-    g_mode = Gio.Settings('org.sugarlabs.system.proxy').get_string('mode')
+    g_mode = Gio.Settings.new('org.sugarlabs.system.proxy').get_string('mode')
     if g_mode == 'manual':
         counter = 0
         for schema in schemas:
-            setting_schema = Gio.Settings(schema)
+            setting_schema = Gio.Settings.new(schema)
 
             if ((env_variables[counter] == 'http_proxy') and
                     setting_schema.get_boolean('use-authentication')):
@@ -290,7 +290,7 @@ def setup_proxy():
             os.environ[env_variables[counter]] = text_to_set
             os.environ[env_variables[counter].upper()] = text_to_set
             counter += 1
-        os.environ['no_proxy'] = ",".join(Gio.Settings(
+        os.environ['no_proxy'] = ",".join(Gio.Settings.new(
             'org.sugarlabs.system.proxy').get_strv('ignore-hosts'))
 
     elif g_mode == 'none':

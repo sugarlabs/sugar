@@ -90,7 +90,7 @@ class BuddyMenu(Palette):
         self._update_invite_menu(activity)
 
     def _add_my_items(self):
-        settings = Gio.Settings('org.sugarlabs')
+        settings = Gio.Settings.new('org.sugarlabs')
 
         show_shutdown = settings.get_boolean('show-shutdown')
         show_restart = settings.get_boolean('show-restart')

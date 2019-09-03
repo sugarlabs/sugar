@@ -124,7 +124,7 @@ def register_laptop(url=_REGISTER_URL):
 
     nick = get_nick_name()
 
-    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings = Gio.Settings.new('org.sugarlabs.collaboration')
     jabber_server = settings.get_string('jabber-server')
     _store_identifiers(sn, uuid_, jabber_server)
 
@@ -150,7 +150,7 @@ def register_laptop(url=_REGISTER_URL):
         raise RegisterError(_('The server could not complete the request.'))
 
     settings.set_string('jabber-server', data['jabberserver'])
-    settings = Gio.Settings('org.sugarlabs')
+    settings = Gio.Settings.new('org.sugarlabs')
     settings.set_string('backup-url', data['backupurl'])
 
     return True

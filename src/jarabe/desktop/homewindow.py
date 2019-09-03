@@ -94,7 +94,7 @@ class HomeWindow(Gtk.Window):
         self._toolbar.show_view_buttons()
 
         # Loads the Gsettings value for activity 'resume-mode'
-        setting = Gio.Settings('org.sugarlabs.user')
+        setting = Gio.Settings.new('org.sugarlabs.user')
         self._resume_mode = setting.get_boolean('resume-activity')
         self._home_box.set_resume_mode(self._resume_mode)
 

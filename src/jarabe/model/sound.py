@@ -61,12 +61,12 @@ class PlaybackSound(object):
 
     def save(self):
         self._save_timeout_id = -1
-        settings = Gio.Settings('org.sugarlabs.sound')
+        settings = Gio.Settings.new('org.sugarlabs.sound')
         settings.set_int('volume', self.get_volume())
         return False
 
     def restore(self):
-        settings = Gio.Settings('org.sugarlabs.sound')
+        settings = Gio.Settings.new('org.sugarlabs.sound')
         self.set_volume(settings.get_int('volume'))
 
 

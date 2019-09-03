@@ -149,7 +149,7 @@ class FavoritesView(ViewContainer):
         self._last_clicked_icon = None
 
         self._alert = None
-        self._resume_mode = Gio.Settings(
+        self._resume_mode = Gio.Settings.new(
             'org.sugarlabs.user').get_boolean('resume-activity')
 
         GLib.idle_add(self.__connect_to_bundle_registry_cb)
@@ -426,7 +426,7 @@ class ActivityIcon(CanvasIcon):
 
         self._activity_info = activity_info
         self._journal_entries = []
-        self._resume_mode = Gio.Settings(
+        self._resume_mode = Gio.Settings.new(
             'org.sugarlabs.user').get_boolean('resume-activity')
 
         self.connect_after('activate', self.__button_activate_cb)
@@ -684,7 +684,7 @@ class OwnerIcon(BuddyIcon):
     def create_palette(self):
         palette = BuddyMenu(get_owner_instance())
 
-        settings = Gio.Settings('org.sugarlabs')
+        settings = Gio.Settings.new('org.sugarlabs')
         if settings.get_boolean('show-register'):
             backup_url = settings.get_string('backup-url')
 
@@ -714,7 +714,7 @@ class FavoritesSetting(object):
     def __init__(self, favorite_view):
         self._favorite_view = int(favorite_view)
 
-        settings = Gio.Settings(self._DESKTOP_DIR)
+        settings = Gio.Settings.new(self._DESKTOP_DIR)
         homeviews = settings.get_value(self._HOMEVIEWS_KEY).unpack()
 
         self._layout = homeviews[self._favorite_view]['layout']
@@ -733,7 +733,7 @@ class FavoritesSetting(object):
         if layout != self._layout:
             self._layout = layout
 
-            settings = Gio.Settings(self._DESKTOP_DIR)
+            settings = Gio.Settings.new(self._DESKTOP_DIR)
             homeviews = settings.get_value(self._HOMEVIEWS_KEY).unpack()
 
             homeviews[self._favorite_view]['layout'] = layout

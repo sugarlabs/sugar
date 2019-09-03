@@ -28,12 +28,12 @@ GENDERS = ['female', 'male']
 
 
 def load_gender():
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
     return settings.get_string('gender')
 
 
 def save_gender(gender):
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
     if gender is not None:
         settings.set_string('gender', gender)
     else:

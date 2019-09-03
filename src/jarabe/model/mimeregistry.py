@@ -26,7 +26,7 @@ class MimeRegistry(object):
 
     def __init__(self):
         # TODO move here all mime_type related code from jarabe modules
-        self._settings = Gio.Settings(_JOURNAL_DIR)
+        self._settings = Gio.Settings.new(_JOURNAL_DIR)
 
     def get_default_activity(self, mime_type):
         dictionary = self._settings.get_value(_REGISTRY_KEY).unpack()

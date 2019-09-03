@@ -87,7 +87,7 @@ def group_label_to_age(label):
 def load_age():
     group_labels = get_group_labels()
 
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
     birth_timestamp = settings.get_int('birth-timestamp')
 
     if birth_timestamp == 0:
@@ -109,7 +109,7 @@ def load_age():
 
 def save_age(age):
     birth_timestamp = calculate_birth_timestamp(age)
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
     settings.set_int('birth-timestamp', birth_timestamp)
 
     # Record the label so we know it was set

@@ -223,7 +223,7 @@ class ClipboardMenu(Palette):
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
         color = settings.get_string('color')
         jobject.metadata['icon-color'] = color
         jobject.metadata['mime_type'] = mime_type

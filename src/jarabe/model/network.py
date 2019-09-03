@@ -1036,7 +1036,7 @@ def _migrate_old_gsm_connection():
         # don't attempt migration if a NM-level connection already exists
         return
 
-    settings = Gio.Settings(GSM_KEYS_PATH)
+    settings = Gio.Settings.new(GSM_KEYS_PATH)
 
     username = settings.get_string(GSM_USERNAME_KEY) or ''
     password = settings.get_string(GSM_PASSWORD_KEY) or ''

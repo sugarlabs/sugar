@@ -44,7 +44,7 @@ def create_profile_with_nickname(nickname):
 
 
 def create_profile(user_profile):
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
 
     if user_profile.nickname in [None, '']:
         nick = settings.get_string('nick')
@@ -269,7 +269,7 @@ class _IntroBox(Gtk.VBox):
         self._current_page = None
         self._next_button = None
 
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
 
         if 'default-gender' in settings.list_keys():
             default_gender = settings.get_string('default-gender')

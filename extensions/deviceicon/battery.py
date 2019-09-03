@@ -58,7 +58,7 @@ def _settings_get(key):
     global _settings
 
     if _settings is None:
-        _settings = Gio.Settings('org.sugarlabs.power')
+        _settings = Gio.Settings.new('org.sugarlabs.power')
 
     return _settings.get_double(key)
 

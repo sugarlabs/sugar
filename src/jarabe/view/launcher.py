@@ -122,7 +122,7 @@ class LaunchWindow(Gtk.Window):
 def setup():
     global _INTERVAL
 
-    settings = Gio.Settings('org.sugarlabs.desktop')
+    settings = Gio.Settings.new('org.sugarlabs.desktop')
     _INTERVAL = settings.get_int('launcher-interval')
 
     model = shell.get_model()

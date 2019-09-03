@@ -121,7 +121,7 @@ def get_help_url_and_title(activity):
 
 
 def get_social_help_server():
-    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings = Gio.Settings.new('org.sugarlabs.collaboration')
     return settings.get_string('social-help-server')
 
 

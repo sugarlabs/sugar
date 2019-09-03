@@ -756,10 +756,10 @@ class Neighborhood(GObject.GObject):
         self._shell_model = shell.get_model()
 
         self._settings_collaboration = \
-            Gio.Settings('org.sugarlabs.collaboration')
+            Gio.Settings.new('org.sugarlabs.collaboration')
         self._settings_collaboration.connect(
             'changed::jabber-server', self.__jabber_server_changed_cb)
-        self._settings_user = Gio.Settings('org.sugarlabs.user')
+        self._settings_user = Gio.Settings.new('org.sugarlabs.user')
         self._settings_user.connect(
             'changed::nick', self.__nick_changed_cb)
 

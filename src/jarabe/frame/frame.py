@@ -60,7 +60,7 @@ class Frame(object):
     def __init__(self):
         logging.debug('STARTUP: Loading the frame')
 
-        self.settings = Gio.Settings('org.sugarlabs.frame')
+        self.settings = Gio.Settings.new('org.sugarlabs.frame')
         self._palette_group = palettegroup.get_group('frame')
 
         self._left_panel = None

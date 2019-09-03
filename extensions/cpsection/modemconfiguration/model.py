@@ -273,7 +273,7 @@ class ServiceProvidersParser(object):
 class ServiceProviders(object):
     def __init__(self):
         self._db = ServiceProvidersParser()
-        self._settings = Gio.Settings(CONF_GSM_DIR)
+        self._settings = Gio.Settings.new(CONF_GSM_DIR)
 
         # Get initial values from GSettings or default ones
         country_code, provider_name, plan_idx = self._get_initial_config()

@@ -125,7 +125,7 @@ def get_firmware_number():
 
 
 def get_hardware_model():
-    settings = Gio.Settings('org.sugarlabs.extensions.aboutcomputer')
+    settings = Gio.Settings.new('org.sugarlabs.extensions.aboutcomputer')
     model = settings.get_string('hardware-model')
     if not model:
         model = _read_device_tree('mfg-data/MN')

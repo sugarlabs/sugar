@@ -68,7 +68,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
 
         self._title.connect('focus-out-event', self._title_focus_out_event_cb)
 
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
         icon_color = settings.get_string('color')
 
         self._icon = Icon(icon_name='project-box',

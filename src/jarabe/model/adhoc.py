@@ -75,7 +75,7 @@ class AdHocManager(GObject.GObject):
             if not self._find_connection(channel):
                 self._add_connection(channel)
 
-        settings = Gio.Settings('org.sugarlabs.network')
+        settings = Gio.Settings.new('org.sugarlabs.network')
         self._autoconnect_enabled = settings.get_boolean('adhoc-autoconnect')
 
     def start_listening(self, device):

@@ -56,11 +56,11 @@ class Brightness(GObject.GObject):
         GLib.spawn_command_line_sync(cmd)
 
     def _save(self, value):
-        settings = Gio.Settings('org.sugarlabs.screen')
+        settings = Gio.Settings.new('org.sugarlabs.screen')
         settings.set_int('brightness', value)
 
     def _restore(self):
-        settings = Gio.Settings('org.sugarlabs.screen')
+        settings = Gio.Settings.new('org.sugarlabs.screen')
         value = settings.get_int('brightness')
         if value != -1:
             self.set_brightness(value)

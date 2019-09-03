@@ -104,7 +104,7 @@ class BundleRegistry(GObject.GObject):
         for i in range(desktop.get_number_of_views()):
             self._favorite_bundles.append({})
 
-        settings = Gio.Settings('org.sugarlabs')
+        settings = Gio.Settings.new('org.sugarlabs')
         self._protected_activities = settings.get_strv('protected-activities')
 
         try:
