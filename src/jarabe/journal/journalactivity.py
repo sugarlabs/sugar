@@ -311,7 +311,7 @@ class JournalActivity(JournalWindow):
         add_new_box.activate.connect(self.__add_new_activate_cb)
         add_new_box.show_all()
         project_vbox.pack_start(add_new_box, False, True,
-                                style.DEFAULT_SPACING/3)
+                                style.DEFAULT_SPACING / 3)
 
         self._entry_project = add_new_box.get_entry()
         self._list_view_project = self._project_view.create_list_view_project()
@@ -384,8 +384,8 @@ class JournalActivity(JournalWindow):
             activity_id=activity_id, project_metadata=self.project_metadata)
 
     def __key_press_event_cb(self, widget, event):
-        #if not self._main_toolbox.search_entry.has_focus():
-        #self._main_toolbox.search_entry.grab_focus()
+        # if not self._main_toolbox.search_entry.has_focus():
+        # self._main_toolbox.search_entry.grab_focus()
 
         keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Escape':

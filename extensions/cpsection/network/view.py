@@ -100,6 +100,7 @@ def bind_with_convert(self, key, widget, prop, flags,
     if not (flags & Gio.SettingsBindFlags.NO_SENSITIVITY):
         self.bind_writable(key, widget, "sensitive", False)
 
+
 Gio.Settings.bind_with_convert = bind_with_convert
 Gio.Settings.__setitem__ = __setitem__
 
@@ -127,6 +128,7 @@ class SettingBox(Gtk.HBox):
     Base class for "lines" on the screen representing configuration
     settings.
     """
+
     def __init__(self, name, size_group=None):
         Gtk.HBox.__init__(self, spacing=style.DEFAULT_SPACING)
         label = Gtk.Label(name)
@@ -147,6 +149,7 @@ class ComboSettingBox(Gtk.VBox):
     Renders the top level setting as a ComboBox.  Only the currently
     active set is shown on screen.
     """
+
     def __init__(self, name, setting, setting_key,
                  option_sets, size_group=None):
         Gtk.VBox.__init__(self, spacing=style.DEFAULT_SPACING)
@@ -196,6 +199,7 @@ class OptionalSettingsBox(Gtk.VBox):
     Renders the top level setting as a CheckButton. The settings are only
     shown on screen if the top-level setting is enabled.
     """
+
     def __init__(self, name, setting, setting_key, contents_box):
         Gtk.VBox.__init__(self, spacing=style.DEFAULT_SPACING)
 
@@ -217,6 +221,7 @@ class HostPortSettingBox(SettingBox):
     """
     A configuration line for a combined host name and port setting.
     """
+
     def __init__(self, name, alert, setting, size_group=None):
         SettingBox.__init__(self, name, size_group)
         self.pack_start(alert, False, True, 0)
@@ -246,6 +251,7 @@ class StringSettingBox(SettingBox):
     """
     A configuration line for a string setting.
     """
+
     def __init__(self, name, setting, setting_key, size_group=None,
                  password_field=False):
         SettingBox.__init__(self, name, size_group)
@@ -263,6 +269,7 @@ class StringSettingBox_with_convert(SettingBox):
     """
     A configuration line for a string setting.
     """
+
     def __init__(self, name, setting, setting_key,
                  get_method, set_method, size_group=None,
                  password_field=False):

@@ -57,7 +57,7 @@ class ObjectPalette(Palette):
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
         'choose-project': (GObject.SignalFlags.RUN_FIRST, None,
-                          ([object])),
+                           ([object])),
     }
 
     def __init__(self, journalactivity, metadata, detail=False):

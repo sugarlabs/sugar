@@ -21,6 +21,7 @@ from gi.repository import GObject
 def _(msg):
     return gettext.dgettext('sugar', msg)
 
+
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics import iconentry

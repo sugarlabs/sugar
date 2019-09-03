@@ -61,7 +61,8 @@ class ViewLayout(Layout):
         self._height = allocation.height
         self._grid = Grid(int(allocation.width / _CELL_SIZE),
                           int(allocation.height / _CELL_SIZE))
-        self._grid.connect('child-changed', self.__grid_child_changed_cb, allocation)
+        self._grid.connect(
+            'child-changed', self.__grid_child_changed_cb, allocation)
         self._allocate_owner_icon(allocation, owner_icon, activity_icon)
 
     def _allocate_owner_icon(self, allocation, owner_icon, activity_icon):
@@ -371,7 +372,7 @@ class RingLayout(ViewLayout):
     def _calculate_maximum_radius(self, icon_size):
         """ Return the maximum radius including encroachment. """
         r = (Gdk.Screen.height() - style.GRID_CELL_SIZE) / 2 - \
-                         style.DEFAULT_SPACING
+            style.DEFAULT_SPACING
         return r - (icon_size * _MAXIMUM_RADIUS_PADDING_FACTOR)
 
     def _calculate_angle_and_radius(self, icon_count, icon_size):
@@ -399,7 +400,8 @@ class RingLayout(ViewLayout):
     def allocate_children(self, allocation, children):
         radius, icon_size = self._calculate_radius_and_icon_size(len(children))
 
-        children.sort(key = lambda x:(x.get_activity_name().lower(), x.get_activity_name()))
+        children.sort(key=lambda x: (
+            x.get_activity_name().lower(), x.get_activity_name()))
         height = allocation.height + allocation.y
         for n in range(len(children)):
             child = children[n]

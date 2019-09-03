@@ -35,8 +35,9 @@ class MultipleInstanceAlert(BaseErrorAlert):
         BaseErrorAlert.__init__(
             self,
             _('Activity launcher'),
-            _('%(activity)s is already running. \
-Please stop %(activity)s before launching it again.' % ({'activity':name})))
+            _('%(activity)s is already running. '
+              'Please stop %(activity)s before '
+              'launching it again.' % ({'activity': name})))
 
 
 class MaxOpenActivitiesAlert(BaseErrorAlert):
@@ -45,8 +46,8 @@ class MaxOpenActivitiesAlert(BaseErrorAlert):
         BaseErrorAlert.__init__(
             self,
             _('Activity launcher'),
-            _('The maximum number of open activities has been reached. \
-Please close an activity before launching a new one.'))
+            _('The maximum number of open activities has been reached. '
+              'Please close an activity before launching a new one.'))
 
 
 def _alert_response_cb(alert, response_id, window):

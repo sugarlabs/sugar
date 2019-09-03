@@ -24,7 +24,7 @@ _DESKTOP_CONF_DIR = 'org.sugarlabs.desktop'
 _HOMEVIEWS_KEY = 'homeviews'
 
 _VIEW_ICONS = [{'layout': 'box-layout', 'view-icon': 'view-radial',
-               'favorite-icon': 'emblem-locked'}]
+                'favorite-icon': 'emblem-locked'}]
 _MOCK_LIST = [{'layout': 'box-layout', 'view-icon': 'view-radial',
                'favorite-icon': 'emblem-locked'},
               {'layout': 'ring-layout', 'view-icon': 'view-box',

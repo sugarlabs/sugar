@@ -190,6 +190,7 @@ class MicroformatUpdater(object):
        b) If we don't have the activity installed, use MetadataLookup
           to lookup activity name and size.
     """
+
     def __init__(self):
         self._icon_temp_files = []
 

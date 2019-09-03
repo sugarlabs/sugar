@@ -60,7 +60,8 @@ class ConnectionWatcher(GObject.GObject):
                                      signal_name='StatusChanged',
                                      path_keyword='path')
 
-        bus_object = self.bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        bus_object = self.bus.get_object(
+            'org.freedesktop.DBus', '/org/freedesktop/DBus')
         bus_object.ListNames(
             dbus_interface='org.freedesktop.DBus',
             reply_handler=self.__get_services_reply_cb,
@@ -140,7 +141,8 @@ class ConnectionWatcher(GObject.GObject):
         return list(self._connections.values())
 
     def __error_handler_cb(exception):
-        logging.debug('Exception from asynchronous method call:\n%s' % exception)
+        logging.debug(
+            'Exception from asynchronous method call:\n%s' % exception)
 
 
 def get_instance():

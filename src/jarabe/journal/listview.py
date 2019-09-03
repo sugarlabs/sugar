@@ -51,7 +51,7 @@ class TreeView(Gtk.TreeView):
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
         'choose-project': (GObject.SignalFlags.RUN_FIRST, None,
-                          ([object])),
+                           ([object])),
     }
 
     def __init__(self, journalactivity):
@@ -522,7 +522,8 @@ class BaseListView(Gtk.Bin):
                     if self.get_projects_view_active():
                         show_message_text = _('No Projects')
 
-                    self._show_message(show_message_text,
+                    self._show_message(
+                        show_message_text,
                         show_clear_query=self._can_clear_query())
         else:
             self._clear_message()
@@ -724,7 +725,7 @@ class ListView(BaseListView):
         'title-edit-finished': (GObject.SignalFlags.RUN_FIRST, None,
                                 ([])),
         'project-view-activate': (GObject.SignalFlags.RUN_FIRST, None,
-                                 ([object])),
+                                  ([object])),
     }
 
     def __init__(self, journalactivity, enable_multi_operations=False):

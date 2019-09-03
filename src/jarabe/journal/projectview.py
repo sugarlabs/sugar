@@ -64,7 +64,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
 
         description_box, self._description = self._create_description()
         self._vbox.pack_start(description_box, False, True,
-                              style.DEFAULT_SPACING/3)
+                              style.DEFAULT_SPACING / 3)
 
         self._title.connect('focus-out-event', self._title_focus_out_event_cb)
 

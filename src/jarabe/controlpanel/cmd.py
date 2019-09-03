@@ -98,8 +98,8 @@ def main():
                     if found == 1:
                         print(method.__doc__)
                     else:
-                        print(_same_option_warning % \
-                            {'key': key, 'module': module})
+                        print(_same_option_warning %
+                              {'key': key, 'module': module})
             if found == 0:
                 print(_no_option_error % key)
         if option in ('-l'):
@@ -123,8 +123,8 @@ def main():
                         except Exception as detail:
                             print(_general_error % detail)
                     else:
-                        print(_same_option_warning % \
-                            {'key': key, 'module': module})
+                        print(_same_option_warning %
+                              {'key': key, 'module': module})
             if found == 0:
                 print(_no_option_error % key)
         if option in ('-s'):
@@ -141,8 +141,8 @@ def main():
                         if note == _RESTART:
                             note_restart()
                     else:
-                        print(_same_option_warning % \
-                            {'key': key, 'module': module})
+                        print(_same_option_warning %
+                              {'key': key, 'module': module})
             if found == 0:
                 print(_no_option_error % key)
         if option in ('-c'):
@@ -159,7 +159,7 @@ def main():
                         if note == _RESTART:
                             note_restart()
                     else:
-                        print(_same_option_warning % \
-                            {'key': key, 'module': module})
+                        print(_same_option_warning %
+                              {'key': key, 'module': module})
             if found == 0:
                 print(_no_option_error % key)

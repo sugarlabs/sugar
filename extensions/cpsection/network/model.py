@@ -134,4 +134,5 @@ def set_publish_information(value):
     settings.set_boolean('publish-gadget', value)
     return 0
 
+
 nm_client = NM.Client()

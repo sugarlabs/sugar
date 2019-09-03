@@ -39,6 +39,7 @@ def _translate_language(msg):
 def _translate_country(msg):
     return gettext.dgettext('iso_3166', msg)
 
+
 CLASS = 'Language'
 ICON = 'module-language'
 TITLE = gettext.gettext('Language')

@@ -7,9 +7,11 @@ DBusGMainLoop(set_as_default=True)
 
 from jarabe.model import bundleregistry
 
+
 def cmd_help():
     print('Usage: sugar-erase-bundle bundle_id [...] \n\n\
     Erase activity bundles\n')
+
 
 if len(sys.argv) < 2:
     cmd_help()

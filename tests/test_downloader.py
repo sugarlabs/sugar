@@ -20,14 +20,13 @@ import http.server
 import socketserver
 
 from gi.repository import Gtk
-from gi.repository import GLib
 
 from sugar3 import env
 from jarabe.util.downloader import Downloader
 
 profile_data_dir = os.path.join(env.get_profile_path(), 'data')
 if not os.path.isdir(profile_data_dir):
-        os.makedirs(profile_data_dir)
+    os.makedirs(profile_data_dir)
 
 tests_dir = os.getcwd()
 data_dir = os.path.join(tests_dir, "data")

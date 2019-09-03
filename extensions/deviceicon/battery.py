@@ -303,6 +303,7 @@ class DeviceModel(GObject.GObject):
         sm.shutdown()
         GLib.timeout_add_seconds(10, sm.shutdown_completed)
 
+
 def setup(tray):
     bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)
     up_proxy = bus.get_object('org.freedesktop.UPower',

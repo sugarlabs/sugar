@@ -12,6 +12,7 @@ def cmd_help():
     print('Usage: sugar-install-bundle activitybundle.xo [...] \n\n\
     Install activity bundles\n')
 
+
 if len(sys.argv) < 2:
     cmd_help()
     sys.exit(2)
