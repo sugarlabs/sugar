@@ -58,7 +58,7 @@ def _get_serial_number():
     if status != 0:
         return _not_available
 
-    return output.rstrip('\n')
+    return output.decode().rstrip('\n')
 
 
 def get_serial_number():
@@ -179,6 +179,7 @@ def get_wireless_firmware():
 
         try:
             for line in output:
+                line = line.decode()
                 if line.startswith('firmware'):
                     version = line.split()[1]
                 if line.startswith('driver'):
