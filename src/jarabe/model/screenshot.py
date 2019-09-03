@@ -114,6 +114,6 @@ def _get_preview_data(screenshot_surface):
     cr.set_source_surface(screenshot_surface)
     cr.paint()
 
-    preview_str = io.StringIO()
+    preview_str = io.BytesIO()
     preview_surface.write_to_png(preview_str)
     return dbus.ByteArray(preview_str.getvalue())
