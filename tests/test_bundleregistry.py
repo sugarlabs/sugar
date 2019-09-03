@@ -22,8 +22,6 @@ import os
 from jarabe.model import bundleregistry
 from sugar3.bundle.helpers import bundle_from_archive
 
-GLib.threads_init()
-
 tests_dir = os.getcwd()
 data_dir = os.path.join(tests_dir, "data")
 base_dir = os.path.dirname(tests_dir)

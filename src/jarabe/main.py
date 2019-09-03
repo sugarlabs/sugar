@@ -336,10 +336,6 @@ def _check_group_label():
 
 
 def main():
-    # This can be removed once pygobject-3.10 is a requirement.
-    # https://bugzilla.gnome.org/show_bug.cgi?id=686914
-    GLib.threads_init()
-
     Gst.init(sys.argv)
 
     cleanup_temporary_files()

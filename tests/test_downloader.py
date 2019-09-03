@@ -32,8 +32,6 @@ if not os.path.isdir(profile_data_dir):
 tests_dir = os.getcwd()
 data_dir = os.path.join(tests_dir, "data")
 
-GLib.threads_init()
-
 
 class TestDownloader(unittest.TestCase):
     def setUp(self):
