@@ -15,9 +15,9 @@ AM_MAINTAINER_MODE
 PYTHON=python3
 AM_PATH_PYTHON
 
-AC_PATH_PROG([EMPY], [empy])
+AC_PATH_PROGS([EMPY], [empy empy3])
 if test -z "$EMPY"; then
-	AC_MSG_ERROR([python-empy is required])
+	AC_MSG_ERROR([empy is required])
 fi
 
 PKG_CHECK_MODULES(SHELL, gtk+-3.0)
