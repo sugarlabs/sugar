@@ -164,8 +164,8 @@ def get_wireless_firmware():
 
     wireless_interfaces = get_wireless_interfaces()
     if not wireless_interfaces:
-        _logger.warning('Cannot connect to NetworkManager, falling back to'
-                        ' static list of devices')
+        _logger.warning('NetworkManager knows of no wireless devices, '
+                        'falling back to static list')
         wireless_interfaces = ['wlan0', 'eth0']
 
     for interface in get_wireless_interfaces():
