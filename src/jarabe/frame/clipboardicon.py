@@ -48,7 +48,7 @@ class ClipboardIcon(RadioToolButton):
         self.props.sensitive = False
         self.props.active = False
         self._notif_icon = None
-        self._current_percent = None
+        self._current_percent = 0
 
         self._icon = Icon()
         color = profile.get_color()
@@ -152,11 +152,12 @@ class ClipboardIcon(RadioToolButton):
             self.props.sensitive = True
 
         # Clipboard object became complete. Make it the active one.
-        if self._current_percent < 100 and cb_object.get_percent() == 100:
+        percent = cb_object.get_percent()
+        if self._current_percent < 100 and percent == 100:
             self.props.active = True
             self.show_notification()
 
-        self._current_percent = cb_object.get_percent()
+        self._current_percent = percent
 
     def _object_selected_cb(self, cb_service, object_id):
         if object_id != self._cb_object.get_id():
