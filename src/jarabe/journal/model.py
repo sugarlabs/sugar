@@ -533,7 +533,8 @@ def _get_file_metadata_from_json(path, fetch_preview):
     else:
         if os.path.exists(preview_path):
             try:
-                metadata['preview'] = dbus.ByteArray(open(preview_path).read())
+                metadata['preview'] = dbus.ByteArray(
+                    open(preview_path, 'rb').read())
             except EnvironmentError:
                 logging.debug('Could not read preview for file %r on '
                               'external device.', filename)
