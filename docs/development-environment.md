@@ -30,7 +30,7 @@ Once installed, Sugar Live Build can be used to make changes to Sugar, the toolk
 
 -   changes to demonstration activities can be done in the activity source trees in `/usr/src/sugar-activities`, and are immediately effective; just start a new instance of the activity in Sugar.
 
--   writing new activities can be done in the `~/Activities/` directory, and the new activity can be started using `sugar-activity` command in Terminal, or by restarting Sugar so that the new `activity/activity.info` file is read to regenerate the [Home View](https://help.sugarlabs.org/en/home_view.html).
+-   writing new activities can be done in the `~/Activities/` directory, and the new activity can be started using `sugar-activity3` command in Terminal, or by restarting Sugar so that the new `activity/activity.info` file is read to regenerate the [Home View](https://help.sugarlabs.org/en/home_view.html).
 
 See [sugar-live-build](https://github.com/sugarlabs/sugar-live-build) on GitHub for configuration files to make your own Sugar Live Build using the Debian Live Build software.
 
