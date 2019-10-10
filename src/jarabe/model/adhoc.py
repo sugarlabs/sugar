@@ -159,6 +159,7 @@ class AdHocManager(GObject.GObject):
             self._autoconnect_adhoc()
         else:
             logging.debug('autoconnect Sugar Ad-hoc: already connected')
+        self._idle_source = 0
         return False
 
     def _autoconnect_adhoc(self):
