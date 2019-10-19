@@ -18,7 +18,7 @@ from unicodedata import normalize
 
 
 def normalize_string(unicode_string):
-    u"""Return unicode_string normalized for searching.
+    """Return unicode_string normalized for searching.
 
     >>> normalize_string(u'Mónica Viñao')
     'monica vinao'
@@ -27,4 +27,4 @@ def normalize_string(unicode_string):
     'abaco'
 
     """
-    return normalize('NFKD', unicode_string).encode('ASCII', 'ignore').lower()
+    return normalize('NFKD', unicode_string).lower()

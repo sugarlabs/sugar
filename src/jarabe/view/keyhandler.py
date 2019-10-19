@@ -101,7 +101,7 @@ class KeyHandler(object):
                 except Exception:
                     logging.exception('Exception while loading extension:')
 
-        self._key_grabber.grab_keys(_actions_table.keys())
+        self._key_grabber.grab_keys(list(_actions_table.keys()))
 
     def _change_volume(self, step=None, value=None):
         if step is not None:
@@ -193,7 +193,7 @@ class KeyHandler(object):
         panel.show()
 
     def handle_dump_ui_tree(self, event_time):
-        print uitree.get_root().dump()
+        print(uitree.get_root().dump())
 
     def _key_pressed_cb(self, grabber, keycode, state, event_time):
         key = grabber.get_key(keycode, state)
@@ -221,7 +221,7 @@ class KeyHandler(object):
 
             if hasattr(action, 'handle_key_press'):
                 action.handle_key_press(key)
-            elif isinstance(action, basestring):
+            elif isinstance(action, str):
                 method = getattr(self, 'handle_' + action)
                 method(event_time)
             else:

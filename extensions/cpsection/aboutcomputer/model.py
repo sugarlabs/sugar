@@ -45,7 +45,7 @@ def get_aboutcomputer():
 
 
 def print_aboutcomputer():
-    print get_aboutcomputer()
+    print(get_aboutcomputer())
 
 
 def _get_serial_number():
@@ -58,7 +58,7 @@ def _get_serial_number():
     if status != 0:
         return _not_available
 
-    return output.rstrip('\n')
+    return output.decode().rstrip('\n')
 
 
 def get_serial_number():
@@ -74,7 +74,7 @@ def print_serial_number():
     serial_no = get_serial_number()
     if serial_no is None:
         serial_no = _not_available
-    print serial_no
+    print(serial_no)
 
 
 def get_build_number():
@@ -87,12 +87,12 @@ def get_build_number():
         try:
             popen = subprocess.Popen(['lsb_release', '-ds'],
                                      stdout=subprocess.PIPE)
-        except OSError, e:
+        except OSError as e:
             if e.errno != errno.ENOENT:
                 raise
         else:
             build_no, stderr_ = popen.communicate()
-            build_no = build_no.strip()
+            build_no = build_no.strip().decode()
 
     if build_no is None or not build_no:
         build_no = _not_available
@@ -101,7 +101,7 @@ def get_build_number():
 
 
 def print_build_number():
-    print get_build_number()
+    print(get_build_number())
 
 
 def get_firmware_number():
@@ -125,7 +125,7 @@ def get_firmware_number():
 
 
 def get_hardware_model():
-    settings = Gio.Settings('org.sugarlabs.extensions.aboutcomputer')
+    settings = Gio.Settings.new('org.sugarlabs.extensions.aboutcomputer')
     model = settings.get_string('hardware-model')
     if not model:
         model = _read_device_tree('mfg-data/MN')
@@ -154,7 +154,7 @@ def get_secondary_licenses():
 
 
 def print_firmware_number():
-    print get_firmware_number()
+    print(get_firmware_number())
 
 
 def get_wireless_firmware():
@@ -164,8 +164,8 @@ def get_wireless_firmware():
 
     wireless_interfaces = get_wireless_interfaces()
     if not wireless_interfaces:
-        _logger.warning('Cannot connect to NetworkManager, falling back to'
-                        ' static list of devices')
+        _logger.warning('NetworkManager knows of no wireless devices, '
+                        'falling back to static list')
         wireless_interfaces = ['wlan0', 'eth0']
 
     for interface in get_wireless_interfaces():
@@ -179,6 +179,7 @@ def get_wireless_firmware():
 
         try:
             for line in output:
+                line = line.decode()
                 if line.startswith('firmware'):
                     version = line.split()[1]
                 if line.startswith('driver'):
@@ -206,15 +207,15 @@ def get_wireless_firmware():
         return _not_available
 
     if len(firmware_info) == 1:
-        return firmware_info.values()[0]
+        return list(firmware_info.values())[0]
 
     return ', '.join(['%(interface)s: %(info)s' %
                       {'interface': interface, 'info': info}
-                      for interface, info in firmware_info.items()])
+                      for interface, info in list(firmware_info.items())])
 
 
 def print_wireless_firmware():
-    print get_wireless_firmware()
+    print(get_wireless_firmware())
 
 
 def _read_file(path):

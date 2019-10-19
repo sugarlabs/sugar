@@ -64,11 +64,11 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
 
         description_box, self._description = self._create_description()
         self._vbox.pack_start(description_box, False, True,
-                              style.DEFAULT_SPACING/3)
+                              style.DEFAULT_SPACING / 3)
 
         self._title.connect('focus-out-event', self._title_focus_out_event_cb)
 
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
         icon_color = settings.get_string('color')
 
         self._icon = Icon(icon_name='project-box',
@@ -113,7 +113,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         self._update_entry()
 
     def _update_entry(self):
-        #updating description
+        # updating description
         bounds = self._description.get_buffer().get_bounds()
         old_description = self.project_metadata.get('description', None)
         new_description = self._description.get_buffer().get_text(

@@ -56,11 +56,11 @@ class Brightness(GObject.GObject):
         GLib.spawn_command_line_sync(cmd)
 
     def _save(self, value):
-        settings = Gio.Settings('org.sugarlabs.screen')
+        settings = Gio.Settings.new('org.sugarlabs.screen')
         settings.set_int('brightness', value)
 
     def _restore(self):
-        settings = Gio.Settings('org.sugarlabs.screen')
+        settings = Gio.Settings.new('org.sugarlabs.screen')
         value = settings.get_int('brightness')
         if value != -1:
             self.set_brightness(value)
@@ -81,7 +81,7 @@ class Brightness(GObject.GObject):
         result, output, error, status = GLib.spawn_command_line_sync(cmd)
         if status != 0:
             return None
-        return output.rstrip('\0\n')
+        return output.rstrip(b'\0\n')
 
     def _helper_write(self, option, value):
         cmd = 'pkexec sugar-backlight-helper --%s %d' % (option, value)

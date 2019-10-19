@@ -15,8 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import logging
-
 import gi
 gi.require_version('NM', '1.0')
 from gettext import gettext as _
@@ -38,7 +36,7 @@ class ReadError(Exception):
 
 
 def get_social_help():
-    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings = Gio.Settings.new('org.sugarlabs.collaboration')
     return settings.get_string('social-help-server')
 
 
@@ -48,7 +46,7 @@ def set_social_help(server):
 
     e.g. 'https://use-socialhelp.sugarlabs.org'
     """
-    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings = Gio.Settings.new('org.sugarlabs.collaboration')
     server = server.strip().rstrip('/')
     # Don't add http:// to a null input
     if server and '://' not in server:
@@ -57,19 +55,19 @@ def set_social_help(server):
 
 
 def get_jabber():
-    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings = Gio.Settings.new('org.sugarlabs.collaboration')
     return settings.get_string('jabber-server')
 
 
 def print_jabber():
-    print get_jabber()
+    print(get_jabber())
 
 
 def set_jabber(server):
     """Set the jabber server
     server : e.g. 'olpc.collabora.co.uk'
     """
-    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings = Gio.Settings.new('org.sugarlabs.collaboration')
     settings.set_string('jabber-server', server)
     return 0
 
@@ -82,7 +80,7 @@ def get_radio():
 
 
 def print_radio():
-    print ('off', 'on')[get_radio()]
+    print(('off', 'on')[get_radio()])
 
 
 def set_radio(state):
@@ -99,7 +97,7 @@ def set_radio(state):
 def clear_registration():
     """Clear the registration with the schoolserver
     """
-    settings = Gio.Settings('org.sugarlabs')
+    settings = Gio.Settings.new('org.sugarlabs')
     settings.set_string('backup-url', '')
     return 1
 
@@ -113,13 +111,13 @@ def have_wireless_networks():
 
 
 def get_publish_information():
-    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings = Gio.Settings.new('org.sugarlabs.collaboration')
     publish = settings.get_boolean('publish-gadget')
     return publish
 
 
 def print_publish_information():
-    print get_publish_information()
+    print(get_publish_information())
 
 
 def set_publish_information(value):
@@ -132,8 +130,9 @@ def set_publish_information(value):
     except:
         raise ValueError(_('Error in specified argument. Use 0/1.'))
 
-    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings = Gio.Settings.new('org.sugarlabs.collaboration')
     settings.set_boolean('publish-gadget', value)
     return 0
+
 
 nm_client = NM.Client()

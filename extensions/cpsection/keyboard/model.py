@@ -35,7 +35,7 @@ class KeyboardManager(object):
         self._configrec = Xkl.ConfigRec()
         self._configrec.get_from_server(self._engine)
 
-        self._settings = Gio.Settings(_KEYBOARD_DIR)
+        self._settings = Gio.Settings.new(_KEYBOARD_DIR)
 
     def _populate_one(self, config_registry, item, store):
         store.append([item.get_description(), item.get_name()])

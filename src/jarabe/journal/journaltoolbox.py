@@ -458,13 +458,7 @@ class MainToolbox(ToolbarBox):
                              'callback': self._what_palette_cb,
                              'id': bundle_id})
         finally:
-            def _cmp(a, b):
-                if a['label'] < b['label']:
-                    return -1
-                else:
-                    return 1
-
-            for item in sorted(what_list_activities, _cmp):
+            for item in sorted(what_list_activities, key=lambda x: x['label']):
                 self._what_list.append(item)
 
             if self._what_widget_contents is not None:
@@ -1013,6 +1007,8 @@ class FilterToolItem(Gtk.ToolButton):
             invoker.draw_rectangle(cr, self.palette)
 
         return False
+
+
 if hasattr(FilterToolItem, 'set_css_name'):
     FilterToolItem.set_css_name('filtertoolbutton')
 

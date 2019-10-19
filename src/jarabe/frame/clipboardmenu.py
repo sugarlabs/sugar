@@ -15,7 +15,7 @@
 
 from gettext import gettext as _
 import tempfile
-import urlparse
+import urllib.parse
 import os
 import logging
 from gi.repository import Gio
@@ -187,7 +187,7 @@ class ClipboardMenu(Palette):
         return file_path
 
     def _copy_to_journal(self):
-        formats = self._cb_object.get_formats().keys()
+        formats = list(self._cb_object.get_formats().keys())
         most_significant_mime_type = mime.choose_most_significant(formats)
         format_ = self._cb_object.get_formats()[most_significant_mime_type]
 
@@ -195,7 +195,7 @@ class ClipboardMenu(Palette):
         if most_significant_mime_type == 'text/uri-list':
             uri = format_.get_data()
             if uri.startswith('file://'):
-                parsed_url = urlparse.urlparse(uri)
+                parsed_url = urllib.parse.urlparse(uri)
                 file_path = parsed_url.path  # pylint: disable=E1101
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
@@ -205,7 +205,7 @@ class ClipboardMenu(Palette):
                 mime_type = 'text/uri-list'
         else:
             if format_.is_on_disk():
-                parsed_url = urlparse.urlparse(format_.get_data())
+                parsed_url = urllib.parse.urlparse(format_.get_data())
                 file_path = parsed_url.path  # pylint: disable=E1101
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
@@ -223,7 +223,7 @@ class ClipboardMenu(Palette):
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
         color = settings.get_string('color')
         jobject.metadata['icon-color'] = color
         jobject.metadata['mime_type'] = mime_type

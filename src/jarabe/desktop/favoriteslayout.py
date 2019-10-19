@@ -61,7 +61,8 @@ class ViewLayout(Layout):
         self._height = allocation.height
         self._grid = Grid(int(allocation.width / _CELL_SIZE),
                           int(allocation.height / _CELL_SIZE))
-        self._grid.connect('child-changed', self.__grid_child_changed_cb, allocation)
+        self._grid.connect(
+            'child-changed', self.__grid_child_changed_cb, allocation)
         self._allocate_owner_icon(allocation, owner_icon, activity_icon)
 
     def _allocate_owner_icon(self, allocation, owner_icon, activity_icon):
@@ -177,7 +178,10 @@ class SpreadLayout(ViewLayout):
                 x = y = None
 
                 if hasattr(child, "get_positioning_data"):
-                    md5hash = hashlib.md5(child.get_positioning_data())
+                    positioning_data = child.get_positioning_data()
+                    if isinstance(positioning_data, str):
+                        positioning_data = positioning_data.encode('utf-8')
+                    md5hash = hashlib.md5(positioning_data)
                     digest = abs(hash(md5hash.digest()))
                     w = (self._grid.width - (width * 3))
                     h = (self._grid.height - (width * 3))
@@ -243,7 +247,7 @@ class RandomLayout(SpreadLayout):
                     x = min(x, allocation.width - child_requisition.width)
                     y = min(y, allocation.height - child_requisition.height)
                 elif hasattr(child, 'get_bundle_id'):
-                    name_hash = hashlib.md5(child.get_bundle_id())
+                    name_hash = hashlib.md5(child.get_bundle_id().decode())
                     x = int(name_hash.hexdigest()[:5], 16) % \
                         (allocation.width - child_requisition.width)
                     y = int(name_hash.hexdigest()[-5:], 16) % \
@@ -368,7 +372,7 @@ class RingLayout(ViewLayout):
     def _calculate_maximum_radius(self, icon_size):
         """ Return the maximum radius including encroachment. """
         r = (Gdk.Screen.height() - style.GRID_CELL_SIZE) / 2 - \
-                         style.DEFAULT_SPACING
+            style.DEFAULT_SPACING
         return r - (icon_size * _MAXIMUM_RADIUS_PADDING_FACTOR)
 
     def _calculate_angle_and_radius(self, icon_count, icon_size):
@@ -396,7 +400,8 @@ class RingLayout(ViewLayout):
     def allocate_children(self, allocation, children):
         radius, icon_size = self._calculate_radius_and_icon_size(len(children))
 
-        children.sort(self.compare_activities)
+        children.sort(key=lambda x: (
+            x.get_activity_name().lower(), x.get_activity_name()))
         height = allocation.height + allocation.y
         for n in range(len(children)):
             child = children[n]
@@ -422,9 +427,6 @@ class RingLayout(ViewLayout):
             child_allocation.width = new_width
             child_allocation.height = new_height
             child.size_allocate(child_allocation)
-
-    def compare_activities(self, icon_a, icon_b):
-        return cmp(icon_a.get_activity_name(), icon_b.get_activity_name())
 
 
 _SUNFLOWER_CONSTANT = style.STANDARD_ICON_SIZE * .75

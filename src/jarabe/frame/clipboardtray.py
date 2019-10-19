@@ -58,7 +58,7 @@ class _ContextMap(object):
 
 class ClipboardTray(tray.VTray):
 
-    MAX_ITEMS = Gdk.Screen.height() / style.GRID_CELL_SIZE - 2
+    MAX_ITEMS = Gdk.Screen.height() // style.GRID_CELL_SIZE - 2
 
     def __init__(self):
         tray.VTray.__init__(self, align=tray.ALIGN_TO_END)
@@ -70,7 +70,7 @@ class ClipboardTray(tray.VTray):
         cb_service.connect('object-deleted', self._object_deleted_cb)
 
     def owns_clipboard(self):
-        for icon in self._icons.values():
+        for icon in list(self._icons.values()):
             if icon.owns_clipboard:
                 return True
         return False
@@ -105,7 +105,7 @@ class ClipboardTray(tray.VTray):
 
     def _object_added_cb(self, cb_service, cb_object):
         if self._icons:
-            group = self._icons.values()[0]
+            group = list(self._icons.values())[0]
         else:
             group = None
 

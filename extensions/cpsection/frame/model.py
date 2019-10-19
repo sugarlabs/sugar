@@ -25,7 +25,7 @@ def get_corner_delay():
 
 
 def print_corner_delay():
-    print get_corner_delay()
+    print(get_corner_delay())
 
 
 def set_corner_delay(delay):
@@ -44,7 +44,7 @@ def get_edge_delay():
 
 
 def print_edge_delay():
-    print get_edge_delay()
+    print(get_edge_delay())
 
 
 def set_edge_delay(delay):
@@ -63,7 +63,7 @@ def get_trigger_size():
 
 
 def print_trigger_size():
-    print '{}px'.format(get_trigger_size())
+    print('{}px'.format(get_trigger_size()))
 
 
 def set_trigger_size(size):

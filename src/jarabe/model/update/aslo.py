@@ -128,7 +128,7 @@ class _UpdateChecker(GObject.GObject):
         link = document.find(_FIND_LINK).text
 
         try:
-            size = long(document.find(_FIND_SIZE).text) * 1024
+            size = int(document.find(_FIND_SIZE).text) * 1024
         except ValueError:
             _logger.exception('Exception occurred while parsing size')
             size = 0

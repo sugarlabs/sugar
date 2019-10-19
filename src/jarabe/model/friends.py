@@ -15,7 +15,7 @@
 
 import os
 import logging
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 from gi.repository import GObject
 
@@ -135,7 +135,7 @@ class Friends(GObject.GObject):
         self.emit('friend-removed', buddy_info.get_key())
 
     def __iter__(self):
-        return self._friends.values().__iter__()
+        return list(self._friends.values()).__iter__()
 
     def load(self):
         cp = ConfigParser()

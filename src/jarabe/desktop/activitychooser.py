@@ -66,7 +66,7 @@ class ActivityChooser(Gtk.Window):
     __gsignals__ = {
         'response': (GObject.SignalFlags.RUN_FIRST, None, ([int])),
         'activity-selected': (GObject.SignalFlags.RUN_FIRST, None,
-                             ([object, object])),
+                              ([object, object])),
     }
 
     def __init__(self):
@@ -92,8 +92,9 @@ class ActivityChooser(Gtk.Window):
         self._vbox.pack_start(self._title_box, False, True, 0)
         self._title_box.show()
 
-        self.set_size_request((Gdk.Screen.height() - style.GRID_CELL_SIZE * 3)*3/4,
-                  (Gdk.Screen.height() - style.GRID_CELL_SIZE * 2)*2/3)
+        self.set_size_request(
+            (Gdk.Screen.height() - style.GRID_CELL_SIZE * 3) * 3 / 4,
+            (Gdk.Screen.height() - style.GRID_CELL_SIZE * 2) * 2 / 3)
         self.connect('key-press-event', self.__key_press_event_cb)
         self.connect('realize', self.__realize_cb)
 
@@ -158,7 +159,6 @@ class ActivityChooser(Gtk.Window):
         window = self.get_window()
         window.set_accept_focus(True)
         shell.get_model().push_modal()
-
 
     def __toolbar_query_changed_cb(self, toolbar, query):
         self._query = normalize_string(query.decode('utf-8'))
@@ -271,7 +271,7 @@ class SearchBar(Gtk.Toolbar):
 
         self._query = None
         self._autosearch_timer = None
-        #self.set_border_width(10)
+        # self.set_border_width(10)
         tool_item = Gtk.ToolItem()
         self.insert(tool_item, -1)
         tool_item.set_expand(True)

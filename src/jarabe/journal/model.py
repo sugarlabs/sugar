@@ -143,7 +143,7 @@ class BaseResultSet(object):
 
             # Total cache miss: remake it
             limit = self._page_size * MIN_PAGES_TO_CACHE
-            offset = max(0, self._position - limit / 2)
+            offset = max(0, self._position - limit // 2)
             logging.debug('remaking cache, offset: %r limit: %r', offset,
                           limit)
             query = self._query.copy()
@@ -291,9 +291,8 @@ class InplaceResultSet(BaseResultSet):
         else:
             # timestamp
             keygetter = itemgetter(2)
-        self._file_list.sort(lambda a, b: cmp(b, a),
-                             key=keygetter,
-                             reverse=(self._sort[0] == '-'))
+        self._file_list.sort(key=keygetter,
+                             reverse=not self._sort[0] == '-')
         self.ready.send(self)
 
     def find(self, query):
@@ -534,7 +533,8 @@ def _get_file_metadata_from_json(path, fetch_preview):
     else:
         if os.path.exists(preview_path):
             try:
-                metadata['preview'] = dbus.ByteArray(open(preview_path).read())
+                metadata['preview'] = dbus.ByteArray(
+                    open(preview_path, 'rb').read())
             except EnvironmentError:
                 logging.debug('Could not read preview for file %r on '
                               'external device.', filename)
@@ -688,7 +688,7 @@ def copy(metadata, mount_point, ready_callback=None):
     """
     metadata = get(metadata['uid'])
     if mount_point == '/' and metadata.get('icon-color') == '#000000,#ffffff':
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
         metadata['icon-color'] = settings.get_string('color')
     file_path = get_file(metadata['uid'])
     if file_path is None:
@@ -857,7 +857,7 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
         logging.error('Could not convert metadata to json.')
     else:
         (fh, fn) = tempfile.mkstemp(dir=metadata['mountpoint'])
-        os.write(fh, metadata_json)
+        os.write(fh, metadata_json.encode())
         os.close(fh)
         os.rename(fn, os.path.join(metadata_dir_path, file_name + '.metadata'))
 
@@ -949,7 +949,8 @@ def get_documents_path():
     try:
         pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
                                 stdout=subprocess.PIPE)
-        documents_path = os.path.normpath(pipe.communicate()[0].strip())
+        documents_path = os.path.normpath(
+            pipe.communicate()[0].strip().decode())
         if os.path.exists(documents_path) and \
                 os.environ.get('HOME') != documents_path:
             _documents_path = documents_path

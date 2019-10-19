@@ -17,6 +17,7 @@ import json
 import os
 import struct
 import time
+import binascii
 
 import dbus
 from gi.repository import GLib
@@ -62,7 +63,7 @@ class ActivityAPI(API):
             self._session_manager_shutdown_cb)
 
     def get_xo_color(self, request):
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
         color_string = settings.get_string('color')
 
         self._client.send_result(request, [color_string.split(",")])
@@ -287,7 +288,7 @@ class APIServer(object):
         self._server = Server()
         self._server.connect("session-started", self._session_started_cb)
         self._port = self._server.start()
-        self._key = os.urandom(16).encode("hex")
+        self._key = binascii.hexlify(os.urandom(16)).decode()
 
         self._apis = {}
         self._apis["activity"] = ActivityAPI
@@ -298,7 +299,7 @@ class APIServer(object):
         os.environ["SUGAR_APISOCKET_KEY"] = self._key
 
     def _open_stream(self, client, request):
-        for stream_id in xrange(0, 255):
+        for stream_id in range(0, 255):
             if stream_id not in client.stream_monitors:
                 client.stream_monitors[stream_id] = StreamMonitor()
                 break

@@ -446,7 +446,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         vbox.pack_start(halign, False, False, 0)
 
         if self._metadata.get('buddies'):
-            buddies = json.loads(self._metadata['buddies']).values()
+            buddies = list(json.loads(self._metadata['buddies']).values())
             vbox.pack_start(BuddyList(buddies), False, False, 0)
             return vbox
         else:

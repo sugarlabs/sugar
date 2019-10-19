@@ -58,7 +58,7 @@ def _settings_get(key):
     global _settings
 
     if _settings is None:
-        _settings = Gio.Settings('org.sugarlabs.power')
+        _settings = Gio.Settings.new('org.sugarlabs.power')
 
     return _settings.get_double(key)
 
@@ -304,6 +304,7 @@ class DeviceModel(GObject.GObject):
         sm = get_session_manager()
         sm.shutdown()
         GLib.timeout_add_seconds(10, sm.shutdown_completed)
+
 
 def setup(tray):
     bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)

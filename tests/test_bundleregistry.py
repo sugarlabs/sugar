@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import GLib
 import shutil
 import tempfile
 import unittest
@@ -21,8 +20,6 @@ import os
 
 from jarabe.model import bundleregistry
 from sugar3.bundle.helpers import bundle_from_archive
-
-GLib.threads_init()
 
 tests_dir = os.getcwd()
 data_dir = os.path.join(tests_dir, "data")

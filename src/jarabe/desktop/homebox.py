@@ -59,7 +59,7 @@ class HomeBox(Gtk.VBox):
 
         self._set_view(self._favorites_views_indicies[0])
         self._query = ''
-        self._resume_mode = Gio.Settings(
+        self._resume_mode = Gio.Settings.new(
             'org.sugarlabs.user').get_boolean('resume-activity')
 
     def __desktop_view_icons_changed_cb(self, model):
@@ -84,7 +84,7 @@ class HomeBox(Gtk.VBox):
                       (self._list_view_index))
 
     def __toolbar_query_changed_cb(self, toolbar, query):
-        self._query = normalize_string(query.decode('utf-8'))
+        self._query = normalize_string(query)
         self._list_view.set_filter(self._query)
         for i in range(desktop.get_number_of_views()):
             self._favorites_boxes[i].set_filter(self._query)
@@ -172,11 +172,6 @@ class HomeBox(Gtk.VBox):
 
     def suspend(self):
         pass
-
-    def has_activities(self):
-        # TODO: Do we need this?
-        # return self._donut.has_activities()
-        return False
 
     def set_resume_mode(self, resume_mode, favorite_view=0):
         self._resume_mode = resume_mode

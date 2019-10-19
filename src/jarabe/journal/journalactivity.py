@@ -25,7 +25,6 @@ from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import Gio
 import dbus
-import statvfs
 import os
 
 from sugar3.graphics.alert import ErrorAlert
@@ -312,7 +311,7 @@ class JournalActivity(JournalWindow):
         add_new_box.activate.connect(self.__add_new_activate_cb)
         add_new_box.show_all()
         project_vbox.pack_start(add_new_box, False, True,
-                                style.DEFAULT_SPACING/3)
+                                style.DEFAULT_SPACING / 3)
 
         self._entry_project = add_new_box.get_entry()
         self._list_view_project = self._project_view.create_list_view_project()
@@ -385,8 +384,8 @@ class JournalActivity(JournalWindow):
             activity_id=activity_id, project_metadata=self.project_metadata)
 
     def __key_press_event_cb(self, widget, event):
-        #if not self._main_toolbox.search_entry.has_focus():
-        #self._main_toolbox.search_entry.grab_focus()
+        # if not self._main_toolbox.search_entry.has_focus():
+        # self._main_toolbox.search_entry.grab_focus()
 
         keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Escape':
@@ -553,7 +552,7 @@ class JournalActivity(JournalWindow):
         if self._critical_space_alert:
             return
         stat = os.statvfs(env.get_profile_path())
-        free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
+        free_space = stat[0] * stat[4]
         if free_space < (_SPACE_THRESHOLD * 1024 * 1024):
             self._critical_space_alert = ModalAlert()
             self._critical_space_alert.connect('destroy',
@@ -622,7 +621,7 @@ def initialize_journal_object(title=None, bundle_id=None,
                               icon_color=None, invited=False):
 
     if not icon_color:
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
         icon_color = settings.get_string('color')
 
     if not activity_id:

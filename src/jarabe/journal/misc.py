@@ -422,6 +422,7 @@ def get_mount_color(mount):
         sha_hash.update(str(time.time()))
     else:
         mount_name = os.path.basename(path)
+        mount_name = mount_name.encode('utf-8')
         sha_hash.update(mount_name)
 
     digest = hash(sha_hash.digest())

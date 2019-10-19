@@ -24,7 +24,7 @@ _DESKTOP_CONF_DIR = 'org.sugarlabs.desktop'
 _HOMEVIEWS_KEY = 'homeviews'
 
 _VIEW_ICONS = [{'layout': 'box-layout', 'view-icon': 'view-radial',
-               'favorite-icon': 'emblem-locked'}]
+                'favorite-icon': 'emblem-locked'}]
 _MOCK_LIST = [{'layout': 'box-layout', 'view-icon': 'view-radial',
                'favorite-icon': 'emblem-locked'},
               {'layout': 'ring-layout', 'view-icon': 'view-box',
@@ -36,7 +36,7 @@ class TestDesktopConfig(unittest.UITestCase):
     def setUp(self):
         self.target = []
 
-        settings = Gio.Settings(_DESKTOP_CONF_DIR)
+        settings = Gio.Settings.new(_DESKTOP_CONF_DIR)
         self._save_homeviews = settings.get_value(_HOMEVIEWS_KEY)
 
         self.model = desktop.get_model()
@@ -60,18 +60,18 @@ class TestDesktopConfig(unittest.UITestCase):
     def test_unset_views(self):
         self.target = _VIEW_ICONS
         with self.run_view("gtk_main"):
-            settings = Gio.Settings(_DESKTOP_CONF_DIR)
+            settings = Gio.Settings.new(_DESKTOP_CONF_DIR)
             variant = GLib.Variant('aa{ss}', self.target)
             settings.set_value(_HOMEVIEWS_KEY, variant)
 
     def test_set_views(self):
         self.target = _MOCK_LIST
         with self.run_view("gtk_main"):
-            settings = Gio.Settings(_DESKTOP_CONF_DIR)
+            settings = Gio.Settings.new(_DESKTOP_CONF_DIR)
             variant = GLib.Variant('aa{ss}', self.target)
             settings.set_value(_HOMEVIEWS_KEY, variant)
 
     def tearDown(self):
         self.target = self._save_homeviews.unpack()
-        settings = Gio.Settings(_DESKTOP_CONF_DIR)
+        settings = Gio.Settings.new(_DESKTOP_CONF_DIR)
         settings.set_value(_HOMEVIEWS_KEY, self._save_homeviews)

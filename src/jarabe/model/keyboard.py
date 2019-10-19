@@ -24,7 +24,7 @@ from gi.repository import Xkl
 
 
 def setup():
-    settings = Gio.Settings('org.sugarlabs.peripherals.keyboard')
+    settings = Gio.Settings.new('org.sugarlabs.peripherals.keyboard')
     have_config = False
 
     try:

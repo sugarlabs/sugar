@@ -56,6 +56,7 @@ _GSM_STATE_FAILED = 4
 def _get_address_data_cb(ip_cb, address):
     ip_cb(address[0]['address'])
 
+
 def _get_ip4_config_cb(bus, ip_cb, ip4_config):
     obj = bus.get_object(network.NM_SERVICE, ip4_config)
     props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
@@ -63,6 +64,7 @@ def _get_ip4_config_cb(bus, ip_cb, ip4_config):
               'AddressData',
               reply_handler=partial(_get_address_data_cb, ip_cb),
               error_handler=logging.error)
+
 
 def _get_ip(bus, props, ip_cb):
     props.Get(network.NM_DEVICE_IFACE, 'Ip4Config',
@@ -515,8 +517,8 @@ class WirelessDeviceView(ToolButton):
                 self._color = profile.get_color()
             else:
                 sha_hash = hashlib.sha1()
-                data = self._ssid + hex(self._flags)
-                sha_hash.update(data)
+                data = self._ssid.decode() + hex(self._flags)
+                sha_hash.update(data.encode('utf-8'))
                 digest = hash(sha_hash.digest())
                 index = digest % len(xocolor.colors)
 

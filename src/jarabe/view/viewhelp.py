@@ -36,7 +36,7 @@ from jarabe.model import shell
 
 
 try:
-    olpc_build = file('/boot/olpc_build', 'r').readline()
+    olpc_build = open('/boot/olpc_build', 'r').readline()
 except:
     olpc_build = ''
 
@@ -114,14 +114,14 @@ def get_help_url_and_title(activity):
         _logger.error('helplink.json malformed, or can\'t be read')
 
     if links:
-        if link_id in links.keys():
+        if link_id in list(links.keys()):
             return links[link_id], title
 
     return None, title
 
 
 def get_social_help_server():
-    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings = Gio.Settings.new('org.sugarlabs.collaboration')
     return settings.get_string('social-help-server')
 
 
@@ -201,7 +201,7 @@ class ViewHelp(Gtk.Window):
         self._help_state = None
         if has_local_help:
             self._help_url = self._browser.get_local_method() + \
-                             self._get_help_file(language, url)
+                self._get_help_file(language, url)
 
         self._social_help_uri = '{}/goto/{}'.format(
             get_social_help_server(), activity.get_bundle_id())

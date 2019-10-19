@@ -168,8 +168,11 @@ class BuddyIcon(CanvasIcon):
                 palette.props.icon.props.xo_color = self._buddy.get_color()
 
     def set_filter(self, query):
-        normalized_name = normalize_string(
-            self._buddy.get_nick().decode('utf-8'))
+        if isinstance(self._buddy.get_nick(), bytes):
+            nick = self._buddy.get_nick().decode()
+        else:
+            nick = self._buddy.get_nick()
+        normalized_name = normalize_string(nick)
         self._filtered = (normalized_name.find(query) == -1) \
             and not self._buddy.is_owner()
         self._update_color()

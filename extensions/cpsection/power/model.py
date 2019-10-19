@@ -50,12 +50,12 @@ def get_automatic_pm():
         return not os.access(POWERD_INHIBIT_FLAG, os.R_OK)
 
     # ohmd
-    settings = Gio.Settings('org.sugarlabs.power')
+    settings = Gio.Settings.new('org.sugarlabs.power')
     return settings.get_boolean('automatic')
 
 
 def print_automatic_pm():
-    print ('off', 'on')[get_automatic_pm()]
+    print(('off', 'on')[get_automatic_pm()])
 
 
 def set_automatic_pm(enabled):
@@ -88,6 +88,6 @@ def set_automatic_pm(enabled):
     else:
         raise ValueError(_('Error in automatic pm argument, use on/off.'))
 
-    settings = Gio.Settings('org.sugarlabs.power')
+    settings = Gio.Settings.new('org.sugarlabs.power')
     settings.set_boolean('automatic', enabled)
     return

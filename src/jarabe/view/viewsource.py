@@ -367,7 +367,7 @@ class DocumentButton(RadioToolButton):
 
         self.props.tooltip = _('Instance Source')
 
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
         self._color = settings.get_string('color')
         icon = Icon(file=file_name,
                     pixel_size=style.STANDARD_ICON_SIZE,

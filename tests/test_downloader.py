@@ -16,29 +16,26 @@
 import os
 import unittest
 import threading
-import SimpleHTTPServer
-import SocketServer
+import http.server
+import socketserver
 
 from gi.repository import Gtk
-from gi.repository import GLib
 
 from sugar3 import env
 from jarabe.util.downloader import Downloader
 
 profile_data_dir = os.path.join(env.get_profile_path(), 'data')
 if not os.path.isdir(profile_data_dir):
-        os.makedirs(profile_data_dir)
+    os.makedirs(profile_data_dir)
 
 tests_dir = os.getcwd()
 data_dir = os.path.join(tests_dir, "data")
 
-GLib.threads_init()
-
 
 class TestDownloader(unittest.TestCase):
     def setUp(self):
-        handler = SimpleHTTPServer.SimpleHTTPRequestHandler
-        self._server = SocketServer.TCPServer(("", 0), handler)
+        handler = http.server.SimpleHTTPRequestHandler
+        self._server = socketserver.TCPServer(("", 0), handler)
         self._port = self._server.server_address[1]
         self._server_thread = threading.Thread(target=self._run_http_server)
         self._server_thread.daemon = True

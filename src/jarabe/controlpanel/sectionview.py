@@ -72,5 +72,7 @@ class SectionView(Gtk.VBox):
     def undo(self):
         """Undo here the changes that have been made in this section."""
         pass
+
+
 if hasattr(SectionView, 'set_css_name'):
     SectionView.set_css_name('cpanelsectionview')

@@ -18,7 +18,7 @@ import os.path
 import logging
 from gettext import gettext as _
 import pwd
-import commands
+import subprocess
 
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -44,7 +44,7 @@ def create_profile_with_nickname(nickname):
 
 
 def create_profile(user_profile):
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
 
     if user_profile.nickname in [None, '']:
         nick = settings.get_string('nick')
@@ -81,7 +81,7 @@ def create_profile(user_profile):
     logging.debug("Generating user keypair")
 
     cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % (keypath, )
-    (s, o) = commands.getstatusoutput(cmd)
+    (s, o) = subprocess.getstatusoutput(cmd)
     if s != 0:
         logging.error('Could not generate key pair: %d %s', s, o)
 
@@ -269,7 +269,7 @@ class _IntroBox(Gtk.VBox):
         self._current_page = None
         self._next_button = None
 
-        settings = Gio.Settings('org.sugarlabs.user')
+        settings = Gio.Settings.new('org.sugarlabs.user')
 
         if 'default-gender' in settings.list_keys():
             default_gender = settings.get_string('default-gender')
@@ -365,7 +365,7 @@ class _IntroBox(Gtk.VBox):
         button_box.show()
 
         if not self.PAGES[self._page]:
-            self.next()
+            next(self)
 
     def _update_next_button(self):
         self._next_button.set_sensitive(self._current_page.props.valid)
@@ -382,9 +382,9 @@ class _IntroBox(Gtk.VBox):
             self._setup_page()
 
     def _next_activated_cb(self, widget):
-        self.next()
+        next(self)
 
-    def next(self):
+    def __next__(self):
         if self._current_page.props.valid or not self.PAGES[self._page]:
             if self._page == self.PAGE_LAST:
                 self.done()
@@ -446,12 +446,14 @@ class IntroWindow(Gtk.Window):
 
     def __key_press_cb(self, widget, event):
         if Gdk.keyval_name(event.keyval) == 'Return':
-            self._intro_box.next()
+            next(self._intro_box)
             return True
         elif Gdk.keyval_name(event.keyval) == 'Escape':
             self._intro_box.back()
             return True
         return False
+
+
 if hasattr(IntroWindow, 'set_css_name'):
     IntroWindow.set_css_name('introwindow')
 

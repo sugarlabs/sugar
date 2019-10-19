@@ -32,6 +32,7 @@ class JournalMock(JournalWindow):
     def get_mount_point(self):
         return '/'
 
+
 tests_dir = os.getcwd()
 extension_dir = os.path.join(tests_dir, 'extensions')
 

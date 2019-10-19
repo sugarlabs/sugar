@@ -292,7 +292,7 @@ class Invites(GObject.GObject):
         self.emit('invite-removed', invite)
 
     def __iter__(self):
-        return self._dispatch_operations.values().__iter__()
+        return list(self._dispatch_operations.values()).__iter__()
 
 
 def get_instance():

@@ -104,7 +104,7 @@ class BundleRegistry(GObject.GObject):
         for i in range(desktop.get_number_of_views()):
             self._favorite_bundles.append({})
 
-        settings = Gio.Settings('org.sugarlabs')
+        settings = Gio.Settings.new('org.sugarlabs')
         self._protected_activities = settings.get_strv('protected-activities')
 
         try:
@@ -196,12 +196,12 @@ class BundleRegistry(GObject.GObject):
                 if not isinstance(favorite_bundles, dict):
                     raise ValueError('Invalid format in %s.' % favorites_path)
                 if favorite_bundles:
-                    first_key = favorite_bundles.keys()[0]
-                    if not isinstance(first_key, basestring):
+                    first_key = list(favorite_bundles.keys())[0]
+                    if not isinstance(first_key, str):
                         raise ValueError('Invalid format in %s.' %
                                          favorites_path)
 
-                    first_value = favorite_bundles.values()[0]
+                    first_value = list(favorite_bundles.values())[0]
                     if first_value is not None and \
                        not isinstance(first_value, dict):
                         raise ValueError('Invalid format in %s.' %
@@ -222,7 +222,7 @@ class BundleRegistry(GObject.GObject):
 
     def _convert_old_favorites(self):
         for i in range(desktop.get_number_of_views()):
-            for key in self._favorite_bundles[i].keys():
+            for key in list(self._favorite_bundles[i].keys()):
                 data = self._favorite_bundles[i][key]
                 if data is None:
                     data = {}
@@ -273,8 +273,8 @@ class BundleRegistry(GObject.GObject):
                 logging.exception('Error while processing installed activity'
                                   ' bundle %s:', bundle_dir)
 
-        bundle_dirs = bundles.keys()
-        bundle_dirs.sort(lambda d1, d2: cmp(bundles[d1], bundles[d2]))
+        bundle_dirs = list(bundles.keys())
+        bundle_dirs.sort(key=lambda x: bundles[x])
         for folder in bundle_dirs:
             try:
                 self.add_bundle(folder, emit_signals=False)

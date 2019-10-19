@@ -60,7 +60,8 @@ class ConnectionWatcher(GObject.GObject):
                                      signal_name='StatusChanged',
                                      path_keyword='path')
 
-        bus_object = self.bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        bus_object = self.bus.get_object(
+            'org.freedesktop.DBus', '/org/freedesktop/DBus')
         bus_object.ListNames(
             dbus_interface='org.freedesktop.DBus',
             reply_handler=self.__get_services_reply_cb,
@@ -137,10 +138,11 @@ class ConnectionWatcher(GObject.GObject):
         self.emit('connection-removed', conn)
 
     def get_connections(self):
-        return self._connections.values()
+        return list(self._connections.values())
 
     def __error_handler_cb(exception):
-        logging.debug('Exception from asynchronous method call:\n%s' % exception)
+        logging.debug(
+            'Exception from asynchronous method call:\n%s' % exception)
 
 
 def get_instance():
@@ -154,10 +156,10 @@ if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
     def connection_added_cb(conn_watcher, conn):
-        print 'new connection', conn["service_name"]
+        print('new connection', conn["service_name"])
 
     def connection_removed_cb(conn_watcher, conn):
-        print 'removed connection', conn["service_name"]
+        print('removed connection', conn["service_name"])
 
     watcher = ConnectionWatcher()
     watcher.connect('connection-added', connection_added_cb)

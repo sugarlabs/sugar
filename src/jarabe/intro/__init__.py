@@ -17,7 +17,7 @@ def check_profile():
 
 
 def check_group_label():
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
     if len(settings.get_string('group-label')) > 0:
         return True
     return False

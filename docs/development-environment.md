@@ -30,7 +30,7 @@ Once installed, Sugar Live Build can be used to make changes to Sugar, the toolk
 
 -   changes to demonstration activities can be done in the activity source trees in `/usr/src/sugar-activities`, and are immediately effective; just start a new instance of the activity in Sugar.
 
--   writing new activities can be done in the `~/Activities/` directory, and the new activity can be started using `sugar-activity` command in Terminal, or by restarting Sugar so that the new `activity/activity.info` file is read to regenerate the [Home View](https://help.sugarlabs.org/en/home_view.html).
+-   writing new activities can be done in the `~/Activities/` directory, and the new activity can be started using `sugar-activity3` command in Terminal, or by restarting Sugar so that the new `activity/activity.info` file is read to regenerate the [Home View](https://help.sugarlabs.org/en/home_view.html).
 
 See [sugar-live-build](https://github.com/sugarlabs/sugar-live-build) on GitHub for configuration files to make your own Sugar Live Build using the Debian Live Build software.
 
@@ -74,20 +74,20 @@ On Debian or Ubuntu, ensure `deb-src` lines are present and enabled in `/etc/apt
     for module in sugar{-datastore,-artwork,-toolkit,-toolkit-gtk3,}; do
         sudo apt build-dep $module
     done
-    sudo apt install python{,3}-six python-empy
+    sudo apt install python{,3}-six python3-empy
 
 On Fedora, use [dnf builddep](http://dnf-plugins-core.readthedocs.io/en/latest/builddep.html), like this;
 
     for module in sugar{-datastore,-artwork,-toolkit,-toolkit-gtk3,}; do
         sudo dnf builddep $module
     done
-    sudo dnf install python{2,3}-six python2-empy
+    sudo dnf install python{2,3}-six python3-empy
 
-Autogen, configure, make, and install each module for Python 2;
+Autogen, configure, make, and install modules for Python 2;
 
-    for module in sugar{-artwork,-toolkit,-toolkit-gtk3,}; do
+    for module in sugar{-toolkit,-toolkit-gtk3}; do
         cd $module
-        ./autogen.sh
+        ./autogen.sh --with-python2
         make
         sudo make install
         cd ..
@@ -95,7 +95,7 @@ Autogen, configure, make, and install each module for Python 2;
 
 Autogen, configure, make, and install modules for Python 3;
 
-    for module in sugar{-toolkit-gtk3,-datastore}; do
+    for module in sugar{-artwork,-toolkit-gtk3,-datastore,}; do
         cd $module
         ./autogen.sh --with-python3
         make

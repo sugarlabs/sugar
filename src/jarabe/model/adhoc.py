@@ -75,7 +75,7 @@ class AdHocManager(GObject.GObject):
             if not self._find_connection(channel):
                 self._add_connection(channel)
 
-        settings = Gio.Settings('org.sugarlabs.network')
+        settings = Gio.Settings.new('org.sugarlabs.network')
         self._autoconnect_enabled = settings.get_boolean('adhoc-autoconnect')
 
     def start_listening(self, device):
@@ -159,6 +159,7 @@ class AdHocManager(GObject.GObject):
             self._autoconnect_adhoc()
         else:
             logging.debug('autoconnect Sugar Ad-hoc: already connected')
+        self._idle_source = 0
         return False
 
     def _autoconnect_adhoc(self):
@@ -196,7 +197,7 @@ class AdHocManager(GObject.GObject):
         settings.connection.uuid = str(uuid.uuid4())
         settings.connection.type = '802-11-wireless'
         settings.connection.autoconnect = False
-        settings.wireless.ssid = dbus.ByteArray(ssid)
+        settings.wireless.ssid = dbus.ByteArray(ssid.encode())
         settings.wireless.band = 'bg'
         settings.wireless.channel = channel
         settings.wireless.mode = 'adhoc'
@@ -269,7 +270,7 @@ class AdHocManager(GObject.GObject):
         Return: Boolean
 
         """
-        for access_point in self._networks.values():
+        for access_point in list(self._networks.values()):
             if access_point is not None:
                 if access_point.model.object_path == ap_object_path:
                     return True

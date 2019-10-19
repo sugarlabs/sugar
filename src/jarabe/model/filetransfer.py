@@ -28,7 +28,7 @@ CONNECTION_INTERFACE_REQUESTS = \
 CHANNEL = TelepathyGLib.IFACE_CHANNEL
 CHANNEL_DISPATCHER = TelepathyGLib.IFACE_CHANNEL_DISPATCHER
 CONNECTION_HANDLE_TYPE_CONTACT = TelepathyGLib.HandleType.CONTACT
-SOCKET_ADDRESS_TYPE_UNIX = TelepathyGLib.SocketAddressType.UNIX 
+SOCKET_ADDRESS_TYPE_UNIX = TelepathyGLib.SocketAddressType.UNIX
 SOCKET_ACCESS_CONTROL_LOCALHOST = TelepathyGLib.SocketAccessControl.LOCALHOST
 CHANNEL_TYPE_FILE_TRANSFER = TelepathyGLib.IFACE_CHANNEL_TYPE_FILE_TRANSFER
 CONNECTION = TelepathyGLib.IFACE_CONNECTION
@@ -141,7 +141,8 @@ class IncomingFileTransfer(BaseFileTransfer):
         BaseFileTransfer.__init__(self, connection)
 
         channel = {}
-        text_proxy = dbus.Bus().get_object(connection["service_name"], object_path)
+        text_proxy = dbus.Bus().get_object(
+            connection["service_name"], object_path)
         channel[dbus.PROPERTIES_IFACE] = \
             dbus.Interface(text_proxy, dbus.PROPERTIES_IFACE)
         channel[CHANNEL_TYPE_FILE_TRANSFER] = \
@@ -365,7 +366,7 @@ if __name__ == '__main__':
 
     test_file_name = '/home/humitos/test.py'
     test_temp_file = tempfile.mkstemp()[1]
-    print test_temp_file
+    print(test_temp_file)
     test_input_stream = Gio.File.new_for_path(test_file_name).read(None)
     test_output_stream = Gio.File.new_for_path(test_temp_file)\
         .append_to(Gio.FileCreateFlags.PRIVATE, None)

@@ -1,23 +1,23 @@
-AC_INIT([Sugar],[0.114],[],[sugar])
+AC_INIT([Sugar],[0.116],[],[sugar])
 
 AC_PREREQ([2.59])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([configure.ac])
 
-SUCROSE_VERSION="0.114"
+SUCROSE_VERSION="0.116"
 AC_SUBST(SUCROSE_VERSION)
 
 AM_INIT_AUTOMAKE([1.9 foreign dist-xz no-dist-gzip])
 
 AM_MAINTAINER_MODE
 
-PYTHON=python2
+PYTHON=python3
 AM_PATH_PYTHON
 
-AC_PATH_PROG([EMPY], [empy])
+AC_PATH_PROGS([EMPY], [empy empy3])
 if test -z "$EMPY"; then
-	AC_MSG_ERROR([python-empy is required])
+	AC_MSG_ERROR([empy is required])
 fi
 
 PKG_CHECK_MODULES(SHELL, gtk+-3.0)

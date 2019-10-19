@@ -17,7 +17,7 @@
 import os
 import tempfile
 from gettext import gettext as _
-import StringIO
+import io
 import cairo
 
 from gi.repository import Gdk
@@ -46,7 +46,7 @@ def take_screenshot():
     cr.paint()
     screenshot_surface.write_to_png(file_path)
 
-    settings = Gio.Settings('org.sugarlabs.user')
+    settings = Gio.Settings.new('org.sugarlabs.user')
     color = settings.get_string('color')
 
     content_title = None
@@ -114,6 +114,6 @@ def _get_preview_data(screenshot_surface):
     cr.set_source_surface(screenshot_surface)
     cr.paint()
 
-    preview_str = StringIO.StringIO()
+    preview_str = io.BytesIO()
     preview_surface.write_to_png(preview_str)
     return dbus.ByteArray(preview_str.getvalue())

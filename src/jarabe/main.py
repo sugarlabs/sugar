@@ -28,11 +28,6 @@ import sys
 import subprocess
 import shutil
 
-# Change the default encoding to avoid UnicodeDecodeError
-# http://lists.sugarlabs.org/archive/sugar-devel/2012-August/038928.html
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 # Disable overlay scrolling before GTK is loaded
 os.environ['GTK_OVERLAY_SCROLLING'] = '0'
 os.environ['LIBOVERLAY_SCROLLBAR'] = '0'
@@ -247,18 +242,18 @@ def cleanup_temporary_files():
     except OSError as e:
         # temporary files cleanup is not critical; it should not prevent
         # sugar from starting if (for example) the disk is full or read-only.
-        print 'temporary files cleanup failed: %s' % e
+        print('temporary files cleanup failed: %s' % e)
 
 
 def setup_timezone():
-    settings = Gio.Settings('org.sugarlabs.date')
+    settings = Gio.Settings.new('org.sugarlabs.date')
     timezone = settings.get_string('timezone')
     if timezone is not None and timezone:
         os.environ['TZ'] = timezone
 
 
 def setup_fonts():
-    settings = Gio.Settings('org.sugarlabs.font')
+    settings = Gio.Settings.new('org.sugarlabs.font')
     face = settings.get_string('default-face')
     size = settings.get_double('default-size')
 
@@ -272,11 +267,11 @@ def setup_proxy():
     schemas = ['org.sugarlabs.system.proxy.{}'.format(
         proto) for proto in protos]
 
-    g_mode = Gio.Settings('org.sugarlabs.system.proxy').get_string('mode')
+    g_mode = Gio.Settings.new('org.sugarlabs.system.proxy').get_string('mode')
     if g_mode == 'manual':
         counter = 0
         for schema in schemas:
-            setting_schema = Gio.Settings(schema)
+            setting_schema = Gio.Settings.new(schema)
 
             if ((env_variables[counter] == 'http_proxy') and
                     setting_schema.get_boolean('use-authentication')):
@@ -295,7 +290,7 @@ def setup_proxy():
             os.environ[env_variables[counter]] = text_to_set
             os.environ[env_variables[counter].upper()] = text_to_set
             counter += 1
-        os.environ['no_proxy'] = ",".join(Gio.Settings(
+        os.environ['no_proxy'] = ",".join(Gio.Settings.new(
             'org.sugarlabs.system.proxy').get_strv('ignore-hosts'))
 
     elif g_mode == 'none':
@@ -341,10 +336,6 @@ def _check_group_label():
 
 
 def main():
-    # This can be removed once pygobject-3.10 is a requirement.
-    # https://bugzilla.gnome.org/show_bug.cgi?id=686914
-    GLib.threads_init()
-
     Gst.init(sys.argv)
 
     cleanup_temporary_files()
@@ -377,8 +368,9 @@ def main():
     try:
         Gtk.main()
     except KeyboardInterrupt:
-        print 'Ctrl+C pressed, exiting...'
+        print('Ctrl+C pressed, exiting...')
 
     _stop_window_manager()
+
 
 main()
