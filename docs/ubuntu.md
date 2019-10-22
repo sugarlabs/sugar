@@ -5,10 +5,38 @@ Using Sugar on Ubuntu
 
 In relation to Sugar, Ubuntu is a downstream distribution project that can be used to run Sugar.
 
+Ubuntu 19.10 (Eoan Ermine)
+-------------------
+
+Sugar 0.112 can be installed with the following commands:
+
+    sudo apt update
+    sudo apt install sucrose
+
+-   log out,
+-   log in with the Sugar desktop selected,
+
+Known Problems:
+
+-   Sugar 0.112 does not start because of [ImportError: No module named popwindow](https://github.com/sugarlabs/sugar/issues/822), in turn because the Sugar Toolkit 0.116 is not compatible with Sugar 0.112,
+
+Ubuntu 19.04 (Disco Dingo)
+-------------------
+
+Sugar 0.112 is in the universe repository, and can be installed with the following commands:
+
+
+    sudo add-apt-repository universe
+    sudo apt update
+    sudo apt install sucrose
+
+-   log out,
+-   log in with the Sugar desktop selected,
+
 Ubuntu 18.04 (Bionic Beaver) and 18.10 (Cosmic Cuttlefish)
 -------------------
 
-Sugar 0.112 is in the universe repository of Ubuntu 18.04, (Bionic Beaver) as well as 18.10 (Cosmic Cuttlefish), and can be installed by executing the following commands:
+Sugar 0.112 is in the universe repository, and can be installed with the following commands:
 
 
     sudo add-apt-repository universe
