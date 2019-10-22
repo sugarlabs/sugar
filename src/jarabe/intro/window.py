@@ -379,6 +379,8 @@ class _IntroBox(Gtk.VBox):
     def back(self):
         if self._page != self.PAGE_FIRST:
             self._page -= 1
+            while not self.PAGES[self._page] and self._page > 0:
+                self._page -= 1
             self._setup_page()
 
     def _next_activated_cb(self, widget):
