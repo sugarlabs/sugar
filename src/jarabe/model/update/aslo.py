@@ -157,7 +157,7 @@ class AsloUpdater(object):
 
     def _check_complete_cb(self, checker, result):
         if isinstance(result, Exception):
-            logging.warning("Failed to check bundle: %r", result)
+            _logger.warning("Failed to check bundle: %r", result)
         elif isinstance(result, BundleUpdate):
             self._updates.append(result)
 

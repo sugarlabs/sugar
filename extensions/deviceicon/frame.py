@@ -26,12 +26,14 @@ import jarabe.frame
 _ICON_NAME = 'module-keyboard'
 _HAS_MALIIT = False
 
+logger = logging.getLogger('frame')
+
 import gi
 try:
     gi.require_version('Maliit', '1.0')
     from gi.repository import Maliit
 except (ValueError, ImportError):
-    logging.debug('Frame: can not create OSK icon: Maliit is not installed.')
+    logger.debug('Frame: can not create OSK icon: Maliit is not installed.')
 else:
     _HAS_MALIIT = True
 

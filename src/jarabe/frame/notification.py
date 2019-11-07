@@ -36,6 +36,8 @@ from jarabe.model import notifications
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
+logger = logging.getLogger('notification')
+
 
 class NotificationBox(Gtk.VBox):
 
@@ -140,19 +142,19 @@ class NotificationBox(Gtk.VBox):
         self.show()
 
     def __clear_cb(self, clear_item):
-        logging.debug('NotificationBox.__clear_cb')
+        logger.debug('NotificationBox.__clear_cb')
         for entry in self._notifications_box.get_children():
             self._notifications_box.remove(entry)
         self._service.clear_by_name(self._name)
         self.hide()
 
     def __notification_received_cb(self, **kwargs):
-        logging.debug('NotificationBox.__notification_received_cb')
+        logger.debug('NotificationBox.__notification_received_cb')
         if kwargs.get('app_name', '') == self._name:
             self._add(kwargs.get('summary', ''), kwargs.get('body', ''))
 
     def __destroy_cb(self, box):
-        logging.debug('NotificationBox.__destroy_cb')
+        logger.debug('NotificationBox.__destroy_cb')
         service = notifications.get_service()
         service.notification_received.disconnect(
             self. __notification_received_cb)

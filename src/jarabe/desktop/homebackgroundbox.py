@@ -27,6 +27,8 @@ BACKGROUND_IMAGE_PATH_KEY = 'image-path'
 BACKGROUND_ALPHA_LEVEL_KEY = 'alpha-level'
 DEFAULT_BACKGROUND_ALPHA_LEVEL = 0.20
 
+logger = logging.getLogger('home-background')
+
 
 def get_background_image_path():
     settings = Gio.Settings.new(BACKGROUND_DIR)
@@ -94,6 +96,6 @@ class HomeBackgroundBox(Gtk.VBox):
                 self._background_pixbuf = GdkPixbuf.Pixbuf.new_from_file(
                     background_image_path)
             except Exception as e:
-                logging.exception('Failed to update background image %s: %s' %
+                logger.exception('Failed to update background image %s: %s' %
                                   (background_image_path, str(e)))
                 self._background_pixbuf = None

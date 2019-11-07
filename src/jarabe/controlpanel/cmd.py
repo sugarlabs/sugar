@@ -29,6 +29,7 @@ _same_option_warning = _('sugar-control-panel: WARNING, found more than one'
                          ' module: %(module)r')
 _no_option_error = _('sugar-control-panel: key=%s not an available option')
 _general_error = 'sugar-control-panel: %s'
+logger = logging.getLogger('cmd')
 
 
 def cmd_help():
@@ -68,7 +69,7 @@ def load_modules():
                 module = __import__('.'.join(('cpsection', item, 'model')),
                                     globals(), locals(), ['model'])
             except Exception:
-                logging.exception('Exception while loading extension:')
+                logger.exception('Exception while loading extension:')
             else:
                 modules.append(module)
 

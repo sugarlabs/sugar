@@ -20,6 +20,7 @@ from gi.repository import Gdk
 from gi.repository import SugarExt
 
 _instance = None
+logger = logging.getLogger('cursortracker')
 
 
 def setup():
@@ -40,11 +41,11 @@ def setup():
     devices = device_manager.list_devices(Gdk.DeviceType.SLAVE)
     for device in devices:
         if device.get_source() == Gdk.InputSource.TOUCHSCREEN:
-            logging.debug('Cursor Tracker: found touchscreen, '
+            logger.debug('Cursor Tracker: found touchscreen, '
                           'will track input.')
             _instance = SugarExt.CursorTracker()
             break
 
     if not _instance:
-        logging.debug('Cursor Tracker: no touchscreen available, '
+        logger.debug('Cursor Tracker: no touchscreen available, '
                       'will not track input.')

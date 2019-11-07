@@ -30,6 +30,7 @@ _ACCOUNT_MODULE_NAME = 'account'
 _user_extensions_path = os.path.join(env.get_profile_path(), 'extensions')
 
 _module_repository = None
+logger = logging.getLogger('accountsmanager')
 
 
 def _extend_sys_path():
@@ -87,7 +88,7 @@ def _ensure_module_repository():
             try:
                 account_module = module.get_account()
             except Exception as e:
-                logging.error('%s.get_account() failed: %s' %
+                logger.error('%s.get_account() failed: %s' %
                               (service_name, e))
                 traceback.format_exc()
 
@@ -130,7 +131,7 @@ def _load_module(path, module):
                                [module])
     except ImportError as e:
         module = None
-        logging.debug('ImportError: %s' % (e))
+        logger.debug('ImportError: %s' % (e))
 
     return module
 
@@ -175,7 +176,7 @@ def _extend_icon_theme_search_path(path):
         icon_path_dirs = os.listdir(path)
     except OSError as e:
         icon_path_dirs = []
-        logging.warning('listdir: %s: %s' % (path, e))
+        logger.warning('listdir: %s: %s' % (path, e))
 
     for file in icon_path_dirs:
         if file == 'icons':

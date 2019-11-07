@@ -36,6 +36,8 @@ from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.gui import ControlPanel
 import jarabe.desktop.homewindow
 
+logger = logging.getLogger('buddymenu')
+
 
 class BuddyMenu(Palette):
 
@@ -219,9 +221,9 @@ class BuddyMenu(Palette):
                     'org.freedesktop.DBus.Error.UnknownMethod',
                     'org.freedesktop.DBus.Python.NotImplementedError']
                 if e.get_dbus_name() in expected_exceptions:
-                    logging.warning('Trying deprecated Activity.Invite')
+                    logger.warning('Trying deprecated Activity.Invite')
                     service.Invite(self._buddy.props.key)
                 else:
                     raise
         else:
-            logging.error('Invite failed, activity service not ')
+            logger.error('Invite failed, activity service not ')

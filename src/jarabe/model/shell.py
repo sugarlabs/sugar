@@ -38,6 +38,8 @@ _SERVICE_INTERFACE = 'org.laptop.Activity'
 
 _model = None
 
+logger = logging.getLogger('shell')
+
 
 class Activity(GObject.GObject):
     """Activity which appears in the "Home View" of the Sugar shell
@@ -317,13 +319,13 @@ class Activity(GObject.GObject):
     def _name_owner_changed_cb(self, name, old, new):
         if name == self._get_service_name():
             if old and not new:
-                logging.debug('Activity._name_owner_changed_cb: '
+                logger.debug('Activity._name_owner_changed_cb: '
                               'activity %s went away', name)
                 self._name_owner_changed_handler.remove()
                 self._name_owner_changed_handler = None
                 self._service = None
             elif not old and new:
-                logging.debug('Activity._name_owner_changed_cb: '
+                logger.debug('Activity._name_owner_changed_cb: '
                               'activity %s started up', name)
                 self._retrieve_service()
                 self.set_active(True)
@@ -339,7 +341,7 @@ class Activity(GObject.GObject):
         pass
 
     def _set_active_error(self, err):
-        logging.error('set_active() failed: %s', err)
+        logger.error('set_active() failed: %s', err)
 
     def _set_launch_status(self, value):
         get_model().disconnect(self._launch_completed_hid)
@@ -612,7 +614,7 @@ class ShellModel(GObject.GObject):
                     window.get_window_type() == Wnck.WindowType.NORMAL:
                 # This is a special case for the Journal
                 # We check if is not a splash screen to avoid #4767
-                logging.debug('first window registered for %s', activity_id)
+                logger.debug('first window registered for %s', activity_id)
                 color = self._shared_activities.get(activity_id, None)
                 home_activity = Activity(activity_info, activity_id,
                                          color, window)
@@ -620,14 +622,14 @@ class ShellModel(GObject.GObject):
                 self._add_activity(home_activity)
 
             else:
-                logging.debug('window registered for %s', activity_id)
+                logger.debug('window registered for %s', activity_id)
                 home_activity.add_window(window, is_main_window(window,
                                                                 home_activity))
 
             if is_main_window(window, home_activity):
                 self.emit('launch-completed', home_activity)
                 startup_time = time.time() - home_activity.get_launch_time()
-                logging.debug('%s launched in %f seconds.',
+                logger.debug('%s launched in %f seconds.',
                               activity_id, startup_time)
 
             if self._active_activity is None:
@@ -641,7 +643,7 @@ class ShellModel(GObject.GObject):
             if activity is not None:
                 activity.remove_window_by_xid(xid)
                 if activity.get_window() is None:
-                    logging.debug('last window gone - remove activity %s',
+                    logger.debug('last window gone - remove activity %s',
                                   activity)
                     activity.close_window()
                     self._remove_activity(activity)
@@ -709,7 +711,7 @@ class ShellModel(GObject.GObject):
                     self._set_active_activity(new_activity)
                     break
             else:
-                logging.error('No activities are running')
+                logger.error('No activities are running')
                 self._set_active_activity(None)
 
         self.emit('activity-removed', home_activity)
@@ -741,7 +743,7 @@ class ShellModel(GObject.GObject):
     def notify_launch_failed(self, activity_id):
         home_activity = self.get_activity_by_id(activity_id)
         if home_activity:
-            logging.debug('Activity %s (%s) launch failed', activity_id,
+            logger.debug('Activity %s (%s) launch failed', activity_id,
                           home_activity.get_type())
             if self.get_launcher(activity_id) is not None:
                 self.emit('launch-failed', home_activity)
@@ -749,7 +751,7 @@ class ShellModel(GObject.GObject):
                 # activity sent failure notification after closing launcher
                 self._remove_activity(home_activity)
         else:
-            logging.error('Model for activity id %s does not exist.',
+            logger.error('Model for activity id %s does not exist.',
                           activity_id)
 
     def _check_activity_launched(self, activity_id):
@@ -757,11 +759,11 @@ class ShellModel(GObject.GObject):
         home_activity = self.get_activity_by_id(activity_id)
 
         if not home_activity:
-            logging.debug('Activity %s has been closed already.', activity_id)
+            logger.debug('Activity %s has been closed already.', activity_id)
             return False
 
         if self.get_launcher(activity_id) is not None:
-            logging.debug('Activity %s still launching, assuming it failed.',
+            logger.debug('Activity %s still launching, assuming it failed.',
                           activity_id)
             self.notify_launch_failed(activity_id)
         return False

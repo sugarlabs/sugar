@@ -57,6 +57,8 @@ created = dispatch.Signal()
 updated = dispatch.Signal()
 deleted = dispatch.Signal()
 
+logger = logging.getLogger('Journal-model')
+
 
 class _Cache(object):
 
@@ -144,7 +146,7 @@ class BaseResultSet(object):
             # Total cache miss: remake it
             limit = self._page_size * MIN_PAGES_TO_CACHE
             offset = max(0, self._position - limit // 2)
-            logging.debug('remaking cache, offset: %r limit: %r', offset,
+            logger.debug('remaking cache, offset: %r limit: %r', offset,
                           limit)
             query = self._query.copy()
             query['limit'] = limit
@@ -159,7 +161,7 @@ class BaseResultSet(object):
               remaining_backwards_entries > 0):
 
             # Add one page to the end of cache
-            logging.debug('appending one more page, offset: %r',
+            logger.debug('appending one more page, offset: %r',
                           last_cached_entry)
             query = self._query.copy()
             query['limit'] = self._page_size
@@ -183,7 +185,7 @@ class BaseResultSet(object):
             limit = min(self._offset, self._page_size)
             self._offset = max(0, self._offset - limit)
 
-            logging.debug('prepending one more page, offset: %r limit: %r',
+            logger.debug('prepending one more page, offset: %r limit: %r',
                           self._offset, limit)
             query = self._query.copy()
             query['limit'] = limit
@@ -317,7 +319,7 @@ class InplaceResultSet(BaseResultSet):
             metadata['mountpoint'] = self._mount_point
             entries.append(metadata)
 
-        logging.debug('InplaceResultSet.find took %f s.', time.time() - t)
+        logger.debug('InplaceResultSet.find took %f s.', time.time() - t)
 
         return entries, total_count
 
@@ -359,7 +361,7 @@ class InplaceResultSet(BaseResultSet):
             stat = os.lstat(full_path)
         except OSError as e:
             if e.errno != errno.ENOENT:
-                logging.exception(
+                logger.exception(
                     'Error reading metadata of file %r', full_path)
             return
 
@@ -367,7 +369,7 @@ class InplaceResultSet(BaseResultSet):
             try:
                 link = os.readlink(full_path)
             except OSError as e:
-                logging.exception(
+                logger.exception(
                     'Error reading target of link %r', full_path)
                 return
 
@@ -379,7 +381,7 @@ class InplaceResultSet(BaseResultSet):
 
             except OSError as e:
                 if e.errno != errno.ENOENT:
-                    logging.exception(
+                    logger.exception(
                         'Error reading metadata of linked file %r', full_path)
                 return
 
@@ -454,7 +456,7 @@ class InplaceResultSet(BaseResultSet):
             entries = os.listdir(dir_path)
         except OSError as e:
             if e.errno != errno.EACCES:
-                logging.exception('Error reading directory %r', dir_path)
+                logger.exception('Error reading directory %r', dir_path)
             return
 
         for entry in entries:
@@ -521,7 +523,7 @@ def _get_file_metadata_from_json(path, fetch_preview):
         os.unlink(metadata_path)
         if os.path.exists(preview_path):
             os.unlink(preview_path)
-        logging.error('Could not read metadata for file %r on '
+        logger.error('Could not read metadata for file %r on '
                       'external device.', filename)
         return None
     else:
@@ -536,7 +538,7 @@ def _get_file_metadata_from_json(path, fetch_preview):
                 metadata['preview'] = dbus.ByteArray(
                     open(preview_path, 'rb').read())
             except EnvironmentError:
-                logging.debug('Could not read preview for file %r on '
+                logger.debug('Could not read preview for file %r on '
                               'external device.', filename)
 
     return metadata
@@ -613,10 +615,10 @@ def get_file(object_id):
     """Returns the file for an object
     """
     if os.path.exists(object_id):
-        logging.debug('get_file asked for file with path %r', object_id)
+        logger.debug('get_file asked for file with path %r', object_id)
         return object_id
     else:
-        logging.debug('get_file asked for entry with id %r', object_id)
+        logger.debug('get_file asked for entry with id %r', object_id)
         file_path = _get_datastore().get_filename(object_id)
         if file_path:
             return util.TempFilePath(file_path)
@@ -627,7 +629,7 @@ def get_file(object_id):
 def get_file_size(object_id):
     """Return the file size for an object
     """
-    logging.debug('get_file_size %r', object_id)
+    logger.debug('get_file_size %r', object_id)
     if os.path.exists(object_id):
         return os.stat(object_id).st_size
 
@@ -673,7 +675,7 @@ def delete(object_id):
                 try:
                     os.unlink(old_file)
                 except EnvironmentError:
-                    logging.error('Could not remove metadata=%s '
+                    logger.error('Could not remove metadata=%s '
                                   'for file=%s', old_file, filename)
         try:
             os.rmdir(metadata_path)
@@ -714,9 +716,9 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True,
             ready_callback(metadata, file_path, metadata['uid'])
 
     def error_handler(error):
-        logging.error('Could not create/update datastore entry')
+        logger.error('Could not create/update datastore entry')
 
-    logging.debug('model.write %r %r %r', metadata.get('uid', ''), file_path,
+    logger.debug('model.write %r %r %r', metadata.get('uid', ''), file_path,
                   update_mtime)
     if update_mtime:
         metadata['mtime'] = datetime.now().isoformat()
@@ -757,7 +759,7 @@ def _rename_entry_on_external_device(file_path, destination_path,
                 try:
                     os.unlink(ofile)
                 except EnvironmentError:
-                    logging.error('Could not remove metadata=%s '
+                    logger.error('Could not remove metadata=%s '
                                   'for file=%s', ofile, old_fname)
 
 
@@ -842,7 +844,7 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
     # exists for backward compatibility; but don't set it in ~/Documents
     if not metadata['mountpoint'] == get_documents_path():
         if not SugarExt.fat_set_hidden_attrib(metadata_dir_path):
-            logging.error('Could not set hidden attribute on %s' %
+            logger.error('Could not set hidden attribute on %s' %
                           (metadata_dir_path))
 
     preview = None
@@ -854,7 +856,7 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
     try:
         metadata_json = json.dumps(metadata_copy)
     except (UnicodeDecodeError, EnvironmentError):
-        logging.error('Could not convert metadata to json.')
+        logger.error('Could not convert metadata to json.')
     else:
         (fh, fn) = tempfile.mkstemp(dir=metadata['mountpoint'])
         os.write(fh, metadata_json.encode())
@@ -956,5 +958,5 @@ def get_documents_path():
             _documents_path = documents_path
     except OSError as exception:
         if exception.errno != errno.ENOENT:
-            logging.exception('Could not run xdg-user-dir')
+            logger.exception('Could not run xdg-user-dir')
     return _documents_path

@@ -48,6 +48,8 @@ _OLPC_MESH_ICON_NAME = 'network-mesh'
 
 _FILTERED_ALPHA = 0.33
 
+logger = logging.getLogger('networkviews')
+
 
 class WirelessNetworkView(EventPulsingIcon):
 
@@ -182,13 +184,13 @@ class WirelessNetworkView(EventPulsingIcon):
                             error_handler=self.__get_device_state_error_cb)
 
     def __get_active_ap_error_cb(self, err):
-        logging.error('Error getting the active access point: %s', err)
+        logger.error('Error getting the active access point: %s', err)
 
     def __get_device_caps_reply_cb(self, caps):
         self._device_caps = caps
 
     def __get_device_caps_error_cb(self, err):
-        logging.error('Error getting the wireless device properties: %s', err)
+        logger.error('Error getting the wireless device properties: %s', err)
 
     def __get_device_state_reply_cb(self, state):
         self._device_state = state
@@ -198,7 +200,7 @@ class WirelessNetworkView(EventPulsingIcon):
         self._update_badge()
 
     def __get_device_state_error_cb(self, err):
-        logging.error('Error getting the device state: %s', err)
+        logger.error('Error getting the device state: %s', err)
 
     def _update_icon(self):
         if self._mode == network.NM_802_11_MODE_ADHOC and \
@@ -338,7 +340,7 @@ class WirelessNetworkView(EventPulsingIcon):
 
         if (self._mode != network.NM_802_11_MODE_INFRA):
             # Stuff after this point requires infrastructure
-            logging.error('The infrastructure mode is not supoorted'
+            logger.error('The infrastructure mode is not supoorted'
                           ' by your wireless device.')
             return None
 
@@ -373,13 +375,13 @@ class WirelessNetworkView(EventPulsingIcon):
         # Activate existing connection, if there is one
         connection = network.find_connection_by_ssid(self._ssid)
         if connection:
-            logging.debug('Activating existing connection for SSID %r',
+            logger.debug('Activating existing connection for SSID %r',
                           self._ssid)
             connection.activate(self._device)
             return
 
         # Otherwise, create new connection and activate it
-        logging.debug('Creating new connection for SSID %r', self._ssid)
+        logger.debug('Creating new connection for SSID %r', self._ssid)
         settings = Settings()
         settings.connection.id = self._display_name
         settings.connection.uuid = str(uuid.uuid4())
@@ -689,7 +691,7 @@ class OlpcMeshView(EventPulsingIcon):
         self._update()
 
     def __get_device_state_error_cb(self, err):
-        logging.error('Error getting the device state: %s', err)
+        logger.error('Error getting the device state: %s', err)
 
     def __device_state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
@@ -701,7 +703,7 @@ class OlpcMeshView(EventPulsingIcon):
         self._update()
 
     def __get_active_channel_error_cb(self, err):
-        logging.error('Error getting the active channel: %s', err)
+        logger.error('Error getting the active channel: %s', err)
 
     def __wireless_properties_changed_cb(self, properties):
         if 'ActiveChannel' in properties:

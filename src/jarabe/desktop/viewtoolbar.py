@@ -35,6 +35,8 @@ from jarabe.model import desktop
 
 _AUTOSEARCH_TIMEOUT = 1000
 
+logger = logging.getLogger('viewtoolbar')
+
 
 class ViewToolbar(Gtk.Toolbar):
     __gtype_name__ = 'SugarViewToolbar'
@@ -102,7 +104,7 @@ class ViewToolbar(Gtk.Toolbar):
         self._add_separator()
 
     def _add_favorites_button(self, i):
-        logging.debug('adding FavoritesButton %d' % (i))
+        logger.debug('adding FavoritesButton %d' % (i))
         self._favorites_buttons.append(FavoritesButton(i))
         self._favorites_buttons[i].connect('toggled',
                                            self.__view_button_toggled_cb,
@@ -162,7 +164,7 @@ class ViewToolbar(Gtk.Toolbar):
                                                   self._autosearch_timer_cb)
 
     def _autosearch_timer_cb(self):
-        logging.debug('_autosearch_timer_cb')
+        logger.debug('_autosearch_timer_cb')
         self._autosearch_timer = None
         self.search_entry.activate()
         return False
@@ -185,7 +187,7 @@ class ViewToolbar(Gtk.Toolbar):
             for i in range(len(self._favorites_views_indicies) -
                            number_of_views):
                 n = len(self._favorites_views_indicies) - 1
-                logging.debug('removing FavoritesButton %d' % (n))
+                logger.debug('removing FavoritesButton %d' % (n))
                 button = self._favorites_buttons[n]
                 self._favorites_buttons.remove(button)
                 button.destroy()

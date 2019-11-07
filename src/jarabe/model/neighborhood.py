@@ -72,6 +72,7 @@ will be very slow in returning these queries, so just be patient.
 """
 
 _model = None
+logger = logging.getLogger('neighborhood')
 
 
 class ActivityModel(GObject.GObject):
@@ -226,7 +227,7 @@ class _Account(GObject.GObject):
                                                           error))
 
     def __got_connection_cb(self, connection_path):
-        logging.debug('_Account.__got_connection_cb %r', connection_path)
+        logger.debug('_Account.__got_connection_cb %r', connection_path)
 
         if connection_path == '/':
             self._check_registration_error()
@@ -247,7 +248,7 @@ class _Account(GObject.GObject):
                                       'Account.GetConnectionError'))
 
     def __got_connection_error_cb(self, error):
-        logging.debug('_Account.__got_connection_error_cb %r', error)
+        logger.debug('_Account.__got_connection_error_cb %r', error)
         if error == 'org.freedesktop.Telepathy.Error.RegistrationExists':
             bus = dbus.Bus()
             obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, self.object_path)
@@ -255,7 +256,7 @@ class _Account(GObject.GObject):
                                  dbus_interface=ACCOUNT)
 
     def __account_property_changed_cb(self, properties):
-        logging.debug('_Account.__account_property_changed_cb %r %r %r',
+        logger.debug('_Account.__account_property_changed_cb %r %r %r',
                       self.object_path, properties.get('Connection', None),
                       self._connection)
         if 'Connection' not in properties:
@@ -307,7 +308,7 @@ class _Account(GObject.GObject):
         if not self.conn_ready:
             return
 
-        logging.debug('_Account.__connection_ready_cb %r',
+        logger.debug('_Account.__connection_ready_cb %r',
                       self._object_path)
         connection[CONNECTION].connect_to_signal('StatusChanged',
                                                  self.__status_changed_cb)
@@ -320,12 +321,12 @@ class _Account(GObject.GObject):
                                              'Connection.GetStatus'))
 
     def __get_status_cb(self, status):
-        logging.debug('_Account.__get_status_cb %r %r',
+        logger.debug('_Account.__get_status_cb %r %r',
                       self._object_path, status)
         self._update_status(status)
 
     def __status_changed_cb(self, status, reason):
-        logging.debug('_Account.__status_changed_cb %r %r', status, reason)
+        logger.debug('_Account.__status_changed_cb %r %r', status, reason)
         self._update_status(status)
 
     def _update_status(self, status):
@@ -401,7 +402,7 @@ class _Account(GObject.GObject):
                     'active-activity-changed',
                     self.__active_activity_changed_cb)
         else:
-            logging.warning('Connection %s does not support OLPC buddy '
+            logger.warning('Connection %s does not support OLPC buddy '
                             'properties', self._object_path)
 
         if CONNECTION_INTERFACE_ACTIVITY_PROPERTIES in self._connection:
@@ -411,7 +412,7 @@ class _Account(GObject.GObject):
                 'ActivityPropertiesChanged',
                 self.__activity_properties_changed_cb)
         else:
-            logging.warning('Connection %s does not support OLPC activity '
+            logger.warning('Connection %s does not support OLPC activity '
                             'properties', self._object_path)
 
         properties = {
@@ -464,26 +465,26 @@ class _Account(GObject.GObject):
             error_handler=self.__set_current_activity_error_cb)
 
     def __set_current_activity_cb(self):
-        logging.debug('_Account.__set_current_activity_cb')
+        logger.debug('_Account.__set_current_activity_cb')
 
     def __set_current_activity_error_cb(self, error):
-        logging.debug('_Account.__set_current_activity__error_cb %r', error)
+        logger.debug('_Account.__set_current_activity__error_cb %r', error)
 
     def __update_capabilities_cb(self):
         pass
 
     def __aliases_changed_cb(self, aliases):
-        logging.debug('_Account.__aliases_changed_cb')
+        logger.debug('_Account.__aliases_changed_cb')
         for handle, alias in aliases:
             if handle in self._buddy_handles:
-                logging.debug('Got handle %r with nick %r, going to update',
+                logger.debug('Got handle %r with nick %r, going to update',
                               handle, alias)
                 properties = {CONNECTION_INTERFACE_ALIASING + '/alias': alias}
                 self.emit('buddy-updated', self._buddy_handles[handle],
                           properties)
 
     def __presences_changed_cb(self, presences):
-        logging.debug('_Account.__presences_changed_cb %r', presences)
+        logger.debug('_Account.__presences_changed_cb %r', presences)
         for handle, presence in list(presences.items()):
             if handle in self._buddy_handles:
                 presence_type, status_, message_ = presence
@@ -493,13 +494,13 @@ class _Account(GObject.GObject):
                     self.emit('buddy-removed', contact_id)
 
     def __buddy_info_updated_cb(self, handle, properties):
-        logging.debug('_Account.__buddy_info_updated_cb %r', handle)
+        logger.debug('_Account.__buddy_info_updated_cb %r', handle)
         if handle in self._buddy_handles:
             self.emit('buddy-updated', self._buddy_handles[handle], properties)
 
     def __current_activity_changed_cb(self, contact_handle, activity_id,
                                       room_handle):
-        logging.debug('_Account.__current_activity_changed_cb %r %r %r',
+        logger.debug('_Account.__current_activity_changed_cb %r %r %r',
                       contact_handle, activity_id, room_handle)
         if contact_handle in self._buddy_handles:
             contact_id = self._buddy_handles[contact_handle]
@@ -509,7 +510,7 @@ class _Account(GObject.GObject):
 
     def __get_current_activity_cb(self, contact_handle, activity_id,
                                   room_handle):
-        logging.debug('_Account.__get_current_activity_cb %r %r %r',
+        logger.debug('_Account.__get_current_activity_cb %r %r %r',
                       contact_handle, activity_id, room_handle)
 
         if contact_handle in self._buddy_handles:
@@ -522,7 +523,7 @@ class _Account(GObject.GObject):
         self._update_buddy_activities(buddy_handle, activities)
 
     def _update_buddy_activities(self, buddy_handle, activities):
-        logging.debug('_Account._update_buddy_activities')
+        logger.debug('_Account._update_buddy_activities')
 
         if buddy_handle not in self._activities_per_buddy:
             self._activities_per_buddy[buddy_handle] = set()
@@ -584,7 +585,7 @@ class _Account(GObject.GObject):
                 self._remove_buddy_from_activity(buddy_handle, activity_id)
 
     def __get_properties_cb(self, room_handle, properties):
-        logging.debug('_Account.__get_properties_cb %r %r', room_handle,
+        logger.debug('_Account.__get_properties_cb %r %r', room_handle,
                       properties)
         if properties:
             self._update_activity(room_handle, properties)
@@ -612,7 +613,7 @@ class _Account(GObject.GObject):
             self.emit('activity-removed', activity_id)
 
     def __activity_properties_changed_cb(self, room_handle, properties):
-        logging.debug('_Account.__activity_properties_changed_cb %r %r',
+        logger.debug('_Account.__activity_properties_changed_cb %r %r',
                       room_handle, properties)
         self._update_activity(room_handle, properties)
 
@@ -621,7 +622,7 @@ class _Account(GObject.GObject):
             self.emit('activity-updated', self._activity_handles[room_handle],
                       properties)
         else:
-            logging.debug('_Account.__activity_properties_changed_cb unknown '
+            logger.debug('_Account.__activity_properties_changed_cb unknown '
                           'activity')
             # We don't get ActivitiesChanged for the owner of the connection,
             # so we query for its activities in order to find out.
@@ -639,14 +640,14 @@ class _Account(GObject.GObject):
         self._add_buddy_handles(added)
 
     def __get_members_ready_cb(self, handles):
-        logging.debug('_Account.__get_members_ready_cb %r', handles)
+        logger.debug('_Account.__get_members_ready_cb %r', handles)
         if not handles:
             return
 
         self._add_buddy_handles(handles)
 
     def _add_buddy_handles(self, handles):
-        logging.debug('_Account._add_buddy_handles %r', handles)
+        logger.debug('_Account._add_buddy_handles %r', handles)
         interfaces = [CONNECTION, CONNECTION_INTERFACE_ALIASING]
         self._connection[CONNECTION_INTERFACE_CONTACTS].GetContactAttributes(
             handles, interfaces, False,
@@ -655,29 +656,29 @@ class _Account(GObject.GObject):
                                   'Contacts.GetContactAttributes'))
 
     def __got_buddy_info_cb(self, handle, nick, properties):
-        logging.debug('_Account.__got_buddy_info_cb %r', handle)
+        logger.debug('_Account.__got_buddy_info_cb %r', handle)
         self.emit('buddy-updated', self._buddy_handles[handle], properties)
 
     def __get_contact_attributes_cb(self, attributes):
-        logging.debug('_Account.__get_contact_attributes_cb %r',
+        logger.debug('_Account.__get_contact_attributes_cb %r',
                       list(attributes.keys()))
 
         for handle in list(attributes.keys()):
             nick = attributes[handle][CONNECTION_INTERFACE_ALIASING + '/alias']
 
             if handle == self._self_handle:
-                logging.debug('_Account.__get_contact_attributes_cb,'
+                logger.debug('_Account.__get_contact_attributes_cb,'
                               ' do not add ourself %r', handle)
                 continue
 
             if handle in self._buddy_handles and \
                     not self._buddy_handles[handle] is None:
-                logging.debug('Got handle %r with nick %r, going to update',
+                logger.debug('Got handle %r with nick %r, going to update',
                               handle, nick)
                 self.emit('buddy-updated', self._buddy_handles[handle],
                           attributes[handle])
             else:
-                logging.debug('Got handle %r with nick %r, going to add',
+                logger.debug('Got handle %r with nick %r, going to add',
                               handle, nick)
 
                 contact_id = attributes[handle][CONNECTION + '/contact-id']
@@ -715,16 +716,16 @@ class _Account(GObject.GObject):
                 self.emit('buddy-added', contact_id, nick, handle)
 
     def __got_activities_cb(self, buddy_handle, activities):
-        logging.debug('_Account.__got_activities_cb %r %r', buddy_handle,
+        logger.debug('_Account.__got_activities_cb %r %r', buddy_handle,
                       activities)
         self._update_buddy_activities(buddy_handle, activities)
 
     def enable(self):
-        logging.debug('_Account.enable %s', self.object_path)
+        logger.debug('_Account.enable %s', self.object_path)
         self._set_enabled(True)
 
     def disable(self):
-        logging.debug('_Account.disable %s', self.object_path)
+        logger.debug('_Account.disable %s', self.object_path)
         self._set_enabled(False)
         self._close_connection()
 
@@ -738,7 +739,7 @@ class _Account(GObject.GObject):
                 dbus_interface=dbus.PROPERTIES_IFACE)
 
     def __set_enabled_cb(self):
-        logging.debug('_Account.__set_enabled_cb success')
+        logger.debug('_Account.__set_enabled_cb success')
 
 
 class Neighborhood(GObject.GObject):
@@ -805,12 +806,12 @@ class Neighborhood(GObject.GObject):
         account.connect('disconnected', self.__account_disconnected_cb)
 
     def __account_connected_cb(self, account):
-        logging.debug('__account_connected_cb %s', account.object_path)
+        logger.debug('__account_connected_cb %s', account.object_path)
         if account == self._server_account:
             self._link_local_account.disable()
 
     def __account_disconnected_cb(self, account):
-        logging.debug('__account_disconnected_cb %s', account.object_path)
+        logger.debug('__account_disconnected_cb %s', account.object_path)
         if account == self._server_account:
             self._link_local_account.enable()
 
@@ -829,12 +830,12 @@ class Neighborhood(GObject.GObject):
     def _ensure_link_local_account(self, account_paths):
         for account_path in account_paths:
             if 'salut' in account_path:
-                logging.debug('Already have a Salut account')
+                logger.debug('Already have a Salut account')
                 account = _Account(account_path)
                 account.enable()
                 return account
 
-        logging.debug('Still dont have a Salut account, creating one')
+        logger.debug('Still dont have a Salut account, creating one')
 
         nick = self._settings_user.get_string('nick')
 
@@ -863,12 +864,12 @@ class Neighborhood(GObject.GObject):
     def _ensure_server_account(self, account_paths):
         for account_path in account_paths:
             if 'gabble' in account_path:
-                logging.debug('Already have a Gabble account')
+                logger.debug('Already have a Gabble account')
                 account = _Account(account_path)
                 account.enable()
                 return account
 
-        logging.debug('Still dont have a Gabble account, creating one')
+        logger.debug('Still dont have a Gabble account, creating one')
 
         nick = self._settings_user.get_string('nick')
         server = self._settings_collaboration.get_string('jabber-server')
@@ -907,7 +908,7 @@ class Neighborhood(GObject.GObject):
         return '%s@%s' % (public_key_hash, server)
 
     def __jabber_server_changed_cb(self, settings, key):
-        logging.debug('__jabber_server_changed_cb')
+        logger.debug('__jabber_server_changed_cb')
 
         bus = dbus.Bus()
         account = bus.get_object(ACCOUNT_MANAGER_SERVICE,
@@ -926,7 +927,7 @@ class Neighborhood(GObject.GObject):
         self._update_jid()
 
     def __nick_changed_cb(self, settings, key):
-        logging.debug('__nick_changed_cb')
+        logger.debug('__nick_changed_cb')
 
         nick = settings.get_string('nick')
 
@@ -960,10 +961,10 @@ class Neighborhood(GObject.GObject):
             account.Reconnect()
 
     def __buddy_added_cb(self, account, contact_id, nick, handle):
-        logging.debug('__buddy_added_cb %r', contact_id)
+        logger.debug('__buddy_added_cb %r', contact_id)
 
         if contact_id in self._buddies:
-            logging.debug('__buddy_added_cb buddy already tracked')
+            logger.debug('__buddy_added_cb buddy already tracked')
             return
 
         buddy = BuddyModel(
@@ -974,13 +975,13 @@ class Neighborhood(GObject.GObject):
         self._buddies[contact_id] = buddy
 
     def __buddy_updated_cb(self, account, contact_id, properties):
-        logging.debug('__buddy_updated_cb %r', contact_id)
+        logger.debug('__buddy_updated_cb %r', contact_id)
         if contact_id is None:
             # Don't know the contact-id yet, will get the full state later
             return
 
         if contact_id not in self._buddies:
-            logging.debug('__buddy_updated_cb Unknown buddy with contact_id'
+            logger.debug('__buddy_updated_cb Unknown buddy with contact_id'
                           ' %r', contact_id)
             return
 
@@ -1003,9 +1004,9 @@ class Neighborhood(GObject.GObject):
             self.emit('buddy-added', buddy)
 
     def __buddy_removed_cb(self, account, contact_id):
-        logging.debug('Neighborhood.__buddy_removed_cb %r', contact_id)
+        logger.debug('Neighborhood.__buddy_removed_cb %r', contact_id)
         if contact_id not in self._buddies:
-            logging.debug('Neighborhood.__buddy_removed_cb Unknown buddy with '
+            logger.debug('Neighborhood.__buddy_removed_cb Unknown buddy with '
                           'contact_id %r', contact_id)
             return
 
@@ -1016,25 +1017,25 @@ class Neighborhood(GObject.GObject):
             self.emit('buddy-removed', buddy)
 
     def __activity_added_cb(self, account, room_handle, activity_id):
-        logging.debug('__activity_added_cb %r %r', room_handle, activity_id)
+        logger.debug('__activity_added_cb %r %r', room_handle, activity_id)
         if activity_id in self._activities:
-            logging.debug('__activity_added_cb activity already tracked')
+            logger.debug('__activity_added_cb activity already tracked')
             return
 
         activity = ActivityModel(activity_id, room_handle)
         self._activities[activity_id] = activity
 
     def __activity_updated_cb(self, account, activity_id, properties):
-        logging.debug('__activity_updated_cb %r %r', activity_id, properties)
+        logger.debug('__activity_updated_cb %r %r', activity_id, properties)
         if activity_id not in self._activities:
-            logging.debug('__activity_updated_cb Unknown activity with '
+            logger.debug('__activity_updated_cb Unknown activity with '
                           'activity_id %r', activity_id)
             return
 
         registry = bundleregistry.get_registry()
         bundle = registry.get_bundle(properties['type'])
         if not bundle:
-            logging.warning('Ignoring shared activity we don''t have')
+            logger.warning('Ignoring shared activity we don''t have')
             return
 
         activity = self._activities[activity_id]
@@ -1053,9 +1054,9 @@ class Neighborhood(GObject.GObject):
             self.emit('activity-added', activity)
 
     def __activity_removed_cb(self, account, activity_id):
-        logging.debug('__activity_removed_cb %r', activity_id)
+        logger.debug('__activity_removed_cb %r', activity_id)
         if activity_id not in self._activities:
-            logging.debug('Unknown activity with id %s. Already removed?',
+            logger.debug('Unknown activity with id %s. Already removed?',
                           activity_id)
             return
         activity = self._activities[activity_id]
@@ -1066,14 +1067,14 @@ class Neighborhood(GObject.GObject):
             self.emit('activity-removed', activity)
 
     def __current_activity_updated_cb(self, account, contact_id, activity_id):
-        logging.debug('__current_activity_updated_cb %r %r', contact_id,
+        logger.debug('__current_activity_updated_cb %r %r', contact_id,
                       activity_id)
         if contact_id not in self._buddies:
-            logging.debug('__current_activity_updated_cb Unknown buddy with '
+            logger.debug('__current_activity_updated_cb Unknown buddy with '
                           'contact_id %r', contact_id)
             return
         if activity_id and activity_id not in self._activities:
-            logging.debug('__current_activity_updated_cb Unknown activity with'
+            logger.debug('__current_activity_updated_cb Unknown activity with'
                           ' id %s', activity_id)
             activity_id = ''
 
@@ -1092,12 +1093,12 @@ class Neighborhood(GObject.GObject):
 
     def __buddy_joined_activity_cb(self, account, contact_id, activity_id):
         if contact_id not in self._buddies:
-            logging.debug('__buddy_joined_activity_cb Unknown buddy with '
+            logger.debug('__buddy_joined_activity_cb Unknown buddy with '
                           'contact_id %r', contact_id)
             return
 
         if activity_id not in self._activities:
-            logging.debug('__buddy_joined_activity_cb Unknown activity with '
+            logger.debug('__buddy_joined_activity_cb Unknown activity with '
                           'activity_id %r', activity_id)
             return
 
@@ -1105,12 +1106,12 @@ class Neighborhood(GObject.GObject):
 
     def __buddy_left_activity_cb(self, account, contact_id, activity_id):
         if contact_id not in self._buddies:
-            logging.debug('__buddy_left_activity_cb Unknown buddy with '
+            logger.debug('__buddy_left_activity_cb Unknown buddy with '
                           'contact_id %r', contact_id)
             return
 
         if activity_id not in self._activities:
-            logging.debug('__buddy_left_activity_cb Unknown activity with '
+            logger.debug('__buddy_left_activity_cb Unknown activity with '
                           'activity_id %r', activity_id)
             return
 

@@ -47,6 +47,8 @@ from jarabe.journal import journalwindow
 
 PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
+logger = logging.getLogger('misc')
+
 
 def _get_icon_for_mime(mime_type):
     generic_types = mime.get_all_generic_types()
@@ -57,7 +59,7 @@ def _get_icon_for_mime(mime_type):
                 return file_name
 
     icons = Gio.content_type_get_icon(mime_type)
-    logging.debug('icons for this file: %r', icons.props.names)
+    logger.debug('icons for this file: %r', icons.props.names)
     for icon_name in icons.props.names:
         file_name = get_icon_file_name(icon_name)
         if file_name is not None:
@@ -77,7 +79,7 @@ def get_mount_icon_name(mount, size):
                 if '/icons/sugar/' not in file_name:
                     continue
                 return icon_name
-    logging.error('Cannot find icon name for %s, %s', icon, mount)
+    logger.error('Cannot find icon name for %s, %s', icon, mount)
     return 'drive'
 
 
@@ -107,7 +109,7 @@ def get_icon_name(metadata):
                 bundle = get_bundle_instance(file_path)
                 file_name = bundle.get_icon()
             except Exception:
-                logging.exception('Could not read bundle')
+                logger.exception('Could not read bundle')
 
     if file_name is None:
         file_name = _get_icon_for_mime(metadata.get('mime_type', ''))
@@ -124,7 +126,7 @@ def get_date(metadata):
         try:
             timestamp = float(metadata['timestamp'])
         except (TypeError, ValueError):
-            logging.warning('Invalid timestamp: %r', metadata['timestamp'])
+            logger.warning('Invalid timestamp: %r', metadata['timestamp'])
         else:
             return util.timestamp_to_elapsed_string(timestamp)
 
@@ -132,7 +134,7 @@ def get_date(metadata):
         try:
             ti = time.strptime(metadata['mtime'], '%Y-%m-%dT%H:%M:%S')
         except (TypeError, ValueError):
-            logging.warning('Invalid mtime: %r', metadata['mtime'])
+            logger.warning('Invalid mtime: %r', metadata['mtime'])
         else:
             return util.timestamp_to_elapsed_string(time.mktime(ti))
 
@@ -144,27 +146,27 @@ def get_bundle(metadata):
         if is_activity_bundle(metadata):
             file_path = model.get_file(metadata['uid'])
             if not os.path.exists(file_path):
-                logging.warning('Invalid path: %r', file_path)
+                logger.warning('Invalid path: %r', file_path)
                 return None
             return get_bundle_instance(file_path)
 
         elif is_content_bundle(metadata):
             file_path = model.get_file(metadata['uid'])
             if not os.path.exists(file_path):
-                logging.warning('Invalid path: %r', file_path)
+                logger.warning('Invalid path: %r', file_path)
                 return None
             return ContentBundle(file_path)
 
         elif is_journal_bundle(metadata):
             file_path = model.get_file(metadata['uid'])
             if not os.path.exists(file_path):
-                logging.warning('Invalid path: %r', file_path)
+                logger.warning('Invalid path: %r', file_path)
                 return None
             return JournalEntryBundle(file_path, metadata['uid'])
         else:
             return None
     except Exception:
-        logging.exception('Incorrect bundle')
+        logger.exception('Incorrect bundle')
         return None
 
 
@@ -201,7 +203,7 @@ def get_activities(metadata):
 def get_bundle_id_from_metadata(metadata):
     activities = get_activities(metadata)
     if not activities:
-        logging.warning('No activity can open this object, %s.',
+        logger.warning('No activity can open this object, %s.',
                         metadata.get('mime_type', None))
         return None
     return activities[0].get_bundle_id()
@@ -245,7 +247,7 @@ def resume(metadata, bundle_id=None, alert_window=None,
     if bundle_id is None:
         activities = get_activities(metadata)
         if not activities:
-            logging.warning('No activity can open this object, %s.',
+            logger.warning('No activity can open this object, %s.',
                             metadata.get('mime_type', None))
             return
         bundle_id = activities[0].get_bundle_id()
@@ -267,7 +269,7 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
     if activity_id is None or not activity_id:
         activity_id = activityfactory.create_activity_id()
 
-    logging.debug('launch bundle_id=%s activity_id=%s object_id=%s uri=%s',
+    logger.debug('launch bundle_id=%s activity_id=%s object_id=%s uri=%s',
                   bundle.get_bundle_id(), activity_id, object_id, uri)
 
     if isinstance(bundle, ContentBundle):
@@ -276,15 +278,15 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
         uri = bundle.get_start_uri()
         activities = get_activities_for_mime('text/html')
         if len(activities) == 0:
-            logging.error("No browser available for content bundle")
+            logger.error("No browser available for content bundle")
             return
         bundle = activities[0]
-        logging.debug('Launching content bundle with uri %s', uri)
+        logger.debug('Launching content bundle with uri %s', uri)
 
     shell_model = shell.get_model()
     activity = shell_model.get_activity_by_id(activity_id)
     if activity is not None:
-        logging.debug('re-launch %r', activity.get_window())
+        logger.debug('re-launch %r', activity.get_window())
         activity.get_window().activate(Gtk.get_current_event_time())
         return
 
@@ -388,7 +390,7 @@ def handle_bundle_installation(metadata, force_downgrade=False):
     except AlreadyInstalledException:
         return bundle, True
     except (ZipExtractException, RegistrationException):
-        logging.exception('Could not install bundle %s', bundle.get_path())
+        logger.exception('Could not install bundle %s', bundle.get_path())
         return None, False
     finally:
         window.set_cursor(None)

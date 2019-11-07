@@ -25,6 +25,7 @@ from jarabe.model import shell
 
 
 _session_manager = None
+logger = logging.getLogger('session')
 
 
 def have_systemd():
@@ -109,7 +110,7 @@ class SessionManager(GObject.GObject):
                     elif self._logout_mode == self.MODE_REBOOT:
                         pm.Reboot(True)
                 except:
-                    logging.exception('Can not stop sugar')
+                    logger.exception('Can not stop sugar')
                     self.session.cancel_shutdown()
                     return
             else:
@@ -125,7 +126,7 @@ class SessionManager(GObject.GObject):
                     elif self._logout_mode == self.MODE_REBOOT:
                         pm.Restart()
                 except:
-                    logging.exception('Can not stop sugar')
+                    logger.exception('Can not stop sugar')
                     self.session.cancel_shutdown()
                     return
 

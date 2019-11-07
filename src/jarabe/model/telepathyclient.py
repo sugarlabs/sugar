@@ -36,6 +36,7 @@ SUGAR_CLIENT_SERVICE = 'org.freedesktop.Telepathy.Client.Sugar'
 SUGAR_CLIENT_PATH = '/org/freedesktop/Telepathy/Client/Sugar'
 
 _instance = None
+logger = logging.getLogger('telepathyclient')
 
 
 class TelepathyClient(dbus.service.Object):
@@ -91,14 +92,14 @@ class TelepathyClient(dbus.service.Object):
         filter_dict = dbus.Dictionary(ft_invitation, signature='sv')
         filters.append(filter_dict)
 
-        logging.debug('__get_filters_approver_cb %r', filters)
+        logger.debug('__get_filters_approver_cb %r', filters)
         return filters
 
     @dbus.service.method(dbus_interface=CLIENT_HANDLER,
                          in_signature='ooa(oa{sv})aota{sv}', out_signature='')
     def HandleChannels(self, account, connection, channels, requests_satisfied,
                        user_action_time, handler_info):
-        logging.debug('HandleChannels\n%r\n%r\n%r\n%r\n%r\n%r\n', account,
+        logger.debug('HandleChannels\n%r\n%r\n%r\n%r\n%r\n%r\n', account,
                       connection, channels, requests_satisfied,
                       user_action_time, handler_info)
         for channel in channels:
@@ -108,7 +109,7 @@ class TelepathyClient(dbus.service.Object):
     @dbus.service.method(dbus_interface=CLIENT_INTERFACE_REQUESTS,
                          in_signature='oa{sv}', out_signature='')
     def AddRequest(self, request, properties):
-        logging.debug('AddRequest\n%r\n%r', request, properties)
+        logger.debug('AddRequest\n%r\n%r', request, properties)
 
     @dbus.service.method(dbus_interface=CLIENT_APPROVER,
                          in_signature='a(oa{sv})oa{sv}', out_signature='',
@@ -117,7 +118,7 @@ class TelepathyClient(dbus.service.Object):
                              properties, success_cb, error_cb_):
         success_cb()
         try:
-            logging.debug('AddDispatchOperation\n%r\n%r\n%r', channels,
+            logger.debug('AddDispatchOperation\n%r\n%r\n%r', channels,
                           dispatch_operation_path, properties)
 
             self.got_dispatch_operation.send(
@@ -126,7 +127,7 @@ class TelepathyClient(dbus.service.Object):
                 dispatch_operation_path=dispatch_operation_path,
                 properties=properties)
         except Exception as e:
-            logging.exception(e)
+            logger.exception(e)
 
     @dbus.service.method(dbus_interface=dbus.PROPERTIES_IFACE,
                          in_signature='ss', out_signature='v')
@@ -135,7 +136,7 @@ class TelepathyClient(dbus.service.Object):
                 and property_name in self._prop_getters[interface_name]:
             return self._prop_getters[interface_name][property_name]()
         else:
-            logging.debug('InvalidArgument')
+            logger.debug('InvalidArgument')
 
     @dbus.service.method(dbus_interface=dbus.PROPERTIES_IFACE,
                          in_signature='ssv', out_signature='')
@@ -144,7 +145,7 @@ class TelepathyClient(dbus.service.Object):
                 and property_name in self._prop_setters[interface_name]:
             self._prop_setters[interface_name][property_name](value)
         else:
-            logging.debug('PermissionDenied')
+            logger.debug('PermissionDenied')
 
     @dbus.service.method(dbus_interface=dbus.PROPERTIES_IFACE,
                          in_signature='s', out_signature='a{sv}')
@@ -155,7 +156,7 @@ class TelepathyClient(dbus.service.Object):
                 r[k] = v()
             return r
         else:
-            logging.debug('InvalidArgument')
+            logger.debug('InvalidArgument')
 
 
 def get_instance():

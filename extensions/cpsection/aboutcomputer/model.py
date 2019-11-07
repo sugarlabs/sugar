@@ -32,7 +32,7 @@ _OFW_TREE = '/ofw'
 _PROC_TREE = '/proc/device-tree'
 _DMI_DIRECTORY = '/sys/class/dmi/id'
 
-_logger = logging.getLogger('ControlPanel - AboutComputer')
+logger = logging.getLogger('model')
 _not_available = _('Not available')
 
 _serial_no = None
@@ -149,7 +149,7 @@ def get_secondary_licenses():
                 with open(file_path) as f:
                     licenses.append(f.read())
             except IOError:
-                logging.error('Error trying open %s', file_path)
+                logger.error('Error trying open %s', file_path)
     return licenses
 
 

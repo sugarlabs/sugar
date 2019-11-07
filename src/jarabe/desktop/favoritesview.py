@@ -172,7 +172,7 @@ class FavoritesView(ViewContainer):
 
     def _set_layout(self, layout):
         if layout not in LAYOUT_MAP:
-            logging.warn('Unknown favorites layout: %r', layout)
+            _logger.warn('Unknown favorites layout: %r', layout)
             layout = favoriteslayout.RingLayout.key
             assert layout in LAYOUT_MAP
 
@@ -475,7 +475,7 @@ class ActivityIcon(CanvasIcon):
         self._update()
 
     def __get_last_activity_error_handler_cb(self, error):
-        logging.error('Error retrieving most recent activities: %r', error)
+        _logger.error('Error retrieving most recent activities: %r', error)
 
     def _update(self):
         self.palette = None
@@ -719,7 +719,7 @@ class FavoritesSetting(object):
 
         self._layout = homeviews[self._favorite_view]['layout']
 
-        logging.debug('FavoritesSetting layout %r', self._layout)
+        _logger.debug('FavoritesSetting layout %r', self._layout)
 
         self._mode = None
 
@@ -729,7 +729,7 @@ class FavoritesSetting(object):
         return self._layout
 
     def set_layout(self, layout):
-        logging.debug('set_layout %r %r', layout, self._layout)
+        _logger.debug('set_layout %r %r', layout, self._layout)
         if layout != self._layout:
             self._layout = layout
 

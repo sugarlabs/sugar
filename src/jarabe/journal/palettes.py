@@ -46,6 +46,8 @@ from jarabe.journal.misc import get_mount_color
 
 PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
+logger = logging.getLogger('Journal-palettes')
+
 
 class ObjectPalette(Palette):
 
@@ -177,7 +179,7 @@ class ObjectPalette(Palette):
         try:
             model.copy(self._metadata, '/')
         except IOError as e:
-            logging.exception('Error while copying the entry. %s', e.strerror)
+            logger.exception('Error while copying the entry. %s', e.strerror)
             self.emit('volume-error',
                       _('Error while copying the entry. %s') % e.strerror,
                       _('Error'))
@@ -214,11 +216,11 @@ class ObjectPalette(Palette):
         self.emit('volume-error', message, severity)
 
     def __friend_selected_cb(self, menu_item, buddy):
-        logging.debug('__friend_selected_cb')
+        logger.debug('__friend_selected_cb')
         file_name = model.get_file(self._metadata['uid'])
 
         if not file_name or not os.path.exists(file_name):
-            logging.warn('Entries without a file cannot be sent.')
+            logger.warn('Entries without a file cannot be sent.')
             self.emit('volume-error',
                       _('Entries without a file cannot be sent.'),
                       _('Warning'))
@@ -387,7 +389,7 @@ class VolumeMenu(MenuItem):
             file_path = model.get_file(uid)
 
             if not file_path or not os.path.exists(file_path):
-                logging.warn('Entries without a file cannot be copied.')
+                logger.warn('Entries without a file cannot be copied.')
                 self.emit('volume-error',
                           _('Entries without a file cannot be copied.'),
                           _('Warning'))
@@ -397,7 +399,7 @@ class VolumeMenu(MenuItem):
                 metadata = model.get(uid)
                 model.copy(metadata, self._mount_point)
             except IOError as e:
-                logging.exception('Error while copying the entry. %s',
+                logger.exception('Error while copying the entry. %s',
                                   e.strerror)
                 self.emit('volume-error',
                           _('Error while copying the entry. %s') % e.strerror,
@@ -416,12 +418,12 @@ class VolumeMenu(MenuItem):
     def _perform_copy(self, metadata):
         file_path = model.get_file(metadata['uid'])
         if not file_path or not os.path.exists(file_path):
-            logging.warn('Entries without a file cannot be copied.')
+            logger.warn('Entries without a file cannot be copied.')
             return
         try:
             model.copy(metadata, self._mount_point)
         except IOError as e:
-            logging.exception('Error while copying the entry. %s',
+            logger.exception('Error while copying the entry. %s',
                               e.strerror)
 
 
@@ -447,7 +449,7 @@ class ClipboardMenu(MenuItem):
             uid = uid_list[0]
             file_path = model.get_file(uid)
             if not file_path or not os.path.exists(file_path):
-                logging.warn('Entries without a file cannot be copied.')
+                logger.warn('Entries without a file cannot be copied.')
                 self.emit('volume-error',
                           _('Entries without a file cannot be copied.'),
                           _('Warning'))
@@ -472,7 +474,7 @@ class ClipboardMenu(MenuItem):
         # Get hold of a reference so the temp file doesn't get deleted
         for uid in self._get_uid_list_cb():
             self._temp_file_path = model.get_file(uid)
-            logging.debug('__clipboard_get_func_cb %r', self._temp_file_path)
+            logger.debug('__clipboard_get_func_cb %r', self._temp_file_path)
             selection_data.set_uris(['file://' + self._temp_file_path])
 
     def __clipboard_clear_func_cb(self, clipboard, data):

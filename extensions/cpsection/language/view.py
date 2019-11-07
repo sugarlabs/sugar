@@ -31,6 +31,8 @@ from sugar3.graphics.palettemenu import PaletteMenuItem
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
+logger = logging.getLogger('language-view')
+
 
 def _translate_language(msg):
     return gettext.dgettext('iso_639', msg)
@@ -395,7 +397,7 @@ class Language(SectionView):
             self._lang_alert.props.msg = self.restart_msg
             self._lang_alert.show()
         except IOError as e:
-            logging.exception('Error writing i18n config %s', e)
+            logger.exception('Error writing i18n config %s', e)
             self.undo()
             self._lang_alert.props.msg = gettext.gettext(
                 'Error writing language configuration (%s)') % e

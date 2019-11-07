@@ -28,6 +28,8 @@ from jarabe.model.network import IP4Config
 
 _adhoc_manager_instance = None
 
+logger = logging.getLogger('adhoc')
+
 
 def get_adhoc_manager_instance():
     global _adhoc_manager_instance
@@ -135,7 +137,7 @@ class AdHocManager(GObject.GObject):
         self._update_state()
 
     def __get_all_ap_props_error_cb(self, err):
-        logging.error('Error getting the access point properties: %s', err)
+        logger.error('Error getting the access point properties: %s', err)
 
     def _update_state(self):
         self.emit('state-changed', self._current_channel, self._device_state)
@@ -155,10 +157,10 @@ class AdHocManager(GObject.GObject):
 
     def __idle_check_cb(self):
         if self._device_state == network.NM_DEVICE_STATE_DISCONNECTED:
-            logging.debug('Connect to Ad-hoc network due to inactivity.')
+            logger.debug('Connect to Ad-hoc network due to inactivity.')
             self._autoconnect_adhoc()
         else:
-            logging.debug('autoconnect Sugar Ad-hoc: already connected')
+            logger.debug('autoconnect Sugar Ad-hoc: already connected')
         self._idle_source = 0
         return False
 
@@ -169,7 +171,7 @@ class AdHocManager(GObject.GObject):
         """
         if self._autoconnect_enabled is False and \
                 self._last_channel is None:
-            logging.debug('autoconnect Sugar Ad-hoc: is not enabled.')
+            logger.debug('autoconnect Sugar Ad-hoc: is not enabled.')
             return
 
         self.activate_channel(self._last_channel or self._CHANNEL_1)
@@ -235,13 +237,13 @@ class AdHocManager(GObject.GObject):
                     self._last_channel = None
 
     def __get_active_connections_error_cb(self, err):
-        logging.error('Error getting the active connections: %s', err)
+        logger.error('Error getting the active connections: %s', err)
 
     def __activate_reply_cb(self, connection):
-        logging.debug('Ad-hoc network created: %s', connection)
+        logger.debug('Ad-hoc network created: %s', connection)
 
     def __activate_error_cb(self, err):
-        logging.error('Failed to create Ad-hoc network: %s', err)
+        logger.error('Failed to create Ad-hoc network: %s', err)
 
     def add_access_point(self, access_point):
         """Add an access point to a network and notify the view to idicate

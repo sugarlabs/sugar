@@ -42,6 +42,8 @@ _APPLY_TIMEOUT = 500
 
 _iso_639_1_to_2 = {}
 
+logger = logging.getLogger('keyboard-view')
+
 
 def _build_ISO_639_dictionary():
     """ The keyboard section of the control panel requires a conversion
@@ -60,7 +62,7 @@ def _build_ISO_639_dictionary():
             if codes[2] != '':
                 _iso_639_1_to_2[codes[2]] = codes[0]
     else:
-        logging.error('%s not found' % (ISO_DATA_FILE))
+        logger.error('%s not found' % (ISO_DATA_FILE))
 
 
 class LayoutCombo(Gtk.HBox):
@@ -283,7 +285,7 @@ class Keyboard(SectionView):
         try:
             self._keyboard_manager.set_model(self._selected_kmodel)
         except Exception:
-            logging.exception('Could not set new keyboard model')
+            logger.exception('Could not set new keyboard model')
 
         return False
 
@@ -352,7 +354,7 @@ class Keyboard(SectionView):
             self._keyboard_manager.set_option_group(
                 self._selected_group_switch_option)
         except Exception:
-            logging.exception('Could not set new keyboard group switch option')
+            logger.exception('Could not set new keyboard group switch option')
 
         return False
 
@@ -461,7 +463,7 @@ class Keyboard(SectionView):
         try:
             self._keyboard_manager.set_layouts(self._selected_klayouts)
         except Exception:
-            logging.exception('Could not set new keyboard layouts')
+            logger.exception('Could not set new keyboard layouts')
 
         return False
 

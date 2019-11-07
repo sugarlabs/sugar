@@ -33,6 +33,8 @@ from jarabe.model import bundleregistry
 
 from jarabe.journal.iconview import IconView
 
+logger = logging.getLogger('objectchooser')
+
 
 class ObjectChooser(Gtk.Window):
 
@@ -61,7 +63,7 @@ class ObjectChooser(Gtk.Window):
         self.connect('key-press-event', self.__key_press_event_cb)
 
         if parent is None:
-            logging.warning('ObjectChooser: No parent window specified')
+            logger.warning('ObjectChooser: No parent window specified')
         else:
             self.connect('realize', self.__realize_cb, parent)
 
@@ -145,11 +147,11 @@ class ObjectChooser(Gtk.Window):
             self._icon_view.update_with_query(query)
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
-        logging.debug('Selected volume: %r.', mount_point)
+        logger.debug('Selected volume: %r.', mount_point)
         self._toolbar.set_mount_point(mount_point)
 
     def __visibility_notify_event_cb(self, window, event):
-        logging.debug('visibility_notify_event_cb %r', self)
+        logger.debug('visibility_notify_event_cb %r', self)
         visible = event.get_state() == Gdk.VisibilityState.FULLY_OBSCURED
         if not self._show_preview:
             self._list_view.set_is_visible(visible)

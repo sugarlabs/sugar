@@ -38,6 +38,8 @@ CONF_SP_COUNTRY = 'country'
 CONF_SP_PROVIDER = 'provider'
 CONF_SP_PLAN = 'plan'
 
+logger = logging.getLogger('modemconfiguration')
+
 
 def get_connection():
     return network.find_gsm_connection()
@@ -70,9 +72,9 @@ def get_modem_settings(callback):
         secrets_call_done[0] = True
         if isinstance(err, dbus.exceptions.DBusException) and \
                 err.get_dbus_name() == network.NM_AGENT_MANAGER_ERR_NO_SECRETS:
-            logging.error('No GSM secrets present')
+            logger.error('No GSM secrets present')
         else:
-            logging.error('Error retrieving GSM secrets: %s', err)
+            logger.error('Error retrieving GSM secrets: %s', err)
 
         callback(modem_settings)
 
@@ -195,7 +197,7 @@ class CountryCodeParser(object):
             # Error reading ISO 3166 alpha-2 country code file
             msg = ("Mobile broadband provider database: Country "
                    "codes path %s not found.") % COUNTRY_CODES_PATH
-            logging.warning(msg)
+            logger.warning(msg)
             raise ServiceProvidersError(msg)
 
         return data
@@ -218,7 +220,7 @@ class ServiceProvidersParser(object):
         except (IOError, SyntaxError) as e:
             msg = ("Mobile broadband provider database: Could not read "
                    "provider information %s error=%s") % (PROVIDERS_PATH, e)
-            logging.warning(msg)
+            logger.warning(msg)
             raise ServiceProvidersError(msg)
 
         # Check service provider database format
@@ -226,7 +228,7 @@ class ServiceProvidersParser(object):
         if self.root.get('format') != PROVIDERS_FORMAT_SUPPORTED:
             msg = ("Mobile broadband provider database: Could not "
                    "read provider information. Wrong format.")
-            logging.warning(msg)
+            logger.warning(msg)
             raise ServiceProvidersError(msg)
 
         # Populate countries list

@@ -51,6 +51,8 @@ from jarabe.frame.notification import NotificationButton
 from jarabe.frame.notification import NotificationPulsingIcon
 import jarabe.frame
 
+logger = logging.getLogger('activitiestray')
+
 
 class ActivityButton(RadioToolButton):
 
@@ -269,7 +271,7 @@ class ActivitiesTray(HTray):
         service.buffer_cleared.connect(self.__buffer_cleared_cb)
 
     def __notification_received_cb(self, **kwargs):
-        logging.debug('ActivitiesTray.__notification_received_cb')
+        logger.debug('ActivitiesTray.__notification_received_cb')
 
         name = kwargs.get('app_name')
 
@@ -292,7 +294,7 @@ class ActivitiesTray(HTray):
             button.show_badge()
 
     def __buffer_cleared_cb(self, **kwargs):
-        logging.debug('ActivitiesTray.__buffer_cleared_cb')
+        logger.debug('ActivitiesTray.__buffer_cleared_cb')
 
         name = kwargs.get('app_name', None)
 
@@ -306,7 +308,7 @@ class ActivitiesTray(HTray):
             button.hide_badge()
 
     def __activity_added_cb(self, home_model, home_activity):
-        logging.debug('__activity_added_cb: %r', home_activity)
+        logger.debug('__activity_added_cb: %r', home_activity)
         if self.get_children():
             group = self.get_children()[0]
         else:
@@ -320,7 +322,7 @@ class ActivitiesTray(HTray):
         button.show()
 
     def __activity_removed_cb(self, home_model, home_activity):
-        logging.debug('__activity_removed_cb: %r', home_activity)
+        logger.debug('__activity_removed_cb: %r', home_activity)
         button = self._buttons[home_activity]
         self.remove_item(button)
         del self._buttons[home_activity]
@@ -340,7 +342,7 @@ class ActivitiesTray(HTray):
             x11_window.process_updates(True)
 
     def __activity_changed_cb(self, home_model, home_activity):
-        logging.debug('__activity_changed_cb: %r', home_activity)
+        logger.debug('__activity_changed_cb: %r', home_activity)
 
         if home_activity is None:
             return
@@ -350,7 +352,7 @@ class ActivitiesTray(HTray):
             self._activate_activity(home_activity)
 
     def __tabbing_activity_changed_cb(self, home_model, home_activity):
-        logging.debug('__tabbing_activity_changed_cb: %r', home_activity)
+        logger.debug('__tabbing_activity_changed_cb: %r', home_activity)
         # If the tabbing_activity is set to None just do nothing.
         # The active activity will be updated a bit later (and it will
         # be set to the activity that is currently selected).
@@ -361,7 +363,7 @@ class ActivitiesTray(HTray):
 
     def __activity_clicked_cb(self, button, home_activity):
         if not self._freeze_button_clicks and button.props.active:
-            logging.debug('ActivitiesTray.__activity_clicked_cb')
+            logger.debug('ActivitiesTray.__activity_clicked_cb')
             window = home_activity.get_window()
             if window:
                 window.activate(Gtk.get_current_event_time())
@@ -392,7 +394,7 @@ class ActivitiesTray(HTray):
 
     def __new_file_transfer_cb(self, **kwargs):
         file_transfer = kwargs['file_transfer']
-        logging.debug('__new_file_transfer_cb %r', file_transfer)
+        logger.debug('__new_file_transfer_cb %r', file_transfer)
 
         if isinstance(file_transfer, filetransfer.IncomingFileTransfer):
             button = IncomingTransferButton(file_transfer)
@@ -438,7 +440,7 @@ class BaseTransferButton(ToolButton):
         self.props.parent.remove(self)
 
     def __notify_state_cb(self, file_transfer, pspec):
-        logging.debug('_update state: %r %r', file_transfer.props.state,
+        logger.debug('_update state: %r %r', file_transfer.props.state,
                       file_transfer.reason_last_change)
         if file_transfer.props.state == filetransfer.FT_STATE_CANCELLED:
             if file_transfer.reason_last_change == \
@@ -486,7 +488,7 @@ class IncomingTransferButton(BaseTransferButton):
 
     def __notify_state_cb(self, file_transfer, pspec):
         if file_transfer.props.state == filetransfer.FT_STATE_OPEN:
-            logging.debug('__notify_state_cb OPEN')
+            logger.debug('__notify_state_cb OPEN')
             self._ds_object.metadata['title'] = file_transfer.title
             self._ds_object.metadata['description'] = file_transfer.description
             self._ds_object.metadata['progress'] = '0'
@@ -497,14 +499,14 @@ class IncomingTransferButton(BaseTransferButton):
                 file_transfer.buddy.props.color.to_string()
             self._ds_object.metadata['mime_type'] = file_transfer.mime_type
         elif file_transfer.props.state == filetransfer.FT_STATE_COMPLETED:
-            logging.debug('__notify_state_cb COMPLETED')
+            logger.debug('__notify_state_cb COMPLETED')
             self._ds_object.metadata['progress'] = '100'
             self._ds_object.file_path = file_transfer.destination_path
             datastore.write(self._ds_object, transfer_ownership=True,
                             reply_handler=self.__reply_handler_cb,
                             error_handler=self.__error_handler_cb)
         elif file_transfer.props.state == filetransfer.FT_STATE_CANCELLED:
-            logging.debug('__notify_state_cb CANCELLED')
+            logger.debug('__notify_state_cb CANCELLED')
             object_id = self._ds_object.object_id
             if object_id is not None:
                 self._ds_object.destroy()
@@ -518,10 +520,10 @@ class IncomingTransferButton(BaseTransferButton):
         datastore.write(self._ds_object, update_mtime=False)
 
     def __reply_handler_cb(self):
-        logging.debug('__reply_handler_cb %r', self._ds_object.object_id)
+        logger.debug('__reply_handler_cb %r', self._ds_object.object_id)
 
     def __error_handler_cb(self, error):
-        logging.debug('__error_handler_cb %r %s', self._ds_object.object_id,
+        logger.debug('__error_handler_cb %r %s', self._ds_object.object_id,
                       error)
 
     def __dismiss_clicked_cb(self, palette):
@@ -609,7 +611,7 @@ class BaseTransferPalette(Palette):
             return _('%d MiB') % (size / 1048576)
 
     def update_progress(self):
-        logging.debug('update_progress: %r',
+        logger.debug('update_progress: %r',
                       self.file_transfer.props.transferred_bytes)
 
         if self.progress_bar is None:
@@ -618,7 +620,7 @@ class BaseTransferPalette(Palette):
         self.progress_bar.props.fraction = \
             self.file_transfer.props.transferred_bytes / \
             float(self.file_transfer.file_size)
-        logging.debug('update_progress: %r', self.progress_bar.props.fraction)
+        logger.debug('update_progress: %r', self.progress_bar.props.fraction)
 
         transferred = self._format_size(
             self.file_transfer.props.transferred_bytes)
@@ -652,7 +654,7 @@ class IncomingTransferPalette(BaseTransferPalette):
         self.set_content(box)
         box.show()
 
-        logging.debug('_update state: %r', self.file_transfer.props.state)
+        logger.debug('_update state: %r', self.file_transfer.props.state)
         if self.file_transfer.props.state == filetransfer.FT_STATE_PENDING:
             menu_item = PaletteMenuItem(_('Accept'))
             icon = Icon(icon_name='dialog-ok',
@@ -815,7 +817,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
 
     def _update(self):
         new_state = self.file_transfer.props.state
-        logging.debug('_update state: %r', new_state)
+        logger.debug('_update state: %r', new_state)
 
         box = PaletteMenuBox()
         self.set_content(box)

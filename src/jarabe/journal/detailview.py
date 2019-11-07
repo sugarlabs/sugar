@@ -25,6 +25,8 @@ from sugar3.graphics.icon import Icon
 from jarabe.journal.expandedentry import ExpandedEntry
 from jarabe.journal import model
 
+logger = logging.getLogger('detailview')
+
 
 class DetailView(Gtk.VBox):
     __gtype_name__ = 'DetailView'
@@ -64,7 +66,7 @@ class DetailView(Gtk.VBox):
         self.show_all()
 
     def refresh(self):
-        logging.debug('DetailView.refresh')
+        logger.debug('DetailView.refresh')
         self._metadata = model.get(self._metadata['uid'])
         self._update_view()
 

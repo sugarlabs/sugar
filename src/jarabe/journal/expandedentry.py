@@ -39,6 +39,8 @@ from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal import journalwindow
 
+logger = logging.getLogger('expandentry')
+
 
 class Separator(Gtk.VBox):
 
@@ -426,7 +428,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             try:
                 timestamp = float(self._metadata['timestamp'])
             except (ValueError, TypeError):
-                logging.warning('Invalid timestamp for %r: %r',
+                logger.warning('Invalid timestamp for %r: %r',
                                 self._metadata['uid'],
                                 self._metadata['timestamp'])
             else:
@@ -565,7 +567,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         return True
 
     def _preview_box_button_release_event_cb(self, button, event):
-        logging.debug('_preview_box_button_release_event_cb')
+        logger.debug('_preview_box_button_release_event_cb')
         misc.resume(self._metadata,
                     alert_window=journalwindow.get_journal_window())
         return True

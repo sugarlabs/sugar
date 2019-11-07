@@ -28,6 +28,8 @@ from jarabe.model import neighborhood
 
 _model = None
 
+logger = logging.getLogger('friends')
+
 
 class FriendBuddyModel(BuddyModel):
     __gtype_name__ = 'SugarFriendBuddyModel'
@@ -150,7 +152,7 @@ class Friends(GObject.GObject):
                     buddy = FriendBuddyModel(key=key, nick=cp.get(key, 'nick'))
                     self.add_friend(buddy)
         except Exception:
-            logging.exception('Error parsing friends file')
+            logger.exception('Error parsing friends file')
 
     def save(self):
         cp = ConfigParser()

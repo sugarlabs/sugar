@@ -28,6 +28,8 @@ from sugar3.graphics.radiotoolbutton import RadioToolButton
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
 
+logger = logging.getLogger('zoomtoolbar')
+
 
 class ZoomToolbar(Gtk.Toolbar):
     __gsignals__ = {
@@ -96,7 +98,7 @@ class ZoomToolbar(Gtk.Toolbar):
         self._set_zoom_level(kwargs['new_level'])
 
     def _set_zoom_level(self, new_level):
-        logging.debug('new zoom level: %r', new_level)
+        logger.debug('new zoom level: %r', new_level)
         if new_level == shell.ShellModel.ZOOM_MESH:
             self._mesh_button.props.active = True
         elif new_level == shell.ShellModel.ZOOM_GROUP:

@@ -221,7 +221,7 @@ class RandomLayout(SpreadLayout):
 
     def _add_fixed_position(self, icon, allocation, locked=False):
         if not hasattr(type(icon), 'fixed_position'):
-            logging.debug('Icon without fixed_position: %r', icon)
+            _logger.debug('Icon without fixed_position: %r', icon)
             return
 
         icon.props.pixel_size = max(icon.props.pixel_size,
@@ -229,7 +229,7 @@ class RandomLayout(SpreadLayout):
 
         relative_x, relative_y = icon.fixed_position
         if relative_x < 0 or relative_y < 0:
-            logging.debug('Icon out of bounds: %r', icon)
+            _logger.debug('Icon out of bounds: %r', icon)
             return
 
         self.fixed_positions[icon] = \
@@ -277,7 +277,7 @@ class RandomLayout(SpreadLayout):
 
         if not (hasattr(child, 'get_bundle_id') and
                 hasattr(child, 'get_version')):
-            logging.debug('Not an activity icon %r', child)
+            _logger.debug('Not an activity icon %r', child)
             return
 
         registry = bundleregistry.get_registry()

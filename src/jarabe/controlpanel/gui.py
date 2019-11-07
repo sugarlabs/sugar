@@ -366,7 +366,7 @@ class ControlPanel(Gtk.Window):
                     else:
                         _logger.debug('no CLASS attribute in %r', item)
                 except Exception:
-                    logging.exception('Exception while loading extension:')
+                    _logger.exception('Exception while loading extension:')
 
         return options
 

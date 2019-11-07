@@ -28,6 +28,7 @@ _DBUS_IFACE = 'org.freedesktop.Notifications'
 _DBUS_PATH = '/org/freedesktop/Notifications'
 
 _instance = None
+logger = logging.getLogger('notifications')
 
 
 class NotificationService(dbus.service.Object):
@@ -59,7 +60,7 @@ class NotificationService(dbus.service.Object):
     def Notify(self, app_name, replaces_id, app_icon, summary, body, actions,
                hints, expire_timeout):
 
-        logging.debug('Received notification: %r',
+        logger.debug('Received notification: %r',
                       [app_name, replaces_id,
                        '<app_icon>', summary, body, actions, '<hints>',
                        expire_timeout])

@@ -52,6 +52,8 @@ _GSM_STATE_CONNECTING = 2
 _GSM_STATE_CONNECTED = 3
 _GSM_STATE_FAILED = 4
 
+logger = logging.getLogger('Network')
+
 
 def _get_address_data_cb(ip_cb, address):
     ip_cb(address[0]['address'])
@@ -63,13 +65,13 @@ def _get_ip4_config_cb(bus, ip_cb, ip4_config):
     props.Get('org.freedesktop.NetworkManager.IP4Config',
               'AddressData',
               reply_handler=partial(_get_address_data_cb, ip_cb),
-              error_handler=logging.error)
+              error_handler=logger.error)
 
 
 def _get_ip(bus, props, ip_cb):
     props.Get(network.NM_DEVICE_IFACE, 'Ip4Config',
               reply_handler=partial(_get_ip4_config_cb, bus, ip_cb),
-              error_handler=logging.error)
+              error_handler=logger.error)
 
 
 class WirelessPalette(Palette):
@@ -454,7 +456,7 @@ class WirelessDeviceView(ToolButton):
             self._update_state()
 
     def __get_device_props_error_cb(self, err):
-        logging.error('Error getting the device properties: %s', err)
+        logger.error('Error getting the device properties: %s', err)
 
     def __get_active_ap_reply_cb(self, active_ap_op):
         if self._active_ap_op != active_ap_op:
@@ -483,7 +485,7 @@ class WirelessDeviceView(ToolButton):
                 byte_arrays=True)
 
     def __get_active_ap_error_cb(self, err):
-        logging.error('Error getting the active access point: %s', err)
+        logger.error('Error getting the active access point: %s', err)
 
     def __state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
@@ -531,7 +533,7 @@ class WirelessDeviceView(ToolButton):
         self._update_properties(properties)
 
     def __get_all_ap_props_error_cb(self, err):
-        logging.error('Error getting the access point properties: %s', err)
+        logger.error('Error getting the access point properties: %s', err)
 
     def _update(self):
         if self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
@@ -599,10 +601,10 @@ class WirelessDeviceView(ToolButton):
         network.disconnect_access_points([self._active_ap_op])
 
     def __activate_reply_cb(self, connection):
-        logging.debug('Network created: %s', connection)
+        logger.debug('Network created: %s', connection)
 
     def __activate_error_cb(self, err):
-        logging.debug('Failed to create network: %s', err)
+        logger.debug('Failed to create network: %s', err)
 
 
 class OlpcMeshDeviceView(ToolButton):
@@ -665,7 +667,7 @@ class OlpcMeshDeviceView(ToolButton):
         self._update_text()
 
     def __get_active_channel_error_cb(self, err):
-        logging.error('Error getting the active channel: %s', err)
+        logger.error('Error getting the active channel: %s', err)
 
     def __state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
@@ -802,7 +804,7 @@ class GsmDeviceView(TrayIcon):
                                     _('Create a connection in My Settings.'))
 
     def __connect_cb(self, active_connection):
-        logging.debug('Connected successfully to gsm device, %s',
+        logger.debug('Connected successfully to gsm device, %s',
                       active_connection)
 
     def __connect_error_cb(self, error):
@@ -827,13 +829,13 @@ class GsmDeviceView(TrayIcon):
                 break
 
     def __disconnect_cb(self):
-        logging.debug('Disconnected successfully gsm device')
+        logger.debug('Disconnected successfully gsm device')
 
     def __disconnect_error_cb(self, error):
         raise RuntimeError('Error when disconnecting gsm device, %s' % error)
 
     def __state_changed_cb(self, new_state, old_state, reason):
-        logging.debug('State: %s to %s, reason %s', old_state,
+        logger.debug('State: %s to %s, reason %s', old_state,
                       new_state, reason)
         self._update_state(int(new_state), int(old_state), int(reason))
 
@@ -953,7 +955,7 @@ class MeshDeviceObserver(object):
             self._update_state(properties['State'])
 
     def __get_device_props_error_cb(self, err):
-        logging.error('Error getting the device properties: %s', err)
+        logger.error('Error getting the device properties: %s', err)
 
     def __state_changed_cb(self, new_state, old_state, reason):
         self._update_state(new_state)
@@ -1002,7 +1004,7 @@ class WiredDeviceObserver(object):
             self._update_state(properties['State'])
 
     def __get_device_props_error_cb(self, err):
-        logging.error('Error getting the device properties: %s', err)
+        logger.error('Error getting the device properties: %s', err)
 
     def __state_changed_cb(self, new_state, old_state, reason):
         self._update_state(new_state)
@@ -1050,7 +1052,7 @@ class NetworkManagerObserver(object):
             obj = self._bus.get_object(network.NM_SERVICE, network.NM_PATH)
             self._netmgr = dbus.Interface(obj, network.NM_IFACE)
         except dbus.DBusException:
-            logging.error('%s service not available', network.NM_SERVICE)
+            logger.error('%s service not available', network.NM_SERVICE)
             return
 
         self._netmgr.GetDevices(reply_handler=self.__get_devices_reply_cb,
@@ -1068,7 +1070,7 @@ class NetworkManagerObserver(object):
             self._check_device(device_op)
 
     def __get_devices_error_cb(self, err):
-        logging.error('Failed to get devices: %s', err)
+        logger.error('Failed to get devices: %s', err)
 
     def _check_device(self, device_op):
         if device_op in self._devices:

@@ -35,6 +35,7 @@ DS_SOURCE_NAME = 'datastore'
 SN_PATH_X86 = '/ofw/serial-number/serial-number'
 SN_PATH_ARM = '/proc/device-tree/serial-number'
 
+logger = logging.getLogger('volume')
 
 class Backup(Backend):
 
@@ -54,7 +55,7 @@ class Backup(Backend):
             return
 
         volume_options = _get_volume_options()
-        logging.error('volume_options %s', volume_options)
+        logger.error('volume_options %s', volume_options)
         if not volume_options['options']:
             raise PreConditionsError(_('Please connect a device to continue'))
 
@@ -96,7 +97,7 @@ class Backup(Backend):
         percent = int((1.0 - float(len(self._entries)) / self._total) * 100)
         if percent != self._percent:
             self._percent = percent
-            logging.debug('backup-local progress is %f', percent)
+            logger.debug('backup-local progress is %f', percent)
             self.emit('progress', float(percent) / 100.0)
 
         if self._cancelled:
@@ -108,7 +109,7 @@ class Backup(Backend):
 
     def _do_cancel(self):
         self._tarfile.close()
-        logging.debug('Cancel backup operation, remove file %s',
+        logger.debug('Cancel backup operation, remove file %s',
                       self._checkpoint)
         os.remove(self._checkpoint)
         self.emit('cancelled')
@@ -164,7 +165,7 @@ class Restore(Backend):
             return
 
         volume_options = _get_volume_options()
-        logging.error('volume_options %s', volume_options)
+        logger.error('volume_options %s', volume_options)
         if not volume_options['options']:
             raise PreConditionsError(_('Please connect a device to continue'))
 
@@ -215,7 +216,7 @@ class Restore(Backend):
             percent = int(self._bytes / self._checkpoint_size * 100)
             if percent != self._percent:
                 self._percent = percent
-                logging.debug('restore-local progress is %f', percent)
+                logger.debug('restore-local progress is %f', percent)
                 self.emit('progress', float(percent) / 100.0)
             GLib.idle_add(self._do_continue)
         else:
@@ -229,7 +230,7 @@ class Restore(Backend):
     def start(self):
         self._cancellable = False
         self.emit('started')
-        logging.debug('Starting with checkpoint %s', self._checkpoint)
+        logger.debug('Starting with checkpoint %s', self._checkpoint)
         self._tarfile = tarfile.open(self._checkpoint, 'r:gz')
         self._bytes = 0.0
         self._reset_datastore()
@@ -262,7 +263,7 @@ def _get_checkpoint_size(path):
     metadata = model.get(path)
     if 'uncompressed_size' in metadata:
         size = int(metadata['uncompressed_size'])
-        logging.error('size from metadata = %d', size)
+        logger.error('size from metadata = %d', size)
     else:
         size = 0
         with tarfile.open(path, 'r:gz') as file:

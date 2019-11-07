@@ -38,6 +38,8 @@ _PROC_TREE = '/proc/device-tree'
 _MFG_SN = 'mfg-data/SN'
 _MFG_UUID = 'mfg-data/U#'
 
+logger = logging.getLogger('schoolserver')
+
 
 def _generate_serial_number():
     """  Generates a serial number based on 3 random uppercase letters
@@ -139,13 +141,13 @@ def register_laptop(url=_REGISTER_URL):
     try:
         data = server.register(sn, nick, uuid_, profile.pubkey)
     except (xmlrpc.client.Error, TypeError, socket.error):
-        logging.exception('Registration: cannot connect to server')
+        logger.exception('Registration: cannot connect to server')
         raise RegisterError(_('Cannot connect to the server.'))
     finally:
         socket.setdefaulttimeout(None)
 
     if data['success'] != 'OK':
-        logging.error('Registration: server could not complete request: %s',
+        logger.error('Registration: server could not complete request: %s',
                       data['error'])
         raise RegisterError(_('The server could not complete the request.'))
 

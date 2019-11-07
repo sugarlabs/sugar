@@ -36,6 +36,8 @@ from jarabe.frame import clipboard
 from jarabe.journal import misc
 from jarabe.model import bundleregistry
 
+logger = logger.getLogger('clipboardmenu')
+
 
 class ClipboardMenu(Palette):
 
@@ -76,7 +78,7 @@ class ClipboardMenu(Palette):
 
     def _update_open_submenu(self):
         activities = self._get_activities()
-        logging.debug('_update_open_submenu: %r', activities)
+        logger.debug('_update_open_submenu: %r', activities)
         child = self._open_item.get_child()
         if activities is None or len(activities) <= 1:
             child.set_text(_('Open'))
@@ -99,7 +101,7 @@ class ClipboardMenu(Palette):
             activity_info = registry.get_bundle(service_name)
 
             if not activity_info:
-                logging.warning('Activity %s is unknown.', service_name)
+                logger.warning('Activity %s is unknown.', service_name)
 
             item = Gtk.MenuItem(activity_info.get_name())
             item.connect('activate', self._open_submenu_item_activate_cb,
@@ -151,7 +153,7 @@ class ClipboardMenu(Palette):
         self._update_open_submenu()
 
     def _open_item_activate_cb(self, menu_item):
-        logging.debug('_open_item_activate_cb')
+        logger.debug('_open_item_activate_cb')
         percent = self._cb_object.get_percent()
         if percent < 100 or menu_item.get_submenu() is not None:
             return
@@ -160,7 +162,7 @@ class ClipboardMenu(Palette):
         jobject.destroy()
 
     def _open_submenu_item_activate_cb(self, menu_item, service_name):
-        logging.debug('_open_submenu_item_activate_cb')
+        logger.debug('_open_submenu_item_activate_cb')
         percent = self._cb_object.get_percent()
         if percent < 100:
             return
@@ -173,7 +175,7 @@ class ClipboardMenu(Palette):
         cb_service.delete_object(self._cb_object.get_id())
 
     def _journal_item_activate_cb(self, menu_item):
-        logging.debug('_journal_item_activate_cb')
+        logger.debug('_journal_item_activate_cb')
         jobject = self._copy_to_journal()
         jobject.destroy()
 

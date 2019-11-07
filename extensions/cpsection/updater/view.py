@@ -32,6 +32,8 @@ from jarabe.model import bundleregistry
 
 _DEBUG_VIEW_ALL = True
 
+logger = logging.getLogger('updater-view')
+
 
 class ActivityUpdater(SectionView):
 
@@ -160,7 +162,7 @@ class ActivityUpdater(SectionView):
         self._progress_pane.set_progress(progress)
 
     def __updates_available_cb(self, model, updates):
-        logging.debug('ActivityUpdater.__updates_available_cb')
+        logger.debug('ActivityUpdater.__updates_available_cb')
         available_updates = len(updates)
         if not available_updates:
             top_message = _('Your software is up-to-date')
@@ -179,7 +181,7 @@ class ActivityUpdater(SectionView):
             self._switch_to_update_box(updates)
 
     def __error_cb(self, model, updates):
-        logging.debug('ActivityUpdater.__error_cb')
+        logger.debug('ActivityUpdater.__error_cb')
         top_message = _('Can\'t connect to the activity server')
         self._top_label.set_markup('<big>%s</big>' % top_message)
         self._bottom_label.set_markup(
@@ -202,7 +204,7 @@ class ActivityUpdater(SectionView):
     def __finished_cb(self, model, installed_updates, failed_updates,
                       cancelled):
         num_installed = len(installed_updates)
-        logging.debug('ActivityUpdater.__finished_cb')
+        logger.debug('ActivityUpdater.__finished_cb')
         top_message = ngettext('%s update was installed',
                                '%s updates were installed', num_installed)
         top_message = top_message % num_installed

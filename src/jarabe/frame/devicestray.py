@@ -20,6 +20,8 @@ from sugar3.graphics import tray
 
 from jarabe import config
 
+logger = logging.getLogger('devicetray')
+
 
 class DevicesTray(tray.HTray):
 
@@ -34,7 +36,7 @@ class DevicesTray(tray.HTray):
                                      locals(), [module_name])
                     mod.setup(self)
                 except Exception:
-                    logging.exception('Exception while loading extension:')
+                    logger.exception('Exception while loading extension:')
 
     def add_device(self, view):
         index = 0

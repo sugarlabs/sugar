@@ -23,6 +23,8 @@ from jarabe.model import shell
 
 _RAISE_DELAY = 250
 
+logger = logging.getLogger('tabbinghandler')
+
 
 class TabbingHandler(object):
 
@@ -45,7 +47,7 @@ class TabbingHandler(object):
 
     def _start_tabbing(self, event_time):
         if not self._tabbing:
-            logging.debug('Grabing the input.')
+            logger.debug('Grabing the input.')
 
             screen = Gdk.Screen.get_default()
             window = screen.get_root_window()
@@ -75,7 +77,7 @@ class TabbingHandler(object):
             # conditions. We also test if one of the grabs failed.
             mask = window.get_device_position(self._mouse)[3]
             if not self._tabbing or not (mask & self._modifier):
-                logging.debug('Releasing grabs again.')
+                logger.debug('Releasing grabs again.')
 
                 # ungrab keyboard/pointer if the grab was successfull.
                 if keyboard_grab_result == Gdk.GrabStatus.SUCCESS:

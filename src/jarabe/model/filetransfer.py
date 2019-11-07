@@ -59,6 +59,7 @@ FT_REASON_REMOTE_ERROR = 6
 
 
 new_file_transfer = dispatch.Signal()
+logger = logging.getLogger('filetransfer')
 
 
 class BaseFileTransfer(GObject.GObject):
@@ -100,7 +101,7 @@ class BaseFileTransfer(GObject.GObject):
         self.buddy = neighborhood.get_model().get_buddy_by_handle(handle)
 
     def __transferred_bytes_changed_cb(self, transferred_bytes):
-        logging.debug('__transferred_bytes_changed_cb %r', transferred_bytes)
+        logger.debug('__transferred_bytes_changed_cb %r', transferred_bytes)
         self.props.transferred_bytes = transferred_bytes
 
     def _set_transferred_bytes(self, transferred_bytes):
@@ -115,11 +116,11 @@ class BaseFileTransfer(GObject.GObject):
                                          setter=_set_transferred_bytes)
 
     def __initial_offset_defined_cb(self, offset):
-        logging.debug('__initial_offset_defined_cb %r', offset)
+        logger.debug('__initial_offset_defined_cb %r', offset)
         self.initial_offset = offset
 
     def __state_changed_cb(self, state, reason):
-        logging.debug('__state_changed_cb %r %r', state, reason)
+        logger.debug('__state_changed_cb %r %r', state, reason)
         self.reason_last_change = reason
         self.props.state = state
 
@@ -174,7 +175,7 @@ class IncomingFileTransfer(BaseFileTransfer):
             byte_arrays=True)
 
     def __notify_state_cb(self, file_transfer, pspec):
-        logging.debug('__notify_state_cb %r', self.props.state)
+        logger.debug('__notify_state_cb %r', self.props.state)
         if self.props.state == FT_STATE_OPEN:
             # Need to hold a reference to the socket so that python doesn't
             # close the fd when it goes out of scope
@@ -252,7 +253,7 @@ class OutgoingFileTransfer(BaseFileTransfer):
             byte_arrays=True)
 
     def __notify_state_cb(self, file_transfer, pspec):
-        logging.debug('__notify_state_cb %r', self.props.state)
+        logger.debug('__notify_state_cb %r', self.props.state)
         if self.props.state == FT_STATE_OPEN:
             # Need to hold a reference to the socket so that python doesn't
             # closes the fd when it goes out of scope
@@ -261,7 +262,7 @@ class OutgoingFileTransfer(BaseFileTransfer):
             output_stream = Gio.UnixOutputStream.new(
                 self._socket.fileno(), True)
 
-            logging.debug('opening %s for reading', self._file_name)
+            logger.debug('opening %s for reading', self._file_name)
             input_stream = Gio.File.new_for_path(self._file_name).read(None)
             if self.initial_offset > 0:
                 input_stream.skip(self.initial_offset)
@@ -281,7 +282,7 @@ def _new_channels_cb(connection, channels):
         if props[CHANNEL + '.ChannelType'] == CHANNEL_TYPE_FILE_TRANSFER and \
                 not props[CHANNEL + '.Requested']:
 
-            logging.debug('__new_channels_cb %r', object_path)
+            logger.debug('__new_channels_cb %r', object_path)
 
             incoming_file_transfer = IncomingFileTransfer(connection,
                                                           object_path, props)
@@ -289,7 +290,7 @@ def _new_channels_cb(connection, channels):
 
 
 def _monitor_connection(connection):
-    logging.debug('connection added %r', connection)
+    logger.debug('connection added %r', connection)
     connection[CONNECTION_INTERFACE_REQUESTS].connect_to_signal(
         'NewChannels',
         lambda channels: _new_channels_cb(connection, channels))
@@ -300,7 +301,7 @@ def _connection_added_cb(conn_watcher, connection):
 
 
 def _connection_removed_cb(conn_watcher, connection):
-    logging.debug('connection removed %r', connection)
+    logger.debug('connection removed %r', connection)
 
 
 def _got_dispatch_operation_cb(**kwargs):
@@ -344,7 +345,7 @@ def file_transfer_available():
             properties = properties_iface.GetAll(
                 CONNECTION_INTERFACE_REQUESTS)
         except dbus.DBusException as e:
-            logging.exception(e)
+            logger.exception(e)
             continue
 
         classes = properties['RequestableChannelClasses']

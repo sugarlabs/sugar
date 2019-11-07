@@ -41,6 +41,8 @@ from jarabe.journal import journalwindow
 UPDATE_INTERVAL = 300
 PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
+logger = logging.getLogger('listview')
+
 
 class TreeView(Gtk.TreeView):
     __gtype_name__ = 'JournalTreeView'
@@ -434,7 +436,7 @@ class BaseListView(Gtk.Bin):
         self.emit('selection-changed', len(self._model.get_selected_items()))
 
     def update_with_query(self, query_dict):
-        logging.debug('ListView.update_with_query')
+        logger.debug('ListView.update_with_query')
 
         if 'order_by' not in query_dict:
             query_dict['order_by'] = ['+timestamp']
@@ -450,7 +452,7 @@ class BaseListView(Gtk.Bin):
         self.refresh(new_query=True)
 
     def refresh(self, new_query=False):
-        logging.debug('ListView.refresh query %r', self._query)
+        logger.debug('ListView.refresh query %r', self._query)
         self._stop_progress_bar()
         window = self.get_toplevel().get_window()
         if window is not None:
@@ -480,7 +482,7 @@ class BaseListView(Gtk.Bin):
         self._stop_progress_bar()
 
         self._scroll_position = self.tree_view.props.vadjustment.props.value
-        logging.debug('ListView.__model_ready_cb %r', self._scroll_position)
+        logger.debug('ListView.__model_ready_cb %r', self._scroll_position)
 
         x11_window = self.tree_view.get_window()
 
@@ -532,14 +534,14 @@ class BaseListView(Gtk.Bin):
         return True
 
     def __map_cb(self, widget):
-        logging.debug('ListView.__map_cb %r', self._scroll_position)
+        logger.debug('ListView.__map_cb %r', self._scroll_position)
         self.tree_view.props.vadjustment.props.value = self._scroll_position
         self.tree_view.props.vadjustment.value_changed()
         self.set_is_visible(True)
 
     def __unmap_cb(self, widget):
         self._scroll_position = self.tree_view.props.vadjustment.props.value
-        logging.debug('ListView.__unmap_cb %r', self._scroll_position)
+        logger.debug('ListView.__unmap_cb %r', self._scroll_position)
         self.set_is_visible(False)
 
     def _is_query_empty(self):
@@ -636,7 +638,7 @@ class BaseListView(Gtk.Bin):
         if visible_range is None:
             return
 
-        logging.debug('ListView.update_dates')
+        logger.debug('ListView.update_dates')
 
         path, end_path = visible_range
         tree_model = self.tree_view.get_model()
@@ -672,20 +674,20 @@ class BaseListView(Gtk.Bin):
         if visible != self._fully_obscured:
             return
 
-        logging.debug('canvas_visibility_notify_event_cb %r', visible)
+        logger.debug('canvas_visibility_notify_event_cb %r', visible)
         if visible:
             self._fully_obscured = False
             if self._dirty:
                 self.refresh()
             if self._update_dates_timer is None:
-                logging.debug('Adding date updating timer')
+                logger.debug('Adding date updating timer')
                 self._update_dates_timer = \
                     GLib.timeout_add_seconds(UPDATE_INTERVAL,
                                              self.__update_dates_timer_cb)
         else:
             self._fully_obscured = True
             if self._update_dates_timer is not None:
-                logging.debug('Remove date updating timer')
+                logger.debug('Remove date updating timer')
                 GLib.source_remove(self._update_dates_timer)
                 self._update_dates_timer = None
 

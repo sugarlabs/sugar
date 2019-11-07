@@ -43,6 +43,8 @@ from jarabe.view.palettes import ActivityPalette
 from jarabe.journal import misc
 from jarabe.util.normalize import normalize_string
 
+logger = logging.getLogger('activitieslist')
+
 
 class ActivitiesTreeView(Gtk.TreeView):
     __gtype_name__ = 'SugarActivitiesTreeView'
@@ -178,7 +180,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         """
         A click on activity icon cell is to start an activity.
         """
-        logging.debug('__icon_clicked_cb')
+        logger.debug('__icon_clicked_cb')
         self._start_activity(path)
 
     def __row_activated_cb(self, treeview, path, col):
@@ -186,7 +188,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         A click on cells other than the favorite toggle is to start an
         activity.  Gtk+ 3.8 and later.
         """
-        logging.debug('__row_activated_cb')
+        logger.debug('__row_activated_cb')
         if col is not treeview.get_column(0):
             self._start_activity(path)
 
@@ -210,7 +212,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         return path
 
     def __button_press_cb(self, widget, event):
-        logging.debug('__button_press_cb')
+        logger.debug('__button_press_cb')
         path = self.__button_to_path(event, Gdk.EventType.BUTTON_PRESS)
         if path is None:
             return
@@ -218,7 +220,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._row_activated_armed_path = path
 
     def __button_release_cb(self, widget, event):
-        logging.debug('__button_release_cb')
+        logger.debug('__button_release_cb')
         path = self.__button_to_path(event, Gdk.EventType.BUTTON_RELEASE)
         if path is None:
             return
@@ -515,7 +517,7 @@ class ActivitiesList(Gtk.VBox):
     }
 
     def __init__(self):
-        logging.debug('STARTUP: Loading the activities list')
+        logger.debug('STARTUP: Loading the activities list')
 
         Gtk.VBox.__init__(self)
 

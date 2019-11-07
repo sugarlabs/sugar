@@ -63,6 +63,7 @@ _BUNDLE_ID = 'org.laptop.JournalActivity'
 SCOPE_PRIVATE = 'private'
 _journal = None
 PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
+logger = logging.getLogger('journal')
 
 
 class JournalActivityDBusService(dbus.service.Object):
@@ -74,7 +75,7 @@ class JournalActivityDBusService(dbus.service.Object):
                                         bus=session_bus,
                                         replace_existing=False,
                                         allow_replacement=False)
-        logging.debug('bus_name: %r', bus_name)
+        logger.debug('bus_name: %r', bus_name)
         dbus.service.Object.__init__(self, bus_name, J_DBUS_PATH)
 
     @dbus.service.method(J_DBUS_INTERFACE, in_signature='ss',
@@ -121,13 +122,13 @@ class JournalActivityDBusService(dbus.service.Object):
     def ShowObject(self, object_id):
         """Pop-up journal and show object with object_id"""
 
-        logging.debug('Trying to show object %s', object_id)
+        logger.debug('Trying to show object %s', object_id)
 
         if self._parent.show_object(object_id):
             self._parent.reveal()
 
     def _chooser_response_cb(self, chooser, response_id, chooser_id):
-        logging.debug('JournalActivityDBusService._chooser_response_cb')
+        logger.debug('JournalActivityDBusService._chooser_response_cb')
         if response_id == Gtk.ResponseType.ACCEPT:
             object_id = chooser.get_selected_object_id()
             self.ObjectChooserResponse(chooser_id, object_id)
@@ -190,7 +191,7 @@ class JournalViews(object):
 class JournalActivity(JournalWindow):
 
     def __init__(self):
-        logging.debug('STARTUP: Loading the journal')
+        logger.debug('STARTUP: Loading the journal')
         JournalWindow.__init__(self)
 
         self.set_title(_('Journal'))
@@ -476,7 +477,7 @@ class JournalActivity(JournalWindow):
         try:
             self._detail_toolbox.set_metadata(metadata)
         except Exception:
-            logging.exception('Exception while displaying entry:')
+            logger.exception('Exception while displaying entry:')
 
         self.set_toolbar_box(self._detail_toolbox)
         self._detail_toolbox.show()
@@ -484,7 +485,7 @@ class JournalActivity(JournalWindow):
         try:
             self._detail_view.props.metadata = metadata
         except Exception:
-            logging.exception('Exception while displaying entry:')
+            logger.exception('Exception while displaying entry:')
 
         self.set_canvas(self._secondary_view)
         self._secondary_view.show()
@@ -498,7 +499,7 @@ class JournalActivity(JournalWindow):
             return True
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
-        logging.debug('Selected volume: %r.', mount_point)
+        logger.debug('Selected volume: %r.', mount_point)
         self._mount_point = mount_point
         self.set_editing_mode(False)
         self._main_toolbox.set_mount_point(mount_point)
@@ -530,7 +531,7 @@ class JournalActivity(JournalWindow):
         self._set_is_visible(False)
 
     def __window_state_event_cb(self, window, event):
-        logging.debug('window_state_event_cb %r', self)
+        logger.debug('window_state_event_cb %r', self)
         if event.changed_mask & Gdk.WindowState.ICONIFIED:
             state = event.new_window_state
             visible = not state & Gdk.WindowState.ICONIFIED

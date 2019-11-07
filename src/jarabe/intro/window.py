@@ -36,6 +36,8 @@ from jarabe.intro import agepicker
 from jarabe.intro import colorpicker
 from jarabe.intro import genderpicker
 
+logger = logging.getLogger('intro-window')
+
 
 def create_profile_with_nickname(nickname):
     user_profile = UserProfile()
@@ -49,7 +51,7 @@ def create_profile(user_profile):
     if user_profile.nickname in [None, '']:
         nick = settings.get_string('nick')
         if nick is not None:
-            logging.debug('recovering old nickname %s' % (nick))
+            logger.debug('recovering old nickname %s' % (nick))
             user_profile.nickname = nick
     settings.set_string('nick', user_profile.nickname)
 
@@ -63,29 +65,29 @@ def create_profile(user_profile):
     agepicker.save_age(user_profile.age)
 
     if profile.get_pubkey() and profile.get_profile().privkey_hash:
-        logging.info('Valid key pair found, skipping generation.')
+        logger.info('Valid key pair found, skipping generation.')
         return
 
     # Generate keypair
     keypath = os.path.join(env.get_profile_path(), 'owner.key')
     if os.path.exists(keypath):
         os.rename(keypath, keypath + '.broken')
-        logging.warning('Existing private key %s moved to %s.broken',
+        logger.warning('Existing private key %s moved to %s.broken',
                         keypath, keypath)
 
     if os.path.exists(keypath + '.pub'):
         os.rename(keypath + '.pub', keypath + '.pub.broken')
-        logging.warning('Existing public key %s.pub moved to %s.pub.broken',
+        logger.warning('Existing public key %s.pub moved to %s.pub.broken',
                         keypath, keypath)
 
-    logging.debug("Generating user keypair")
+    logger.debug("Generating user keypair")
 
     cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % (keypath, )
     (s, o) = subprocess.getstatusoutput(cmd)
     if s != 0:
-        logging.error('Could not generate key pair: %d %s', s, o)
+        logger.error('Could not generate key pair: %d %s', s, o)
 
-    logging.debug("User keypair generated")
+    logger.debug("User keypair generated")
 
 
 class _Page(Gtk.VBox):

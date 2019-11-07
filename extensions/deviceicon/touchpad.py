@@ -38,6 +38,8 @@ STATUS_ICON = ('touchpad-capacitive', 'touchpad-resistive')
 # NODE_PATH is used to communicate with the touchpad device.
 NODE_PATH = '/sys/devices/platform/i8042/serio1/hgpk_mode'
 
+logger = logging.getLogger('touchpad')
+
 
 class DeviceView(TrayIcon):
     """ Manage the touchpad mode from the device palette on the Frame. """
@@ -130,7 +132,7 @@ def _write_touchpad_mode_str(mode_str):
     try:
         node_file_handle = open(NODE_PATH, 'w')
     except IOError as e:
-        logging.error('Error opening %s for writing: %s', NODE_PATH, e)
+        logger.error('Error opening %s for writing: %s', NODE_PATH, e)
         return
     node_file_handle.write(mode_str)
     node_file_handle.close()

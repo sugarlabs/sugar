@@ -24,6 +24,7 @@ from jarabe.model.network import Settings
 from jarabe.model.network import OlpcMesh as OlpcMeshSettings
 
 _XS_ANYCAST = '\xc0\x27\xc0\x27\xc0\x00'
+logger = logging.getLogger('olpcmesh')
 
 
 class OlpcMeshManager(object):
@@ -102,7 +103,7 @@ class OlpcMeshManager(object):
         self._idle_source = GLib.timeout_add_seconds(10, self._idle_check)
 
     def __get_state_error_cb(self, err):
-        logging.debug('Error getting the device state: %s', err)
+        logger.debug('Error getting the device state: %s', err)
 
     def __get_mesh_state_reply_cb(self, state):
         self._mesh_device_state = state
@@ -145,7 +146,7 @@ class OlpcMeshManager(object):
         if self._mesh_device_state == network.NM_DEVICE_STATE_DISCONNECTED \
                 and \
                 self._eth_device_state == network.NM_DEVICE_STATE_DISCONNECTED:
-            logging.debug('starting automesh due to inactivity')
+            logger.debug('starting automesh due to inactivity')
             self._start_automesh()
         return False
 
@@ -163,11 +164,11 @@ class OlpcMeshManager(object):
                 self.ready()
 
     def _add_connection_reply_cb(self, connection):
-        logging.debug("Added connection: %s", connection)
+        logger.debug("Added connection: %s", connection)
         self._connection_added()
 
     def _add_connection_err_cb(self, err):
-        logging.debug("Error adding mesh connection: %s", err)
+        logger.debug("Error adding mesh connection: %s", err)
         self._connection_added()
 
     def _add_connection(self, channel, xs_hosted):
@@ -198,7 +199,7 @@ class OlpcMeshManager(object):
         if connection:
             connection.activate(self.mesh_device.object_path)
         else:
-            logging.warning("Could not find mesh connection")
+            logger.warning("Could not find mesh connection")
 
     def _try_next_connection_from_queue(self):
         if len(self._connection_queue) == 0:

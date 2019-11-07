@@ -29,6 +29,7 @@ from jarabe.frame.clipboardobject import ClipboardObject, Format
 
 
 _instance = None
+logger = logging.getLogger('clipboard')
 
 
 class Clipboard(GObject.GObject):
@@ -66,13 +67,13 @@ class Clipboard(GObject.GObject):
         Return: object_id or None if the object is not added
 
         """
-        logging.debug('Clipboard.add_object: hash %s', data_hash)
+        logger.debug('Clipboard.add_object: hash %s', data_hash)
         if data_hash is None:
             object_id = self._get_next_object_id()
         else:
             object_id = data_hash
         if object_id in self._objects:
-            logging.debug('Clipboard.add_object: object already in clipboard,'
+            logger.debug('Clipboard.add_object: object already in clipboard,'
                           ' selecting previous entry instead')
             self.emit('object-selected', object_id)
             return None
@@ -81,17 +82,17 @@ class Clipboard(GObject.GObject):
         return object_id
 
     def add_object_format(self, object_id, format_type, data, on_disk):
-        logging.debug('Clipboard.add_object_format')
+        logger.debug('Clipboard.add_object_format')
         cb_object = self._objects[object_id]
 
         if on_disk and cb_object.get_percent() == 100:
             new_uri = self._copy_file(data)
             cb_object.add_format(Format(format_type, new_uri, on_disk))
-            logging.debug('Added format of type ' + format_type +
+            logger.debug('Added format of type ' + format_type +
                           ' with path at ' + new_uri)
         else:
             cb_object.add_format(Format(format_type, data, on_disk))
-            logging.debug('Added in-memory format of type %s.', format_type)
+            logger.debug('Added in-memory format of type %s.', format_type)
 
         self.emit('object-state-changed', cb_object)
 
@@ -102,7 +103,7 @@ class Clipboard(GObject.GObject):
             gtk_clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
             gtk_clipboard.clear()
         self.emit('object-deleted', object_id)
-        logging.debug('Deleted object with object_id %r', object_id)
+        logger.debug('Deleted object with object_id %r', object_id)
 
     def set_object_percent(self, object_id, percent):
         cb_object = self._objects[object_id]
@@ -140,11 +141,11 @@ class Clipboard(GObject.GObject):
                     data=formats['UTF8_STRING'].get_data(), on_disk=False)
 
     def get_object(self, object_id):
-        logging.debug('Clipboard.get_object')
+        logger.debug('Clipboard.get_object')
         return self._objects[object_id]
 
     def get_object_data(self, object_id, format_type):
-        logging.debug('Clipboard.get_object_data')
+        logger.debug('Clipboard.get_object_data')
         cb_object = self._objects[object_id]
         format_ = cb_object.get_formats()[format_type]
         return format_

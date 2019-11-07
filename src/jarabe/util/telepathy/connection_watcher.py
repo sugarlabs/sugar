@@ -34,6 +34,7 @@ CONNECTION_STATUS_DISCONNECTED = TelepathyGLib.ConnectionStatus.DISCONNECTED
 
 
 _instance = None
+logger = logging.getLogger('connection-watcher')
 
 
 class ConnectionWatcher(GObject.GObject):
@@ -128,7 +129,7 @@ class ConnectionWatcher(GObject.GObject):
             conn_proxy = dbus.Bus().get_object(service_name, path)
             self._prepare_conn_cb(path, conn_proxy)
         except dbus.exceptions.DBusException:
-            logging.debug('%s is propably already gone.', service_name)
+            logger.debug('%s is propably already gone.', service_name)
 
     def _remove_connection(self, service_name, path):
         conn = self._connections.pop(path, None)
@@ -141,7 +142,7 @@ class ConnectionWatcher(GObject.GObject):
         return list(self._connections.values())
 
     def __error_handler_cb(exception):
-        logging.debug(
+        logger.debug(
             'Exception from asynchronous method call:\n%s' % exception)
 
 

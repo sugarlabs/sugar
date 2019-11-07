@@ -21,10 +21,12 @@ from sugar3.datastore import datastore
 from jarabe.model import bundleregistry
 from jarabe.journal.misc import get_activities_for_mime
 
+logger = logging.getLogger('bundlelauncher')
+
 
 def get_bundle(bundle_id=None, object_id=None):
     if bundle_id is None and object_id is None:
-        logging.error('At least one parameter has to be passed')
+        logger.error('At least one parameter has to be passed')
         return None
 
     if bundle_id is None:
@@ -37,7 +39,7 @@ def get_bundle(bundle_id=None, object_id=None):
         activities = get_activities_for_mime(mime_type)
 
         if not activities:
-            logging.warning('No activity can start object with type, %s.',
+            logger.warning('No activity can start object with type, %s.',
                             mime_type)
             return None
 
@@ -45,7 +47,7 @@ def get_bundle(bundle_id=None, object_id=None):
     else:
         bundle = bundleregistry.get_registry().get_bundle(bundle_id)
         if bundle is None:
-            logging.warning('Activity with the bundle_id %s was not found',
+            logger.warning('Activity with the bundle_id %s was not found',
                             mime_type)
             return None
         return bundle

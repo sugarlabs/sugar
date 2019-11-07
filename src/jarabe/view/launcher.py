@@ -29,6 +29,8 @@ from jarabe.view.pulsingicon import PulsingIcon
 
 _INTERVAL = 100
 
+logger = logging.getLogger('launcher')
+
 
 class LaunchWindow(Gtk.Window):
 
@@ -153,7 +155,7 @@ def __launch_failed_cb(home_model, home_activity):
     launcher = shell.get_model().get_launcher(activity_id)
 
     if launcher is None:
-        logging.error('Launcher for %s is missing', activity_id)
+        logger.error('Launcher for %s is missing', activity_id)
     else:
         launcher.error_text.props.label = _('<b>%s</b> failed to start.') % \
             home_activity.get_activity_name()
@@ -179,7 +181,7 @@ def _destroy_launcher(home_activity):
     launcher = shell.get_model().get_launcher(activity_id)
     if launcher is None:
         if not home_activity.is_journal():
-            logging.error('Launcher was not registered for %s', activity_id)
+            logger.error('Launcher was not registered for %s', activity_id)
         return
 
     shell.get_model().unregister_launcher(activity_id)

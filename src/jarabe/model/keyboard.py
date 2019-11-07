@@ -22,6 +22,8 @@ from gi.repository import Gio
 from gi.repository import GdkX11
 from gi.repository import Xkl
 
+logger = logging.getLogger('keyboard')
+
 
 def setup():
     settings = Gio.Settings.new('org.sugarlabs.peripherals.keyboard')
@@ -32,7 +34,7 @@ def setup():
         if display is not None:
             engine = Xkl.Engine.get_instance(display)
         else:
-            logging.debug('setup_keyboard_cb: Could not get default display.')
+            logger.debug('setup_keyboard_cb: Could not get default display.')
             return
 
         configrec = Xkl.ConfigRec()
@@ -64,4 +66,4 @@ def setup():
         if have_config:
             configrec.activate(engine)
     except Exception:
-        logging.exception('Error during keyboard configuration')
+        logger.exception('Error during keyboard configuration')

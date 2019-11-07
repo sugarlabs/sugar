@@ -30,6 +30,8 @@ BACKENDS_MODULE = 'cpsection.backup.backends'
 OPERATION_BACKUP = 'backup'
 OPERATION_RESTORE = 'restore'
 
+logger = logging.getLogger('backup-manager')
+
 
 class BackupManager():
 
@@ -47,7 +49,7 @@ class BackupManager():
                 module = _load_module(module_name)
                 if module is not None:
                     if hasattr(module, 'get_name'):
-                        logging.debug('FOUND BACKEND %s', module.get_name())
+                        logger.debug('FOUND BACKEND %s', module.get_name())
                         self._backends.append(module)
 
     def get_backends(self):
@@ -68,5 +70,5 @@ def _load_module(module):
         module = import_module('%s.%s' % (BACKENDS_MODULE, module))
     except ImportError as e:
         module = None
-        logging.error('ImportError: %s' % (e))
+        logger.error('ImportError: %s' % (e))
     return module

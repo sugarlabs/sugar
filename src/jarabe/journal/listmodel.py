@@ -33,6 +33,8 @@ DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
+logger = logging.getLogger('listmodel')
+
 
 class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     __gtype_name__ = 'JournalListModel'
@@ -84,7 +86,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._all_ids = []
         t = time.time()
         self._result_set = model.find(query, ListModel._PAGE_SIZE)
-        logging.debug('init resultset: %r', time.time() - t)
+        logger.debug('init resultset: %r', time.time() - t)
         self._temp_drag_file_path = None
         self._selected = []
 
@@ -105,7 +107,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     def __result_set_ready_cb(self, **kwargs):
         t = time.time()
         self._all_ids = self._result_set.find_ids(self._query)
-        logging.debug('get all ids: %r', time.time() - t)
+        logger.debug('get all ids: %r', time.time() - t)
         self.emit('ready')
 
     def __result_set_progress_cb(self, **kwargs):
@@ -216,11 +218,11 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
             try:
                 buddies = list(json.loads(metadata['buddies']).values())
             except json.decoder.JSONDecodeError as exception:
-                logging.warning('Cannot decode buddies for %r: %s',
+                logger.warning('Cannot decode buddies for %r: %s',
                                 metadata['uid'], exception)
 
         if not isinstance(buddies, list):
-            logging.warning('Content of buddies for %r is not a list: %r',
+            logger.warning('Content of buddies for %r is not a list: %r',
                             metadata['uid'], buddies)
             buddies = []
 
@@ -229,7 +231,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
                 try:
                     nick, color = buddies.pop(0)
                 except (AttributeError, ValueError) as exception:
-                    logging.warning('Malformed buddies for %r: %s',
+                    logger.warning('Malformed buddies for %r: %s',
                                     metadata['uid'], exception)
                 else:
                     self._cached_row.append([nick, XoColor(color)])
@@ -285,7 +287,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
                 # Get hold of a reference so the temp file doesn't get deleted
                 self._temp_drag_file_path = model.get_file(uid)
                 self._temp_drag_file_uid = uid
-            logging.debug('putting %r in selection', self._temp_drag_file_path)
+            logger.debug('putting %r in selection', self._temp_drag_file_path)
             selection.set(target_atom, 8, self._temp_drag_file_path)
             return True
         elif target_name == 'journal-object-id':

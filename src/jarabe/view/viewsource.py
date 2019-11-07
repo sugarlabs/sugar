@@ -61,7 +61,7 @@ _IMPORT_TYPES = {'sugar3': 3, 'from gi.repository import Gtk': 3,
 
 _SOURCE_FONT = Pango.FontDescription('Monospace %d' % style.FONT_SIZE)
 
-_logger = logging.getLogger('ViewSource')
+_logger = logger.getLogger('ViewSource')
 
 
 def _is_web_activity(bundle_path):
@@ -124,9 +124,9 @@ def setup_view_source(activity):
                 'org.freedesktop.DBus.Error.UnknownMethod',
                 'org.freedesktop.DBus.Python.NotImplementedError']
             if e.get_dbus_name() not in expected_exceptions:
-                logging.exception('Exception occurred in HandleViewSource():')
+                _logger.exception('Exception occurred in HandleViewSource():')
         except Exception:
-            logging.exception('Exception occurred in HandleViewSource():')
+            _logger.exception('Exception occurred in HandleViewSource():')
 
     window_xid = activity.get_xid()
     if window_xid is None:
@@ -150,9 +150,9 @@ def setup_view_source(activity):
                 'org.freedesktop.DBus.Error.UnknownMethod',
                 'org.freedesktop.DBus.Python.NotImplementedError']
             if e.get_dbus_name() not in expected_exceptions:
-                logging.exception('Exception occurred in GetDocumentPath():')
+                _logger.exception('Exception occurred in GetDocumentPath():')
         except Exception:
-            logging.exception('Exception occurred in GetDocumentPath():')
+            _logger.exception('Exception occurred in GetDocumentPath():')
 
     if bundle_path is None and document_path is None:
         _logger.debug('Activity without bundle_path nor document_path')

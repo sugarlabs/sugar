@@ -23,6 +23,8 @@ from jarabe.model import shell
 from jarabe.model.buddy import get_owner_instance
 from jarabe.model import neighborhood
 
+logger = logging.getLogger('friendstray')
+
 
 class FriendIcon(TrayIcon):
 
@@ -81,7 +83,7 @@ class FriendsTray(VTray):
 
     def __neighborhood_activity_added_cb(self, neighborhood_model,
                                          shared_activity):
-        logging.debug('FriendsTray.__neighborhood_activity_added_cb')
+        logger.debug('FriendsTray.__neighborhood_activity_added_cb')
         active_activity = shell.get_model().get_active_activity()
         if active_activity.get_activity_id() != shared_activity.activity_id:
             return
@@ -94,7 +96,7 @@ class FriendsTray(VTray):
         self._set_current_activity(shared_activity.activity_id)
 
     def __active_activity_changed_cb(self, home_model, home_activity):
-        logging.debug('FriendsTray.__active_activity_changed_cb')
+        logger.debug('FriendsTray.__active_activity_changed_cb')
         self.clear()
 
         # always display ourselves
@@ -110,7 +112,7 @@ class FriendsTray(VTray):
         self._set_current_activity(activity_id)
 
     def _set_current_activity(self, activity_id):
-        logging.debug('FriendsTray._set_current_activity')
+        logger.debug('FriendsTray._set_current_activity')
         neighborhood_model = neighborhood.get_model()
         self._shared_activity = neighborhood_model.get_activity(activity_id)
         if self._shared_activity is None:
@@ -123,9 +125,9 @@ class FriendsTray(VTray):
         self._shared_activity.connect('buddy-removed', self.__buddy_removed_cb)
 
     def __buddy_added_cb(self, activity, buddy):
-        logging.debug('FriendsTray.__buddy_added_cb')
+        logger.debug('FriendsTray.__buddy_added_cb')
         self.add_buddy(buddy)
 
     def __buddy_removed_cb(self, activity, buddy):
-        logging.debug('FriendsTray.__buddy_removed_cb')
+        logger.debug('FriendsTray.__buddy_removed_cb')
         self.remove_buddy(buddy)

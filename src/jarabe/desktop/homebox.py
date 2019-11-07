@@ -24,12 +24,14 @@ from jarabe.desktop.activitieslist import ActivitiesList
 from jarabe.util.normalize import normalize_string
 from jarabe.model import desktop
 
+logger = logging.getLogger('homebox')
+
 
 class HomeBox(Gtk.VBox):
     __gtype_name__ = 'SugarHomeBox'
 
     def __init__(self, toolbar):
-        logging.debug('STARTUP: Loading the home view')
+        logger.debug('STARTUP: Loading the home view')
 
         Gtk.VBox.__init__(self)
 
@@ -80,7 +82,7 @@ class HomeBox(Gtk.VBox):
                     self._favorites_views_indicies[-1])
 
         self._list_view_index = number_of_views
-        logging.debug('homebox: reassigning list view index to %d' %
+        logger.debug('homebox: reassigning list view index to %d' %
                       (self._list_view_index))
 
     def __toolbar_query_changed_cb(self, toolbar, query):

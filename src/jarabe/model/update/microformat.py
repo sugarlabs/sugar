@@ -235,7 +235,7 @@ class MicroformatUpdater(object):
         for bundle_id, data in list(self._parser.results.items()):
             # filter optional activities for automatic updates
             if self._auto and data[2] is True:
-                logging.debug('filtered optional activity %s', bundle_id)
+                _logger.debug('filtered optional activity %s', bundle_id)
                 continue
 
             bundle = registry.get_bundle(bundle_id)
@@ -297,7 +297,7 @@ class MicroformatUpdater(object):
         _logger.debug("Name lookup result: %r", result)
         if icon_file_name is not None:
             self._icon_temp_files.append(icon_file_name)
-            logging.debug('Adding temporary file %s to list', icon_file_name)
+            _logger.debug('Adding temporary file %s to list', icon_file_name)
 
         if size is None:
             # if the size lookup failed, assume this update is bad
@@ -335,7 +335,7 @@ class MicroformatUpdater(object):
 
     def clean(self):
         for filename in self._icon_temp_files:
-            logging.debug('Removing temporary file %s', filename)
+            _logger.debug('Removing temporary file %s', filename)
             try:
                 os.unlink(filename)
             except OSError:

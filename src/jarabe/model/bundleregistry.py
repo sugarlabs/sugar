@@ -56,6 +56,7 @@ immediately by the shell.
 
 _DEFAULT_VIEW = 0
 _instance = None
+logger = logging.getLogger('bundleregistry')
 
 
 class BundleRegistry(GObject.GObject):
@@ -71,7 +72,7 @@ class BundleRegistry(GObject.GObject):
     }
 
     def __init__(self):
-        logging.debug('STARTUP: Loading the bundle registry')
+        logger.debug('STARTUP: Loading the bundle registry')
         GObject.GObject.__init__(self)
 
         self._mime_defaults = self._load_mime_defaults()
@@ -110,7 +111,7 @@ class BundleRegistry(GObject.GObject):
         try:
             self._load_favorites()
         except Exception:
-            logging.exception('Error while loading favorite_activities.')
+            logger.exception('Error while loading favorite_activities.')
 
         self._hidden_activities = []
         self._load_hidden_activities()
@@ -130,7 +131,7 @@ class BundleRegistry(GObject.GObject):
         try:
             self._load_favorites()
         except Exception:
-            logging.exception('Error while loading favorite_activities.')
+            logger.exception('Error while loading favorite_activities.')
 
     def __file_monitor_changed_cb(self, monitor, one_file, other_file,
                                   event_type):
@@ -145,7 +146,7 @@ class BundleRegistry(GObject.GObject):
                 try:
                     os.listdir(root)
                 except OSError:
-                    logging.debug('Can not find GLib system dir %s', root)
+                    logger.debug('Can not find GLib system dir %s', root)
                     continue
                 activity_dir = os.path.basename(one_file.get_path())
                 try:
@@ -218,7 +219,7 @@ class BundleRegistry(GObject.GObject):
                     if bundle_id:
                         self._hidden_activities.append(bundle_id)
         except IOError:
-            logging.error('Error when loading hidden activities %s', path)
+            logger.error('Error when loading hidden activities %s', path)
 
     def _convert_old_favorites(self):
         for i in range(desktop.get_number_of_views()):
@@ -270,7 +271,7 @@ class BundleRegistry(GObject.GObject):
                 if os.path.isdir(bundle_dir):
                     bundles[bundle_dir] = os.stat(bundle_dir).st_mtime
             except Exception:
-                logging.exception('Error while processing installed activity'
+                logger.exception('Error while processing installed activity'
                                   ' bundle %s:', bundle_dir)
 
         bundle_dirs = list(bundles.keys())
@@ -280,7 +281,7 @@ class BundleRegistry(GObject.GObject):
                 self.add_bundle(folder, emit_signals=False)
             except:
                 # pylint: disable=W0702
-                logging.exception('Error while processing installed activity'
+                logger.exception('Error while processing installed activity'
                                   ' bundle %s:', folder)
 
     def add_bundle(self, bundle_path, set_favorite=False, emit_signals=True,
@@ -295,30 +296,30 @@ class BundleRegistry(GObject.GObject):
         try:
             bundle = bundle_from_dir(bundle_path)
         except MalformedBundleException:
-            logging.exception('Error loading bundle %r', bundle_path)
+            logger.exception('Error loading bundle %r', bundle_path)
             return None
 
         # None is a valid return value from bundle_from_dir helper.
         if bundle is None:
-            logging.error('No bundle in %r', bundle_path)
+            logger.error('No bundle in %r', bundle_path)
             return None
 
         bundle_id = bundle.get_bundle_id()
-        logging.debug('STARTUP: Adding bundle %s', bundle_id)
+        logger.debug('STARTUP: Adding bundle %s', bundle_id)
         installed = self.get_bundle(bundle_id)
 
         if installed is not None:
             if NormalizedVersion(installed.get_activity_version()) == \
                     NormalizedVersion(bundle.get_activity_version()):
-                logging.debug("Bundle already known")
+                logger.debug("Bundle already known")
                 return installed
             if not force_downgrade and \
                     NormalizedVersion(installed.get_activity_version()) >= \
                     NormalizedVersion(bundle.get_activity_version()):
-                logging.debug('Skip old version for %s', bundle_id)
+                logger.debug('Skip old version for %s', bundle_id)
                 return None
             else:
-                logging.debug('Upgrade %s', bundle_id)
+                logger.debug('Upgrade %s', bundle_id)
                 self.remove_bundle(installed.get_path(), emit_signals)
 
         if set_favorite:
@@ -555,16 +556,16 @@ class BundleRegistry(GObject.GObject):
         """
         act = self.get_bundle(bundle.get_bundle_id())
         if not act:
-            logging.debug("Bundle is not installed")
+            logger.debug("Bundle is not installed")
             return
 
         if not force and \
                 act.get_activity_version() != bundle.get_activity_version():
-            logging.warning('Not uninstalling, different bundle present')
+            logger.warning('Not uninstalling, different bundle present')
             return
 
         if not act.is_user_activity():
-            logging.debug('Do not uninstall system activity')
+            logger.debug('Do not uninstall system activity')
             return
 
         install_path = act.get_path()
@@ -597,7 +598,7 @@ class BundleRegistry(GObject.GObject):
             try:
                 dir_list = os.listdir(root)
             except OSError:
-                logging.debug('Can not find GLib system dir %s', root)
+                logger.debug('Can not find GLib system dir %s', root)
                 continue
 
             for activity_dir in dir_list:
@@ -658,12 +659,12 @@ class _InstallQueue(object):
         bundle = task.bundle
         bundle_id = bundle.get_bundle_id()
         act = self._registry.get_bundle(bundle_id)
-        logging.debug("InstallQueue task %s installed %r", bundle_id, act)
+        logger.debug("InstallQueue task %s installed %r", bundle_id, act)
 
         if act:
             # Same version already installed?
             if act.get_activity_version() == bundle.get_activity_version():
-                logging.debug('No upgrade needed, same version already '
+                logger.debug('No upgrade needed, same version already '
                               'installed.')
                 task.queue_callback(False)
                 return
@@ -680,17 +681,17 @@ class _InstallQueue(object):
                 try:
                     act.uninstall()
                 except:
-                    logging.exception('Uninstall failed, still trying to '
+                    logger.exception('Uninstall failed, still trying to '
                                       'install newer bundle')
             else:
-                logging.warning('Unable to uninstall system activity, '
+                logger.warning('Unable to uninstall system activity, '
                                 'installing upgraded version in user '
                                 'activities')
 
         try:
             task.queue_callback(bundle.install())
         except Exception as e:
-            logging.debug("InstallThread install failed: %r", e)
+            logger.debug("InstallThread install failed: %r", e)
             task.queue_callback(e)
 
 

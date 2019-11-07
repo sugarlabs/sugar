@@ -28,6 +28,8 @@ from sugar3.graphics.objectchooser import get_preview_pixbuf
 from sugar3.graphics import style
 from sugar3.activity.activity import PREVIEW_SIZE
 
+logger = logging.getLogger('iconview')
+
 
 class PreviewRenderer(Gtk.CellRendererPixbuf):
 
@@ -195,7 +197,7 @@ class IconView(Gtk.Bin):
         self._stop_progress_bar()
 
         self._scroll_position = self.icon_view.props.vadjustment.props.value
-        logging.debug('IconView.__model_ready_cb %r', self._scroll_position)
+        logger.debug('IconView.__model_ready_cb %r', self._scroll_position)
 
         # Cannot set it up earlier because will try to access the model
         # and it needs to be ready.
@@ -222,13 +224,13 @@ class IconView(Gtk.Bin):
             self._clear_message()
 
     def __map_cb(self, widget):
-        logging.debug('IconView.__map_cb %r', self._scroll_position)
+        logger.debug('IconView.__map_cb %r', self._scroll_position)
         self.icon_view.props.vadjustment.props.value = self._scroll_position
         self.icon_view.props.vadjustment.value_changed()
 
     def __unrealize_cb(self, widget):
         self._scroll_position = self.icon_view.props.vadjustment.props.value
-        logging.debug('IconView.__map_cb %r', self._scroll_position)
+        logger.debug('IconView.__map_cb %r', self._scroll_position)
 
     def _is_query_empty(self):
         # FIXME: This is a hack, we shouldn't have to update this every time
@@ -325,7 +327,7 @@ class IconView(Gtk.Bin):
         if visible != self._fully_obscured:
             return
 
-        logging.debug('canvas_visibility_notify_event_cb %r', visible)
+        logger.debug('canvas_visibility_notify_event_cb %r', visible)
         if visible:
             self._fully_obscured = False
             if self._dirty:

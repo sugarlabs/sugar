@@ -69,6 +69,7 @@ _actions_table = {
 _non_modal_action_keys = ('F1', 'F2', 'F3', 'F4', 'F5', 'F6')
 
 _instance = None
+logger = logging.getLogger('keyhandler')
 
 
 class KeyHandler(object):
@@ -91,7 +92,7 @@ class KeyHandler(object):
             if f.endswith('.py') and not f.startswith('__'):
                 module_name = f[:-3]
                 try:
-                    logging.debug('Loading module %r', module_name)
+                    logger.debug('Loading module %r', module_name)
                     module = __import__('globalkey.' + module_name, globals(),
                                         locals(), [module_name])
                     for key in module.BOUND_KEYS:
@@ -99,7 +100,7 @@ class KeyHandler(object):
                             raise ValueError('Key %r is already bound' % key)
                         _actions_table[key] = module
                 except Exception:
-                    logging.exception('Exception while loading extension:')
+                    logger.exception('Exception while loading extension:')
 
         self._key_grabber.grab_keys(list(_actions_table.keys()))
 
@@ -197,7 +198,7 @@ class KeyHandler(object):
 
     def _key_pressed_cb(self, grabber, keycode, state, event_time):
         key = grabber.get_key(keycode, state)
-        logging.debug('_key_pressed_cb: %i %i %s', keycode, state, key)
+        logger.debug('_key_pressed_cb: %i %i %s', keycode, state, key)
         if key is not None:
             self._key_pressed = key
             self._keycode_pressed = keycode
@@ -207,7 +208,7 @@ class KeyHandler(object):
             # is opened http://bugs.sugarlabs.org/ticket/4601
             if key in _non_modal_action_keys and \
                     shell.get_model().has_modal():
-                logging.debug(
+                logger.debug(
                     'Key %s action stopped due to modal dialog open', key)
                 return
 
@@ -238,7 +239,7 @@ class KeyHandler(object):
         return False
 
     def _key_released_cb(self, grabber, keycode, state, event_time):
-        logging.debug('_key_released_cb: %i %i', keycode, state)
+        logger.debug('_key_released_cb: %i %i', keycode, state)
         if self._tabbing_handler.is_tabbing():
             # We stop tabbing and switch to the new window as soon as the
             # modifier key is raised again.

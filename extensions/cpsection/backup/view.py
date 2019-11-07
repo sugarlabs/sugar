@@ -33,6 +33,8 @@ from .backupmanager import OPERATION_BACKUP, OPERATION_RESTORE
 from .backends.backend_tools import PreConditionsError
 from .backends.backend_tools import PreConditionsChoose
 
+logger = logging.getLogger('view')
+
 
 class BackupView(SectionView):
     __gtype_name__ = 'SugarBackupWindow'
@@ -281,7 +283,7 @@ class OperationPanel(Gtk.Grid):
         self._start_operation()
 
     def _start_operation(self):
-        logging.error('Starting operation %s with backend %s',
+        logger.error('Starting operation %s with backend %s',
                       self._operation, self._backend.get_name())
 
         if self._operation == OPERATION_BACKUP:

@@ -25,12 +25,14 @@ from jarabe.desktop.viewcontainer import ViewContainer
 from jarabe.desktop.favoriteslayout import SpreadLayout
 from jarabe.util.normalize import normalize_string
 
+logger = logging.getLogger('groupbox')
+
 
 class GroupBox(ViewContainer):
     __gtype_name__ = 'SugarGroupBox'
 
     def __init__(self, toolbar):
-        logging.debug('STARTUP: Loading the group view')
+        logger.debug('STARTUP: Loading the group view')
 
         layout = SpreadLayout()
 

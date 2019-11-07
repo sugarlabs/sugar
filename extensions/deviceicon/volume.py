@@ -35,6 +35,7 @@ from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 _icons = {}
 volume_monitor = None
+logger = logging.getLogger('deviceicon-volume')
 
 
 class DeviceView(TrayIcon):
@@ -120,7 +121,7 @@ def _mount(volume, tray):
 
 
 def _mount_cb(volume, result, user_data):
-    logging.debug('_mount_cb %r %r', volume, result)
+    logger.debug('_mount_cb %r %r', volume, result)
     volume.mount_finish(result)
 
 

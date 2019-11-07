@@ -49,6 +49,8 @@ from jarabe.journal import misc
 
 _FILTERED_ALPHA = 0.33
 
+logger = logging.getLogger('meshbox')
+
 
 class _ActivityIcon(CanvasIcon):
 
@@ -204,7 +206,7 @@ class DeviceObserver(GObject.GObject):
             self.emit('access-point-added', ap)
 
     def _get_access_points_error_cb(self, err):
-        logging.error('Failed to get access points: %s', err)
+        logger.error('Failed to get access points: %s', err)
 
     def __access_point_added_cb(self, access_point_o):
         ap = self._bus.get_object(network.NM_SERVICE, access_point_o)
@@ -247,7 +249,7 @@ class NetworkManagerObserver(object):
             self._bus = dbus.SystemBus()
             self._netmgr = network.get_manager()
         except dbus.DBusException:
-            logging.debug('NetworkManager not available')
+            logger.debug('NetworkManager not available')
             return
 
         self._netmgr.GetDevices(reply_handler=self.__get_devices_reply_cb,
@@ -298,7 +300,7 @@ class NetworkManagerObserver(object):
             self._check_device(dev_o)
 
     def __get_devices_error_cb(self, err):
-        logging.error('Failed to get devices: %s', err)
+        logger.error('Failed to get devices: %s', err)
 
     def _check_device(self, device_o):
         device = self._bus.get_object(network.NM_SERVICE, device_o)
@@ -322,7 +324,7 @@ class NetworkManagerObserver(object):
             self._box.enable_olpc_mesh(device)
 
     def _get_device_path_error_cb(self, err):
-        logging.error('Failed to get device type: %s', err)
+        logger.error('Failed to get device type: %s', err)
 
     def __device_added_cb(self, device_o):
         self._check_device(device_o)
@@ -361,7 +363,7 @@ class MeshBox(ViewContainer):
     __gtype_name__ = 'SugarMeshBox'
 
     def __init__(self, toolbar):
-        logging.debug('STARTUP: Loading the mesh view')
+        logger.debug('STARTUP: Loading the mesh view')
 
         layout = SpreadLayout()
 
@@ -431,13 +433,13 @@ class MeshBox(ViewContainer):
         self._buddies[buddy_model.props.key] = icon
 
     def _remove_buddy(self, buddy_model):
-        logging.debug('MeshBox._remove_buddy')
+        logger.debug('MeshBox._remove_buddy')
         icon = self._buddies[buddy_model.props.key]
         self.remove(icon)
         del self._buddies[buddy_model.props.key]
 
     def __buddy_notify_current_activity_cb(self, buddy_model, pspec):
-        logging.debug('MeshBox.__buddy_notify_current_activity_cb %s',
+        logger.debug('MeshBox.__buddy_notify_current_activity_cb %s',
                       buddy_model.props.current_activity)
         if buddy_model.props.current_activity is None:
             if buddy_model.props.key not in self._buddies:
@@ -487,7 +489,7 @@ class MeshBox(ViewContainer):
         # normal wifi networks
         if len(self._mesh) > 0 and ap.mode == network.NM_802_11_MODE_ADHOC \
                 and ap.ssid == 'olpc-mesh':
-            logging.debug('ignoring OLPC mesh IBSS')
+            logger.debug('ignoring OLPC mesh IBSS')
             ap.disconnect()
             return
 
@@ -545,7 +547,7 @@ class MeshBox(ViewContainer):
 
         # it's not an error if the AP isn't found, since we might have ignored
         # it (e.g. olpc-mesh adhoc network)
-        logging.debug('Can not remove access point %s', ap_o)
+        logger.debug('Can not remove access point %s', ap_o)
 
     def add_adhoc_networks(self, device):
         if self._adhoc_manager is None:
@@ -586,7 +588,7 @@ class MeshBox(ViewContainer):
             if not net.is_olpc_mesh():
                 continue
 
-            logging.debug('removing OLPC mesh IBSS')
+            logger.debug('removing OLPC mesh IBSS')
             net.remove_all_aps()
             net.disconnect()
             self.remove(net)

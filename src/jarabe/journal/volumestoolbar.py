@@ -43,6 +43,8 @@ from jarabe.view.palettes import VolumePalette
 
 _JOURNAL_0_METADATA_DIR = '.olpc.store'
 
+logger = logging.getLogger('volumestoolbar')
+
 
 def _get_id(document):
     """Get the ID for the document in the xapian database."""
@@ -74,7 +76,7 @@ def _convert_entries(root):
         database = xapian.Database(os.path.join(root, _JOURNAL_0_METADATA_DIR,
                                                 'index'))
     except xapian.DatabaseError:
-        logging.exception('Convert DS-0 Journal entries: error reading db: %s',
+        logger.exception('Convert DS-0 Journal entries: error reading db: %s',
                           os.path.join(root, _JOURNAL_0_METADATA_DIR, 'index'))
         return
 
@@ -83,7 +85,7 @@ def _convert_entries(root):
         try:
             os.mkdir(metadata_dir_path)
         except EnvironmentError:
-            logging.error('Convert DS-0 Journal entries: '
+            logger.error('Convert DS-0 Journal entries: '
                           'error creating the Journal metadata directory.')
             return
 
@@ -91,7 +93,7 @@ def _convert_entries(root):
         try:
             document = database.get_document(posting_item.docid)
         except xapian.DocNotFoundError as e:
-            logging.debug('Convert DS-0 Journal entries: error getting '
+            logger.debug('Convert DS-0 Journal entries: error getting '
                           'document %s: %s', posting_item.docid, e)
             continue
         _convert_entry(root, document)
@@ -101,7 +103,7 @@ def _convert_entry(root, document):
     try:
         metadata_loaded = pickle.loads(document.get_data())
     except pickle.PickleError as e:
-        logging.debug('Convert DS-0 Journal entries: '
+        logger.debug('Convert DS-0 Journal entries: '
                       'error converting metadata: %s', e)
         return
 
@@ -156,7 +158,7 @@ def _convert_entry(root, document):
         os.close(fh)
         os.rename(fn, metadata_path)
 
-        logging.debug('Convert DS-0 Journal entries: entry converted: '
+        logger.debug('Convert DS-0 Journal entries: entry converted: '
                       'file=%s metadata=%s',
                       os.path.join(root, filename), metadata)
 
@@ -225,11 +227,11 @@ class VolumesToolbar(Gtk.Toolbar):
         self._remove_button(mount)
 
     def _add_button(self, mount):
-        logging.debug('VolumeToolbar._add_button: %r', mount.get_name())
+        logger.debug('VolumeToolbar._add_button: %r', mount.get_name())
 
         if os.path.exists(os.path.join(mount.get_root().get_path(),
                                        _JOURNAL_0_METADATA_DIR)):
-            logging.debug('Convert DS-0 Journal entries: starting conversion')
+            logger.debug('Convert DS-0 Journal entries: starting conversion')
             GLib.idle_add(_convert_entries, mount.get_root().get_path())
 
         button = VolumeButton(mount)
@@ -257,7 +259,7 @@ class VolumesToolbar(Gtk.Toolbar):
         for button in self.get_children():
             if button.mount_point == mount_point:
                 return button
-        logging.error('Couldnt find button with mount_point %r', mount_point)
+        logger.error('Couldnt find button with mount_point %r', mount_point)
         return None
 
     def _remove_button(self, mount):
@@ -296,7 +298,7 @@ class BaseButton(RadioToolButton):
         metadata = model.get(object_id)
         file_path = model.get_file(metadata['uid'])
         if not file_path or not os.path.exists(file_path):
-            logging.warn('Entries without a file cannot be copied.')
+            logger.warn('Entries without a file cannot be copied.')
             self.emit('volume-error',
                       _('Entries without a file cannot be copied.'),
                       _('Warning'))
@@ -305,7 +307,7 @@ class BaseButton(RadioToolButton):
         try:
             model.copy(metadata, self.mount_point)
         except IOError as e:
-            logging.exception('Error while copying the entry. %s', e.strerror)
+            logger.exception('Error while copying the entry. %s', e.strerror)
             self.emit('volume-error',
                       _('Error while copying the entry. %s') % e.strerror,
                       _('Error'))

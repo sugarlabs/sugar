@@ -33,6 +33,8 @@ from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
 import jarabe.frame
 
+logger = logging.getLogger('clipboardicon')
+
 
 class ClipboardIcon(RadioToolButton):
     __gtype_name__ = 'SugarClipboardIcon'
@@ -81,12 +83,12 @@ class ClipboardIcon(RadioToolButton):
             lambda: frame.remove_notification(self._notif_icon))
         target_atom = selection.get_target()
         target_name = target_atom.name()
-        logging.debug('_drag_data_get_cb: requested target %s', target_name)
+        logger.debug('_drag_data_get_cb: requested target %s', target_name)
         data = self._cb_object.get_formats()[target_name].get_data()
         selection.set(target_atom, 8, data)
 
     def _put_in_clipboard(self):
-        logging.debug('ClipboardIcon._put_in_clipboard')
+        logger.debug('ClipboardIcon._put_in_clipboard')
 
         if self._cb_object.get_percent() < 100:
             raise ValueError('Object is not complete, cannot be put into the'
@@ -112,7 +114,7 @@ class ClipboardIcon(RadioToolButton):
                     targets)
 
             if not stored:
-                logging.error('GtkClipboard.set_with_data failed!')
+                logger.error('GtkClipboard.set_with_data failed!')
             else:
                 self.owns_clipboard = True
 
@@ -120,7 +122,7 @@ class ClipboardIcon(RadioToolButton):
         selection_target = selection.get_target()
         entries_targets = [entry.target for entry in targets]
         if not str(selection_target) in entries_targets:
-            logging.warning('ClipboardIcon._clipboard_data_get_cb: asked %s'
+            logger.warning('ClipboardIcon._clipboard_data_get_cb: asked %s'
                             ' but only have %r.', selection_target,
                             entries_targets)
             return
@@ -128,7 +130,7 @@ class ClipboardIcon(RadioToolButton):
         selection.set(selection_target, 8, data)
 
     def _clipboard_clear_cb(self, x_clipboard, targets):
-        logging.debug('ClipboardIcon._clipboard_clear_cb')
+        logger.debug('ClipboardIcon._clipboard_clear_cb')
         self.owns_clipboard = False
 
     def _object_state_changed_cb(self, cb_service, cb_object):
@@ -164,7 +166,7 @@ class ClipboardIcon(RadioToolButton):
             return
         self.props.active = True
         self.show_notification()
-        logging.debug('ClipboardIcon: %r was selected', object_id)
+        logger.debug('ClipboardIcon: %r was selected', object_id)
 
     def show_notification(self):
         self._notif_icon = NotificationIcon()

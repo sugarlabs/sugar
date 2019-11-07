@@ -206,6 +206,8 @@ _interfaces = None
 
 _nm_device_state_reason_description = None
 
+logger = logging.getLogger('network')
+
 
 def get_error_by_reason(reason):
     global _nm_device_state_reason_description
@@ -345,7 +347,7 @@ def frequency_to_channel(frequency):
                4925: 185, 4935: 187, 4945: 188,
                4960: 192, 4980: 196}
     if frequency not in bg_table and frequency not in a_table:
-        logging.warning('The frequency %s can not be mapped to a channel, '
+        logger.warning('The frequency %s can not be mapped to a channel, '
                         'returning 0.', frequency)
         return 0
 
@@ -590,7 +592,7 @@ def set_connected():
         res_init(None)
     except:
         # pylint: disable=W0702
-        logging.exception('Error calling libc.__res_init')
+        logger.exception('Error calling libc.__res_init')
 
     check_urgent_update()
 
@@ -608,10 +610,10 @@ class SecretAgent(dbus.service.Object):
                        error_handler=self._register_error_cb)
 
     def _register_reply_cb(self):
-        logging.debug("SecretAgent registered")
+        logger.debug("SecretAgent registered")
 
     def _register_error_cb(self, error):
-        logging.error("Failed to register SecretAgent: %s", error)
+        logger.error("Failed to register SecretAgent: %s", error)
 
     @dbus.service.method(NM_SECRET_AGENT_IFACE,
                          async_callbacks=('reply', 'error'),
@@ -729,7 +731,7 @@ class AccessPoint(GObject.GObject):
         self.emit('props-changed', old_hash)
 
     def _get_all_props_error_cb(self, err):
-        logging.error('Error getting the access point properties: %s', err)
+        logger.error('Error getting the access point properties: %s', err)
 
     def _ap_properties_changed_cb(self, properties):
         self._update_properties(properties)
@@ -767,19 +769,19 @@ def get_secret_agent():
 
 
 def _activate_reply_cb(connection_path):
-    logging.debug('Activated connection: %s', connection_path)
+    logger.debug('Activated connection: %s', connection_path)
 
 
 def _activate_error_cb(err):
-    logging.error('Failed to activate connection: %s', err)
+    logger.error('Failed to activate connection: %s', err)
 
 
 def _add_and_activate_reply_cb(settings_path, connection_path):
-    logging.debug('Added and activated connection: %s', connection_path)
+    logger.debug('Added and activated connection: %s', connection_path)
 
 
 def _add_and_activate_error_cb(err):
-    logging.error('Failed to add and activate connection: %s', err)
+    logger.error('Failed to add and activate connection: %s', err)
 
 
 class Connection(GObject.GObject):
@@ -915,11 +917,11 @@ def find_connection_by_id(connection_id):
 
 
 def _add_connection_reply_cb(connection):
-    logging.debug('Added connection: %s', connection)
+    logger.debug('Added connection: %s', connection)
 
 
 def _add_connection_error_cb(err):
-    logging.error('Failed to add connection: %s', err)
+    logger.error('Failed to add connection: %s', err)
 
 
 def add_connection(settings, reply_handler=_add_connection_reply_cb,
@@ -960,10 +962,10 @@ def _migrate_old_wifi_connections():
     config = configparser.ConfigParser()
     try:
         if not config.read(config_path):
-            logging.error('Error reading the nm config file')
+            logger.error('Error reading the nm config file')
             return
     except configparser.ParsingError:
-        logging.exception('Error reading the nm config file')
+        logger.exception('Error reading the nm config file')
         return
 
     for section in config.sections():
@@ -1006,7 +1008,7 @@ def _migrate_old_wifi_connections():
                         value = config.get(section, 'pairwise')
                         settings.wireless_security.pairwise = value
         except configparser.Error:
-            logging.exception('Error reading section')
+            logger.exception('Error reading section')
         else:
             add_connection(settings)
 
@@ -1045,7 +1047,7 @@ def _migrate_old_gsm_connection():
     pin = settings.get_string(GSM_PIN_KEY) or ''
 
     if apn or number:
-        logging.info("Migrating old GSM connection details")
+        logger.info("Migrating old GSM connection details")
         try:
             create_gsm_connection(username, password, number, apn, pin)
             # remove old connection
@@ -1054,7 +1056,7 @@ def _migrate_old_gsm_connection():
                             GSM_PUK_KEY):
                 settings.set_string(setting, '')
         except Exception:
-            logging.exception('Error adding gsm connection to NMSettings.')
+            logger.exception('Error adding gsm connection to NMSettings.')
 
 
 def find_gsm_connection():
@@ -1166,7 +1168,7 @@ def clear_wireless_networks():
     try:
         connections = get_connections()
     except dbus.DBusException:
-        logging.debug('NetworkManager not available')
+        logger.debug('NetworkManager not available')
     else:
         wireless_connections = \
             (connection for connection in
@@ -1176,7 +1178,7 @@ def clear_wireless_networks():
             try:
                 connection.delete()
             except dbus.DBusException:
-                logging.debug("Could not remove connection %s",
+                logger.debug("Could not remove connection %s",
                               connection.get_id())
 
 
@@ -1186,7 +1188,7 @@ def have_wireless_networks():
     try:
         connections = get_connections()
     except dbus.DBusException:
-        logging.debug('NetworkManager not available')
+        logger.debug('NetworkManager not available')
         return False
     else:
         return any(is_wireless(connection)

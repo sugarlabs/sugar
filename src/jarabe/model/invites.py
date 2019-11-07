@@ -43,6 +43,7 @@ CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
     'org.laptop.Telepathy.ActivityProperties'
 
 _instance = None
+logger = logging.getLogger('invites')
 
 
 class BaseInvite(object):
@@ -74,10 +75,10 @@ class BaseInvite(object):
         if error is not None:
             raise error
         else:
-            logging.debug('_handle_with_reply_cb')
+            logger.debug('_handle_with_reply_cb')
 
     def _name_owner_changed_cb(self, name, old_owner, new_owner):
-        logging.debug('BaseInvite._name_owner_changed_cb %r %r %r', name,
+        logger.debug('BaseInvite._name_owner_changed_cb %r %r %r', name,
                       new_owner, old_owner)
         if name == self._handler and new_owner and not old_owner:
             self._call_handle_with()
@@ -106,7 +107,7 @@ class ActivityInvite(BaseInvite):
         return self._activity_properties.get('name')
 
     def join(self):
-        logging.debug('ActivityInvite.join handler %r', self._handler)
+        logger.debug('ActivityInvite.join handler %r', self._handler)
 
         registry = bundleregistry.get_registry()
         bundle_id = self.get_bundle_id()
@@ -139,7 +140,7 @@ class PrivateInvite(BaseInvite):
         return profile.get_color()
 
     def join(self):
-        logging.error('PrivateInvite.join handler %r', self._handler)
+        logger.error('PrivateInvite.join handler %r', self._handler)
         registry = bundleregistry.get_registry()
         bundle_id = self.get_bundle_id()
         bundle = registry.get_bundle(bundle_id)
@@ -171,7 +172,7 @@ class Invites(GObject.GObject):
             self.__got_dispatch_operation_cb)
 
     def __got_dispatch_operation_cb(self, **kwargs):
-        logging.debug('__got_dispatch_operation_cb')
+        logger.debug('__got_dispatch_operation_cb')
         dispatch_operation_path = kwargs['dispatch_operation_path']
         channel_path, channel_properties = kwargs['channels'][0]
         properties = kwargs['properties']
@@ -181,7 +182,7 @@ class Invites(GObject.GObject):
 
         if handle_type == HANDLE_TYPE_ROOM and \
            channel_type == CHANNEL_TYPE_TEXT:
-            logging.debug('May be an activity, checking its properties')
+            logger.debug('May be an activity, checking its properties')
             connection_path = properties[CHANNEL_DISPATCH_OPERATION +
                                          '.Connection']
             connection_name = connection_path.replace('/', '.')[1:]
@@ -208,14 +209,14 @@ class Invites(GObject.GObject):
                                                 properties)
 
     def __get_properties_cb(self, handle, dispatch_operation_path, properties):
-        logging.debug('__get_properties_cb %r', properties)
+        logger.debug('__get_properties_cb %r', properties)
         handler = '%s.%s' % (CLIENT, properties['type'])
         self._add_invite(dispatch_operation_path, handle, handler, properties)
 
     def __error_handler_cb(self, handle, channel_properties,
                            dispatch_operation_path, channel_path,
                            properties, error):
-        logging.debug('__error_handler_cb %r', error)
+        logger.debug('__error_handler_cb %r', error)
         exception_name = 'org.freedesktop.Telepathy.Error.NotAvailable'
         if error.get_dbus_name() == exception_name:
             self._dispatch_non_sugar_invitation(handle,
@@ -242,11 +243,11 @@ class Invites(GObject.GObject):
             self._call_handle_with(dispatch_operation_path, '')
 
         if handler is not None:
-            logging.debug('Adding an invite from a non-Sugar client')
+            logger.debug('Adding an invite from a non-Sugar client')
             self._add_invite(dispatch_operation_path, handle, handler)
 
     def _call_handle_with(self, dispatch_operation_path, handler):
-        logging.debug('_handle_with %r %r', dispatch_operation_path, handler)
+        logger.debug('_handle_with %r %r', dispatch_operation_path, handler)
         bus = dbus.Bus()
         obj = bus.get_object(CHANNEL_DISPATCHER, dispatch_operation_path)
         dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
@@ -257,13 +258,13 @@ class Invites(GObject.GObject):
 
     def __handle_with_reply_cb(self, error=None):
         if error is not None:
-            logging.error('__handle_with_reply_cb %r', error)
+            logger.error('__handle_with_reply_cb %r', error)
         else:
-            logging.debug('__handle_with_reply_cb')
+            logger.debug('__handle_with_reply_cb')
 
     def _add_invite(self, dispatch_operation_path, handle, handler,
                     activity_properties=None):
-        logging.debug('_add_invite %r %r %r', dispatch_operation_path, handle,
+        logger.debug('_add_invite %r %r %r', dispatch_operation_path, handle,
                       handler)
         if dispatch_operation_path in self._dispatch_operations:
             # there is no point to have more than one invite for the same

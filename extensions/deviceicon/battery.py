@@ -53,6 +53,8 @@ _UP_TYPE_BATTERY = 2
 _settings = None
 _warning_capacity = 15
 
+logger = logging.getLogger('battery')
+
 
 def _settings_get(key):
     global _settings
@@ -288,16 +290,16 @@ class DeviceModel(GObject.GObject):
             return
 
         if self._level > self._minimum_capacity:
-            logging.error('battery under warning, %d%%' % self._level)
+            logger.error('battery under warning, %d%%' % self._level)
             return
 
         elapsed = time.time() - self._grace
         if elapsed < self._grace_time:
-            logging.error('battery under minimum, %d%%, grace %d%%' %
+            logger.error('battery under minimum, %d%%, grace %d%%' %
                           (self._level, elapsed * 100 / self._grace))
             return
 
-        logging.error('battery under minimum, %d%%, forced shutdown' %
+        logger.error('battery under minimum, %d%%, forced shutdown' %
                       self._level)
         sm = get_session_manager()
         sm.shutdown()

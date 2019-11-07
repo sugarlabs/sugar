@@ -41,12 +41,13 @@ _MESH_PAGE = 2
 _TRANSITION_PAGE = 3
 
 _instance = None
+logger = logging.getLogger('homewindow')
 
 
 class HomeWindow(Gtk.Window):
 
     def __init__(self):
-        logging.debug('STARTUP: Loading the desktop window')
+        logger.debug('STARTUP: Loading the desktop window')
         Gtk.Window.__init__(self)
         self.set_has_resize_grip(False)
 

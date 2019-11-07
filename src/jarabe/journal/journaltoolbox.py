@@ -73,6 +73,8 @@ _WHITE = style.COLOR_WHITE.get_html()
 _LABEL_MAX_WIDTH = 18
 _MAXIMUM_PALETTE_COLUMNS = 4
 
+logger = logging.getLogger('journal-toolbox')
+
 
 class MainToolbox(ToolbarBox):
 
@@ -253,7 +255,7 @@ class MainToolbox(ToolbarBox):
                     mime_types = generic_type.mime_types
                     query['mime_type'] = mime_types
                 else:
-                    logging.error('filter_type="generic_mime", '
+                    logger.error('filter_type="generic_mime", '
                                   'but "%s" is not a generic mime' % value)
 
             elif filter_type == FILTER_TYPE_ACTIVITY:
@@ -266,7 +268,7 @@ class MainToolbox(ToolbarBox):
                 if bundle is not None:
                     query['mime_type'] = bundle.get_mime_types()
                 else:
-                    logging.error('Trying to filter using activity mimetype '
+                    logger.error('Trying to filter using activity mimetype '
                                   'but bundle id is wrong %s' % value)
 
         if self._when_filter:
@@ -331,7 +333,7 @@ class MainToolbox(ToolbarBox):
                                                   self._autosearch_timer_cb)
 
     def _autosearch_timer_cb(self):
-        logging.debug('_autosearch_timer_cb')
+        logger.debug('_autosearch_timer_cb')
         self._autosearch_timer = None
         self.search_entry.activate()
         return False
@@ -447,7 +449,7 @@ class MainToolbox(ToolbarBox):
                              'id': bundle_id})
                     except GLib.GError as exception:
                         # fall back to generic icon
-                        logging.warning('Falling back to default icon for'
+                        logger.warning('Falling back to default icon for'
                                         ' "what" filter because %r (%r) has an'
                                         ' invalid icon: %s',
                                         activity_info.get_name(),
@@ -592,7 +594,7 @@ class DetailToolbox(ToolbarBox):
         try:
             model.copy(self._metadata, '/')
         except IOError as e:
-            logging.exception('Error while copying the entry.')
+            logger.exception('Error while copying the entry.')
             self.emit('volume-error',
                       _('Error while copying the entry. %s') % (e.strerror, ),
                       _('Error'))

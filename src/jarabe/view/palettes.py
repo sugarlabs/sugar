@@ -40,6 +40,8 @@ from jarabe.view.viewhelp import setup_view_help
 from jarabe.view.viewhelp import should_show_view_help
 from jarabe.journal import misc
 
+logger = logging.getLogger('palettes')
+
 
 class BasePalette(Palette):
 
@@ -315,7 +317,7 @@ class VolumePalette(Palette):
                                            self.__unmount_cb, user_data)
 
     def __unmount_cb(self, mount, result, user_data):
-        logging.debug('__unmount_cb %r %r', mount, result)
+        logger.debug('__unmount_cb %r %r', mount, result)
         mount.unmount_with_operation_finish(result)
 
     def __popup_cb(self, palette):

@@ -25,6 +25,8 @@ from jarabe.frame.clipboardtray import ClipboardTray
 
 from jarabe.frame import clipboard
 
+logger = logging.getLogger('clipboardpanelwindow')
+
 
 class ClipboardPanelWindow(FrameWindow):
 
@@ -52,7 +54,7 @@ class ClipboardPanelWindow(FrameWindow):
                      self._clipboard_tray.drag_data_received_cb)
 
     def _owner_change_cb(self, x_clipboard, event):
-        logging.debug('owner_change_cb')
+        logger.debug('owner_change_cb')
 
         if self._clipboard_tray.owns_clipboard():
             return
@@ -68,13 +70,13 @@ class ClipboardPanelWindow(FrameWindow):
         for target in targets:
             if target not in ('TIMESTAMP', 'TARGETS',
                               'MULTIPLE', 'SAVE_TARGETS'):
-                logging.debug('Asking for target %s.', target)
+                logger.debug('Asking for target %s.', target)
                 if target == 'text/uri-list':
                     target_is_uri = True
 
                 selection = x_clipboard.wait_for_contents(target)
                 if not selection:
-                    logging.warning('no data for selection target %s.', target)
+                    logger.warning('no data for selection target %s.', target)
                     continue
                 cb_selections.append(selection)
 
@@ -113,12 +115,12 @@ class ClipboardPanelWindow(FrameWindow):
 
     def _add_selection(self, key, selection):
         if not selection.get_data():
-            logging.warning('no data for selection target %s.',
+            logger.warning('no data for selection target %s.',
                             selection.get_data_type())
             return
 
         selection_type = str(selection.get_data_type())
-        logging.debug('adding type ' + selection_type + '.')
+        logger.debug('adding type ' + selection_type + '.')
 
         cb_service = clipboard.get_instance()
         if selection_type == 'text/uri-list':

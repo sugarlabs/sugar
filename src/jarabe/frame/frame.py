@@ -43,6 +43,8 @@ BOTTOM_LEFT = 3
 
 NOTIFICATION_DURATION = 5000
 
+logger = logging.getLogger('frame-frame')
+
 
 class _Animation(animator.Animation):
 
@@ -58,7 +60,7 @@ class _Animation(animator.Animation):
 class Frame(object):
 
     def __init__(self):
-        logging.debug('STARTUP: Loading the frame')
+        logger.debug('STARTUP: Loading the frame')
 
         self.settings = Gio.Settings.new('org.sugarlabs.frame')
         self._palette_group = palettegroup.get_group('frame')
@@ -252,7 +254,7 @@ class Frame(object):
 
     def remove_notification(self, icon):
         if icon not in self._notif_by_icon:
-            logging.debug('icon %r not in list of notifications.', icon)
+            logger.debug('icon %r not in list of notifications.', icon)
             return
 
         window = self._notif_by_icon[icon]
@@ -264,7 +266,7 @@ class Frame(object):
         self.show()
 
     def __notification_received_cb(self, **kwargs):
-        logging.debug('__notification_received_cb')
+        logger.debug('__notification_received_cb')
         icon = NotificationIcon()
         icon.show_badge()
         icon.connect('button-release-event', self.__button_release_event_cb)

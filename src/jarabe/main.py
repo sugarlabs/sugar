@@ -14,14 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sugar3 import logger
+from sugar3 import logger as log
 
-logger.cleanup()
-logger.start('shell')
+log.cleanup()
+log.start('shell')
 
 import logging
+logger = logging.getLogger('main')
 
-logging.debug('STARTUP: Starting the shell')
+logger.debug('STARTUP: Starting the shell')
 
 import os
 import sys
@@ -91,32 +92,32 @@ _starting_desktop = False
 
 
 def unfreeze_screen_cb():
-    logging.debug('STARTUP: unfreeze_screen_cb')
+    logger.debug('STARTUP: unfreeze_screen_cb')
     screen.unfreeze()
 
 
 def setup_frame_cb():
-    logging.debug('STARTUP: setup_frame_cb')
+    logger.debug('STARTUP: setup_frame_cb')
     frame.get_view()
 
 
 def setup_keyhandler_cb():
-    logging.debug('STARTUP: setup_keyhandler_cb')
+    logger.debug('STARTUP: setup_keyhandler_cb')
     keyhandler.setup(frame.get_view())
 
 
 def setup_gesturehandler_cb():
-    logging.debug('STARTUP: setup_gesturehandler_cb')
+    logger.debug('STARTUP: setup_gesturehandler_cb')
     gesturehandler.setup(frame.get_view())
 
 
 def setup_cursortracker_cb():
-    logging.debug('STARTUP: setup_cursortracker_cb')
+    logger.debug('STARTUP: setup_cursortracker_cb')
     cursortracker.setup()
 
 
 def setup_journal_cb():
-    logging.debug('STARTUP: setup_journal_cb')
+    logger.debug('STARTUP: setup_journal_cb')
     journalactivity.start()
 
 
@@ -129,15 +130,15 @@ def setup_file_transfer_cb():
 
 
 def setup_window_manager():
-    logging.debug('STARTUP: window_manager')
+    logger.debug('STARTUP: window_manager')
 
     if subprocess.call('metacity-message disable-keybindings',
                        shell=True):
-        logging.warning('Can not disable metacity keybindings')
+        logger.warning('Can not disable metacity keybindings')
 
     if subprocess.call('metacity-message disable-mouse-button-modifiers',
                        shell=True):
-        logging.warning('Can not disable metacity mouse button modifiers')
+        logger.warning('Can not disable metacity mouse button modifiers')
 
 
 def __window_manager_changed_cb(screen):
@@ -178,7 +179,7 @@ def _check_for_window_manager(screen):
 
 
 def __window_manager_failed_cb(fd, condition):
-    logging.error('window manager did fail, restarting')
+    logger.error('window manager did fail, restarting')
     GLib.source_remove(_metacity_sid)
     GLib.timeout_add(1000, _restart_window_manager)
     return False

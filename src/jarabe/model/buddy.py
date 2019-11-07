@@ -32,6 +32,8 @@ CONNECTION_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 
 _owner_instance = None
 
+logger = logging.getLogger('buddy')
+
 
 class BaseBuddyModel(GObject.GObject):
     __gtype_name__ = 'SugarBaseBuddyModel'
@@ -166,14 +168,14 @@ class OwnerBuddyModel(BaseBuddyModel):
             if self.props.color is not None:
                 properties['color'] = self.props.color.to_string()
 
-            logging.debug('calling SetProperties with %r', properties)
+            logger.debug('calling SetProperties with %r', properties)
             connection[CONNECTION_INTERFACE_BUDDY_INFO].SetProperties(
                 properties,
                 reply_handler=self.__set_properties_cb,
                 error_handler=self.__error_handler_cb)
 
     def __set_properties_cb(self):
-        logging.debug('__set_properties_cb')
+        logger.debug('__set_properties_cb')
 
     def __error_handler_cb(self, error):
         raise RuntimeError(error)
