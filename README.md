@@ -46,7 +46,17 @@ Standards](https://www.gnu.org/prep/standards/).
 Install all dependencies, especially `sugar-artwork`, `sugar-datastore`,
 and `sugar-toolkit-gtk3`.
 
-Clone the repository, run `autogen.sh`, then `make` and `make
+Install the dependency `intltool`.
+
+On Debian/Ubuntu, run
+```
+$ sudo apt install intltool
+```
+On Fedora, run
+```
+$ sudo dnf install intltool
+```
+Then, clone the repository, run `autogen.sh`, then `make` and `make
 install`.
 
 See also [Setup a development
