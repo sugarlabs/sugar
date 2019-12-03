@@ -46,6 +46,17 @@ Standards](https://www.gnu.org/prep/standards/).
 Install all dependencies, especially `sugar-artwork`, `sugar-datastore`,
 and `sugar-toolkit-gtk3`.
 
+Install `python3-empy` by running the following command:
+
+On Ubuntu
+```
+$ sudo apt install python3-empy
+```
+On Fedora 
+```
+$ sudo dnf install python3-empy
+```
+
 Clone the repository, run `autogen.sh`, then `make` and `make
 install`.
 
