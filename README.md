@@ -43,8 +43,8 @@ Building
 Sugar follows the [GNU Coding
 Standards](https://www.gnu.org/prep/standards/).
 
-Install all dependencies, especially `sugar-artwork`, `sugar-datastore`,
-and `sugar-toolkit-gtk3`.
+Install all dependencies, especially [`sugar-artwork`](https://github.com/sugarlabs/sugar-artwork), `sugar-datastore` (automatically installed) ,
+and [`sugar-toolkit-gtk3`](https://github.com/sugarlabs/sugar-toolkit-gtk3).
 
 Clone the repository, run `autogen.sh`, then `make` and `make
 install`.
