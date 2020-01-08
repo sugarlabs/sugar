@@ -27,6 +27,7 @@ import os
 import sys
 import subprocess
 import shutil
+import json
 
 # Disable overlay scrolling before GTK is loaded
 os.environ['GTK_OVERLAY_SCROLLING'] = '0'
@@ -194,8 +195,46 @@ def _restart_window_manager():
                                       __window_manager_failed_cb)
     return False
 
+def _get_gnome_cursor():
+    # Retrieve the current GNOME user-defined cursor
+    settings = Gio.Settings.new('org.gnome.desktop.interface')
+    cursor = {
+        'gnome_cursor' : settings.get_string('cursor-theme')
+        }
+    
+    # Store it to cursor_dir, sugar will restore it in _stop_window_manager
+    cursor_dir = '~/.sugar/cursor'
+    try:
+        if not os.path.exists(cursor_dir):
+            os.makedir(os.path.expanduser(cursor_dir))
+        
+        with open(os.path.join(cursor_dir, 'gnome-cursor.json'), 'w') as cursor_file:
+            cursor_file.write(json.dumps(cursor))
+    except Exception as e:
+        logging.warning('GNOME cursor could not be saved. Error {}'.format(e))
+
+def _restore_gnome_cursor():
+    # Retrieve the saved cursor from cursor_dir
+    cursor = None
+    cursor_dir = '~/.sugar/cursor'
+    try:
+        with open(os.path.join(cursor_dir, 'gnome-cursor.json'), 'r') as cursor_file:
+            cursor = json.loads(cursor_file.read())['gnome-cursor']
+    except Exception as e:
+        logging.error('GNOME cursor could not be restored. Error {}'.format(e))
+        cursor = None
+    
+    # Restore the GNOME cursor
+    settings = Gio.Settings.new('org.gnome.desktop.interface')
+    if cursor is not None:
+        settings.set_string('cursor-theme', cursor)
+    else:
+        settings.set_string('cursor-theme', 'default')
 
 def _start_window_manager():
+    
+    _get_gnome_cursor()
+    
     settings = Gio.Settings.new('org.gnome.desktop.interface')
     settings.set_string('cursor-theme', 'sugar')
 
@@ -208,6 +247,7 @@ def _start_window_manager():
 
 
 def _stop_window_manager():
+    _restore_gnome_cursor()
     _metacity_process.terminate()
 
 
