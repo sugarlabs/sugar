@@ -27,7 +27,6 @@ import os
 import sys
 import subprocess
 import shutil
-import json
 
 # Disable overlay scrolling before GTK is loaded
 os.environ['GTK_OVERLAY_SCROLLING'] = '0'
