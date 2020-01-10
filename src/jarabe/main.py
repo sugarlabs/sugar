@@ -88,7 +88,6 @@ from jarabe.model import brightness
 _metacity_process = None
 _window_manager_started = False
 _starting_desktop = False
-_saved_cursor_theme = None
 
 
 def unfreeze_screen_cb():
@@ -197,11 +196,11 @@ def _restart_window_manager():
 
 
 def _start_window_manager():
-    global _saved_cursor_theme
-    global settings
-    settings = Gio.Settings.new('org.gnome.desktop.interface')
-    _saved_cursor_theme = settings.get_string('cursor-theme')
-    settings.set_string('cursor-theme', 'sugar')
+    global _cursor_theme_settings, _cursor_theme
+
+    _cursor_theme_settings = Gio.Settings.new('org.gnome.desktop.interface')
+    _cursor_theme = _cursor_theme_settings.get_string('cursor-theme')
+    _cursor_theme_settings.set_string('cursor-theme', 'sugar')
 
     _restart_window_manager()
 
@@ -212,7 +211,7 @@ def _start_window_manager():
 
 
 def _stop_window_manager():
-    settings.set_string('cursor-theme', _saved_cursor_theme)
+    _cursor_theme_settings.set_string('cursor-theme', _cursor_theme)
     _metacity_process.terminate()
 
 
