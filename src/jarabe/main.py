@@ -84,15 +84,12 @@ from jarabe import apisocket
 from jarabe import testrunner
 from jarabe.model import brightness
 
-
 _metacity_process = None
 _window_manager_started = False
 _starting_desktop = False
 
-# Initiate global settings variable
-settings = Gio.Settings.new('org.gnome.desktop.interface')
 # Set cursor dict as empty on init
-cursor = {}
+cursor = None
 
 
 def unfreeze_screen_cb():
@@ -199,23 +196,14 @@ def _restart_window_manager():
                                       __window_manager_failed_cb)
     return False
 
-def _get_gnome_cursor():
-    # Retrieve the current GNOME user-defined cursor
-    cursor_theme = settings.get_string('cursor-theme')
-    if cursor_theme:
-        cursor = { 'gnome-cursor' : cursor_theme }
-    else:
-        logging.warning('GNOME cursor could not be saved. Error {}'.format(e))
-
 def _restore_gnome_cursor():
-    # Restore the GNOME cursor
-    if cursor:
-        settings.set_string('cursor-theme', cursor['gnome-cursor'])
-    else:
-        settings.set_string('cursor-theme', 'default')
+
 
 def _start_window_manager():
-    _get_gnome_cursor()
+    settings = Gio.Settings.new('org.gnome.desktop.interface')
+    global cursor
+    cursor = settings.get_string('cursor-theme')
+    
     settings.set_string('cursor-theme', 'sugar')
 
     _restart_window_manager()
@@ -227,7 +215,13 @@ def _start_window_manager():
 
 
 def _stop_window_manager():
-    _restore_gnome_cursor()
+    settings = Gio.Settings.new('org.gnome.desktop.interface')
+    # Restore the GNOME cursor
+    if cursor:
+        settings.set_string('cursor-theme', cursor['gnome-cursor'])
+    else:
+        settings.set_string('cursor-theme', 'default')
+        
     _metacity_process.terminate()
 
 
