@@ -87,8 +87,6 @@ from jarabe.model import brightness
 _metacity_process = None
 _window_manager_started = False
 _starting_desktop = False
-
-# Set cursor as None on init
 _saved_cursor_theme = None
 
 
@@ -217,7 +215,6 @@ def _start_window_manager():
 
 def _stop_window_manager():
     settings = Gio.Settings.new('org.gnome.desktop.interface')
-    # Restore the GNOME cursor
     if _saved_cursor_theme:
         settings.set_string('cursor-theme', _saved_cursor_theme)
     _metacity_process.terminate()
