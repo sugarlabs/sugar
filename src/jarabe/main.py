@@ -212,8 +212,7 @@ def _start_window_manager():
 
 def _stop_window_manager():
     settings = Gio.Settings.new('org.gnome.desktop.interface')
-    if _saved_cursor_theme:
-        settings.set_string('cursor-theme', _saved_cursor_theme)
+    settings.set_string('cursor-theme', _saved_cursor_theme)
     _metacity_process.terminate()
 
 
