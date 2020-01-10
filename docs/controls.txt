@@ -33,7 +33,7 @@ sugar.Icon
 sugar.IconButton
 
 * Support for SVG and png.
-* Icons should be grey scale. But might be coloured with the XO colors (svg only)
+* Icons should be grey scale. But might be coloured with the XO colors (svg only).
 * Size of the button is 75 pixels, size of the icon canvas is 55 and suggested icon size is around 45.
 * States, defaults:
     Hover : Black
@@ -42,12 +42,12 @@ sugar.IconButton
     Inactive. Fallbacks if no inactive icon is specified.
         Svg: Remove the fill and render the stroke in button grey
         Png: just do some effect on the pixbuf, which also work for grey icons
-* You can set an icon for each states which replace the default except for the Hover state of buttons which has rollover.
+* You can set an icon for each state which replace the default except for the Hover state of buttons which has rollover.
 * "palette" boolean property. If true show an arrow active immediately on click (but also on hover)
 
 sugar.ToolButton (support for rollovers)
 
-* Contains IconButton
+* Contains IconButton.
 * There is no palette but a tooltip.
 * Normal: Button grey rounded filled rectangle
 * Inactive: Button grey rounded stroked rectangle
