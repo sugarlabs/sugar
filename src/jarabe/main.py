@@ -89,7 +89,7 @@ _window_manager_started = False
 _starting_desktop = False
 
 # Set cursor as None on init
-saved_cursor_theme = None
+_saved_cursor_theme = None
 
 
 def unfreeze_screen_cb():
@@ -202,8 +202,8 @@ def _restore_gnome_cursor():
 
 def _start_window_manager():
     settings = Gio.Settings.new('org.gnome.desktop.interface')
-    global saved_cursor_theme
-    saved_cursor_theme = settings.get_string('cursor-theme')
+    global _saved_cursor_theme
+    _saved_cursor_theme = settings.get_string('cursor-theme')
 
     settings.set_string('cursor-theme', 'sugar')
 
@@ -218,8 +218,8 @@ def _start_window_manager():
 def _stop_window_manager():
     settings = Gio.Settings.new('org.gnome.desktop.interface')
     # Restore the GNOME cursor
-    if saved_cursor_theme:
-        settings.set_string('cursor-theme', saved_cursor_theme)
+    if _saved_cursor_theme:
+        settings.set_string('cursor-theme', _saved_cursor_theme)
     _metacity_process.terminate()
 
 
