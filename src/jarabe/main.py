@@ -195,12 +195,9 @@ def _restart_window_manager():
     return False
 
 
-def _restore_gnome_cursor():
-
-
 def _start_window_manager():
-    settings = Gio.Settings.new('org.gnome.desktop.interface')
     global _saved_cursor_theme
+    settings = Gio.Settings.new('org.gnome.desktop.interface')
     _saved_cursor_theme = settings.get_string('cursor-theme')
 
     settings.set_string('cursor-theme', 'sugar')
