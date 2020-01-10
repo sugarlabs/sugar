@@ -196,8 +196,11 @@ def _restart_window_manager():
 
 
 def _start_window_manager():
-    settings = Gio.Settings.new('org.gnome.desktop.interface')
-    settings.set_string('cursor-theme', 'sugar')
+    global _cursor_theme_settings, _cursor_theme
+
+    _cursor_theme_settings = Gio.Settings.new('org.gnome.desktop.interface')
+    _cursor_theme = _cursor_theme_settings.get_string('cursor-theme')
+    _cursor_theme_settings.set_string('cursor-theme', 'sugar')
 
     _restart_window_manager()
 
@@ -208,6 +211,7 @@ def _start_window_manager():
 
 
 def _stop_window_manager():
+    _cursor_theme_settings.set_string('cursor-theme', _cursor_theme)
     _metacity_process.terminate()
 
 
