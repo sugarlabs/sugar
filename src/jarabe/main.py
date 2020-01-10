@@ -84,6 +84,7 @@ from jarabe import apisocket
 from jarabe import testrunner
 from jarabe.model import brightness
 
+
 _metacity_process = None
 _window_manager_started = False
 _starting_desktop = False
