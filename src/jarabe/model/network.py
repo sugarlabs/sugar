@@ -364,7 +364,7 @@ def is_sugar_adhoc_network(ssid):
     Return: Boolean
 
     """
-    return ssid.startswith('Ad-hoc Network')
+    return ssid.startswith('Ad-hoc Network'.encode("utf-8"))
 
 
 class WirelessSecurity(object):
