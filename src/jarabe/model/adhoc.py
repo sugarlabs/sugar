@@ -251,13 +251,13 @@ class AdHocManager(GObject.GObject):
         access_point -- Access Point
 
         """
-        if access_point.ssid.endswith(' 1'):
+        if access_point.ssid.endswith(b" 1"):
             self._networks[self._CHANNEL_1] = access_point
             self.emit('members-changed', self._CHANNEL_1, True)
-        elif access_point.ssid.endswith(' 6'):
+        elif access_point.ssid.endswith(b" 6"):
             self._networks[self._CHANNEL_6] = access_point
             self.emit('members-changed', self._CHANNEL_6, True)
-        elif access_point.ssid.endswith('11'):
+        elif access_point.ssid.endswith(b"11"):
             self._networks[self._CHANNEL_11] = access_point
             self.emit('members-changed', self._CHANNEL_11, True)
 
