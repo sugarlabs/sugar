@@ -127,7 +127,7 @@ class ActivityView(SnowflakeLayout):
 
     def _is_joinable(self):
         max_participants = self._model.bundle.get_max_participants()
-        return max_participants is 0 or len(self._icons) < max_participants
+        return max_participants == 0 or len(self._icons) < max_participants
 
     def _create_icon(self):
         icon = _ActivityIcon(self._model,
