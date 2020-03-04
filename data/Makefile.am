@@ -1,12 +1,12 @@
 SUBDIRS = icons
 
 sugar-72.gtkrc: gtkrc.em
-	$(PYTHON) - -D scaling=\'72\' $(srcdir)/gtkrc.em > \
-		$(top_builddir)/data/sugar-72.gtkrc < $(EMPY)
+	$(PYTHON) -m em - -D scaling=\'72\' $(srcdir)/gtkrc.em > \
+		$(top_builddir)/data/sugar-72.gtkrc
 
 sugar-100.gtkrc: gtkrc.em
-	$(PYTHON) - -D scaling=\'100\' $(srcdir)/gtkrc.em > \
-		$(top_builddir)/data/sugar-100.gtkrc < $(EMPY)
+	$(PYTHON) -m em - -D scaling=\'100\' $(srcdir)/gtkrc.em > \
+		$(top_builddir)/data/sugar-100.gtkrc
 
 sugardir = $(pkgdatadir)/data
 sugar_DATA =			\
