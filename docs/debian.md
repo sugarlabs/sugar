@@ -8,7 +8,24 @@ In relation to Sugar, Debian is a downstream distribution project that can be us
 Using Sugar 0.112 on Debian
 ---------------------------
 
-Sugar 0.112 will be available in Debian *Buster*.
+Sugar 0.112 is available in Debian *Buster*:
+
+-   install Debian *Buster* in the usual way, see [debian.org](https://www.debian.org/), and [debian-installer](https://www.debian.org/releases/stretch/debian-installer/),
+-   when the install has completed, log in, install Sugar, a display manager, and reboot,
+
+```
+sudo apt install sucrose lightdm
+exec sudo reboot
+```
+
+-   in the graphical login screen, change from the default X session to Sugar,
+-   log in as the non-root user, which you will have created during install.
+
+Known bugs include;
+
+-   Sugar starts in Journal, workaround is to press F3 button, fixed by [Metacity 074af8f](https://github.com/GNOME/metacity/commit/074af8f87ef89b13ff326fb5d04ee424bbfd4ced),
+
+Update activities using My Settings, Software Update.  Updated activities as at 2020-03-07 are Calculate, Chat, Image Viewer, Jukebox, Log, Pippy, Terminal, and Write.
 
 Using Sugar 0.110 on Debian
 ---------------------------
