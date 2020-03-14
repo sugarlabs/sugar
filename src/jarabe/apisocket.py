@@ -211,7 +211,7 @@ class DatastoreAPI(API):
             self._client.send_error(info["close_request"], error)
 
         def on_data(data):
-            file_object.write(data[1:])
+            file_object.write(data[1:].decode("utf-8"))
 
         def on_close(close_request):
             file_object.close()
@@ -320,7 +320,7 @@ class APIServer(object):
 
     def _message_received_cb(self, session, message, client):
         if message.message_type == Message.TYPE_BINARY:
-            stream_id = ord(message.data[0])
+            stream_id = message.data[0]
             stream_monitor = client.stream_monitors[stream_id]
             stream_monitor.on_data(message.data)
             return
