@@ -44,8 +44,9 @@ Packaging
 
 Packaging of Sugar on Debian is done by a team:
 
--   [pkg-sugar-team project](https://https://salsa.debian.org/pkg-sugar-team),
+-   [pkg-sugar-team project](https://salsa.debian.org/pkg-sugar-team),
 -   [pkg-sugar-devel mailing list](https://lists.alioth.debian.org/mailman/listinfo/pkg-sugar-devel),
+-   [pkg-sugar git repositories](https://salsa.debian.org/pkg-sugar-team/sugar)
 -   [package archive of Jonas Smedegaard](http://debian.jones.dk/pkg/sugar_/),
 
 Sucrose packages are usually updated in the unstable release. These packages migrate to the testing release after a while. You can see the current package versions [here](http://packages.debian.org/search?keywords=sugar&searchon=names&suite=all&section=all).
