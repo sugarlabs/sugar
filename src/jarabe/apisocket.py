@@ -121,7 +121,7 @@ class DatastoreAPI(API):
         instance_path = os.path.join(activity_root, "instance")
 
         file_path = os.path.join(instance_path, "%i" % time.time())
-        file_object = open(file_path, "w")
+        file_object = open(file_path, 'wb')
 
         return file_path, file_object
 
@@ -152,7 +152,7 @@ class DatastoreAPI(API):
 
     def load(self, request):
         def get_filename_reply_handler(file_name):
-            file_object = open(file_name)
+            file_object = open(file_name, 'rb')
             info["file_object"] = file_object
 
             if "requested_size" in info:
@@ -168,7 +168,7 @@ class DatastoreAPI(API):
             self._client.send_error(request, error)
 
         def send_binary(data):
-            self._client.send_binary(chr(stream_id) + data)
+            self._client.send_binary(bytes([stream_id]) + data)
 
         def on_data(data):
             size = struct.unpack("ii", data)[1]
@@ -211,7 +211,7 @@ class DatastoreAPI(API):
             self._client.send_error(info["close_request"], error)
 
         def on_data(data):
-            file_object.write(data[1:].decode("utf-8"))
+            file_object.write(data[1:])
 
         def on_close(close_request):
             file_object.close()
