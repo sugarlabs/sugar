@@ -261,6 +261,9 @@ class APIClient(object):
         self._session.send_message(json.dumps(response))
 
     def send_error(self, request, error):
+        if isinstance(error, dbus.exceptions.DBusException):
+            error = error.get_dbus_name() + " " + error.get_dbus_message()
+
         response = {"result": None,
                     "error": error,
                     "id": request["id"]}
