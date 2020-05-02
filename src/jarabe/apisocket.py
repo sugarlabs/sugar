@@ -16,7 +16,6 @@
 import json
 import os
 import struct
-import time
 import binascii
 
 import dbus
@@ -115,12 +114,14 @@ class DatastoreAPI(API):
                                     "/org/laptop/sugar/DataStore")
         self._data_store = dbus.Interface(bus_object,
                                           "org.laptop.sugar.DataStore")
+        self._sequence = 0
 
     def _create_file(self):
         activity_root = env.get_profile_path(self._activity.get_type())
         instance_path = os.path.join(activity_root, "instance")
 
-        file_path = os.path.join(instance_path, "%i" % time.time())
+        self._sequence += 1
+        file_path = os.path.join(instance_path, "%d" % self._sequence)
         file_object = open(file_path, "w")
 
         return file_path, file_object
