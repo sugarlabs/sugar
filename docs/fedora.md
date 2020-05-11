@@ -12,7 +12,7 @@ Install Fedora. Then, in a Terminal, type:
 
     sudo dnf groupinstall sugar-desktop
 
-Then restart your computer. At the *Sign in* select the *Sugar* desktop.
+Then restart your computer. At the *Sign in* select the *Sugar* desktop (Fedora uses GDM by default, tutorial to login to Sugar using GDM can be viewed in [the Sugar Docs](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md)).
 
 Using Sugar with another Desktop Environment
 --------------------------------------------

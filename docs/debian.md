@@ -18,7 +18,7 @@ sudo apt install sucrose lightdm
 exec sudo reboot
 ```
 
--   in the graphical login screen, change from the default X session to Sugar,
+-   in the graphical login screen, [change from the default X session to Sugar](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
 -   log in as the non-root user, which you will have created during install.
 
 Known bugs include;
@@ -41,7 +41,7 @@ sudo apt install sucrose lightdm
 exec sudo reboot
 ```
 
--   in the graphical login screen, change from the default X session to Sugar,
+-   in the graphical login screen, [change from the default X session to Sugar](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
 -   log in as your non-root user, created during install.
 
 Known bugs include;
