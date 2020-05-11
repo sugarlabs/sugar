@@ -49,7 +49,7 @@ Install the `sucrose` package;
 
     sudo apt install sucrose
 
-Log out, then log in with the Sugar desktop selected.
+Log out, then [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md).
 
 Once Sugar is installed, development of activities can begin.
 
@@ -144,7 +144,7 @@ Clone the Browse and Terminal activities;
     git clone https://github.com/sugarlabs/browse-activity.git Browse.activity
     git clone https://github.com/sugarlabs/terminal-activity.git Terminal.activity
 
-Log out and log in again with the Sugar desktop selected, or use the remote desktop feature described earlier on this page.
+Log out and [log in again with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md), or use the remote desktop feature described earlier on this page.
 
 After making changes in a Sugar module, repeat the `sudo make install` step, and log in again.
 
