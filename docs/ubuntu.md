@@ -14,7 +14,7 @@ Sugar 0.112 can be installed with the following commands:
     sudo apt install sucrose
 
 -   log out,
--   log in with the Sugar desktop selected,
+-   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
 
 Known Problems:
 
@@ -31,7 +31,7 @@ Sugar 0.112 is in the universe repository, and can be installed with the followi
     sudo apt install sucrose
 
 -   log out,
--   log in with the Sugar desktop selected,
+-   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
 
 Ubuntu 18.04 (Bionic Beaver) and 18.10 (Cosmic Cuttlefish)
 -------------------
@@ -44,7 +44,7 @@ Sugar 0.112 is in the universe repository, and can be installed with the followi
     sudo apt install sucrose
 
 -   log out,
--   log in with the Sugar desktop selected,
+-   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
 -   press the F3 key to switch to the home view, see below.
 
 Known problems
