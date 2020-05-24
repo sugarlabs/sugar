@@ -265,8 +265,8 @@ class BundleRegistry(GObject.GObject):
         # Sort by mtime to ensure a stable activity order
         bundles = {}
         for f in os.listdir(path):
+            bundle_dir = os.path.join(path, f)
             try:
-                bundle_dir = os.path.join(path, f)
                 if os.path.isdir(bundle_dir):
                     bundles[bundle_dir] = os.stat(bundle_dir).st_mtime
             except Exception:
