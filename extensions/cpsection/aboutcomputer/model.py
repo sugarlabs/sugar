@@ -144,8 +144,8 @@ def get_secondary_licenses():
     licenses_path = config.licenses_path
     if os.path.isdir(licenses_path):
         for file_name in os.listdir(licenses_path):
+            file_path = os.path.join(licenses_path, file_name)
             try:
-                file_path = os.path.join(licenses_path, file_name)
                 with open(file_path) as f:
                     licenses.append(f.read())
             except IOError:
