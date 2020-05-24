@@ -58,13 +58,11 @@ class _ContextMap(object):
 
 class ClipboardTray(tray.VTray):
 
-    MAX_ITEMS = Gdk.Screen.height() // style.GRID_CELL_SIZE - 2
-
     def __init__(self):
         tray.VTray.__init__(self, align=tray.ALIGN_TO_END)
         self._icons = {}
         self._context_map = _ContextMap()
-
+        self.MAX_ITEMS = Gdk.Screen.height() // style.GRID_CELL_SIZE - 2
         cb_service = clipboard.get_instance()
         cb_service.connect('object-added', self._object_added_cb)
         cb_service.connect('object-deleted', self._object_deleted_cb)
