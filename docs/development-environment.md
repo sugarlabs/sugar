@@ -26,7 +26,7 @@ See [downloads](http://people.sugarlabs.org/~quozl/sugar-live-build/) for the IS
 
 Once installed, Sugar Live Build can be used to make changes to Sugar, the toolkits, the demonstration activities, or to write new activities.
 
--   changes to Sugar or the toolkits can be done by editing files in the module source trees in `/usr/src`, followed by `sudo make install` for each changed module.
+-   changes to Sugar or the toolkits can be done by editing files in the module source trees in `/usr/src`, followed by per-module [install steps](https://github.com/sugarlabs/sugar-live-build/blob/master/src/config/hooks/normal/0900-sugar.hook.chroot#L42) for each changed module.  See [issue 442](https://github.com/sugarlabs/sugar-toolkit-gtk3/issues/442) for details.
 
 -   changes to demonstration activities can be done in the activity source trees in `/usr/src/sugar-activities`, and are immediately effective; just start a new instance of the activity in Sugar.
 
