@@ -19,9 +19,9 @@ from xml.etree.cElementTree import ElementTree
 
 from mock import patch
 
-from cpsection.modemconfiguration.model import CountryCodeParser, \
+from extensions.cpsection.modemconfiguration.model import CountryCodeParser, \
     ServiceProvidersParser, ServiceProviders, PROVIDERS_PATH
-from cpsection.modemconfiguration.model import CONF_SP_COUNTRY, \
+from extensions.cpsection.modemconfiguration.model import CONF_SP_COUNTRY, \
     CONF_SP_PROVIDER, CONF_SP_PLAN
 
 
