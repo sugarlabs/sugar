@@ -16,7 +16,7 @@
 
 class WebService():
     def get_icon_name(self):
-        raise "Not implemented"
+        raise NotImplementedError
 
     def config_service_cb(self, widget, event, container):
-        raise "Not implemented"
+        raise NotImplementedError
