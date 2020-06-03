@@ -469,6 +469,7 @@ class FilterToolItem(Gtk.ToolItem):
     def set_widget_label(self, label):
         size = 'x-large'
         color = style.COLOR_BLACK.get_html()
+        label = GLib.markup_escape_text(label)
         span = '<span foreground="%s" size="%s">' % (color, size)
         self._label_widget.set_markup(span + label + '</span>')
 
@@ -486,6 +487,7 @@ class BlackLabel(PaletteMenuItem):
         self.set_label(text_label)
 
     def set_label(self, text_label):
+        text_label = GLib.markup_escape_text(text_label)
         text = '<span foreground="%s">' % style.COLOR_BLACK.get_html() + \
             text_label + '</span>'
         self.label.set_markup(text)
