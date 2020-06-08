@@ -429,7 +429,7 @@ class OlpcMesh(object):
 
     def get_dict(self):
         ret = {
-            'ssid': dbus.ByteArray('olpc-mesh'),
+            'ssid': dbus.ByteArray(b'olpc-mesh'),
             'channel': self.channel,
         }
 
