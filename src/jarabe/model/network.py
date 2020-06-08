@@ -647,7 +647,7 @@ class AccessPoint(GObject.GObject):
         self._initialized = False
         self._bus = dbus.SystemBus()
 
-        self.ssid = ''
+        self.ssid = b''
         self.strength = 0
         self.flags = 0
         self.wpa_flags = 0
