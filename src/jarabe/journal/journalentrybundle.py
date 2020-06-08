@@ -87,7 +87,7 @@ class JournalEntryBundle(Bundle):
         preview_path = os.path.join(bundle_dir, 'preview', uid)
         if not os.path.exists(preview_path):
             return ''
-        f = open(preview_path, 'r')
+        f = open(preview_path, 'rb')
         try:
             preview_data = f.read()
         finally:
