@@ -318,8 +318,6 @@ class ServiceProviders(object):
         provider_name = self._settings.get_string(CONF_SP_PROVIDER)
         if not provider_name:
             provider_name = ''
-        else:
-            provider_name = provider_name.decode('utf-8')
 
         plan_idx = self._settings.get_int(CONF_SP_PLAN) or 0
 
