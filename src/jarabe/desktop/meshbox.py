@@ -486,7 +486,7 @@ class MeshBox(ViewContainer):
         # if we have mesh hardware, ignore OLPC mesh networks that appear as
         # normal wifi networks
         if len(self._mesh) > 0 and ap.mode == network.NM_802_11_MODE_ADHOC \
-                and ap.ssid == 'olpc-mesh':
+                and ap.ssid == b'olpc-mesh':
             logging.debug('ignoring OLPC mesh IBSS')
             ap.disconnect()
             return
