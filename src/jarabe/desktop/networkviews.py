@@ -454,7 +454,7 @@ class WirelessNetworkView(EventPulsingIcon):
 
     def is_olpc_mesh(self):
         return self._mode == network.NM_802_11_MODE_ADHOC \
-            and self._ssid == 'olpc-mesh'
+            and self._ssid == b'olpc-mesh'
 
     def remove_all_aps(self):
         for ap in list(self._access_points.values()):

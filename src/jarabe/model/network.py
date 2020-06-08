@@ -429,7 +429,7 @@ class OlpcMesh(object):
 
     def get_dict(self):
         ret = {
-            'ssid': dbus.ByteArray('olpc-mesh'),
+            'ssid': dbus.ByteArray(b'olpc-mesh'),
             'channel': self.channel,
         }
 
@@ -647,7 +647,7 @@ class AccessPoint(GObject.GObject):
         self._initialized = False
         self._bus = dbus.SystemBus()
 
-        self.ssid = ''
+        self.ssid = b''
         self.strength = 0
         self.flags = 0
         self.wpa_flags = 0
@@ -970,7 +970,7 @@ def _migrate_old_wifi_connections():
         try:
             settings = Settings()
             settings.connection.id = section
-            ssid = config.get(section, 'ssid')
+            ssid = config.get(section, 'ssid').encode()
             settings.wireless.ssid = dbus.ByteArray(ssid)
             config_uuid = config.get(section, 'uuid')
             settings.connection.uuid = config_uuid
