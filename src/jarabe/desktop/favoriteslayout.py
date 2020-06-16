@@ -247,7 +247,7 @@ class RandomLayout(SpreadLayout):
                     x = min(x, allocation.width - child_requisition.width)
                     y = min(y, allocation.height - child_requisition.height)
                 elif hasattr(child, 'get_bundle_id'):
-                    name_hash = hashlib.md5(child.get_bundle_id().decode())
+                    name_hash = hashlib.md5(child.get_bundle_id().encode('utf-8'))
                     x = int(name_hash.hexdigest()[:5], 16) % \
                         (allocation.width - child_requisition.width)
                     y = int(name_hash.hexdigest()[-5:], 16) % \
