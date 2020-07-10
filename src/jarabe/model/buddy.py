@@ -57,6 +57,9 @@ class BaseBuddyModel(GObject.GObject):
         return self._key
 
     def set_key(self, key):
+        if isinstance(key, bytes):
+            key = key.decode('utf-8')
+
         self._key = key
 
     key = GObject.Property(type=object, getter=get_key, setter=set_key)
@@ -160,9 +163,8 @@ class OwnerBuddyModel(BaseBuddyModel):
         if CONNECTION_INTERFACE_BUDDY_INFO in connection:
             properties = {}
             if self.props.key is not None:
-                if isinstance(self.props.key, str):
-                    self.props.key = self.props.key.encode()
-                properties['key'] = dbus.ByteArray(self.props.key)
+                properties['key'] = dbus.ByteArray(
+                    self.props.key.encode('utf-8'))
             if self.props.color is not None:
                 properties['color'] = self.props.color.to_string()
 
