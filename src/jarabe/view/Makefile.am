@@ -15,5 +15,4 @@ sugar_PYTHON =				\
 	tabbinghandler.py		\
 	viewsource.py			\
 	viewhelp.py			\
-	viewhelp_webkit1.py		\
 	viewhelp_webkit2.py
