@@ -33,17 +33,7 @@ from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.bundle.activitybundle import get_bundle_instance
 from jarabe.model import shell
-
-
-try:
-    olpc_build = open('/boot/olpc_build', 'r').readline()
-except:
-    olpc_build = ''
-
-if olpc_build.startswith('13'):
-    from jarabe.view.viewhelp_webkit1 import Browser
-else:
-    from jarabe.view.viewhelp_webkit2 import Browser
+from jarabe.view.viewhelp_webkit2 import Browser
 
 
 _logger = logging.getLogger('ViewHelp')
