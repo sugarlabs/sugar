@@ -970,7 +970,7 @@ def _migrate_old_wifi_connections():
         try:
             settings = Settings()
             settings.connection.id = section
-            ssid = config.get(section, 'ssid')
+            ssid = config.get(section, 'ssid').encode()
             settings.wireless.ssid = dbus.ByteArray(ssid)
             config_uuid = config.get(section, 'uuid')
             settings.connection.uuid = config_uuid
