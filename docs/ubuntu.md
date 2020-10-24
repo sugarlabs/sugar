@@ -5,6 +5,17 @@ Using Sugar on Ubuntu
 
 In relation to Sugar, Ubuntu is a downstream distribution project that can be used to run Sugar.
 
+Ubuntu 20.10 (Groovy Gorilla)
+-------------------
+
+Sugar 0.117 can be installed with the following commands:
+
+    sudo apt update
+    sudo apt install sucrose
+
+-   log out,
+-   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
+
 Ubuntu 19.10 (Eoan Ermine)
 -------------------
 
