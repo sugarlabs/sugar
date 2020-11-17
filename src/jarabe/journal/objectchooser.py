@@ -216,9 +216,6 @@ class ChooserListView(BaseListView):
     def _can_clear_query(self):
         return self._toolbar.is_filter_changed()
 
-    def __entry_activated_cb(self, entry):
-        self.emit('entry-activated', entry)
-
     def _favorite_clicked_cb(self, cell, path):
         pass
 

@@ -966,10 +966,6 @@ class FilterToolItem(Gtk.ToolButton):
         self._label_widget.set_markup(label)
         self._label = label
 
-    def __destroy_cb(self, icon):
-        if self._palette_invoker is not None:
-            self._palette_invoker.detach()
-
     def create_palette(self):
         return None
 

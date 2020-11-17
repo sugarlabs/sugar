@@ -237,12 +237,6 @@ class AdHocManager(GObject.GObject):
     def __get_active_connections_error_cb(self, err):
         logging.error('Error getting the active connections: %s', err)
 
-    def __activate_reply_cb(self, connection):
-        logging.debug('Ad-hoc network created: %s', connection)
-
-    def __activate_error_cb(self, err):
-        logging.error('Failed to create Ad-hoc network: %s', err)
-
     def add_access_point(self, access_point):
         """Add an access point to a network and notify the view to idicate
         the member change.

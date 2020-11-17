@@ -359,11 +359,6 @@ class CopyMenuBuilder():
         self._menu.remove(volume_menu)
         del self._volumes[mount.get_root().get_path()]
 
-    def __destroy_cb(self, widget):
-        volume_monitor = Gio.VolumeMonitor.get()
-        volume_monitor.disconnect(self._mount_added_hid)
-        volume_monitor.disconnect(self._mount_removed_hid)
-
 
 class VolumeMenu(MenuItem):
     __gtype_name__ = 'JournalVolumeMenu'
