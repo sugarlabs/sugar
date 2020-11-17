@@ -408,7 +408,8 @@ class VolumeMenu(MenuItem):
                 self._get_confirmation_alert_message(len(uid_list)),
                 self._perform_copy)
 
-    def _get_confirmation_alert_message(self, entries_len):
+    @staticmethod
+    def _get_confirmation_alert_message(entries_len):
         return ngettext('Do you want to copy %d entry?',
                         'Do you want to copy %d entries?',
                         entries_len) % (entries_len)

@@ -15,8 +15,10 @@
 
 
 class WebService():
-    def get_icon_name(self):
+    @staticmethod
+    def get_icon_name():
         raise "Not implemented"
 
-    def config_service_cb(self, widget, event, container):
+    @staticmethod
+    def config_service_cb(widget, event, container):
         raise "Not implemented"

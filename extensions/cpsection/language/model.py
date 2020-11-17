@@ -130,8 +130,7 @@ def get_languages():
     # There might be cases where .i18n may not contain a LANGUAGE field
     if langlist is None:
         return [lang]
-    else:
-        return langlist
+    return langlist
 
 
 def print_languages():
@@ -162,15 +161,14 @@ def set_languages(languages):
     if languages.endswith('utf8'):
         set_languages_list([languages])
         return 1
-    else:
-        langs = read_all_languages()
-        for lang, territory, locale_str in langs:
-            code = lang.replace(' ', '_') + '/' \
-                + territory.replace(' ', '_')
-            if code == languages:
-                set_languages_list([locale_str])
-                return 1
-        print((_("Sorry I do not speak \'%s\'.") % languages))
+    langs = read_all_languages()
+    for lang, territory, locale_str in langs:
+        code = lang.replace(' ', '_') + '/' \
+                    + territory.replace(' ', '_')
+        if code == languages:
+            set_languages_list([locale_str])
+            return 1
+    print((_("Sorry I do not speak \'%s\'.") % languages))
 
 
 def set_languages_list(languages):

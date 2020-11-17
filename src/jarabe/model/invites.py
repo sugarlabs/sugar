@@ -56,10 +56,10 @@ class BaseInvite(object):
     def get_bundle_id(self):
         if CLIENT in self._handler:
             return self._handler[len(CLIENT + '.'):]
-        else:
-            return None
+        return None
 
-    def get_activity_title(self):
+    @staticmethod
+    def get_activity_title():
         return None
 
     def _call_handle_with(self):
@@ -70,7 +70,8 @@ class BaseInvite(object):
                                       reply_handler=self._handle_with_reply_cb,
                                       error_handler=self._handle_with_reply_cb)
 
-    def _handle_with_reply_cb(self, error=None):
+    @staticmethod
+    def _handle_with_reply_cb(error=None):
         if error is not None:
             raise error
         else:
@@ -135,7 +136,8 @@ class PrivateInvite(BaseInvite):
 
         self._private_channel = private_channel
 
-    def get_color(self):
+    @staticmethod
+    def get_color():
         return profile.get_color()
 
     def join(self):
@@ -255,7 +257,8 @@ class Invites(GObject.GObject):
             reply_handler=self.__handle_with_reply_cb,
             error_handler=self.__handle_with_reply_cb)
 
-    def __handle_with_reply_cb(self, error=None):
+    @staticmethod
+    def __handle_with_reply_cb(error=None):
         if error is not None:
             logging.error('__handle_with_reply_cb %r', error)
         else:

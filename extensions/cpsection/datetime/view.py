@@ -108,7 +108,8 @@ class TimeZone(SectionView):
     def __realize_cb(self, widget):
         self._entry.grab_focus()
 
-    def _search(self, model, column, key, iterator, data=None):
+    @staticmethod
+    def _search(model, column, key, iterator, data=None):
         value = model.get_value(iterator, column)
         if key.lower() in value.lower():
             return False

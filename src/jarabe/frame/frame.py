@@ -171,12 +171,14 @@ class Frame(object):
 
         return panel
 
-    def _create_panel(self, orientation):
+    @staticmethod
+    def _create_panel(orientation):
         panel = FrameWindow(orientation)
 
         return panel
 
-    def _move_panel(self, panel, pos, x1, y1, x2, y2):
+    @staticmethod
+    def _move_panel(panel, pos, x1, y1, x2, y2):
         x = (x2 - x1) * pos + x1
         y = (y2 - y1) * pos + y1
 

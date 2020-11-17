@@ -213,7 +213,8 @@ class OptionalSettingsBox(Gtk.VBox):
         setting.bind(setting_key, check_button, 'active',
                      Gio.SettingsBindFlags.DEFAULT)
 
-    def __button_toggled_cb(self, check_button, contents_box):
+    @staticmethod
+    def __button_toggled_cb(check_button, contents_box):
         contents_box.set_visible(check_button.get_active())
 
 

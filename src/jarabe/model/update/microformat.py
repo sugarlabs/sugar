@@ -446,8 +446,7 @@ class MetadataLookup(GObject.GObject):
         cp.readfp(StringIO(self._zf.read(filename)))
         if cp.has_option('Activity', parameter):
             return cp.get('Activity', parameter)
-        else:
-            return ''
+        return ''
 
     def _library_info_lookup(self, parameter):
         filename = os.path.join(self._prefix, 'library', 'library.info')
@@ -455,8 +454,7 @@ class MetadataLookup(GObject.GObject):
         cp.readfp(StringIO(self._zf.read(filename)))
         if cp.has_option('Library', parameter):
             return cp.get('Library', parameter)
-        else:
-            return ''
+        return ''
 
     def _complete(self, result):
         GLib.idle_add(self.emit, 'complete', result, self._size,

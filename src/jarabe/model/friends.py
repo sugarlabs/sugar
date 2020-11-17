@@ -84,16 +84,14 @@ class FriendBuddyModel(BuddyModel):
     def get_color(self):
         if self._online_buddy is not None:
             return self._online_buddy.color
-        else:
-            return XoColor(FriendBuddyModel._NOT_PRESENT_COLOR)
+        return XoColor(FriendBuddyModel._NOT_PRESENT_COLOR)
 
     color = GObject.Property(type=object, getter=get_color)
 
     def get_handle(self):
         if self._online_buddy is not None:
             return self._online_buddy.handle
-        else:
-            return None
+        return None
 
     handle = GObject.Property(type=object, getter=get_handle)
 

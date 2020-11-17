@@ -49,7 +49,8 @@ class DeviceView(TrayIcon):
         self.connect('button-release-event', self.__button_release_event_cb)
         self.set_palette_invoker(FrameWidgetInvoker(self))
 
-    def create_palette(self):
+    @staticmethod
+    def create_palette():
         palette = Palette(_('Show my keyboard'))
         palette.set_group_id('frame')
         return palette

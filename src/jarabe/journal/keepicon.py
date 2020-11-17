@@ -37,10 +37,12 @@ class KeepIcon(Gtk.ToggleButton):
 
         self._xo_color = profile.get_color()
 
-    def do_get_preferred_width(self):
+    @staticmethod
+    def do_get_preferred_width():
         return 0, style.GRID_CELL_SIZE
 
-    def do_get_preferred_height(self):
+    @staticmethod
+    def do_get_preferred_height():
         return 0, style.GRID_CELL_SIZE
 
     def __button_press_event_cb(self, widget, event):

@@ -140,7 +140,8 @@ class ViewLayout(Layout):
         child_allocation.height = child_request.height
         child.size_allocate(child_allocation)
 
-    def _get_child_grid_size(self, child):
+    @staticmethod
+    def _get_child_grid_size(child):
         request = child.size_request()
         width = math.ceil(request.width / _CELL_SIZE)
         height = math.ceil(request.height / _CELL_SIZE)
@@ -247,7 +248,7 @@ class RandomLayout(SpreadLayout):
                     x = min(x, allocation.width - child_requisition.width)
                     y = min(y, allocation.height - child_requisition.height)
                 elif hasattr(child, 'get_bundle_id'):
-                    name_hash = hashlib.md5(child.get_bundle_id().decode())
+                    name_hash = hashlib.md5(child.get_bundle_id().encode('utf-8'))
                     x = int(name_hash.hexdigest()[:5], 16) % \
                         (allocation.width - child_requisition.width)
                     y = int(name_hash.hexdigest()[-5:], 16) % \
@@ -360,7 +361,8 @@ class RingLayout(ViewLayout):
                                        (style.GRID_CELL_SIZE / 2)) / 2
         return int(x), int(y)
 
-    def _convert_from_polar_to_cartesian(self, angle, radius, icon_size, width,
+    @staticmethod
+    def _convert_from_polar_to_cartesian(angle, radius, icon_size, width,
                                          height):
         """ Convert angle, radius to x, y """
         x = int(math.sin(angle) * radius)
@@ -369,7 +371,8 @@ class RingLayout(ViewLayout):
         y = y + (height - icon_size - (style.GRID_CELL_SIZE / 2)) / 2
         return x, y
 
-    def _calculate_maximum_radius(self, icon_size):
+    @staticmethod
+    def _calculate_maximum_radius(icon_size):
         """ Return the maximum radius including encroachment. """
         r = (Gdk.Screen.height() - style.GRID_CELL_SIZE) / 2 - \
             style.DEFAULT_SPACING

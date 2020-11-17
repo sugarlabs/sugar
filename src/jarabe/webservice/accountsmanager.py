@@ -190,8 +190,7 @@ def get_account(service_name):
 
     if service_name in _module_repository:
         return _module_repository[service_name]['account']
-    else:
-        return None
+    return None
 
 
 def get_service(service_name):
@@ -199,8 +198,7 @@ def get_service(service_name):
 
     if service_name in _module_repository:
         return _module_repository[service_name]['service']
-    else:
-        return None
+    return None
 
 
 def get_configured_accounts():

@@ -336,7 +336,8 @@ class ControlPanel(Gtk.Window):
         """
         self._section_view.auto_close = True
 
-    def _get_options(self):
+    @staticmethod
+    def _get_options():
         """Get the available option information from the extensions
         """
         options = {}
@@ -569,9 +570,9 @@ class _SectionIcon(Gtk.EventBox):
     def do_get_property(self, pspec):
         if pspec.name == 'icon-name':
             return self._icon_name
-        elif pspec.name == 'pixel-size':
+        if pspec.name == 'pixel-size':
             return self._pixel_size
-        elif pspec.name == 'xo-color':
+        if pspec.name == 'xo-color':
             return self._xo_color
-        elif pspec.name == 'title':
+        if pspec.name == 'title':
             return self._title

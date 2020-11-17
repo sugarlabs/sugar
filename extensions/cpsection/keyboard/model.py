@@ -37,10 +37,12 @@ class KeyboardManager(object):
 
         self._settings = Gio.Settings.new(_KEYBOARD_DIR)
 
-    def _populate_one(self, config_registry, item, store):
+    @staticmethod
+    def _populate_one(config_registry, item, store):
         store.append([item.get_description(), item.get_name()])
 
-    def _populate_two(self, config_registry, item, subitem, store):
+    @staticmethod
+    def _populate_two(config_registry, item, subitem, store):
         layout = item.get_name()
         if subitem:
             description = '%s, %s' % (subitem.get_description(),

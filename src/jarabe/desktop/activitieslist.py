@@ -561,7 +561,8 @@ class ActivitiesList(Gtk.VBox):
         self._scrolled_window.add(self._tree_view)
         self._tree_view.show()
 
-    def __key_press_event_cb(self, scrolled_window, event):
+    @staticmethod
+    def __key_press_event_cb(scrolled_window, event):
         keyname = Gdk.keyval_name(event.keyval)
 
         vadjustment = scrolled_window.props.vadjustment

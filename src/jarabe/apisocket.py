@@ -302,7 +302,8 @@ class APIServer(object):
         os.environ["SUGAR_APISOCKET_PORT"] = str(self._port)
         os.environ["SUGAR_APISOCKET_KEY"] = self._key
 
-    def _open_stream(self, client, request):
+    @staticmethod
+    def _open_stream(client, request):
         for stream_id in range(0, 255):
             if stream_id not in client.stream_monitors:
                 client.stream_monitors[stream_id] = StreamMonitor()
@@ -310,7 +311,8 @@ class APIServer(object):
 
         client.send_result(request, [stream_id])
 
-    def _close_stream(self, client, request):
+    @staticmethod
+    def _close_stream(client, request):
         stream_id = request["params"][0]
         stream_monitor = client.stream_monitors[stream_id]
         if stream_monitor.on_close:

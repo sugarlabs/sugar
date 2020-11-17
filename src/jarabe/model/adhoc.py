@@ -134,7 +134,8 @@ class AdHocManager(GObject.GObject):
             self._current_channel = None
         self._update_state()
 
-    def __get_all_ap_props_error_cb(self, err):
+    @staticmethod
+    def __get_all_ap_props_error_cb(err):
         logging.error('Error getting the access point properties: %s', err)
 
     def _update_state(self):
@@ -234,13 +235,16 @@ class AdHocManager(GObject.GObject):
                     netmgr.DeactivateConnection(connection_o)
                     self._last_channel = None
 
-    def __get_active_connections_error_cb(self, err):
+    @staticmethod
+    def __get_active_connections_error_cb(err):
         logging.error('Error getting the active connections: %s', err)
 
-    def __activate_reply_cb(self, connection):
+    @staticmethod
+    def __activate_reply_cb(connection):
         logging.debug('Ad-hoc network created: %s', connection)
 
-    def __activate_error_cb(self, err):
+    @staticmethod
+    def __activate_error_cb(err):
         logging.error('Failed to create Ad-hoc network: %s', err)
 
     def add_access_point(self, access_point):

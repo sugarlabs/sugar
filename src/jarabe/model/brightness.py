@@ -51,11 +51,13 @@ class Brightness(GObject.GObject):
         self._start_monitoring()
         self._restore()
 
-    def _setup(self):
+    @staticmethod
+    def _setup():
         cmd = 'pkexec sugar-backlight-setup'
         GLib.spawn_command_line_sync(cmd)
 
-    def _save(self, value):
+    @staticmethod
+    def _save(value):
         settings = Gio.Settings.new('org.sugarlabs.screen')
         settings.set_int('brightness', value)
 
@@ -76,14 +78,16 @@ class Brightness(GObject.GObject):
         self._monitor_changed_hid = \
             self._monitor.connect('changed', self.__monitor_changed_cb)
 
-    def _helper_read(self, option):
+    @staticmethod
+    def _helper_read(option):
         cmd = 'sugar-backlight-helper --%s' % option
         result, output, error, status = GLib.spawn_command_line_sync(cmd)
         if status != 0:
             return None
         return output.rstrip(b'\0\n')
 
-    def _helper_write(self, option, value):
+    @staticmethod
+    def _helper_write(option, value):
         cmd = 'pkexec sugar-backlight-helper --%s %d' % (option, value)
         GLib.spawn_command_line_sync(cmd)
 
@@ -140,5 +144,4 @@ class Brightness(GObject.GObject):
     def get_step_amount(self):
         if self.get_max_brightness() < self._STEPS:
             return 1
-        else:
-            return self.get_max_brightness() / self._STEPS
+        return self.get_max_brightness() / self._STEPS

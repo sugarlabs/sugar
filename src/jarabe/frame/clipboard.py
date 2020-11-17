@@ -149,7 +149,8 @@ class Clipboard(GObject.GObject):
         format_ = cb_object.get_formats()[format_type]
         return format_
 
-    def _copy_file(self, original_uri):
+    @staticmethod
+    def _copy_file(original_uri):
         uri = urllib.parse.urlparse(original_uri)
         path = uri.path  # pylint: disable=E1101
         directory_, file_name = os.path.split(path)

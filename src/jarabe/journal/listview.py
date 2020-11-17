@@ -244,8 +244,7 @@ class BaseListView(Gtk.Bin):
             return None
         if self._query['mountpoints'] == ['/']:
             return not object_id.startswith('/')
-        else:
-            return object_id.startswith(self._query['mountpoints'][0])
+        return object_id.startswith(self._query['mountpoints'][0])
 
     def _add_columns(self):
         if self._enable_multi_operations:
@@ -346,7 +345,8 @@ class BaseListView(Gtk.Bin):
                                        ListModel.COLUMN_TIMESTAMP)
         self.tree_view.append_column(self.sort_column)
 
-    def _get_width_for_string(self, text):
+    @staticmethod
+    def _get_width_for_string(text):
         # Add some extra margin
         text = text + 'aaaaa'
 
@@ -369,7 +369,8 @@ class BaseListView(Gtk.Bin):
         if self._model is not None:
             self._model.stop()
 
-    def __buddies_set_data_cb(self, column, cell, tree_model,
+    @staticmethod
+    def __buddies_set_data_cb(column, cell, tree_model,
                               tree_iter, data):
         buddy = tree_model.do_get_value(tree_iter, cell._model_column_index)
         if buddy is None:
@@ -385,12 +386,14 @@ class BaseListView(Gtk.Bin):
         progress = tree_model[tree_iter][ListModel.COLUMN_PROGRESS]
         cell.props.visible = progress >= 100
 
-    def __progress_data_cb(self, column, cell, tree_model,
+    @staticmethod
+    def __progress_data_cb(column, cell, tree_model,
                            tree_iter, data):
         progress = tree_model[tree_iter][ListModel.COLUMN_PROGRESS]
         cell.props.visible = progress < 100
 
-    def __favorite_set_data_cb(self, column, cell, tree_model,
+    @staticmethod
+    def __favorite_set_data_cb(column, cell, tree_model,
                                tree_iter, data):
         favorite = tree_model[tree_iter][ListModel.COLUMN_FAVORITE]
         if favorite:
@@ -528,7 +531,8 @@ class BaseListView(Gtk.Bin):
         else:
             self._clear_message()
 
-    def _can_clear_query(self):
+    @staticmethod
+    def _can_clear_query():
         return True
 
     def __map_cb(self, widget):

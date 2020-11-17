@@ -176,7 +176,8 @@ class HomeWindow(Gtk.Window):
         else:
             self._activate_view(shell.get_model().zoom_level)
 
-    def __is_alt(self, event):
+    @staticmethod
+    def __is_alt(event):
         # When shift is on, <ALT> becomes <META>
         shift = (event.state & Gdk.ModifierType.SHIFT_MASK) == 1
         return event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R] or \

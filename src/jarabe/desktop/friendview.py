@@ -46,7 +46,8 @@ class FriendView(Gtk.VBox):
         self._buddy.connect('notify::present', self.__buddy_notify_present_cb)
         self._buddy.connect('notify::color', self.__buddy_notify_color_cb)
 
-    def _get_new_icon_name(self, ps_activity):
+    @staticmethod
+    def _get_new_icon_name(ps_activity):
         registry = bundleregistry.get_registry()
         activity_info = registry.get_bundle(ps_activity.props.type)
         if activity_info:

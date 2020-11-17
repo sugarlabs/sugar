@@ -418,5 +418,6 @@ class AboutMe(SectionView):
         self._age_pickers.update_gender(gender)
         return False
 
-    def __age_changed_cb(self, event, age):
+    @staticmethod
+    def __age_changed_cb(event, age):
         save_age(age)

@@ -221,7 +221,8 @@ class _Account(GObject.GObject):
         obj.connect_to_signal(
             'AccountPropertyChanged', self.__account_property_changed_cb)
 
-    def __error_handler_cb(self, function_name, error):
+    @staticmethod
+    def __error_handler_cb(function_name, error):
         raise RuntimeError('Error when calling %s: %s' % (function_name,
                                                           error))
 
@@ -463,10 +464,12 @@ class _Account(GObject.GObject):
             reply_handler=self.__set_current_activity_cb,
             error_handler=self.__set_current_activity_error_cb)
 
-    def __set_current_activity_cb(self):
+    @staticmethod
+    def __set_current_activity_cb():
         logging.debug('_Account.__set_current_activity_cb')
 
-    def __set_current_activity_error_cb(self, error):
+    @staticmethod
+    def __set_current_activity_error_cb(error):
         logging.debug('_Account.__set_current_activity__error_cb %r', error)
 
     def __update_capabilities_cb(self):
@@ -737,7 +740,8 @@ class _Account(GObject.GObject):
                                       'Account.SetEnabled'),
                 dbus_interface=dbus.PROPERTIES_IFACE)
 
-    def __set_enabled_cb(self):
+    @staticmethod
+    def __set_enabled_cb():
         logging.debug('_Account.__set_enabled_cb success')
 
 
@@ -786,7 +790,8 @@ class Neighborhood(GObject.GObject):
         self._server_account = self._ensure_server_account(account_paths)
         self._connect_to_account(self._server_account)
 
-    def __error_handler_cb(self, error):
+    @staticmethod
+    def __error_handler_cb(error):
         raise RuntimeError(error)
 
     def _connect_to_account(self, account):
@@ -814,7 +819,8 @@ class Neighborhood(GObject.GObject):
         if account == self._server_account:
             self._link_local_account.enable()
 
-    def _get_published_name(self):
+    @staticmethod
+    def _get_published_name():
         """Construct the published name based on the public key
 
         Limit the name to be only 8 characters maximum. The avahi

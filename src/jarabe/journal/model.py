@@ -230,7 +230,8 @@ class DatastoreResultSet(BaseResultSet):
 
         return entries, total_count
 
-    def find_ids(self, query):
+    @staticmethod
+    def find_ids(query):
         copy = query.copy()
         copy.pop('mountpoints', '/')
         return _get_datastore().find_ids(copy)
@@ -579,8 +580,7 @@ def find(query_, page_size):
 
     if mount_points[0] == '/':
         return DatastoreResultSet(query, page_size)
-    else:
-        return InplaceResultSet(query, page_size, mount_points[0])
+    return InplaceResultSet(query, page_size, mount_points[0])
 
 
 def _get_mount_point(path):
@@ -589,10 +589,9 @@ def _get_mount_point(path):
     while dir_path:
         if dir_path == documents_path:
             return documents_path
-        elif os.path.ismount(dir_path):
+        if os.path.ismount(dir_path):
             return dir_path
-        else:
-            dir_path = dir_path.rsplit(os.sep, 1)[0]
+        dir_path = dir_path.rsplit(os.sep, 1)[0]
     return None
 
 
@@ -615,13 +614,11 @@ def get_file(object_id):
     if os.path.exists(object_id):
         logging.debug('get_file asked for file with path %r', object_id)
         return object_id
-    else:
-        logging.debug('get_file asked for entry with id %r', object_id)
-        file_path = _get_datastore().get_filename(object_id)
-        if file_path:
-            return util.TempFilePath(file_path)
-        else:
-            return None
+    logging.debug('get_file asked for entry with id %r', object_id)
+    file_path = _get_datastore().get_filename(object_id)
+    if file_path:
+        return util.TempFilePath(file_path)
+    return None
 
 
 def get_file_size(object_id):
@@ -926,8 +923,7 @@ def get_unique_file_name(mount_point, file_name):
 def is_editable(metadata):
     if metadata.get('mountpoint', '/') == '/':
         return True
-    else:
-        return os.access(metadata['mountpoint'], os.W_OK)
+    return os.access(metadata['mountpoint'], os.W_OK)
 
 
 _documents_path = None

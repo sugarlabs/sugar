@@ -113,9 +113,9 @@ class _BackupButton(Gtk.EventBox):
     def do_get_property(self, pspec):
         if pspec.name == 'icon-name':
             return self._icon_name
-        elif pspec.name == 'pixel-size':
+        if pspec.name == 'pixel-size':
             return self._pixel_size
-        elif pspec.name == 'title':
+        if pspec.name == 'title':
             return self._title
 
 

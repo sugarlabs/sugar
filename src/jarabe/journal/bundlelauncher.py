@@ -42,13 +42,12 @@ def get_bundle(bundle_id=None, object_id=None):
             return None
 
         return activities[0]
-    else:
-        bundle = bundleregistry.get_registry().get_bundle(bundle_id)
-        if bundle is None:
-            logging.warning('Activity with the bundle_id %s was not found',
-                            mime_type)
-            return None
-        return bundle
+    bundle = bundleregistry.get_registry().get_bundle(bundle_id)
+    if bundle is None:
+        logging.warning('Activity with the bundle_id %s was not found',
+                        mime_type)
+        return None
+    return bundle
 
 
 def launch_bundle(bundle_id=None, object_id=None):

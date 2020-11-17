@@ -248,7 +248,8 @@ class DeviceModel(GObject.GObject):
                 return self._time_to_empty
             return 0
 
-    def get_type(self):
+    @staticmethod
+    def get_type():
         return 'battery'
 
     def __notify_cb(self, device, name):

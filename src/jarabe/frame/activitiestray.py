@@ -99,7 +99,8 @@ class ActivityButton(RadioToolButton):
         palette.set_group_id('frame')
         self.set_palette(palette)
 
-    def __palette_item_selected_cb(self, widget):
+    @staticmethod
+    def __palette_item_selected_cb(widget):
         frame = jarabe.frame.get_view()
         frame.hide()
 
@@ -600,13 +601,13 @@ class BaseTransferPalette(Palette):
     def __notify_transferred_bytes_cb(self, file_transfer, pspec):
         self.update_progress()
 
-    def _format_size(self, size):
+    @staticmethod
+    def _format_size(size):
         if size < 1024:
             return _('%d B') % size
-        elif size < 1048576:
+        if size < 1048576:
             return _('%d KiB') % (size / 1024)
-        else:
-            return _('%d MiB') % (size / 1048576)
+        return _('%d MiB') % (size / 1048576)
 
     def update_progress(self):
         logging.debug('update_progress: %r',
@@ -776,7 +777,8 @@ class IncomingTransferPalette(BaseTransferPalette):
 
         self.file_transfer.accept(file_path)
 
-    def _sanitize(self, file_name):
+    @staticmethod
+    def _sanitize(file_name):
         file_name = file_name.replace('/', '_')
         file_name = file_name.replace('.', '_')
         file_name = file_name.replace('?', '_')

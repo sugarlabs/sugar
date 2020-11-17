@@ -205,7 +205,8 @@ class ActivityChooser(Gtk.Window):
                 self.destroy()
                 return True
 
-    def __activitylist_clear_clicked_cb(self, list_view, toolbar):
+    @staticmethod
+    def __activitylist_clear_clicked_cb(list_view, toolbar):
         toolbar.clear_query()
 
     def set_title(self, text):

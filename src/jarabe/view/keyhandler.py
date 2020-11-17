@@ -206,7 +206,7 @@ class KeyHandler(object):
             # avoid switch to the Journal or change views if a modal dialog
             # is opened http://bugs.sugarlabs.org/ticket/4601
             if key in _non_modal_action_keys and \
-                    shell.get_model().has_modal():
+                            shell.get_model().has_modal():
                 logging.debug(
                     'Key %s action stopped due to modal dialog open', key)
                 return
@@ -228,12 +228,11 @@ class KeyHandler(object):
                 raise TypeError('Invalid action %r' % action)
 
             return True
-        else:
-            # If this is not a registered key, then cancel tabbing.
-            if self._tabbing_handler.is_tabbing():
-                if not grabber.is_modifier(keycode):
-                    self._tabbing_handler.stop(event_time)
-                return True
+        # If this is not a registered key, then cancel tabbing.
+        if self._tabbing_handler.is_tabbing():
+            if not grabber.is_modifier(keycode):
+                self._tabbing_handler.stop(event_time)
+            return True
 
         return False
 

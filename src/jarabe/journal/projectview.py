@@ -86,7 +86,8 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
     def get_list_view(self):
         return self._list_view_project
 
-    def get_mount_point(self):
+    @staticmethod
+    def get_mount_point():
         return '/'
 
     def __back_bar_release_event_cb(self, back_bar, event):
@@ -130,7 +131,8 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
             self.project_metadata['title'] = new_title
             model.write(self.project_metadata)
 
-    def _create_scrollable(self, widget, label=None):
+    @staticmethod
+    def _create_scrollable(widget, label=None):
         vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
 

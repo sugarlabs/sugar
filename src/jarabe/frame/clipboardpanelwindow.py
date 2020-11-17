@@ -95,7 +95,8 @@ class ClipboardPanelWindow(FrameWindow):
                 self._add_selection(key, selection)
             cb_service.set_object_percent(key, percent=100)
 
-    def _md5_for_file(self, file_name):
+    @staticmethod
+    def _md5_for_file(file_name):
         '''Calculate md5 for file data
 
         Calculating block wise to prevent issues with big files in memory
@@ -111,7 +112,8 @@ class ClipboardPanelWindow(FrameWindow):
         f.close()
         return md5.digest()
 
-    def _add_selection(self, key, selection):
+    @staticmethod
+    def _add_selection(key, selection):
         if not selection.get_data():
             logging.warning('no data for selection target %s.',
                             selection.get_data_type())

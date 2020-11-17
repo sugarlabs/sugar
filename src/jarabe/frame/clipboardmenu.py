@@ -134,8 +134,7 @@ class ClipboardMenu(Palette):
         activities = registry.get_activities_for_type(mime_type)
         if activities:
             return [info.get_bundle_id() for info in activities]
-        else:
-            return ''
+        return ''
 
     def _object_state_changed_cb(self, cb_service, cb_object):
         if cb_object != self._cb_object:
@@ -177,7 +176,8 @@ class ClipboardMenu(Palette):
         jobject = self._copy_to_journal()
         jobject.destroy()
 
-    def _write_to_temp_file(self, data):
+    @staticmethod
+    def _write_to_temp_file(data):
         tmp_dir = os.path.join(env.get_profile_path(), 'data')
         f, file_path = tempfile.mkstemp(dir=tmp_dir)
         try:

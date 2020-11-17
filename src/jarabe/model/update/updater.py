@@ -280,8 +280,7 @@ def check_urgent_update():
     if os.path.isfile(_URGENT_TRIGGER_FILE):
         get_instance().trigger_automatic_update()
         return True
-    else:
-        return False
+    return False
 
 
 def _check_periodic_update():

@@ -132,10 +132,9 @@ class TelepathyClient(dbus.service.Object):
                          in_signature='ss', out_signature='v')
     def Get(self, interface_name, property_name):
         if interface_name in self._prop_getters \
-                and property_name in self._prop_getters[interface_name]:
+                        and property_name in self._prop_getters[interface_name]:
             return self._prop_getters[interface_name][property_name]()
-        else:
-            logging.debug('InvalidArgument')
+        logging.debug('InvalidArgument')
 
     @dbus.service.method(dbus_interface=dbus.PROPERTIES_IFACE,
                          in_signature='ssv', out_signature='')
@@ -154,8 +153,7 @@ class TelepathyClient(dbus.service.Object):
             for k, v in list(self._prop_getters[interface_name].items()):
                 r[k] = v()
             return r
-        else:
-            logging.debug('InvalidArgument')
+        logging.debug('InvalidArgument')
 
 
 def get_instance():

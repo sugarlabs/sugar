@@ -450,7 +450,7 @@ class IntroWindow(Gtk.Window):
         if Gdk.keyval_name(event.keyval) == 'Return':
             next(self._intro_box)
             return True
-        elif Gdk.keyval_name(event.keyval) == 'Escape':
+        if Gdk.keyval_name(event.keyval) == 'Escape':
             self._intro_box.back()
             return True
         return False

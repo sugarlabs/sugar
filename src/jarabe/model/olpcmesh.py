@@ -153,8 +153,7 @@ class OlpcMeshManager(object):
     def _get_connection_id(channel, xs_hosted):
         if xs_hosted:
             return '%s%d' % (network.XS_MESH_CONNECTION_ID_PREFIX, channel)
-        else:
-            return '%s%d' % (network.MESH_CONNECTION_ID_PREFIX, channel)
+        return '%s%d' % (network.MESH_CONNECTION_ID_PREFIX, channel)
 
     def _connection_added(self):
         if self._add_connections_pending > 0:

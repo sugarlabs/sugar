@@ -68,10 +68,12 @@ class JournalEntryBundle(Bundle):
         finally:
             shutil.rmtree(bundle_dir, ignore_errors=True)
 
-    def get_bundle_id(self):
+    @staticmethod
+    def get_bundle_id():
         return None
 
-    def _read_metadata(self, bundle_dir):
+    @staticmethod
+    def _read_metadata(bundle_dir):
         metadata_path = os.path.join(bundle_dir, '_metadata.json')
         if not os.path.exists(metadata_path):
             raise MalformedBundleException(
@@ -83,11 +85,12 @@ class JournalEntryBundle(Bundle):
             f.close()
         return json.loads(json_data)
 
-    def _read_preview(self, uid, bundle_dir):
+    @staticmethod
+    def _read_preview(uid, bundle_dir):
         preview_path = os.path.join(bundle_dir, 'preview', uid)
         if not os.path.exists(preview_path):
             return ''
-        f = open(preview_path, 'r')
+        f = open(preview_path, 'rb')
         try:
             preview_data = f.read()
         finally:

@@ -201,7 +201,8 @@ class WiredPalette(Palette):
         self._speed_label.set_text('%s: %d Mb/s' % (_('Speed'), speed))
         self._set_ip_address(iaddress)
 
-    def _inet_ntoa(self, iaddress):
+    @staticmethod
+    def _inet_ntoa(iaddress):
         address = ['%s' % ((iaddress >> i) % 256) for i in [0, 8, 16, 24]]
         return '.'.join(address)
 
@@ -274,7 +275,8 @@ class GsmPalette(Palette):
 
         self.update_state(_GSM_STATE_NOT_READY)
 
-    def _add_widget_with_padding(self, child, xalign=0, yalign=0.5):
+    @staticmethod
+    def _add_widget_with_padding(child, xalign=0, yalign=0.5):
         alignment = Gtk.Alignment.new(xalign=xalign, yalign=yalign,
                                       xscale=1, yscale=0.33)
         alignment.set_padding(style.DEFAULT_SPACING,
@@ -363,7 +365,8 @@ class GsmPalette(Palette):
         self._data_label_up.set_text(_('%d KiB') % (out_bytes / 1024))
         self._data_label_down.set_text(_('%d KiB') % (in_bytes / 1024))
 
-    def _get_error_by_nm_reason(self, reason):
+    @staticmethod
+    def _get_error_by_nm_reason(reason):
         if reason in [network.NM_DEVICE_STATE_REASON_NO_SECRETS,
                       network.NM_DEVICE_STATE_REASON_GSM_PIN_CHECK_FAILED]:
             message = _('Check your PIN/PUK configuration.')
@@ -453,7 +456,8 @@ class WirelessDeviceView(ToolButton):
             self._device_state = properties['State']
             self._update_state()
 
-    def __get_device_props_error_cb(self, err):
+    @staticmethod
+    def __get_device_props_error_cb(err):
         logging.error('Error getting the device properties: %s', err)
 
     def __get_active_ap_reply_cb(self, active_ap_op):
@@ -482,7 +486,8 @@ class WirelessDeviceView(ToolButton):
                 dbus_interface=network.NM_ACCESSPOINT_IFACE,
                 byte_arrays=True)
 
-    def __get_active_ap_error_cb(self, err):
+    @staticmethod
+    def __get_active_ap_error_cb(err):
         logging.error('Error getting the active access point: %s', err)
 
     def __state_changed_cb(self, new_state, old_state, reason):
@@ -530,7 +535,8 @@ class WirelessDeviceView(ToolButton):
     def __get_all_ap_props_reply_cb(self, properties):
         self._update_properties(properties)
 
-    def __get_all_ap_props_error_cb(self, err):
+    @staticmethod
+    def __get_all_ap_props_error_cb(err):
         logging.error('Error getting the access point properties: %s', err)
 
     def _update(self):
@@ -598,10 +604,12 @@ class WirelessDeviceView(ToolButton):
     def __deactivate_connection_cb(self, palette, data=None):
         network.disconnect_access_points([self._active_ap_op])
 
-    def __activate_reply_cb(self, connection):
+    @staticmethod
+    def __activate_reply_cb(connection):
         logging.debug('Network created: %s', connection)
 
-    def __activate_error_cb(self, err):
+    @staticmethod
+    def __activate_error_cb(err):
         logging.debug('Failed to create network: %s', err)
 
 
@@ -664,7 +672,8 @@ class OlpcMeshDeviceView(ToolButton):
         self._channel = channel
         self._update_text()
 
-    def __get_active_channel_error_cb(self, err):
+    @staticmethod
+    def __get_active_channel_error_cb(err):
         logging.error('Error getting the active channel: %s', err)
 
     def __state_changed_cb(self, new_state, old_state, reason):
@@ -801,11 +810,13 @@ class GsmDeviceView(TrayIcon):
             self._palette.add_alert(_('No GSM connection available.'),
                                     _('Create a connection in My Settings.'))
 
-    def __connect_cb(self, active_connection):
+    @staticmethod
+    def __connect_cb(active_connection):
         logging.debug('Connected successfully to gsm device, %s',
                       active_connection)
 
-    def __connect_error_cb(self, error):
+    @staticmethod
+    def __connect_error_cb(error):
         raise RuntimeError('Error when connecting to gsm device, %s' % error)
 
     def __gsm_disconnect_cb(self, palette, data=None):
@@ -826,10 +837,12 @@ class GsmDeviceView(TrayIcon):
                     error_handler=self.__disconnect_error_cb)
                 break
 
-    def __disconnect_cb(self):
+    @staticmethod
+    def __disconnect_cb():
         logging.debug('Disconnected successfully gsm device')
 
-    def __disconnect_error_cb(self, error):
+    @staticmethod
+    def __disconnect_error_cb(error):
         raise RuntimeError('Error when disconnecting gsm device, %s' % error)
 
     def __state_changed_cb(self, new_state, old_state, reason):
@@ -840,7 +853,8 @@ class GsmDeviceView(TrayIcon):
     def __current_state_check_cb(self, properties):
         self._update_state(int(properties['State']), 0, 0)
 
-    def __current_state_check_error_cb(self, error):
+    @staticmethod
+    def __current_state_check_error_cb(error):
         raise RuntimeError('Error when checking gsm device state, %s' % error)
 
     def _update_state(self, state, old_state, reason):
@@ -952,7 +966,8 @@ class MeshDeviceObserver(object):
         if 'State' in properties:
             self._update_state(properties['State'])
 
-    def __get_device_props_error_cb(self, err):
+    @staticmethod
+    def __get_device_props_error_cb(err):
         logging.error('Error getting the device properties: %s', err)
 
     def __state_changed_cb(self, new_state, old_state, reason):
@@ -1001,7 +1016,8 @@ class WiredDeviceObserver(object):
         if 'State' in properties:
             self._update_state(properties['State'])
 
-    def __get_device_props_error_cb(self, err):
+    @staticmethod
+    def __get_device_props_error_cb(err):
         logging.error('Error getting the device properties: %s', err)
 
     def __state_changed_cb(self, new_state, old_state, reason):
@@ -1067,7 +1083,8 @@ class NetworkManagerObserver(object):
         for device_op in devices:
             self._check_device(device_op)
 
-    def __get_devices_error_cb(self, err):
+    @staticmethod
+    def __get_devices_error_cb(err):
         logging.error('Failed to get devices: %s', err)
 
     def _check_device(self, device_op):

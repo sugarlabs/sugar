@@ -203,7 +203,8 @@ class DeviceObserver(GObject.GObject):
             ap = self._bus.get_object(network.NM_SERVICE, ap_o)
             self.emit('access-point-added', ap)
 
-    def _get_access_points_error_cb(self, err):
+    @staticmethod
+    def _get_access_points_error_cb(err):
         logging.error('Failed to get access points: %s', err)
 
     def __access_point_added_cb(self, access_point_o):
@@ -297,7 +298,8 @@ class NetworkManagerObserver(object):
         for dev_o in devices_o:
             self._check_device(dev_o)
 
-    def __get_devices_error_cb(self, err):
+    @staticmethod
+    def __get_devices_error_cb(err):
         logging.error('Failed to get devices: %s', err)
 
     def _check_device(self, device_o):
@@ -321,7 +323,8 @@ class NetworkManagerObserver(object):
             self._olpc_mesh_device_o = device_o
             self._box.enable_olpc_mesh(device)
 
-    def _get_device_path_error_cb(self, err):
+    @staticmethod
+    def _get_device_path_error_cb(err):
         logging.error('Failed to get device type: %s', err)
 
     def __device_added_cb(self, device_o):
@@ -486,7 +489,7 @@ class MeshBox(ViewContainer):
         # if we have mesh hardware, ignore OLPC mesh networks that appear as
         # normal wifi networks
         if len(self._mesh) > 0 and ap.mode == network.NM_802_11_MODE_ADHOC \
-                and ap.ssid == 'olpc-mesh':
+                and ap.ssid == b'olpc-mesh':
             logging.debug('ignoring OLPC mesh IBSS')
             ap.disconnect()
             return

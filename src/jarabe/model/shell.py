@@ -172,8 +172,7 @@ class Activity(GObject.GObject):
         """Retrieve the application's root window's suggested title"""
         if self._windows:
             return self._windows[0].get_name()
-        else:
-            return None
+        return None
 
     def get_icon_path(self):
         """Retrieve the activity's icon (file) name"""
@@ -186,10 +185,9 @@ class Activity(GObject.GObject):
             fname = info.get_filename()
             del info
             return fname
-        elif self._activity_info:
+        if self._activity_info:
             return self._activity_info.get_icon()
-        else:
-            return None
+        return None
 
     def get_icon_color(self):
         """Retrieve the appropriate icon colour for this activity
@@ -213,15 +211,13 @@ class Activity(GObject.GObject):
         """ Returns the activity's bundle id"""
         if self._activity_info is None:
             return None
-        else:
-            return self._activity_info.get_bundle_id()
+        return self._activity_info.get_bundle_id()
 
     def get_xid(self):
         """Retrieve the X-windows ID of our root window"""
         if self._windows:
             return self._windows[0].get_xid()
-        else:
-            return None
+        return None
 
     def has_xid(self, xid):
         """Check if an X-window with the given xid is in the windows stack"""
@@ -254,8 +250,7 @@ class Activity(GObject.GObject):
         """Retrieve the activity bundle id for future reference"""
         if not self._windows:
             return None
-        else:
-            return SugarExt.wm_get_bundle_id(self._windows[0].get_xid())
+        return SugarExt.wm_get_bundle_id(self._windows[0].get_xid())
 
     def is_journal(self):
         """Returns boolean if the activity is of type JournalActivity"""
@@ -279,15 +274,13 @@ class Activity(GObject.GObject):
         """Returns the activity's bundle directory"""
         if self._activity_info is None:
             return None
-        else:
-            return self._activity_info.get_path()
+        return self._activity_info.get_path()
 
     def get_activity_name(self):
         """Returns the activity's bundle name"""
         if self._activity_info is None:
             return None
-        else:
-            return self._activity_info.get_name()
+        return self._activity_info.get_name()
 
     def equals(self, activity):
         if self._activity_id and activity.get_activity_id():
@@ -299,8 +292,7 @@ class Activity(GObject.GObject):
     def _get_service_name(self):
         if self._activity_id:
             return _SERVICE_NAME + self._activity_id
-        else:
-            return None
+        return None
 
     def _retrieve_service(self):
         if not self._activity_id:
@@ -446,7 +438,7 @@ class ShellModel(GObject.GObject):
     def _update_zoom_level(self, window):
         if window.get_window_type() == Wnck.WindowType.DIALOG:
             return
-        elif window.get_window_type() == Wnck.WindowType.NORMAL:
+        if window.get_window_type() == Wnck.WindowType.NORMAL:
             new_level = self.ZOOM_ACTIVITY
         else:
             new_level = self._desktop_level
@@ -499,10 +491,9 @@ class ShellModel(GObject.GObject):
         i = activities.index(current)
         if len(activities) == 0:
             return None
-        elif i - 1 >= 0:
+        if i - 1 >= 0:
             return activities[i - 1]
-        else:
-            return activities[len(activities) - 1]
+        return activities[len(activities) - 1]
 
     def get_next_activity(self, current=None):
         if not current:
@@ -512,10 +503,9 @@ class ShellModel(GObject.GObject):
         i = activities.index(current)
         if len(activities) == 0:
             return None
-        elif i + 1 < len(activities):
+        if i + 1 < len(activities):
             return activities[i + 1]
-        else:
-            return activities[0]
+        return activities[0]
 
     def get_active_activity(self):
         """Returns the activity that the user is currently working in"""
@@ -690,10 +680,9 @@ class ShellModel(GObject.GObject):
     def can_launch_activity(self):
         activities = self._get_activities_with_window()
         if self._maximum_open_activities > 0 and \
-           len(activities) > self._maximum_open_activities:
+                   len(activities) > self._maximum_open_activities:
             return False
-        else:
-            return True
+        return True
 
     def _add_activity(self, home_activity):
         self._activities.append(home_activity)

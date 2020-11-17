@@ -170,13 +170,13 @@ class Frame(SectionView):
         self._trigger_size_slider.queue_draw()
         return False
 
-    def __corner_delay_format_cb(self, scale, value):
+    @staticmethod
+    def __corner_delay_format_cb(scale, value):
         if value == _MAX_DELAY:
             return _never
-        elif value == 0:
+        if value == 0:
             return _instantaneous
-        else:
-            return _seconds_label % (value / _MAX_DELAY)
+        return _seconds_label % (value / _MAX_DELAY)
 
     def __edge_delay_changed_cb(self, scale, data=None):
         if self._edge_delay_sid:
@@ -193,13 +193,13 @@ class Frame(SectionView):
         self._trigger_size_slider.queue_draw()
         return False
 
-    def __edge_delay_format_cb(self, scale, value):
+    @staticmethod
+    def __edge_delay_format_cb(scale, value):
         if value == _MAX_DELAY:
             return _never
-        elif value == 0:
+        if value == 0:
             return _instantaneous
-        else:
-            return _seconds_label % (value / _MAX_DELAY)
+        return _seconds_label % (value / _MAX_DELAY)
 
     def __trigger_size_changed_cb(self, scale, data=None):
         if self._trigger_size_sid:
@@ -219,17 +219,16 @@ class Frame(SectionView):
         value = int(value)
         if value == style.GRID_CELL_SIZE:
             return _('toolbar size')
-        elif value == 1:
+        if value == 1:
             corner = self._model.get_corner_delay() < _MAX_DELAY
             edge = self._model.get_edge_delay() < _MAX_DELAY
             if corner and edge:
                 return _('exact corner or edge')
-            elif corner:
+            if corner:
                 return _('exact corner')
-            elif edge:
+            if edge:
                 return _('exact edge')
-            else:
-                return _('ignored')
+            return _('ignored')
         else:
             # TRANS: px as in pixels
             return _('{}px').format(value)

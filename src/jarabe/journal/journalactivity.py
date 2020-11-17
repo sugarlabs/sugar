@@ -79,7 +79,8 @@ class JournalActivityDBusService(dbus.service.Object):
 
     @dbus.service.method(J_DBUS_INTERFACE, in_signature='ss',
                          out_signature='s')
-    def GetBundlePath(self, bundle_id, object_id):
+    @staticmethod
+    def GetBundlePath(bundle_id, object_id):
         '''
         Get bundle path given object_id and/or bundle_id.
         This is used in the toolkit to provide the bundle information
@@ -95,12 +96,12 @@ class JournalActivityDBusService(dbus.service.Object):
         bundle = get_bundle(bundle_id, object_id)
         if bundle is None:
             return ''
-        else:
-            return bundle.get_path()
+        return bundle.get_path()
 
     @dbus.service.method(J_DBUS_INTERFACE, in_signature='ss',
                          out_signature='b')
-    def LaunchBundle(self, bundle_id, object_id):
+    @staticmethod
+    def LaunchBundle(bundle_id, object_id):
         '''
         Launch an activity with a given object_id and/or bundle_id.
 
@@ -253,7 +254,8 @@ class JournalActivity(JournalWindow):
     def _session_manager_shutdown_cb(self, event):
         self.destroy()
 
-    def can_close(self):
+    @staticmethod
+    def can_close():
         return False
 
     def list_view_signal_connect(self, list_view):
@@ -353,7 +355,8 @@ class JournalActivity(JournalWindow):
         self._secondary_view.pack_end(self._detail_view, True, True, 0)
         self._detail_view.show()
 
-    def __add_project_activate_cb(self, bar, title):
+    @staticmethod
+    def __add_project_activate_cb(bar, title):
         initialize_journal_object(
             title=title, bundle_id=PROJECT_BUNDLE_ID,
             activity_id=None, project_metadata=None)
@@ -399,7 +402,8 @@ class JournalActivity(JournalWindow):
                                 metadata_to_send)
         project_chooser._toolbar._proj_list_button_clicked_cb(None)
 
-    def __project_chooser_response_cb(self, project_chooser, response_value,
+    @staticmethod
+    def __project_chooser_response_cb(project_chooser, response_value,
                                       metadata_to_send):
         if response_value == Gtk.ResponseType.DELETE_EVENT:
             project_chooser.destroy()
@@ -493,9 +497,8 @@ class JournalActivity(JournalWindow):
         metadata = model.get(object_id)
         if metadata is None:
             return False
-        else:
-            self._show_secondary_view(object_id)
-            return True
+        self._show_secondary_view(object_id)
+        return True
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
         logging.debug('Selected volume: %r.', mount_point)

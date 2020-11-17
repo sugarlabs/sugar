@@ -298,7 +298,8 @@ class ServiceProviders(object):
 
         self._current_plan = plan_idx
 
-    def _guess_country_code(self):
+    @staticmethod
+    def _guess_country_code():
         """Return country based on locale lang attribute."""
         language_code = locale.getdefaultlocale()[0]
         if language_code is None:
@@ -318,8 +319,6 @@ class ServiceProviders(object):
         provider_name = self._settings.get_string(CONF_SP_PROVIDER)
         if not provider_name:
             provider_name = ''
-        else:
-            provider_name = provider_name.decode('utf-8')
 
         plan_idx = self._settings.get_int(CONF_SP_PLAN) or 0
 
@@ -380,13 +379,11 @@ class ServiceProviders(object):
     def get_provider(self):
         if self._providers == []:
             return None
-        else:
-            return Provider.from_xml(self._current_provider,
-                                     self._providers[self._current_provider])
+        return Provider.from_xml(self._current_provider,
+                                 self._providers[self._current_provider])
 
     def get_plan(self):
         if self._plans == []:
             return None
-        else:
-            return Plan.from_xml(self._current_plan,
-                                 self._plans[self._current_plan])
+        return Plan.from_xml(self._current_plan,
+                             self._plans[self._current_plan])

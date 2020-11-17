@@ -60,8 +60,7 @@ class UIService(dbus.service.Object):
         bundle = bundleregistry.get_registry().get_bundle(bundle_id)
         if bundle:
             return bundle.get_path()
-        else:
-            return ''
+        return ''
 
     @dbus.service.method(_DBUS_SHELL_IFACE,
                          in_signature='s', out_signature='b')

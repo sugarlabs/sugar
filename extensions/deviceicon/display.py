@@ -56,7 +56,8 @@ class DeviceView(TrayIcon):
             self._model.changed_signal.connect(self.__brightness_changed_cb)
             self._update_output_info()
 
-    def create_palette(self):
+    @staticmethod
+    def create_palette():
         palette = DisplayPalette()
         palette.set_group_id('frame')
         return palette
@@ -225,7 +226,8 @@ class DisplayPalette(Palette):
         frame_.hide()
         GLib.idle_add(self.__take_screenshot_cb, frame_)
 
-    def __take_screenshot_cb(self, frame_):
+    @staticmethod
+    def __take_screenshot_cb(frame_):
         if frame_.is_visible():
             return True
         take_screenshot()

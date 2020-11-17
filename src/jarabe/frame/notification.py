@@ -285,9 +285,9 @@ class NotificationIcon(Gtk.EventBox):
     def do_get_property(self, pspec):
         if pspec.name == 'xo-color':
             return self._icon.props.base_color
-        elif pspec.name == 'icon-name':
+        if pspec.name == 'icon-name':
             return self._icon.props.icon_name
-        elif pspec.name == 'icon-filename':
+        if pspec.name == 'icon-filename':
             return self._icon.props.file
 
     def _set_palette(self, palette):

@@ -231,15 +231,18 @@ class BaseExpandedEntry(GObject.GObject):
 
         return header
 
-    def _create_keep_icon(self):
+    @staticmethod
+    def _create_keep_icon():
         keep_icon = KeepIcon()
         return keep_icon
 
-    def _create_title(self):
+    @staticmethod
+    def _create_title():
         entry = Gtk.Entry()
         return entry
 
-    def _create_date(self):
+    @staticmethod
+    def _create_date():
         date = Gtk.Label()
         return date
 
@@ -449,10 +452,10 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             buddies = list(json.loads(self._metadata['buddies']).values())
             vbox.pack_start(BuddyList(buddies), False, False, 0)
             return vbox
-        else:
-            return vbox
+        return vbox
 
-    def _create_scrollable(self, widget, label=None):
+    @staticmethod
+    def _create_scrollable(widget, label=None):
         vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
 

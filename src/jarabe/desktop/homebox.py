@@ -119,7 +119,8 @@ class HomeBox(Gtk.VBox):
             entry._icon_selected = []
             self.set_resume_mode(self._resume_mode)
 
-    def __activitylist_clear_clicked_cb(self, widget, toolbar):
+    @staticmethod
+    def __activitylist_clear_clicked_cb(widget, toolbar):
         toolbar.clear_query()
 
     def __clear_icon_pressed_cb(self, entry, icon_pos, event):

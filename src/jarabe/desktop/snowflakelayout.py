@@ -50,7 +50,8 @@ class SnowflakeLayout(Gtk.Container):
         for child in list(self._children.keys()):
             callback(child)
 
-    def do_remove(self, child):
+    @staticmethod
+    def do_remove(child):
         child.unparent()
 
     def add_icon(self, child, center=False):

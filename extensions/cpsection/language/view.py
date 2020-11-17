@@ -486,6 +486,7 @@ class BlackLabel(PaletteMenuItem):
         self.set_label(text_label)
 
     def set_label(self, text_label):
+        text_label = GLib.markup_escape_text(text_label)
         text = '<span foreground="%s">' % style.COLOR_BLACK.get_html() + \
             text_label + '</span>'
         self.label.set_markup(text)

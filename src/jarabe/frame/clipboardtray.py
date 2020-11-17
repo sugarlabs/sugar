@@ -75,7 +75,8 @@ class ClipboardTray(tray.VTray):
                 return True
         return False
 
-    def _add_selection(self, object_id, selection):
+    @staticmethod
+    def _add_selection(object_id, selection):
         if not selection.get_data():
             return
 
@@ -196,5 +197,4 @@ class ClipboardTray(tray.VTray):
         view_ancestor = source_widget.get_ancestor(Gtk.Viewport)
         if view_ancestor is self._viewport:
             return True
-        else:
-            return False
+        return False

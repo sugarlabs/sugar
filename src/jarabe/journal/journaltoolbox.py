@@ -582,10 +582,12 @@ class DetailToolbox(ToolbarBox):
         misc.resume(self._metadata,
                     alert_window=journalwindow.get_journal_window())
 
-    def _copy_clicked_cb(self, button):
+    @staticmethod
+    def _copy_clicked_cb(button):
         button.palette.popup(immediate=True)
 
-    def _refresh_clicked_cb(self, button):
+    @staticmethod
+    def _refresh_clicked_cb(button):
         button.palette.popup(immediate=True)
 
     def _duplicate_clicked_cb(self, button):
@@ -839,7 +841,8 @@ class BatchEraseButton(ToolButton):
             self._get_confirmation_alert_message(len(selected_uids)),
             self._operate)
 
-    def _get_confirmation_alert_message(self, entries_len):
+    @staticmethod
+    def _get_confirmation_alert_message(entries_len):
         return ngettext('Do you want to erase %d entry?',
                         'Do you want to erase %d entries?',
                         entries_len) % (entries_len)
@@ -970,7 +973,8 @@ class FilterToolItem(Gtk.ToolButton):
         if self._palette_invoker is not None:
             self._palette_invoker.detach()
 
-    def create_palette(self):
+    @staticmethod
+    def create_palette():
         return None
 
     def get_palette(self):
@@ -1083,8 +1087,7 @@ def set_palette_list(palette_list):
                                          (ny + 1) * menuitem_height)
         scrolled_window.add_with_viewport(grid)
         return scrolled_window
-    else:
-        return grid
+    return grid
 
 
 class AddNewBar(Gtk.Box):

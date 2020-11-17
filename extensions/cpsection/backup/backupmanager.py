@@ -59,7 +59,8 @@ class BackupManager():
     def set_selected_backend(self, selected_backend):
         self._selected_backend = selected_backend
 
-    def need_stop_activities(self):
+    @staticmethod
+    def need_stop_activities():
         return len(shell.get_model()) > 1
 
 

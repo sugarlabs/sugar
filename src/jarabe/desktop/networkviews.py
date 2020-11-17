@@ -181,13 +181,15 @@ class WirelessNetworkView(EventPulsingIcon):
                             reply_handler=self.__get_device_state_reply_cb,
                             error_handler=self.__get_device_state_error_cb)
 
-    def __get_active_ap_error_cb(self, err):
+    @staticmethod
+    def __get_active_ap_error_cb(err):
         logging.error('Error getting the active access point: %s', err)
 
     def __get_device_caps_reply_cb(self, caps):
         self._device_caps = caps
 
-    def __get_device_caps_error_cb(self, err):
+    @staticmethod
+    def __get_device_caps_error_cb(err):
         logging.error('Error getting the wireless device properties: %s', err)
 
     def __get_device_state_reply_cb(self, state):
@@ -197,7 +199,8 @@ class WirelessNetworkView(EventPulsingIcon):
         self._update_icon()
         self._update_badge()
 
-    def __get_device_state_error_cb(self, err):
+    @staticmethod
+    def __get_device_state_error_cb(err):
         logging.error('Error getting the device state: %s', err)
 
     def _update_icon(self):
@@ -303,7 +306,8 @@ class WirelessNetworkView(EventPulsingIcon):
     def __forget_activate_cb(self, item):
         network.forget_wireless_network(self._ssid)
 
-    def _add_ciphers_from_flags(self, flags, pairwise):
+    @staticmethod
+    def _add_ciphers_from_flags(flags, pairwise):
         ciphers = []
         if pairwise:
             if flags & network.NM_802_11_AP_SEC_PAIR_TKIP:
@@ -454,7 +458,7 @@ class WirelessNetworkView(EventPulsingIcon):
 
     def is_olpc_mesh(self):
         return self._mode == network.NM_802_11_MODE_ADHOC \
-            and self._ssid == 'olpc-mesh'
+            and self._ssid == b'olpc-mesh'
 
     def remove_all_aps(self):
         for ap in list(self._access_points.values()):
@@ -553,7 +557,8 @@ class SugarAdhocView(EventPulsingIcon):
     def __connect_activate_cb(self, icon):
         get_adhoc_manager_instance().activate_channel(self._channel)
 
-    def __disconnect_activate_cb(self, icon):
+    @staticmethod
+    def __disconnect_activate_cb(icon):
         get_adhoc_manager_instance().deactivate_active_channel()
 
     def __state_changed_cb(self, adhoc_manager, channel, device_state):
@@ -688,7 +693,8 @@ class OlpcMeshView(EventPulsingIcon):
         self._device_state = state
         self._update()
 
-    def __get_device_state_error_cb(self, err):
+    @staticmethod
+    def __get_device_state_error_cb(err):
         logging.error('Error getting the device state: %s', err)
 
     def __device_state_changed_cb(self, new_state, old_state, reason):
@@ -700,7 +706,8 @@ class OlpcMeshView(EventPulsingIcon):
         self._active = (channel == self._channel)
         self._update()
 
-    def __get_active_channel_error_cb(self, err):
+    @staticmethod
+    def __get_active_channel_error_cb(err):
         logging.error('Error getting the active channel: %s', err)
 
     def __wireless_properties_changed_cb(self, properties):

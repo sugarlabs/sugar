@@ -351,8 +351,7 @@ def frequency_to_channel(frequency):
 
     if frequency > 4900:
         return a_table[frequency]
-    else:
-        return bg_table[frequency]
+    return bg_table[frequency]
 
 
 def is_sugar_adhoc_network(ssid):
@@ -429,7 +428,7 @@ class OlpcMesh(object):
 
     def get_dict(self):
         ret = {
-            'ssid': dbus.ByteArray('olpc-mesh'),
+            'ssid': dbus.ByteArray(b'olpc-mesh'),
             'channel': self.channel,
         }
 
@@ -647,7 +646,7 @@ class AccessPoint(GObject.GObject):
         self._initialized = False
         self._bus = dbus.SystemBus()
 
-        self.ssid = ''
+        self.ssid = b''
         self.strength = 0
         self.flags = 0
         self.wpa_flags = 0
@@ -808,10 +807,9 @@ class Connection(GObject.GObject):
     def get_settings(self, stype=None):
         if not stype:
             return self._settings
-        elif stype in self._settings:
+        if stype in self._settings:
             return self._settings[stype]
-        else:
-            return None
+        return None
 
     def get_secrets(self, stype, reply_handler, error_handler):
         return self._connection.GetSecrets(stype, byte_arrays=True,
@@ -834,8 +832,7 @@ class Connection(GObject.GObject):
         wifi_settings = self.get_settings('802-11-wireless')
         if wifi_settings and 'ssid' in wifi_settings:
             return wifi_settings['ssid']
-        else:
-            return None
+        return None
 
     def get_id(self):
         return self.get_settings('connection')['id']
@@ -970,7 +967,7 @@ def _migrate_old_wifi_connections():
         try:
             settings = Settings()
             settings.connection.id = section
-            ssid = config.get(section, 'ssid')
+            ssid = config.get(section, 'ssid').encode()
             settings.wireless.ssid = dbus.ByteArray(ssid)
             config_uuid = config.get(section, 'uuid')
             settings.connection.uuid = config_uuid

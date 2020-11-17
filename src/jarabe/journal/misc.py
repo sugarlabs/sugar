@@ -148,21 +148,20 @@ def get_bundle(metadata):
                 return None
             return get_bundle_instance(file_path)
 
-        elif is_content_bundle(metadata):
+        if is_content_bundle(metadata):
             file_path = model.get_file(metadata['uid'])
             if not os.path.exists(file_path):
                 logging.warning('Invalid path: %r', file_path)
                 return None
             return ContentBundle(file_path)
 
-        elif is_journal_bundle(metadata):
+        if is_journal_bundle(metadata):
             file_path = model.get_file(metadata['uid'])
             if not os.path.exists(file_path):
                 logging.warning('Invalid path: %r', file_path)
                 return None
             return JournalEntryBundle(file_path, metadata['uid'])
-        else:
-            return None
+        return None
     except Exception:
         logging.exception('Incorrect bundle')
         return None
@@ -407,8 +406,7 @@ def handle_bundle_installation(metadata, force_downgrade=False):
 def get_icon_color(metadata):
     if metadata is None or 'icon-color' not in metadata:
         return profile.get_color()
-    else:
-        return XoColor(metadata['icon-color'])
+    return XoColor(metadata['icon-color'])
 
 
 def get_mount_color(mount):

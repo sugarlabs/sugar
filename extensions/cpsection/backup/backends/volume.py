@@ -75,7 +75,8 @@ class Backup(Backend):
         if _get_volume_space(self._volume) < self._uncompressed_size:
             raise PreConditionsError(_('Not enough space in volume'))
 
-    def _get_datastore_entries(self):
+    @staticmethod
+    def _get_datastore_entries():
         ''' gathers datastore top level directories only '''
         ds_path = _get_datastore_path()
         entries = []
@@ -148,7 +149,8 @@ class Restore(Backend):
         self._percent = 0
         self._cancellable = True
 
-    def _reset_datastore(self):
+    @staticmethod
+    def _reset_datastore():
         ''' erase all contents from current datastore '''
         datastore_path = _get_datastore_path()
         if os.path.exists(datastore_path):

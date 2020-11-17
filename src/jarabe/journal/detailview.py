@@ -107,12 +107,14 @@ class BackBar(Gtk.EventBox):
         self.connect('enter-notify-event', self.__enter_notify_event_cb)
         self.connect('leave-notify-event', self.__leave_notify_event_cb)
 
-    def __enter_notify_event_cb(self, box, event):
+    @staticmethod
+    def __enter_notify_event_cb(box, event):
         box.modify_bg(Gtk.StateType.NORMAL,
                       style.COLOR_SELECTION_GREY.get_gdk_color())
         return False
 
-    def __leave_notify_event_cb(self, box, event):
+    @staticmethod
+    def __leave_notify_event_cb(box, event):
         box.modify_bg(Gtk.StateType.NORMAL,
                       style.COLOR_PANEL_GREY.get_gdk_color())
         return False
