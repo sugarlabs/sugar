@@ -16,7 +16,7 @@
 
 import unittest
 
-from cpsection.aboutme import model
+from extensions.cpsection.aboutme import model
 from jarabe.intro.agepicker import AGES
 from jarabe.intro.genderpicker import GENDERS
 

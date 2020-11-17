@@ -352,7 +352,7 @@ class BaseListView(Gtk.Bin):
 
         widget = Gtk.Label(label='')
         context = widget.get_pango_context()
-        layout = Pango.Layout(context)
+        layout = Pango.Layout.new(context)
         layout.set_text(text, len(text))
         width, height_ = layout.get_pixel_size()
         return width

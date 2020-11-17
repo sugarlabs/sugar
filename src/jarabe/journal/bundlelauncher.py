@@ -43,6 +43,10 @@ def get_bundle(bundle_id=None, object_id=None):
 
         return activities[0]
     else:
+        obj = datastore.get(object_id)
+        if obj.metadata['mime_type'] is None:
+            return None
+        mime_type = str(obj.metadata['mime_type'])
         bundle = bundleregistry.get_registry().get_bundle(bundle_id)
         if bundle is None:
             logging.warning('Activity with the bundle_id %s was not found',

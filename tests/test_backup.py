@@ -21,8 +21,8 @@ from jarabe import config
 # we need import from the extensions path
 sys.path.append(config.ext_path)
 
-from cpsection.backup.backupmanager import BackupManager
-from cpsection.backup.backends.backend_tools import Backend
+from extensions.cpsection.backup.backupmanager import BackupManager
+from extensions.cpsection.backup.backends.backend_tools import Backend
 
 
 class TestBackup(unittest.TestCase):

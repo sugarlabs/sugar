@@ -18,7 +18,7 @@ from gi.repository import Gtk
 
 from jarabe.webservice import accountsmanager
 
-from cpsection.webaccount.web_service import WebService
+from extensions.cpsection.webaccount.web_service import WebService
 
 _SERVICE_NAME = 'mock'
 

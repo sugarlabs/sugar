@@ -334,7 +334,7 @@ class ViewSource(Gtk.Window):
         if document_path is not None and os.path.exists(document_path):
             os.unlink(document_path)
 
-        self._gdk_window.set_cursor(Gdk.Cursor(Gdk.CursorType.LEFT_PTR))
+        self._gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
         Gdk.flush()
 
     def __key_press_event_cb(self, window, event):
@@ -418,9 +418,9 @@ class DocumentButton(RadioToolButton):
         cursor = None
 
         if busy:
-            cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
+            cursor = Gdk.Cursor.new(Gdk.CursorType.WATCH)
         else:
-            cursor = Gdk.Cursor(Gdk.CursorType.LEFT_PTR)
+            cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
 
         gdk_window = self.get_root_window()
         gdk_window.set_cursor(cursor)

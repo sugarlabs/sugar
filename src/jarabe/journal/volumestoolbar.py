@@ -296,7 +296,7 @@ class BaseButton(RadioToolButton):
         metadata = model.get(object_id)
         file_path = model.get_file(metadata['uid'])
         if not file_path or not os.path.exists(file_path):
-            logging.warn('Entries without a file cannot be copied.')
+            logging.warning('Entries without a file cannot be copied.')
             self.emit('volume-error',
                       _('Entries without a file cannot be copied.'),
                       _('Warning'))

@@ -42,20 +42,25 @@ from jarabe.model import telepathyclient
 from jarabe.model import neighborhood
 
 
-FT_STATE_NONE = 0
-FT_STATE_PENDING = 1
-FT_STATE_ACCEPTED = 2
-FT_STATE_OPEN = 3
-FT_STATE_COMPLETED = 4
-FT_STATE_CANCELLED = 5
+FT_STATE_NONE = TelepathyGLib.FileTransferState.NONE
+FT_STATE_PENDING = TelepathyGLib.FileTransferState.PENDING
+FT_STATE_ACCEPTED = TelepathyGLib.FileTransferState.ACCEPTED
+FT_STATE_OPEN = TelepathyGLib.FileTransferState.OPEN
+FT_STATE_COMPLETED = TelepathyGLib.FileTransferState.COMPLETED
+FT_STATE_CANCELLED = TelepathyGLib.FileTransferState.CANCELLED
 
-FT_REASON_NONE = 0
-FT_REASON_REQUESTED = 1
-FT_REASON_LOCAL_STOPPED = 2
-FT_REASON_REMOTE_STOPPED = 3
-FT_REASON_LOCAL_ERROR = 4
-FT_REASON_LOCAL_ERROR = 5
-FT_REASON_REMOTE_ERROR = 6
+FT_REASON_NONE = \
+    TelepathyGLib.FileTransferStateChangeReason.NONE
+FT_REASON_REQUESTED = \
+    TelepathyGLib.FileTransferStateChangeReason.REQUESTED
+FT_REASON_LOCAL_STOPPED = \
+    TelepathyGLib.FileTransferStateChangeReason.LOCAL_STOPPED
+FT_REASON_REMOTE_STOPPED = \
+    TelepathyGLib.FileTransferStateChangeReason.REMOTE_STOPPED
+FT_REASON_LOCAL_ERROR = \
+    TelepathyGLib.FileTransferStateChangeReason.LOCAL_ERROR
+FT_REASON_REMOTE_ERROR = \
+    TelepathyGLib.FileTransferStateChangeReason.REMOTE_ERROR
 
 
 new_file_transfer = dispatch.Signal()

@@ -178,7 +178,7 @@ class ClipboardTray(tray.VTray):
         object_id = self._context_map.get_object_id(context)
         try:
             if selection is None:
-                logging.warn('ClipboardTray: empty selection for target %s',
+                logging.warning('ClipboardTray: empty selection for target %s',
                              selection.get_target())
             else:
                 self._add_selection(object_id, selection)

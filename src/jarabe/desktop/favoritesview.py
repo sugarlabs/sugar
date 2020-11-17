@@ -172,7 +172,7 @@ class FavoritesView(ViewContainer):
 
     def _set_layout(self, layout):
         if layout not in LAYOUT_MAP:
-            logging.warn('Unknown favorites layout: %r', layout)
+            logging.warning('Unknown favorites layout: %r', layout)
             layout = favoriteslayout.RingLayout.key
             assert layout in LAYOUT_MAP
 

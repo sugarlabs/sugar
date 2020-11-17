@@ -66,5 +66,5 @@ def setup(tray):
     # of the OSK has many unresolved corner cases, see
     # http://dev.laptop.org/ticket/12281
 
-    if _HAS_MALIIT:
-        tray.add_device(DeviceView())
+    # if _HAS_MALIIT:
+    #     tray.add_device(DeviceView())
