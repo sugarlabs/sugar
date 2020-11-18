@@ -96,8 +96,7 @@ def _get_toolkit_path(bundle_path, bundle_id):
         sugar_web_path = os.path.join(bundle_path, 'lib', 'sugar-web')
         if os.path.exists(sugar_web_path):
             return sugar_web_path
-        else:
-            return None
+        return None
 
     if _is_gtk3_activity(bundle_path, bundle_id):
         sugar_module = 'sugar3'

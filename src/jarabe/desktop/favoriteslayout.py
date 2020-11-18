@@ -326,9 +326,8 @@ class RingLayout(ViewLayout):
             icon_size -= 1
             if icon_size <= style.STANDARD_ICON_SIZE:
                 break
-            else:
-                angle_, radius = self._calculate_angle_and_radius(
-                    children_count, icon_size)
+            angle_, radius = self._calculate_angle_and_radius(
+                children_count, icon_size)
         if radius <= self._calculate_maximum_radius(icon_size):
             return radius, icon_size
 
@@ -337,9 +336,8 @@ class RingLayout(ViewLayout):
         while radius > self._calculate_maximum_radius(icon_size):
             if icon_size < style.SMALL_ICON_SIZE:
                 break
-            else:
-                angle_, radius = self._calculate_angle_and_radius(
-                    children_count, icon_size)
+            angle_, radius = self._calculate_angle_and_radius(
+                children_count, icon_size)
             icon_size -= 1
         return radius, icon_size
 

@@ -228,12 +228,11 @@ class KeyHandler(object):
                 raise TypeError('Invalid action %r' % action)
 
             return True
-        else:
-            # If this is not a registered key, then cancel tabbing.
-            if self._tabbing_handler.is_tabbing():
-                if not grabber.is_modifier(keycode):
-                    self._tabbing_handler.stop(event_time)
-                return True
+        # If this is not a registered key, then cancel tabbing.
+        if self._tabbing_handler.is_tabbing():
+            if not grabber.is_modifier(keycode):
+                self._tabbing_handler.stop(event_time)
+            return True
 
         return False
 

@@ -351,8 +351,7 @@ def frequency_to_channel(frequency):
 
     if frequency > 4900:
         return a_table[frequency]
-    else:
-        return bg_table[frequency]
+    return bg_table[frequency]
 
 
 def is_sugar_adhoc_network(ssid):
@@ -808,10 +807,9 @@ class Connection(GObject.GObject):
     def get_settings(self, stype=None):
         if not stype:
             return self._settings
-        elif stype in self._settings:
+        if stype in self._settings:
             return self._settings[stype]
-        else:
-            return None
+        return None
 
     def get_secrets(self, stype, reply_handler, error_handler):
         return self._connection.GetSecrets(stype, byte_arrays=True,
@@ -834,8 +832,7 @@ class Connection(GObject.GObject):
         wifi_settings = self.get_settings('802-11-wireless')
         if wifi_settings and 'ssid' in wifi_settings:
             return wifi_settings['ssid']
-        else:
-            return None
+        return None
 
     def get_id(self):
         return self.get_settings('connection')['id']

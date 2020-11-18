@@ -244,8 +244,7 @@ class BaseListView(Gtk.Bin):
             return None
         if self._query['mountpoints'] == ['/']:
             return not object_id.startswith('/')
-        else:
-            return object_id.startswith(self._query['mountpoints'][0])
+        return object_id.startswith(self._query['mountpoints'][0])
 
     def _add_columns(self):
         if self._enable_multi_operations:
@@ -650,9 +649,8 @@ class BaseListView(Gtk.Bin):
                                            cel_rect.height)
             if path == end_path:
                 break
-            else:
-                next_iter = tree_model.iter_next(tree_model.get_iter(path))
-                path = tree_model.get_path(next_iter)
+            next_iter = tree_model.iter_next(tree_model.get_iter(path))
+            path = tree_model.get_path(next_iter)
 
     def _set_dirty(self):
         if self._fully_obscured or self._updates_disabled:

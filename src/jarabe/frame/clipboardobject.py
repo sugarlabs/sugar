@@ -82,8 +82,7 @@ class ClipboardObject(object):
         # A bundle will have only one format.
         if not self._formats:
             return False
-        else:
-            return list(self._formats.keys())[0] == ActivityBundle.MIME_TYPE
+        return list(self._formats.keys())[0] == ActivityBundle.MIME_TYPE
 
     def get_percent(self):
         return self._percent

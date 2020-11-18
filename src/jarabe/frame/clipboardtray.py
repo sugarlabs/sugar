@@ -196,5 +196,4 @@ class ClipboardTray(tray.VTray):
         view_ancestor = source_widget.get_ancestor(Gtk.Viewport)
         if view_ancestor is self._viewport:
             return True
-        else:
-            return False
+        return False

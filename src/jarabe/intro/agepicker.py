@@ -286,7 +286,7 @@ class AgePicker(Gtk.Grid):
     def get_age(self):
         if self._page is None:
             return load_age()
-        elif hasattr(self, '_age'):
+        if hasattr(self, '_age'):
             if self._age is None:
                 return None
             i = age_to_index(self._age)

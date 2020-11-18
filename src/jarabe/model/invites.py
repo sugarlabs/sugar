@@ -56,8 +56,7 @@ class BaseInvite(object):
     def get_bundle_id(self):
         if CLIENT in self._handler:
             return self._handler[len(CLIENT + '.'):]
-        else:
-            return None
+        return None
 
     def get_activity_title(self):
         return None

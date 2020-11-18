@@ -449,8 +449,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             buddies = list(json.loads(self._metadata['buddies']).values())
             vbox.pack_start(BuddyList(buddies), False, False, 0)
             return vbox
-        else:
-            return vbox
+        return vbox
 
     def _create_scrollable(self, widget, label=None):
         vbox = Gtk.VBox()

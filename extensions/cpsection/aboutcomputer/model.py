@@ -228,9 +228,8 @@ def _read_file(path):
     if value:
         value = value.strip('\n')
         return value
-    else:
-        _logger.debug('No information in file or directory: %s', path)
-        return None
+    _logger.debug('No information in file or directory: %s', path)
+    return None
 
 
 def get_license():

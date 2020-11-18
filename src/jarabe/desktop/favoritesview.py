@@ -214,8 +214,7 @@ class FavoritesView(ViewContainer):
     def __button_release_cb(self, widget, event):
         if self._dragging:
             return True
-        else:
-            return False
+        return False
 
     def __button_press_cb(self, widget, event):
         if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:
@@ -267,8 +266,7 @@ class FavoritesView(ViewContainer):
         if self._last_clicked_icon is not None:
             Gdk.drag_status(context, context.get_suggested_action(), time)
             return True
-        else:
-            return False
+        return False
 
     def __drag_drop_cb(self, widget, context, x, y, time):
         if self._last_clicked_icon is not None:
@@ -287,8 +285,7 @@ class FavoritesView(ViewContainer):
             self._dragging = False
 
             return True
-        else:
-            return False
+        return False
 
     def __drag_data_received_cb(self, widget, context, x, y, selection_data,
                                 info, time):

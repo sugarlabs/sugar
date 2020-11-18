@@ -378,13 +378,11 @@ class ServiceProviders(object):
     def get_provider(self):
         if self._providers == []:
             return None
-        else:
-            return Provider.from_xml(self._current_provider,
-                                     self._providers[self._current_provider])
+        return Provider.from_xml(self._current_provider,
+                                 self._providers[self._current_provider])
 
     def get_plan(self):
         if self._plans == []:
             return None
-        else:
-            return Plan.from_xml(self._current_plan,
-                                 self._plans[self._current_plan])
+        return Plan.from_xml(self._current_plan,
+                             self._plans[self._current_plan])

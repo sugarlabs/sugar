@@ -162,8 +162,7 @@ class IconView(Gtk.Bin):
         """Check if the created item is part of the currently selected view"""
         if self._query['mountpoints'] == ['/']:
             return not object_id.startswith('/')
-        else:
-            return object_id.startswith(self._query['mountpoints'][0])
+        return object_id.startswith(self._query['mountpoints'][0])
 
     def do_size_allocate(self, allocation):
         self.set_allocation(allocation)

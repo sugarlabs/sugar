@@ -130,8 +130,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     def do_iter_n_children(self, iterator):
         if iterator is None:
             return self._result_set.length
-        else:
-            return 0
+        return 0
 
     def set_value(self, iterator, column, value):
         index = iterator.user_data
@@ -257,9 +256,8 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         if idx >= self._result_set.length:
             iterator.stamp = -1
             return (False, iterator)
-        else:
-            iterator.user_data = idx
-            return (True, iterator)
+        iterator.user_data = idx
+        return (True, iterator)
 
     def do_get_flags(self):
         return Gtk.TreeModelFlags.ITERS_PERSIST | Gtk.TreeModelFlags.LIST_ONLY
@@ -288,7 +286,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
             logging.debug('putting %r in selection', self._temp_drag_file_path)
             selection.set(target_atom, 8, self._temp_drag_file_path)
             return True
-        elif target_name == 'journal-object-id':
+        if target_name == 'journal-object-id':
             # uid is unicode but Gtk.SelectionData.set() needs str
             selection.set(target_atom, 8, str(uid))
             return True

@@ -84,8 +84,7 @@ class IconModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     def do_iter_n_children(self, iterator):
         if iterator is None:
             return self._result_set.length
-        else:
-            return 0
+        return 0
 
     def do_get_value(self, iterator, column):
         if self.view_is_resizing:
@@ -131,9 +130,8 @@ class IconModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         if idx >= self._result_set.length:
             iterator.stamp = -1
             return (False, iterator)
-        else:
-            iterator.user_data = idx
-            return (True, iterator)
+        iterator.user_data = idx
+        return (True, iterator)
 
     def do_get_flags(self):
         return Gtk.TreeModelFlags.ITERS_PERSIST | Gtk.TreeModelFlags.LIST_ONLY

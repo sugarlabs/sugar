@@ -95,8 +95,7 @@ class JournalActivityDBusService(dbus.service.Object):
         bundle = get_bundle(bundle_id, object_id)
         if bundle is None:
             return ''
-        else:
-            return bundle.get_path()
+        return bundle.get_path()
 
     @dbus.service.method(J_DBUS_INTERFACE, in_signature='ss',
                          out_signature='b')
@@ -493,9 +492,8 @@ class JournalActivity(JournalWindow):
         metadata = model.get(object_id)
         if metadata is None:
             return False
-        else:
-            self._show_secondary_view(object_id)
-            return True
+        self._show_secondary_view(object_id)
+        return True
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
         logging.debug('Selected volume: %r.', mount_point)
