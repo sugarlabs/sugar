@@ -54,7 +54,7 @@ class Backup(Backend):
             return
 
         volume_options = _get_volume_options()
-        logging.error('volume_options %s', volume_options)
+        logging.debug('volume_options %s', volume_options)
         if not volume_options['options']:
             raise PreConditionsError(_('Please connect a device to continue'))
 
