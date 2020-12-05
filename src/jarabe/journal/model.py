@@ -831,8 +831,7 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
             original_dir_name != metadata['mountpoint']:
         subdir = os.path.relpath(original_dir_name, metadata['mountpoint'])
         metadata_dir_path = os.path.join(metadata_dir_path, subdir)
-    if not os.path.exists(metadata_dir_path):
-        os.makedirs(metadata_dir_path)
+    os.makedirs(metadata_dir_path, exist_ok=True)
 
     # Set the HIDDEN attrib even when the metadata directory already
     # exists for backward compatibility; but don't set it in ~/Documents
