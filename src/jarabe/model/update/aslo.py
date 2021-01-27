@@ -66,7 +66,7 @@ _FIND_VERSION = './/{http://www.mozilla.org/2004/em-rdf#}version'
 _FIND_LINK = './/{http://www.mozilla.org/2004/em-rdf#}updateLink'
 _FIND_SIZE = './/{http://www.mozilla.org/2004/em-rdf#}updateSize'
 
-_UPDATE_PATH = 'http://activities.sugarlabs.org/services/update-aslo.php'
+_UPDATE_PATH = 'https://v4.activities.sugarlabs.org/services/update-aslo.php'
 
 _logger = logging.getLogger('ASLO')
 
