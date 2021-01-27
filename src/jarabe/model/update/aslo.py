@@ -83,7 +83,7 @@ class _UpdateChecker(GObject.GObject):
 
     def check(self, bundle):
         major, minor = config.version.split('.')[0:2]
-        sp_version = '%s.%s' % (major, int(minor) + int(minor))
+        sp_version = '%s.%s' % (major, minor)
 
         url = '%s?id=%s&appVersion=%s' % \
             (_UPDATE_PATH, bundle.get_bundle_id(), sp_version)
