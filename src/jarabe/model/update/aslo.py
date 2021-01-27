@@ -82,9 +82,8 @@ class _UpdateChecker(GObject.GObject):
         self._bundle = None
 
     def check(self, bundle):
-        # ASLO knows only about stable SP releases
         major, minor = config.version.split('.')[0:2]
-        sp_version = '%s.%s' % (major, int(minor) + int(minor) % 2)
+        sp_version = '%s.%s' % (major, int(minor) + int(minor))
 
         url = '%s?id=%s&appVersion=%s' % \
             (_UPDATE_PATH, bundle.get_bundle_id(), sp_version)
