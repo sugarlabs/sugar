@@ -41,7 +41,7 @@ def soup_status_is_successful(status):
 def get_soup_session():
     global _session
     if _session is None:
-        _session = Soup.SessionAsync()
+        _session = Soup.Session()
         _session.set_property("timeout", 60)
         _session.set_property("idle-timeout", 60)
         _session.set_property("user-agent", "Sugar/%s" % config.version)
