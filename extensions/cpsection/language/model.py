@@ -30,7 +30,7 @@ _standard_msg = _('Could not access ~/.i18n. Create standard settings.')
 
 def read_all_languages():
     fdp = subprocess.Popen(['locale', '-av'], stdout=subprocess.PIPE)
-    lines = fdp.stdout.read().decode().split('\n')
+    lines = fdp.stdout.read().decode('utf-8', 'ignore').split('\n')
     locales = []
 
     for line in lines:
