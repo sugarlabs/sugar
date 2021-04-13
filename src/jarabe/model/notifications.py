@@ -104,9 +104,9 @@ class NotificationService(dbus.service.Object):
     def GetCapabilities(self):
         return []
 
-    @dbus.service.method(_DBUS_IFACE, in_signature='', out_signature='sss')
-    def GetServerInformation(self, name, vendor, version):
-        return 'Sugar Shell', 'Sugar', config.version
+    @dbus.service.method(_DBUS_IFACE, in_signature='', out_signature='ssss')
+    def GetServerInformation(self):
+        return 'Sugar Shell', 'Sugar', config.version, '1.2'
 
     @dbus.service.signal(_DBUS_IFACE, signature='uu')
     def NotificationClosed(self, notification_id, reason):
