@@ -25,6 +25,7 @@ from gi.repository import Pango
 from gi.repository import GdkPixbuf
 
 from sugar3.graphics import style
+from sugar3.graphics.alert import ConfirmationAlert
 from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.scrollingdetector import ScrollingDetector
 from sugar3 import util
@@ -735,6 +736,7 @@ class ListView(BaseListView):
         self.tree_view.connect('button-release-event',
                                self.__button_release_event_cb)
 
+        self._old_title = self.cell_title.props.text
         self.cell_title.connect('edited', self.__cell_title_edited_cb)
         self.cell_title.connect('editing-canceled', self.__editing_canceled_cb)
 
@@ -808,8 +810,28 @@ class ListView(BaseListView):
 
     def __cell_title_edited_cb(self, cell, path, new_text):
         iterator = self._model.get_iter(path)
-        self._model[iterator][ListModel.COLUMN_TITLE] = new_text
+        if new_text == '' or new_text.isspace():
+            alert = ConfirmationAlert()
+            alert.props.title = _('Empty title')
+            alert.props.msg = _('The title is usually not left empty')
+            alert.connect('response', self._cell_title_alert_response_cb, iterator, new_text)
+            journalwindow.get_journal_window().add_alert(alert)
+            alert.show()
+        else:
+            self._old_title = new_text
+            self._model[iterator][ListModel.COLUMN_TITLE] = new_text
+
+
         self.emit('title-edit-finished')
+
+    def _cell_title_alert_response_cb(self, alert, response_id, iterator, new_text):
+        journalwindow.get_journal_window().remove_alert(alert)
+
+        if response_id is Gtk.ResponseType.OK:
+            self._old_title = new_text
+            self._model[iterator][ListModel.COLUMN_TITLE] = new_text
+        elif response_id is Gtk.ResponseType.CANCEL:
+            self._model[iterator][ListModel.COLUMN_TITLE] = self._old_title
 
     def __editing_canceled_cb(self, cell):
         self.cell_title.props.editable = False

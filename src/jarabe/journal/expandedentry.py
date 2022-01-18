@@ -28,7 +28,7 @@ from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.icon import CanvasIcon, get_icon_file_name
 from sugar3.graphics.icon import Icon, CellRendererIcon
-from sugar3.graphics.alert import Alert
+from sugar3.graphics.alert import Alert, ConfirmationAlert
 from sugar3.util import format_size
 from sugar3.graphics.objectchooser import get_preview_pixbuf
 from sugar3.activity.activity import PREVIEW_SIZE
@@ -255,6 +255,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
         self._metadata = None
         self._update_title_sid = None
+        self._title_changed = False
 
         self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
@@ -512,23 +513,30 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
         old_title = self._metadata.get('title', None)
         new_title = self._title.get_text()
+
         if new_title == '' or new_title.isspace():
-            alert = Alert()
+            alert = ConfirmationAlert()
             alert.props.title = _('Empty title')
-            alert.props.msg = _('The title cannot be empty')
-            ok_icon = Icon(icon_name='dialog-ok')
-            alert.add_button(Gtk.ResponseType.OK, _('Ok'), ok_icon)
-            ok_icon.show()
+            alert.props.msg = _('The title is usually not left empty')
             alert.connect('response', self._title_alert_response_cb)
             journalwindow.get_journal_window().add_alert(alert)
             alert.show()
-            new_title = self._title.set_text(old_title)
 
+            if self._title_changed:
+                self._icon.palette.props.primary_text = new_title
+                self._metadata['title'] = new_title
+                self._metadata['title_set_by_user'] = '1'
+                needs_update = True
+            else:
+                self._icon.palette.props.primary_text = old_title
+                self._metadata['title'] = old_title
+                self._metadata['title_set_by_user'] = '1'
         elif old_title != new_title:
             self._icon.palette.props.primary_text = new_title
             self._metadata['title'] = new_title
             self._metadata['title_set_by_user'] = '1'
             needs_update = True
+
 
         bounds = self._tags.get_buffer().get_bounds()
         old_tags = self._metadata.get('tags', None)
@@ -554,6 +562,11 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
     def _title_alert_response_cb(self, alert, response_id):
         journalwindow.get_journal_window().remove_alert(alert)
+
+        if response_id is Gtk.ResponseType.OK:
+            self._title_changed = True
+        elif response_id is Gtk.ResponseType.CANCEL:
+            self._title_changed = False
 
     def _write_entry(self):
         if self._metadata.get('mountpoint', '/') == '/':
