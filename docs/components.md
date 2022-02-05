@@ -33,6 +33,17 @@
 
 ### Sugar
 
+<details><summary>source of data</summary>
+
+1. `git grep "#include "`
+1. `git grep "import "`
+1. `git grep` for fork and exec patterns; os.system, subprocess.Popen, subprocess.call, subprocess.check, os.fork, and os.exec,
+1. dependencies of downstream packages of Sugar,
+
+</details>
+
+#### Imports
+
 | Component | Description | Repository |
 | :-------- | :---------- | :--------- |
 | Cairo | Vector graphics library | https://www.cairographics.org/ |
@@ -58,7 +69,30 @@
 | WebKit2 | Web content rendering engine | https://webkitgtk.org/ |
 | Xkl | X Keyboard Extension high-level library | https://www.freedesktop.org/wiki/Software/LibXklavier |
 
+#### Invokes
+
+| Component | Description |
+| :-------- | :---------- |
+| ping | Network test utility |
+| metacity | Window manager |
+| lsb_release | Distribution standards query |
+| ethtool | Network interface utility |
+| locale | Localisation configuration utility |
+| xgettext | Internationalisation database utility |
+| xdg-user-dir | Desktop standards query |
+
 ### Sugar Toolkit
+
+<details><summary>source of data</summary>
+
+1. `git grep "#include "`
+1. `git grep "import "`
+1. `git grep` for fork and exec patterns; os.system, subprocess.Popen, subprocess.call, subprocess.check, os.fork, and os.exec,
+1. dependencies of downstream packages of Sugar,
+
+</details>
+
+#### Imports
 
 | Component | Description | Repository |
 | :-------- | :---------- | :--------- |
@@ -82,6 +116,10 @@
 | Rsvg | Scalable vector graphics rendering library | https://wiki.gnome.org/Projects/LibRsvg |
 | TelepathyGLib | Messaging library | https://telepathy.freedesktop.org/wiki/ |
 | WebKit2 | Web content rendering engine | https://webkitgtk.org/ |
+
+#### Includes
+
+| Component | Description | Repository |
 | :-------- | :---------- | :--------- |
 | libasound | Audio device library | https://www.alsa-project.org/ |
 | Linux | Linux support headers | http://www.kernel.org/ |
@@ -93,15 +131,25 @@
 | libX11 | Core X11 protocol client library | https://gitlab.freedesktop.org/xorg/lib/libX11 |
 | libxtrans | X Network Transport layer shared code | https://gitlab.freedesktop.org/xorg/lib/libxtrans |
 
+#### Invokes
+
+| Component | Description |
+| :-------- | :---------- |
+| msgfmt | Message catalog compiler |
+| xgettext | Internationalisation database utility |
+| git | Stupid content tracker |
+
+### Sugar Datastore
+
 <details><summary>source of data</summary>
 
-1. `git grep "#include "`
 1. `git grep "import "`
+1. `git grep` for fork and exec patterns; os.system, subprocess.Popen, subprocess.call, subprocess.check, os.fork, and os.exec,
 1. dependencies of downstream packages of Sugar,
 
 </details>
 
-### Sugar Datastore
+#### Imports
 
 | Component | Description | Repository |
 | :-------- | :---------- | :--------- |
@@ -111,14 +159,24 @@
 | Sugar Toolkit | Activity, Journal, and Plaform library | https://github.com/sugarlabs/sugar-toolkit-gtk3 |
 | Xapian | Probabilistic search engine library | https://xapian.org/ |
 
+#### Invokes
+
+| Component | Description |
+| :-------- | :---------- |
+| du | File space usage |
+| md5sum | Compute MD5 message digest |
+
+### Fructose Activities
+
 <details><summary>source of data</summary>
 
 1. `git grep "import "`
+1. `git grep` for fork and exec patterns; os.system, subprocess.Popen, subprocess.call, subprocess.check, os.fork, and os.exec,
 1. dependencies of downstream packages of Sugar,
 
 </details>
 
-### Fructose Activities
+#### Imports
 
 | Component | Description | Repository |
 | :-------- | :---------- | :--------- |
@@ -145,29 +203,36 @@
 | WebKit2 | Web content rendering engine | https://webkitgtk.org/ |
 | XDG | freedesktop.org standards library | http://www.freedesktop.org/wiki/Software/pyxdg |
 
-<details><summary>source of data</summary>
+#### Invokes
 
-1. `git grep "import "`
-1. dependencies of downstream packages of Sugar,
-
-</details>
+| Component | Description |
+| :-------- | :---------- |
+| clear | Clear terminal screen |
+| cp | Copy file |
+| csound | Sound synthesis |
+| espeak | Voice synthesis |
+| evtest | Hardware input event tracing |
+| glib-compile-schemas | GSettings schema compiler |
+| gunzip | Decompress file |
+| rm | Remove file |
+| speaker-test | Test audio output channel |
 
 ## Secondary Components
 
 * dependencies of primary components, and;
 * maintained by Sugar Labs,
 
-| Component | Description | Repository |
-| :-------- | :---------- | :--------- |
-| gwebsockets | Python websocket server integrated with Gio and GLib | https://github.com/sugarlabs/gwebsockets |
-| gst-plugins-espeak | GStreamer espeak plugin | https://github.com/sugarlabs/gst-plugins-espeak |
-| sugar-web | Sugar activity components for JavaScript | https://github.com/sugarlabs/sugar-web |
-
 <details><summary>source of data</summary>
 
 1. search of https://github.com/sugarlabs repositories,
 
 </details>
+
+| Component | Description | Repository |
+| :-------- | :---------- | :--------- |
+| gwebsockets | Python websocket server integrated with Gio and GLib | https://github.com/sugarlabs/gwebsockets |
+| gst-plugins-espeak | GStreamer espeak plugin | https://github.com/sugarlabs/gst-plugins-espeak |
+| sugar-web | Sugar activity components for JavaScript | https://github.com/sugarlabs/sugar-web |
 
 ## Dependencies of Secondary Components
 
@@ -179,16 +244,16 @@
 * copied into code of other components,
 * maintained by Sugar Labs,
 
-| Component | Description | Repository |
-| :-------- | :---------- | :--------- |
-| collabwrapper | Telepathy wrapper for Sugar activities | https://github.com/sugarlabs/collabwrapper |
-| sugargame | Pygame and GTK wrapper for Sugar activities | https://github.com/sugarlabs/sugargame |
-
 <details><summary>source of data</summary>
 
 1. search of https://github.com/sugarlabs repositories,
 
 </details>
+
+| Component | Description | Repository |
+| :-------- | :---------- | :--------- |
+| collabwrapper | Telepathy wrapper for Sugar activities | https://github.com/sugarlabs/collabwrapper |
+| sugargame | Pygame and GTK wrapper for Sugar activities | https://github.com/sugarlabs/sugargame |
 
 ## Dependencies of Embedded Components
 
