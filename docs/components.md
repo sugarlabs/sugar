@@ -48,17 +48,15 @@
 | GObject | Widget toolkit - low level library | https://gtk.org/ |
 | GTK | Widget toolkit library | https://gtk.org/ |
 | GtkSource | Syntax highlighting widget | https://wiki.gnome.org/Projects/GtkSourceView |
-| gi.repository.GUdev | |
-| gi.repository.Maliit | |
-| gi.repository.NM | |
-| gi.repository.Pango | |
-| gi.repository.Soup | |
-| gi.repository.SugarExt | |
-| gi.repository.SugarGestures | |
-| gi.repository.TelepathyGLib | |
-| gi.repository.UPowerGlib | |
-| gi.repository.WebKit2 | |
-| gi.repository.Xkl | |
+| GUdev | Device information wrapper library | https://www.launchpad.net/gudev-sharp |
+| Maliit | Software keyboard library | https://wiki.maliit.org |
+| NM | Network manager library | https://www.gnome.org/projects/NetworkManager/ |
+| Pango | Text layout and rendering library | https://www.pango.org/ |
+| Soup | Asynchronous HTTP library | https://wiki.gnome.org/Projects/libsoup |
+| TelepathyGLib | Messaging library | https://telepathy.freedesktop.org/wiki/ |
+| UPowerGlib | Power management library | https://upower.freedesktop.org/ |
+| WebKit2 | Web content rendering engine | https://webkitgtk.org/ |
+| Xkl | X Keyboard Extension high-level library | https://www.freedesktop.org/wiki/Software/LibXklavier |
 
 ### Sugar Toolkit
 
@@ -72,31 +70,36 @@
 | dateutil | Date and time calculation library | https://github.com/dateutil/dateutil/ |
 | decorator | Signature-preserving function decorator library | https://github.com/micheles/decorator |
 | GIR | Introspection library | https://developer.gnome.org/gobject/stable/ |
-| gi.repository.Atspi | |
+| Atspi | Assistive technology service provider interface library | https://wiki.gnome.org/Accessibility |
 | GdkPixbuf | Widget toolkit - pixbuf library | http://www.gtk.org/ |
 | GdkX11 | Widget toolkit - X11 library | https://gtk.org/ |
 | Gio | Widget toolkit - I/O library | https://gtk.org/ |
 | GLib | Widget toolkit - low level library | https://gtk.org/ |
 | GObject | Widget toolkit - low level library | https://gtk.org/ |
-| gi.repository.Gst | |
+| Gst | GStreamer streaming media framework library | https://gstreamer.freedesktop.org |
 | GTK | Widget toolkit library | https://gtk.org/ |
-| gi.repository.Pango | |
-| gi.repository.Rsvg | |
-| gi.repository.SugarExt | |
-| gi.repository.SugarGestures | |
-| gi.repository.TelepathyGLib | |
-| gi.repository.WebKit2 | |
+| Pango | Text layout and rendering library | https://www.pango.org/ |
+| Rsvg | Scalable vector graphics rendering library | https://wiki.gnome.org/Projects/LibRsvg |
+| TelepathyGLib | Messaging library | https://telepathy.freedesktop.org/wiki/ |
+| WebKit2 | Web content rendering engine | https://webkitgtk.org/ |
 | :-------- | :---------- | :--------- |
-| ALSA library | | https://www.alsa-project.org/ |
-| GLib library | | http://www.gtk.org/ |
-| Linux support headers | | http://www.kernel.org/ |
-| GNU C Library | | https://www.gnu.org/software/libc/libc.html |
-| X11 Input Extension library | | https://gitlab.freedesktop.org/xorg/lib/libXi |
-| X11 Inter-Client Exchange library | | https://gitlab.freedesktop.org/xorg/lib/libICE |
-| X11 Session Management library | | https://gitlab.freedesktop.org/xorg/lib/libSM |
-| X Window System Unified Protocol, X11 extension protocols and auxiliary headers | | https://gitlab.freedesktop.org/xorg/proto/xorgproto |
-| Core X11 protocol client library | | https://gitlab.freedesktop.org/xorg/lib/libX11 |
-| X Network Transport layer shared code | | https://gitlab.freedesktop.org/xorg/lib/libxtrans |
+| libasound | Audio device library | https://www.alsa-project.org/ |
+| Linux | Linux support headers | http://www.kernel.org/ |
+| libc | GNU C Library | https://www.gnu.org/software/libc/libc.html |
+| libXi | X11 Input Extension library | https://gitlab.freedesktop.org/xorg/lib/libXi |
+| libICE | X11 Inter-Client Exchange library | https://gitlab.freedesktop.org/xorg/lib/libICE |
+| libSM | X11 Session Management library | https://gitlab.freedesktop.org/xorg/lib/libSM |
+| x11proto | X Window System Unified Protocol, X11 extension protocols and auxiliary headers | https://gitlab.freedesktop.org/xorg/proto/xorgproto |
+| libX11 | Core X11 protocol client library | https://gitlab.freedesktop.org/xorg/lib/libX11 |
+| libxtrans | X Network Transport layer shared code | https://gitlab.freedesktop.org/xorg/lib/libxtrans |
+
+<details><summary>source of data</summary>
+
+1. `git grep "#include "`
+1. `git grep "import "`
+1. dependencies of downstream packages of Sugar,
+
+</details>
 
 ### Sugar Datastore
 
@@ -108,12 +111,43 @@
 | Sugar Toolkit | Activity, Journal, and Plaform library | https://github.com/sugarlabs/sugar-toolkit-gtk3 |
 | Xapian | Probabilistic search engine library | https://xapian.org/ |
 
-### Sugar Artwork
+<details><summary>source of data</summary>
+
+1. `git grep "import "`
+1. dependencies of downstream packages of Sugar,
+
+</details>
+
+### Fructose Activities
+
+| Component | Description | Repository |
+| :-------- | :---------- | :--------- |
+| Abi | AbiWord document editor | http://www.abisource.com/ |
+| D-Bus | Message bus | https://cgit.freedesktop.org/dbus/dbus/ |
+| Evince | Document viewer | https://wiki.gnome.org/Apps/Evince |
+| GIR | Introspection library | https://developer.gnome.org/gobject/stable/ |
+| GdkPixbuf | Widget toolkit - pixbuf library | http://www.gtk.org/ |
+| GdkX11 | Widget toolkit - X11 library | https://gtk.org/ |
+| GLib | Widget toolkit - low level library | https://gtk.org/ |
+| GObject | Widget toolkit - low level library | https://gtk.org/ |
+| Gst | GStreamer streaming media framework library | https://gstreamer.freedesktop.org |
+| GTK | Widget toolkit library | https://gtk.org/ |
+| GtkSource | Syntax highlighting widget | https://wiki.gnome.org/Projects/GtkSourceView |
+| Pango | Text layout and rendering library | https://www.pango.org/ |
+| PyCurl | libcurl bindings | http://pycurl.sourceforge.net |
+| Rsvg | Scalable vector graphics rendering library | https://wiki.gnome.org/Projects/LibRsvg |
+| Serial | Serial port library | http://pyserial.sourceforge.net/ |
+| Soup | Asynchronous HTTP library | https://wiki.gnome.org/Projects/libsoup |
+| Sugar | Activity Menu, Journal, Network View and Control Panel | https://github.com/sugarlabs/sugar |
+| Sugar Toolkit | Activity, Journal, and Plaform library | https://github.com/sugarlabs/sugar-toolkit-gtk3 |
+| TelepathyGLib | Messaging library | https://telepathy.freedesktop.org/wiki/ |
+| Vte | Virtual terminal emulator | https://wiki.gnome.org/Apps/Terminal/VTE |
+| WebKit2 | Web content rendering engine | https://webkitgtk.org/ |
+| XDG | freedesktop.org standards library | http://www.freedesktop.org/wiki/Software/pyxdg |
 
 <details><summary>source of data</summary>
 
 1. `git grep "import "`
-1. `git grep "#include "`
 1. dependencies of downstream packages of Sugar,
 
 </details>
@@ -125,7 +159,7 @@
 
 | Component | Description | Repository |
 | :-------- | :---------- | :--------- |
-| gwebsockets | Python websocket server integrated with GIO and GLib | https://github.com/sugarlabs/gwebsockets |
+| gwebsockets | Python websocket server integrated with Gio and GLib | https://github.com/sugarlabs/gwebsockets |
 | gst-plugins-espeak | GStreamer espeak plugin | https://github.com/sugarlabs/gst-plugins-espeak |
 | sugar-web | Sugar activity components for JavaScript | https://github.com/sugarlabs/sugar-web |
 
@@ -136,6 +170,9 @@
 </details>
 
 ## Dependencies of Secondary Components
+
+* gwebsockets depends on Gio and GLib,
+* gst-plugins-espeak depends on GStreamer and eSpeak,
 
 ## Embedded Components
 
@@ -153,3 +190,7 @@
 
 </details>
 
+## Dependencies of Embedded Components
+
+* collabwrapper depends on Sugar Toolkit, D-Bus, Telepathy, and GTK,
+* sugargame depends on Sugar Toolkit, Pygame, and GTK,
