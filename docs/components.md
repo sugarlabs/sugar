@@ -53,7 +53,7 @@
 | Xapian | Probabilistic search engine library | https://xapian.org/ |
 | GIR | Introspection library | https://developer.gnome.org/gobject/stable/ |
 | GdkPixbuf | Widget toolkit - pixbuf library | http://www.gtk.org/ |
-| GdkX11 | Widget toolkit - X11 library | https://gtk.org/ |
+| GdkX11[^1] | Widget toolkit - X11 library | https://gtk.org/ |
 | Gio | Widget toolkit - I/O library | https://gtk.org/ |
 | GLib | Widget toolkit - low level library | https://gtk.org/ |
 | GObject | Widget toolkit - low level library | https://gtk.org/ |
@@ -67,19 +67,23 @@
 | TelepathyGLib | Messaging library | https://telepathy.freedesktop.org/wiki/ |
 | UPowerGlib | Power management library | https://upower.freedesktop.org/ |
 | WebKit2 | Web content rendering engine | https://webkitgtk.org/ |
-| Xkl | X Keyboard Extension high-level library | https://www.freedesktop.org/wiki/Software/LibXklavier |
+| Xkl[^1] | X Keyboard Extension high-level library | https://www.freedesktop.org/wiki/Software/LibXklavier |
+
+[^1]: component is specific to Sugar on Xorg.  Xkl might be avoided by delegating keyboard layout responsibility to distribution installer.
 
 #### Invokes
 
 | Component | Description |
 | :-------- | :---------- |
 | ping | Network test utility |
-| metacity | Window manager |
+| metacity[^2] | Window manager |
 | lsb_release | Distribution standards query |
 | ethtool | Network interface utility |
 | locale | Localisation configuration utility |
 | xgettext | Internationalisation database utility |
 | xdg-user-dir | Desktop standards query |
+
+[^2]: component is specific to Sugar on Xorg.  A potential replacement for Metacity is Mutter.
 
 ### Sugar Toolkit for GTK3
 
@@ -106,7 +110,7 @@
 | GIR | Introspection library | https://developer.gnome.org/gobject/stable/ |
 | Atspi | Assistive technology service provider interface library | https://wiki.gnome.org/Accessibility |
 | GdkPixbuf | Widget toolkit - pixbuf library | http://www.gtk.org/ |
-| GdkX11 | Widget toolkit - X11 library | https://gtk.org/ |
+| GdkX11[^3] | Widget toolkit - X11 library | https://gtk.org/ |
 | Gio | Widget toolkit - I/O library | https://gtk.org/ |
 | GLib | Widget toolkit - low level library | https://gtk.org/ |
 | GObject | Widget toolkit - low level library | https://gtk.org/ |
@@ -117,19 +121,25 @@
 | TelepathyGLib | Messaging library | https://telepathy.freedesktop.org/wiki/ |
 | WebKit2 | Web content rendering engine | https://webkitgtk.org/ |
 
+[^3]: component is specific to Sugar on Xorg.
+
 #### Includes
 
 | Component | Description | Repository |
 | :-------- | :---------- | :--------- |
-| libasound | Audio device library | https://www.alsa-project.org/ |
-| Linux | Linux support headers | http://www.kernel.org/ |
+| libasound[^5] | Audio device library | https://www.alsa-project.org/ |
+| Linux[^6] | Linux support headers | http://www.kernel.org/ |
 | libc | GNU C Library | https://www.gnu.org/software/libc/libc.html |
-| libXi | X11 Input Extension library | https://gitlab.freedesktop.org/xorg/lib/libXi |
-| libICE | X11 Inter-Client Exchange library | https://gitlab.freedesktop.org/xorg/lib/libICE |
-| libSM | X11 Session Management library | https://gitlab.freedesktop.org/xorg/lib/libSM |
-| x11proto | X Window System Unified Protocol, X11 extension protocols and auxiliary headers | https://gitlab.freedesktop.org/xorg/proto/xorgproto |
-| libX11 | Core X11 protocol client library | https://gitlab.freedesktop.org/xorg/lib/libX11 |
-| libxtrans | X Network Transport layer shared code | https://gitlab.freedesktop.org/xorg/lib/libxtrans |
+| libXi[^4] | X11 Input Extension library | https://gitlab.freedesktop.org/xorg/lib/libXi |
+| libICE[^4] | X11 Inter-Client Exchange library | https://gitlab.freedesktop.org/xorg/lib/libICE |
+| libSM[^4] | X11 Session Management library | https://gitlab.freedesktop.org/xorg/lib/libSM |
+| x11proto[^4] | X Window System Unified Protocol, X11 extension protocols and auxiliary headers | https://gitlab.freedesktop.org/xorg/proto/xorgproto |
+| libX11[^4] | Core X11 protocol client library | https://gitlab.freedesktop.org/xorg/lib/libX11 |
+| libxtrans[^4] | X Network Transport layer shared code | https://gitlab.freedesktop.org/xorg/lib/libxtrans |
+
+[^4]: component is specific to Sugar on Xorg.  Sugar windowing effects and global keys might be replaced with a compositor.
+[^5]: ALSA library dependency is for volume controls, recording and playback via GStreamer, and might be replaced with PipeWire and PulseAudio.
+[^6]: Linux support headers dependency is for FAT filesystem support and [may be unused](https://github.com/sugarlabs/sugar-toolkit-gtk3/issues/463).
 
 #### Invokes
 
@@ -185,7 +195,7 @@
 | Evince | Document viewer | https://wiki.gnome.org/Apps/Evince |
 | GIR | Introspection library | https://developer.gnome.org/gobject/stable/ |
 | GdkPixbuf | Widget toolkit - pixbuf library | http://www.gtk.org/ |
-| GdkX11 | Widget toolkit - X11 library | https://gtk.org/ |
+| GdkX11[^7] | Widget toolkit - X11 library | https://gtk.org/ |
 | GLib | Widget toolkit - low level library | https://gtk.org/ |
 | GObject | Widget toolkit - low level library | https://gtk.org/ |
 | Gst | GStreamer streaming media framework library | https://gstreamer.freedesktop.org |
@@ -202,6 +212,8 @@
 | Vte | Virtual terminal emulator | https://wiki.gnome.org/Apps/Terminal/VTE |
 | WebKit2 | Web content rendering engine | https://webkitgtk.org/ |
 | XDG | freedesktop.org standards library | http://www.freedesktop.org/wiki/Software/pyxdg |
+
+[^7]: component is specific to Sugar on Xorg.
 
 #### Invokes
 
