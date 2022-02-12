@@ -7,7 +7,7 @@
 | Component | Description | Repository |
 | :-------- | :---------- | :--------- |
 | Sugar | Activity Menu, Journal, Network View and Control Panel | https://github.com/sugarlabs/sugar |
-| Sugar Toolkit | Activity, Journal, and Plaform library | https://github.com/sugarlabs/sugar-toolkit-gtk3 |
+| Sugar Toolkit for GTK3 | Activity, Journal, and Plaform library | https://github.com/sugarlabs/sugar-toolkit-gtk3 |
 | Sugar Datastore | Journal Storage API | https://github.com/sugarlabs/sugar-datastore |
 | Sugar Artwork | Icons, Themes and Cursors | https://github.com/sugarlabs/sugar-artwork |
 | Browse Activity | Web Browser | https://github.com/sugarlabs/browse-activity |
@@ -49,7 +49,7 @@
 | Cairo | Vector graphics library | https://www.cairographics.org/ |
 | D-Bus | Message bus | https://cgit.freedesktop.org/dbus/dbus/ |
 | gwebsockets | Python websocket server integrated with GIO and GLib | https://github.com/sugarlabs/gwebsockets |
-| Sugar Toolkit | Activity, Journal, and Plaform library | https://github.com/sugarlabs/sugar-toolkit-gtk3 |
+| Sugar Toolkit for GTK3 | Activity, Journal, and Plaform library | https://github.com/sugarlabs/sugar-toolkit-gtk3 |
 | Xapian | Probabilistic search engine library | https://xapian.org/ |
 | GIR | Introspection library | https://developer.gnome.org/gobject/stable/ |
 | GdkPixbuf | Widget toolkit - pixbuf library | http://www.gtk.org/ |
@@ -81,7 +81,7 @@
 | xgettext | Internationalisation database utility |
 | xdg-user-dir | Desktop standards query |
 
-### Sugar Toolkit
+### Sugar Toolkit for GTK3
 
 <details><summary>source of data</summary>
 
@@ -156,7 +156,7 @@
 | D-Bus | Message bus | https://cgit.freedesktop.org/dbus/dbus/ |
 | GIR | Introspection library | https://developer.gnome.org/gobject/stable/ |
 | GLib | Widget toolkit - low level library | https://gtk.org/ |
-| Sugar Toolkit | Activity, Journal, and Plaform library | https://github.com/sugarlabs/sugar-toolkit-gtk3 |
+| Sugar Toolkit for GTK3 | Activity, Journal, and Plaform library | https://github.com/sugarlabs/sugar-toolkit-gtk3 |
 | Xapian | Probabilistic search engine library | https://xapian.org/ |
 
 #### Invokes
@@ -197,7 +197,7 @@
 | Serial | Serial port library | http://pyserial.sourceforge.net/ |
 | Soup | Asynchronous HTTP library | https://wiki.gnome.org/Projects/libsoup |
 | Sugar | Activity Menu, Journal, Network View and Control Panel | https://github.com/sugarlabs/sugar |
-| Sugar Toolkit | Activity, Journal, and Plaform library | https://github.com/sugarlabs/sugar-toolkit-gtk3 |
+| Sugar Toolkit for GTK3 | Activity, Journal, and Plaform library | https://github.com/sugarlabs/sugar-toolkit-gtk3 |
 | TelepathyGLib | Messaging library | https://telepathy.freedesktop.org/wiki/ |
 | Vte | Virtual terminal emulator | https://wiki.gnome.org/Apps/Terminal/VTE |
 | WebKit2 | Web content rendering engine | https://webkitgtk.org/ |
@@ -257,5 +257,5 @@
 
 ## Dependencies of Embedded Components
 
-* collabwrapper depends on Sugar Toolkit, D-Bus, Telepathy, and GTK,
+* collabwrapper depends on Sugar Toolkit for GTK3, D-Bus, Telepathy, and GTK,
 * sugargame depends on Sugar Toolkit, Pygame, and GTK,
