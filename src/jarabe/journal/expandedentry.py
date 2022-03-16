@@ -255,7 +255,6 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
         self._metadata = None
         self._update_title_sid = None
-        self._title_changed = False
 
         self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
@@ -265,7 +264,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         self._keep_sid = self._keep_icon.connect(
             'toggled', self._keep_icon_toggled_cb)
         self._title.connect(
-            'focus-out-event', self._title_focus_out_event_cb)
+            'changed', self._title_changed_event_cb)
 
         if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
             # Reverse header children.
@@ -497,8 +496,34 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
                 GLib.timeout_add_seconds(1,
                                          self._update_title_cb)
 
-    def _title_focus_out_event_cb(self, entry, event):
-        self._update_entry()
+    def _title_changed_event_cb(self, widget):
+        old_title = self._metadata.get('title', None)
+        new_title = self._title.get_text()
+        if old_title != new_title:
+            if new_title == '' or new_title.isspace():
+                alert = ConfirmationAlert()
+                alert.props.title = _('Empty title')
+                alert.props.msg = _('The title is usually not left empty')
+                alert.connect(
+                    'response',
+                    self._title_alert_response_cb,
+                    old_title,
+                    self._metadata.get('title_set_by_user', 0)
+                )
+                journalwindow.get_journal_window().add_alert(alert)
+                alert.show()
+
+            self._update_entry()
+
+    def _title_alert_response_cb(self, alert, response_id, old_title, old_title_set_by_user):
+        journalwindow.get_journal_window().remove_alert(alert)
+
+        if response_id is Gtk.ResponseType.CANCEL:
+            self._title.set_text(old_title)
+            self._icon.palette.props.primary_text = old_title
+            self._metadata['title'] = old_title
+            self._metadata['title_set_by_user'] = old_title_set_by_user
+            self._update_entry(needs_update=True)
 
     def _description_tags_focus_out_event_cb(self, text_view, event):
         self._update_entry()
@@ -513,25 +538,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
         old_title = self._metadata.get('title', None)
         new_title = self._title.get_text()
-
-        if new_title == '' or new_title.isspace():
-            alert = ConfirmationAlert()
-            alert.props.title = _('Empty title')
-            alert.props.msg = _('The title is usually not left empty')
-            alert.connect('response', self._title_alert_response_cb)
-            journalwindow.get_journal_window().add_alert(alert)
-            alert.show()
-
-            if self._title_changed:
-                self._icon.palette.props.primary_text = new_title
-                self._metadata['title'] = new_title
-                self._metadata['title_set_by_user'] = '1'
-                needs_update = True
-            else:
-                self._icon.palette.props.primary_text = old_title
-                self._metadata['title'] = old_title
-                self._metadata['title_set_by_user'] = '1'
-        elif old_title != new_title:
+        if old_title != new_title:
             self._icon.palette.props.primary_text = new_title
             self._metadata['title'] = new_title
             self._metadata['title_set_by_user'] = '1'
@@ -559,14 +566,6 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             self._write_entry()
 
         self._update_title_sid = None
-
-    def _title_alert_response_cb(self, alert, response_id):
-        journalwindow.get_journal_window().remove_alert(alert)
-
-        if response_id is Gtk.ResponseType.OK:
-            self._title_changed = True
-        elif response_id is Gtk.ResponseType.CANCEL:
-            self._title_changed = False
 
     def _write_entry(self):
         if self._metadata.get('mountpoint', '/') == '/':

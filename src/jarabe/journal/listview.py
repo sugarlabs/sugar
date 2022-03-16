@@ -722,7 +722,7 @@ class ListView(BaseListView):
         'title-edit-started': (GObject.SignalFlags.RUN_FIRST, None,
                                ([])),
         'title-edit-finished': (GObject.SignalFlags.RUN_FIRST, None,
-                                ([])),
+                                ([str, object])),
         'project-view-activate': (GObject.SignalFlags.RUN_FIRST, None,
                                   ([object])),
     }
@@ -736,7 +736,6 @@ class ListView(BaseListView):
         self.tree_view.connect('button-release-event',
                                self.__button_release_event_cb)
 
-        self._old_title = self.cell_title.props.text
         self.cell_title.connect('edited', self.__cell_title_edited_cb)
         self.cell_title.connect('editing-canceled', self.__editing_canceled_cb)
 
@@ -810,32 +809,31 @@ class ListView(BaseListView):
 
     def __cell_title_edited_cb(self, cell, path, new_text):
         iterator = self._model.get_iter(path)
-        if new_text == '' or new_text.isspace():
+        old_text = self._model[iterator][ListModel.COLUMN_TITLE]
+
+        if old_text != new_text and (new_text == '' or new_text.isspace()):
             alert = ConfirmationAlert()
             alert.props.title = _('Empty title')
             alert.props.msg = _('The title is usually not left empty')
-            alert.connect('response', self._cell_title_alert_response_cb, iterator, new_text)
+            alert.connect('response', self._cell_title_alert_response_cb, path, new_text)
             journalwindow.get_journal_window().add_alert(alert)
             alert.show()
-        else:
-            self._old_title = new_text
+            return
+
+        if old_text != new_text:
             self._model[iterator][ListModel.COLUMN_TITLE] = new_text
+            self.emit('title-edit-finished', new_text, path)
 
-
-        self.emit('title-edit-finished')
-
-    def _cell_title_alert_response_cb(self, alert, response_id, iterator, new_text):
+    def _cell_title_alert_response_cb(self, alert, response_id, path, new_text):
         journalwindow.get_journal_window().remove_alert(alert)
 
+        iterator = self._model.get_iter(path)
         if response_id is Gtk.ResponseType.OK:
-            self._old_title = new_text
             self._model[iterator][ListModel.COLUMN_TITLE] = new_text
-        elif response_id is Gtk.ResponseType.CANCEL:
-            self._model[iterator][ListModel.COLUMN_TITLE] = self._old_title
+            self.emit('title-edit-finished', new_text, path)
 
     def __editing_canceled_cb(self, cell):
         self.cell_title.props.editable = False
-        self.emit('title-edit-finished')
 
 
 class CellRendererFavorite(CellRendererIcon):
