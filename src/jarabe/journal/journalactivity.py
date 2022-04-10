@@ -40,6 +40,7 @@ from jarabe.journal.journaltoolbox import EditToolbox
 from jarabe.journal.projectview import ProjectView
 
 from jarabe.journal.listview import ListView
+from jarabe.journal.listmodel import ListModel
 from jarabe.journal.detailview import DetailView
 from jarabe.journal.volumestoolbar import VolumesToolbar
 from jarabe.journal import misc
@@ -449,8 +450,10 @@ class JournalActivity(JournalWindow):
     def __title_edit_started_cb(self, list_view):
         self.disconnect_by_func(self.__key_press_event_cb)
 
-    def __title_edit_finished_cb(self, list_view):
-        self.connect('key-press-event', self.__key_press_event_cb)
+    def __title_edit_finished_cb(self, list_view, new_text, path):
+        list_view_model = list_view.get_model()
+        iterator = list_view_model.get_iter(path)
+        list_view_model[iterator][ListModel.COLUMN_TITLE] = new_text
 
     def show_main_view(self):
         self._active_view = JournalViews.MAIN

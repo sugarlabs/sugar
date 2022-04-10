@@ -25,6 +25,7 @@ from gi.repository import Pango
 from gi.repository import GdkPixbuf
 
 from sugar3.graphics import style
+from sugar3.graphics.alert import ConfirmationAlert
 from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.scrollingdetector import ScrollingDetector
 from sugar3 import util
@@ -721,7 +722,7 @@ class ListView(BaseListView):
         'title-edit-started': (GObject.SignalFlags.RUN_FIRST, None,
                                ([])),
         'title-edit-finished': (GObject.SignalFlags.RUN_FIRST, None,
-                                ([])),
+                                ([str, object])),
         'project-view-activate': (GObject.SignalFlags.RUN_FIRST, None,
                                   ([object])),
     }
@@ -808,12 +809,31 @@ class ListView(BaseListView):
 
     def __cell_title_edited_cb(self, cell, path, new_text):
         iterator = self._model.get_iter(path)
-        self._model[iterator][ListModel.COLUMN_TITLE] = new_text
-        self.emit('title-edit-finished')
+        old_text = self._model[iterator][ListModel.COLUMN_TITLE]
+
+        if old_text != new_text and (new_text == '' or new_text.isspace()):
+            alert = ConfirmationAlert()
+            alert.props.title = _('Empty title')
+            alert.props.msg = _('The title is usually not left empty')
+            alert.connect('response', self._cell_title_alert_response_cb, path, new_text)
+            journalwindow.get_journal_window().add_alert(alert)
+            alert.show()
+            return
+
+        if old_text != new_text:
+            self._model[iterator][ListModel.COLUMN_TITLE] = new_text
+            self.emit('title-edit-finished', new_text, path)
+
+    def _cell_title_alert_response_cb(self, alert, response_id, path, new_text):
+        journalwindow.get_journal_window().remove_alert(alert)
+
+        iterator = self._model.get_iter(path)
+        if response_id is Gtk.ResponseType.OK:
+            self._model[iterator][ListModel.COLUMN_TITLE] = new_text
+            self.emit('title-edit-finished', new_text, path)
 
     def __editing_canceled_cb(self, cell):
         self.cell_title.props.editable = False
-        self.emit('title-edit-finished')
 
 
 class CellRendererFavorite(CellRendererIcon):
