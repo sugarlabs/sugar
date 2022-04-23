@@ -15,7 +15,7 @@ AM_MAINTAINER_MODE
 PYTHON=python3
 AM_PATH_PYTHON
 
-AS_IF([$PYTHON -m em >/dev/null 2>&1], AC_MSG_RESULT([empy found]), AC_MSG_ERROR([empy not found]))
+AS_IF([$PYTHON -m em </dev/null >/dev/null 2>&1], AC_MSG_RESULT([empy found]), AC_MSG_ERROR([empy not found]))
 
 PKG_CHECK_MODULES(SHELL, gtk+-3.0)
 
