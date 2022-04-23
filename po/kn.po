@@ -7,105 +7,114 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2013-06-18 19:21+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2021-06-30 14:42+0000\n"
+"Last-Translator: Sourabha <sourabha.project@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: kn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1625064133.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
-msgstr ""
+msgstr "ಜಿ ಸಂಯೋಜನೆಗಳಿಗೆ ಸ್ಥಳಾಂತರಗೊಂಡಿದೆ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:2
 msgid "This key shows whether or not GConf values were migrated to GSettings"
 msgstr ""
+"ಜಿಕಾನ್ಫ್ ಮೌಲ್ಯಗಳನ್ನು ಜಿ ಸಂಯೋಜನೆಗಳಿಗೆ ಸ್ಥಳಾಂತರಿಸಲಾಗಿದೆಯೆ ಅಥವಾ ಇಲ್ಲವೇ ಎಂಬುದನ್ನು"
+" ಈ ಕೀ ತೋರಿಸುತ್ತದೆ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
 msgid "Backup URL"
-msgstr ""
+msgstr "ಬ್ಯಾಕಪ್ ಯು ಆರ್ ಎಲ್ ಸಂರಕ್ಷಿತ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:4 ../data/sugar.schemas.in.h:12
 msgid "URL where the backup is saved to."
-msgstr ""
+msgstr "ಬ್ಯಾಕಪ್ ಅನ್ನು ಉಳಿಸಲಾಗಿರುವ ಯು ಅರ್ ಎಲ್."
 
 #: ../data/org.sugarlabs.gschema.xml.h:5 ../data/sugar.schemas.in.h:31
 msgid "Show Log out"
-msgstr ""
+msgstr "ಲಾಗ್ ಔಟ್ ತೋರಿಸಿ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr ""
+msgstr "ನಿಜವಾದರೆ, ಸಕ್ಕರೆ \"ಲಾಗ್ ಔಟ್\" ಆಯ್ಕೆಯನ್ನು ತೋರಿಸುತ್ತದೆ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:7 ../data/sugar.schemas.in.h:33
 msgid "Show Restart"
-msgstr ""
+msgstr "ಮರುಪ್ರಾರಂಭ ತೋರಿಸಿ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:8 ../data/sugar.schemas.in.h:34
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr ""
+msgstr "ನಿಜವಾದರೆ, ಸಕ್ಕರೆ \"ರೀಸ್ಟಾರ್ಟ್\" ಆಯ್ಕೆಯನ್ನು ತೋರಿಸುತ್ತದೆ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
 msgid "Show Shutdown"
-msgstr ""
+msgstr "ಸ್ಥಗಿತಗೊಳಿಸುವಿಕೆಯನ್ನು ತೋರಿಸಿ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
-msgstr ""
+msgstr "ನಿಜವಾದರೆ, ಸಕ್ಕರೆ \"ಶಟ್ಡೌನ್\" ಆಯ್ಕೆಯನ್ನು ತೋರಿಸುತ್ತದೆ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
-msgstr ""
+msgstr "ನೋಂದಣಿಯನ್ನು ತೋರಿಸಿ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
 msgstr ""
+"ನಿಜವಾದರೆ, ಸಕ್ಕರೆ \"ನೋಂದಣಿ\" ಆಯ್ಕೆಯನ್ನು ಸ್ನೇಹಿತ ಪ್ಯಾಲೆಟ್ನಲ್ಲಿ ತೋರಿಸುತ್ತದೆ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
 msgid "Bundle IDs of protected activities"
-msgstr ""
+msgstr "ಸಂರಕ್ಷಿತ ಚಟುವಟಿಕೆಗಳ ಬಂಡಲ್ ಐಡಿಗಳು"
 
 #: ../data/org.sugarlabs.gschema.xml.h:14 ../data/sugar.schemas.in.h:64
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
-msgstr ""
+msgstr "ಲಿಸ್ಟ್ ವ್ಯೂನಿಂದ ಈ ಆಕ್ಟಿವಿಟಿಗಳನ್ನೂ ಬಳಕೆದಾರ ಅಳಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
 msgid "A limit to the number of simultaneously open activities."
-msgstr ""
+msgstr "ಏಕಕಾಲದಲ್ಲಿ ಮುಕ್ತ ಚಟುವಟಿಕೆಗಳ ಸಂಖ್ಯೆಗೆ ಮಿತಿ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:16 ../data/sugar.schemas.in.h:80
 msgid ""
 "This int is used to set a limit to the number of open activities. By default "
 "(0), there is no limit."
 msgstr ""
+"ಮುಕ್ತ ಚಟುವಟಿಕೆಗಳ ಸಂಖ್ಯೆಗೆ ಮಿತಿಯನ್ನು ಹೊಂದಿಸಲು ಈ ಇಂಟ್ ಅನ್ನು ಬಳಸಲಾಗುತ್ತದೆ.  "
+"ಪೂರ್ವನಿಯೋಜಿತವಾಗಿ (0), ಯಾವುದೇ ಮಿತಿಯಿಲ್ಲ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:17 ../data/sugar.schemas.in.h:1
-#, fuzzy
 msgid "User Name"
-msgstr "ಬಳಕೆದಾರ ಹೆಸರು"
+msgstr "ಬಳಕೆದಾರರ ಹೆಸರು"
 
 #: ../data/org.sugarlabs.gschema.xml.h:18 ../data/sugar.schemas.in.h:2
 msgid "User name that is used throughout the desktop."
-msgstr ""
+msgstr "ಡೆಸ್ಕ್‌ಟಾಪ್‌ನಾದ್ಯಂತ ಬಳಸಲಾಗುವ ಬಳಕೆದಾರರ ಹೆಸರು."
 
 #: ../data/org.sugarlabs.gschema.xml.h:19 ../data/sugar.schemas.in.h:3
+#, fuzzy
 msgid "Default nick"
-msgstr ""
+msgstr "ಕೊರತೆಯ ಸೀಳಿಕೆ ಮಾಡು"
 
 #: ../data/org.sugarlabs.gschema.xml.h:20 ../data/sugar.schemas.in.h:4
+#, fuzzy
 msgid ""
 "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
 "long name."
 msgstr ""
+"ಯುನಿಕ್ಸ್ ಖಾತೆಯ ದೀರ್ಘ ಹೆಸರನ್ನು ಮರುಬಳಕೆ ಮಾಡಲು \"ಸಿಸ್ಟಮ್\". \"ಪ್ರಾರಂಭದಲ್ಲಿ "
+"ಸೀಳಿಕೆ ಕೇಳಲು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:21 ../data/sugar.schemas.in.h:5
 msgid "User Color"
-msgstr ""
+msgstr "ಬಳಕೆದಾರರ ಬಣ್ಣ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:22 ../data/sugar.schemas.in.h:6
 msgid ""
@@ -113,26 +122,29 @@ msgid ""
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
+"ಡೆಸ್ಕ್‌ಟಾಪ್‌ನಾದ್ಯಂತ ಬಳಸಲಾಗುವ XO ಐಕಾನ್‌ಗಾಗಿ ಬಣ್ಣ. ಸ್ಟ್ರಿಂಗ್ ಸ್ಟ್ರೋಕ್ ಬಣ್ಣ "
+"ಮತ್ತು ಫಿಲ್ ಬಣ್ಣದಿಂದ ಕೂಡಿದೆ, ಸ್ವರೂಪವು ಆರ್ಜಿಬಿ ಬಣ್ಣಗಳಿಂದ ಕೂಡಿದೆ. ಉದಾಹರಣೆ: "
+"#AC32FF,#9A5200"
 
 #: ../data/org.sugarlabs.gschema.xml.h:23
 msgid "User Gender"
-msgstr ""
+msgstr "ಬಳಕೆದಾರರ ಲಿಂಗ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:24
 msgid "Gender of the Sugar user, either male, female, or unassigned"
-msgstr ""
+msgstr "ಸಕ್ಕರೆ ಬಳಕೆದಾರರ ಲಿಂಗ, ಗಂಡು, ಹೆಣ್ಣು ಅಥವಾ ನಿಯೋಜಿಸದ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:25
 msgid "User Birth Timestamp"
-msgstr ""
+msgstr "ಬಳಕೆದಾರರ ಜನನದ ಟೈಮ್‌ಸ್ಟ್ಯಾಂಪ್"
 
 #: ../data/org.sugarlabs.gschema.xml.h:26
 msgid "Birth timestamp (seconds since the epoch)"
-msgstr ""
+msgstr "ಜನನ ಸಮಯದ ಸ್ಟ್ಯಾಂಪ್ (ಯುಗದಿಂದ ಸೆಕೆಂಡುಗಳು)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:27
 msgid "Group Label"
-msgstr ""
+msgstr "ಗುಂಪು ಲೇಬಲ್"
 
 #: ../data/org.sugarlabs.gschema.xml.h:28
 msgid "Label associated with age, e.g., '2nd Grade'"
@@ -140,19 +152,20 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:29
 msgid "Background image path"
-msgstr ""
+msgstr "ಹಿನ್ನೆಲೆ ಚಿತ್ರಕ್ಕೆ ಮಾರ್ಗ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:30
 msgid "Path to the image to be used as a background."
-msgstr ""
+msgstr "ಹಿನ್ನೆಲೆ ಚಿತ್ರಕ್ಕೆ ಮಾರ್ಗ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:31
 msgid "Background alpha level"
-msgstr ""
+msgstr "ಹಿನ್ನೆಲೆ ಅಲ್ಫಾ ಮಟ್ಟ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:32
+#, fuzzy
 msgid "The opacity of the background image."
-msgstr ""
+msgstr "ಹಿನ್ನಲೆ ಚಿತ್ರದ ಅಪಾರದರ್ಶಕತೆ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:33
 msgid "Mimetype registry"
@@ -164,40 +177,41 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
-msgstr ""
+msgstr "ಧ್ವನಿ ಪರಿಮಾಣ ಮಟ್ಟ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:36 ../data/sugar.schemas.in.h:8
 msgid "Volume level for the sound device."
-msgstr ""
+msgstr "ಧ್ವನಿ ಸಾಧನಗಳಿಗೆ ಪರಿಮಾಣ ಮಟ್ಟ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:37 ../data/sugar.schemas.in.h:9
 msgid "Sound Muted"
-msgstr ""
+msgstr "ಧ್ವನಿ ಮ್ಯೂಟ್ ಮಾಡಲಾಗಿದೆ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:38 ../data/sugar.schemas.in.h:10
 msgid "Setting for muting the sound device."
-msgstr ""
+msgstr "ಧ್ವನಿ ಸಾಧನಗಳನ್ನು ಮ್ಯೂಟ್ ಮಾಡುವ ಸೆಟ್ಟಿಂಗ್."
 
 #: ../data/org.sugarlabs.gschema.xml.h:39
 msgid "Brightness Level"
-msgstr ""
+msgstr "ಹೊಳಪು ಮಟ್ಟ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
-msgstr ""
+msgstr "ಕಂಪ್ಯೂಟರ್ ಸ್ಕ್ರೀನಿನ ಹೊಳಪು ಮಟ್ಟ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:41
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
 msgid "Timezone"
-msgstr ""
+msgstr "ಸಮಯ ವಲಯ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:42 ../data/sugar.schemas.in.h:14
 msgid "Timezone setting for the system."
-msgstr ""
+msgstr "ಸಿಸ್ಟಮ್ಮಿನ ಸಮಯ ವಲಯದ ಸೆಟ್ಟಿಂಗ್."
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
+#, fuzzy
 msgid "Home views"
-msgstr ""
+msgstr "ಮನೆಯ ವೀಕ್ಷಣೆಗಳು"
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
@@ -215,7 +229,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
-msgstr ""
+msgstr "ಅಂಚಿನ ವಿಳಂಬ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:48 ../data/sugar.schemas.in.h:20
 msgid "Delay for the activation of the frame using the edges."
@@ -223,15 +237,16 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:49 ../data/sugar.schemas.in.h:21
 msgid "Corner Delay"
-msgstr ""
+msgstr "ಕಾನರ್ ವಿಳಂಬ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:50 ../data/sugar.schemas.in.h:22
 msgid "Delay for the activation of the frame using the corners."
 msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
+#, fuzzy
 msgid "Trigger Size"
-msgstr ""
+msgstr "ಪ್ರಚೋದಕ ಗಾತ್ರ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
@@ -239,7 +254,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
-msgstr ""
+msgstr "ಜಬ್ಬರ್ ಸರ್ವರ್"
 
 #: ../data/org.sugarlabs.gschema.xml.h:54 ../data/sugar.schemas.in.h:24
 msgid "URL of the jabber server to use."
@@ -265,7 +280,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:59 ../data/sugar.schemas.in.h:25
 msgid "Power Automatic"
-msgstr ""
+msgstr "ಪವರ್ ಸ್ವಯಂಚಾಲಿತ"
 
 #: ../data/org.sugarlabs.gschema.xml.h:60
 #: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:26
@@ -283,7 +298,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:63 ../data/sugar.schemas.in.h:39
 msgid "Keyboard layouts"
-msgstr ""
+msgstr "ಕೀಬೋರ್ಡ್ ವಿನ್ಯಾಸಗಳು"
 
 #: ../data/org.sugarlabs.gschema.xml.h:64 ../data/sugar.schemas.in.h:40
 msgid ""
