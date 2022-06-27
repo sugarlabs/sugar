@@ -176,9 +176,6 @@ class FavoritesView(ViewContainer):
             layout = favoriteslayout.RingLayout.key
             assert layout in LAYOUT_MAP
 
-        if isinstance(self._layout, LAYOUT_MAP[layout]):
-            return False
-
         if self._layout is not None and self._dragging_mode:
             self.disconnect(self._drag_motion_hid)
             self.disconnect(self._drag_drop_hid)
