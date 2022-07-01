@@ -410,18 +410,17 @@ class JournalActivity(JournalWindow):
                 self._main_toolbox.search_entry.grab_focus()
 
         elif self._active_view == JournalViews.DETAIL:
-            if not self._detail_view._expanded_entry.in_focus:
-                if keyname == 'Left':
-                    path, col = self._list_view.tree_view.get_cursor()
-                    self.show_main_view()
-                    self._list_view.tree_view.grab_focus()
-                    column = self._list_view.tree_view.get_column(5)
-                    self._list_view.tree_view.set_cursor_on_cell(path, column, None, True)
+            if keyname == 'Left':
+                path, col = self._list_view.tree_view.get_cursor()
+                self._list_view.tree_view.grab_focus()
+                column = self._list_view.tree_view.get_column(5)
+                self._list_view.tree_view.set_cursor_on_cell(path, column, None, True)
+                self._detail_view.emit('go-back-clicked')
 
-                if keyname == 'Return':
-                    metadata = self._detail_toolbox.get_metadata()
-                    misc.resume(metadata,
-                            alert_window=journalwindow.get_journal_window())
+            if keyname == 'Return':
+                metadata = self._detail_toolbox.get_metadata()
+                misc.resume(metadata,
+                    alert_window=journalwindow.get_journal_window())
 
 
     def __choose_project_cb(self, tree_view, metadata_to_send):

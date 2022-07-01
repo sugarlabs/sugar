@@ -266,7 +266,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             'toggled', self._keep_icon_toggled_cb)
         self._title.connect('activate', self._title_entered)
         self._title.connect(
-            'focus-out-event', self._title_focus_out_event_cb)
+            'focus-out-event', self._focus_out_cb)
         self._title.connect(
             'focus-in-event', self._focus_in_cb)
 
