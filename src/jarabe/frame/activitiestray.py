@@ -24,6 +24,7 @@ from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GLib
 
 from sugar3.graphics import style
 from sugar3.graphics.tray import HTray
@@ -55,6 +56,7 @@ from jarabe.frame.clipboardobject import ClipboardObject
 from jarabe.frame.clipboardtray import _ContextMap
 from jarabe.frame.clipboardobject import Format
 import jarabe.frame
+from jarabe.frame import clipboard
 
 
 class ActivityButton(RadioToolButton):
@@ -108,25 +110,21 @@ class ActivityButton(RadioToolButton):
             self._on_failed_launch()
 
     def __drag_drop_cb(self, widget, context, x, y, time):
+        cb_service = clipboard.get_instance()
+        object_id = cb_service.add_object(name="")
+
         context_targets = context.list_targets()
-
-        self._context_map = _ContextMap()
-        self._context_map.add_context(context, 0, len(context_targets))
-
-        self._cb_object = ClipboardObject(0, "")
+        if not self._context_map.has_context(context):
+            self._context_map.add_context(context, object_id, len(context_targets))
 
         for target in context_targets:
             if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
                 widget.drag_get_data(context, target, time)
 
-        Gdk.drop_finish(context, True, Gtk.get_current_event_time())
-        if hasattr(self, "_cb_object") and self._cb_object is not None:
-            cb_menu = ClipboardMenu(self._cb_object)
-            cb_menu._copy_to_journal()
-            self._cb_object = None
-            self._context_map = None
-            logging.debug('Saved to Journal')
+        cb_menu = ClipboardMenu(self._cb_object)
+        cb_menu._copy_to_journal()
 
+        logging.debug('Saved to Journal')
         return True
 
     def __journal_drag_data_received_cb(self, widget, context, x, y, selection,
@@ -135,20 +133,25 @@ class ActivityButton(RadioToolButton):
         if selection.get_pixbuf() is not None:
             data = selection.get_pixbuf()
         if len(selection.get_uris()) != 0:
-            data = selection.get_uris()[0]
+            data = selection.get_uris()[0].encode()
+            GLib.strfreev(data)
         if selection.get_text() is not None:
-            data = selection.get_text()
+            data = selection.get_text().encode()
         if data is None:
             data = selection.get_data()
 
-        if (data is not None and hasattr(self, "_cb_object") and
-                self._cb_object is not None):
-            mime_type = selection.get_data_type().name()
-            cb_format = Format(mime_type, data, on_disk=False)
-            self._cb_object.add_format(cb_format)
+        if self._cb_object is None:
+            cb_service = clipboard.get_instance()
+            object_id = cb_service.add_object(name="")
+            self._cb_object = ClipboardObject(object_id, "")
+
+        mime_type = selection.get_data_type().name()
+        cb_format = Format(mime_type, data, on_disk=False)
+        self._cb_object.add_format(cb_format)
 
         logging.debug('ActivityTray: got data for target')
-        Gdk.drop_finish(context, True, Gtk.get_current_event_time())
+
+        Gtk.drag_finish(context, True, True, Gtk.get_current_event_time())
 
     def create_palette(self):
         if self._home_activity.is_journal():

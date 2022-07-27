@@ -75,10 +75,7 @@ class ClipboardIcon(RadioToolButton):
 
     def _drag_data_get_cb(self, widget, context, selection, target_type,
                           event_time):
-        frame = jarabe.frame.get_view()
-        self._timeout_id = GLib.timeout_add(
-            jarabe.frame.frame.NOTIFICATION_DURATION,
-            lambda: frame.remove_notification(self._notif_icon))
+        GLib.source_remove(self._timeout_id)
         target_atom = selection.get_target()
         target_name = target_atom.name()
         logging.debug('_drag_data_get_cb: requested target %s', target_name)
@@ -183,7 +180,10 @@ class ClipboardIcon(RadioToolButton):
 
     def _drag_begin_cb(self, widget, context):
         # TODO: We should get the pixbuf from the icon, with colors, etc.
-        GLib.source_remove(self._timeout_id)
+        frame = jarabe.frame.get_view()
+        self._timeout_id = GLib.timeout_add(
+            jarabe.frame.frame.NOTIFICATION_DURATION,
+            lambda: frame.remove_notification(self._notif_icon))
         icon_theme = Gtk.IconTheme.get_default()
         pixbuf = icon_theme.load_icon(self._icon.props.icon_name,
                                       style.STANDARD_ICON_SIZE, 0)
