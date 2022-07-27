@@ -110,12 +110,9 @@ class ActivityButton(RadioToolButton):
             self._on_failed_launch()
 
     def __drag_drop_cb(self, widget, context, x, y, time):
-        cb_service = clipboard.get_instance()
-        object_id = cb_service.add_object(name="")
-
         context_targets = context.list_targets()
         if not self._context_map.has_context(context):
-            self._context_map.add_context(context, object_id, len(context_targets))
+            self._context_map.add_context(context, 0, len(context_targets))
 
         for target in context_targets:
             if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
@@ -141,9 +138,7 @@ class ActivityButton(RadioToolButton):
             data = selection.get_data()
 
         if self._cb_object is None:
-            cb_service = clipboard.get_instance()
-            object_id = cb_service.add_object(name="")
-            self._cb_object = ClipboardObject(object_id, "")
+            self._cb_object = ClipboardObject(0, "")
 
         mime_type = selection.get_data_type().name()
         cb_format = Format(mime_type, data, on_disk=False)
