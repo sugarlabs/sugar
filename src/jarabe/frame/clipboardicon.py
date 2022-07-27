@@ -75,12 +75,12 @@ class ClipboardIcon(RadioToolButton):
 
     def _drag_data_get_cb(self, widget, context, selection, target_type,
                           event_time):
-        GLib.source_remove(self._timeout_id)
         target_atom = selection.get_target()
         target_name = target_atom.name()
         logging.debug('_drag_data_get_cb: requested target %s', target_name)
         data = self._cb_object.get_formats()[target_name].get_data()
         selection.set(target_atom, 8, data)
+        GLib.source_remove(self._timeout_id)
 
     def _put_in_clipboard(self):
         logging.debug('ClipboardIcon._put_in_clipboard')
