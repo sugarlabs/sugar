@@ -137,8 +137,7 @@ class ActivityButton(RadioToolButton):
         if data is None:
             data = selection.get_data()
 
-        if self._cb_object is None:
-            self._cb_object = ClipboardObject(0, "")
+        self._cb_object = ClipboardObject(0, "")
 
         mime_type = selection.get_data_type().name()
         cb_format = Format(mime_type, data, on_disk=False)
