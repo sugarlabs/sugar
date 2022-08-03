@@ -184,11 +184,10 @@ class ClipboardMenu(Palette):
             if not is_pixbuf:
                 os.write(f, data)
             else:
-                options = {}
-                data.savev(file_path, 'bmp', options.keys(), options.values())
+                _type = self._cb_object.get_mime_type().split('/').pop()
+                data.savev(file_path, _type, [], [])
         finally:
-            if not is_pixbuf:
-                os.close(f)
+            os.close(f)
         return file_path
 
     def _copy_to_journal(self):
@@ -215,7 +214,7 @@ class ClipboardMenu(Palette):
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
             else:
-                if most_significant_mime_type == 'image/x-MS-bmp':
+                if most_significant_mime_type.startswith('image'):
                     file_path = self._write_to_temp_file(format_.get_data(), True)
                 else:
                     file_path = self._write_to_temp_file(format_.get_data(), False)
