@@ -25,7 +25,7 @@ from jarabe.frame import clipboard
 from jarabe.frame.clipboardicon import ClipboardIcon
 
 
-class _ContextMap(object):
+class ContextMap(object):
     """Maps a drag context to the clipboard object involved in the dragging."""
 
     def __init__(self):
@@ -63,7 +63,7 @@ class ClipboardTray(tray.VTray):
     def __init__(self):
         tray.VTray.__init__(self, align=tray.ALIGN_TO_END)
         self._icons = {}
-        self._context_map = _ContextMap()
+        self._context_map = ContextMap()
 
         cb_service = clipboard.get_instance()
         cb_service.connect('object-added', self._object_added_cb)
