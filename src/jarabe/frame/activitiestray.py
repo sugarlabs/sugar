@@ -24,7 +24,6 @@ from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GLib
 
 from sugar3.graphics import style
 from sugar3.graphics.tray import HTray
@@ -53,7 +52,7 @@ from jarabe.frame.notification import NotificationButton
 from jarabe.frame.notification import NotificationPulsingIcon
 from jarabe.frame.clipboardmenu import ClipboardMenu
 from jarabe.frame.clipboardobject import ClipboardObject
-from jarabe.frame.clipboardtray import _ContextMap
+from jarabe.frame.clipboardtray import ContextMap
 from jarabe.frame.clipboardobject import Format
 import jarabe.frame
 from jarabe.frame import clipboard
@@ -70,7 +69,7 @@ class ActivityButton(RadioToolButton):
         self._home_activity = home_activity
         self._notify_launch_hid = None
 
-        self._context_map = _ContextMap()
+        self._context_map = ContextMap()
         self._cb_object = None
         self._icon = NotificationPulsingIcon()
         self._icon.props.base_color = home_activity.get_icon_color()
@@ -131,7 +130,6 @@ class ActivityButton(RadioToolButton):
             data = selection.get_pixbuf()
         if len(selection.get_uris()) != 0:
             data = selection.get_uris()[0].encode()
-            GLib.strfreev(data)
         if selection.get_text() is not None:
             data = selection.get_text().encode()
         if data is None:
