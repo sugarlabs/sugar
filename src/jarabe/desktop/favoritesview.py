@@ -65,6 +65,7 @@ LAYOUT_MAP = {favoriteslayout.RingLayout.key: favoriteslayout.RingLayout,
               # favoriteslayout.TriangleLayout,
               # favoriteslayout.SunflowerLayout.key:
               # favoriteslayout.SunflowerLayout,
+              # favoriteslayout.CornerLayout.key: favoriteslayout.CornerLayout,
               favoriteslayout.RandomLayout.key: favoriteslayout.RandomLayout}
 """Map numeric layout identifiers to uninstantiated subclasses of
 `FavoritesLayout` which implement the layouts.  Additional information
