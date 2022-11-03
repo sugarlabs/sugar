@@ -299,7 +299,8 @@ def setup_proxy():
 
     elif g_mode == 'none':
         for each_env_variable in env_variables:
-            os.environ[each_env_variable] = ''
+            if each_env_variable in os.environ:
+                del os.environ[each_env_variable]
 
 
 def setup_theme():
