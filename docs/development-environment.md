@@ -53,6 +53,8 @@ Log out, then [log in with the Sugar desktop selected](https://github.com/sugarl
 
 Once Sugar is installed, development of activities can begin.
 
+You can also checkout [SOAS](https://spins.fedoraproject.org/en/soas).
+
 Native Sugar
 ------------
 
