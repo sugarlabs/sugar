@@ -350,11 +350,11 @@ def _validation_check():
 
 
 def main():
+    Gst.init(sys.argv)
+
     if not _validation_check():
         sys.exit()
         
-    Gst.init(sys.argv)
-
     cleanup_temporary_files()
 
     _start_window_manager()
