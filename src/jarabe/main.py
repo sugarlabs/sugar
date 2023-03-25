@@ -340,7 +340,19 @@ def _check_group_label():
     return intro.check_group_label()
 
 
+def _validation_check():
+
+    screen = Wnck.Screen.get_default()
+    if screen is not None:
+        return True
+    else:
+        return False
+
+
 def main():
+    if not _validation_check():
+        sys.exit()
+        
     Gst.init(sys.argv)
 
     cleanup_temporary_files()
