@@ -198,13 +198,16 @@ def _restart_window_manager():
 def _start_window_manager():
     global _cursor_theme_settings, _cursor_theme
 
+    screen = Wnck.Screen.get_default()
+    if screen is None:
+        return sys.exit()
+
     _cursor_theme_settings = Gio.Settings.new('org.gnome.desktop.interface')
     _cursor_theme = _cursor_theme_settings.get_string('cursor-theme')
     _cursor_theme_settings.set_string('cursor-theme', 'sugar')
 
     _restart_window_manager()
 
-    screen = Wnck.Screen.get_default()
     screen.connect('window-manager-changed', __window_manager_changed_cb)
 
     _check_for_window_manager(screen)
@@ -340,21 +343,9 @@ def _check_group_label():
     return intro.check_group_label()
 
 
-def _validation_check():
-
-    screen = Wnck.Screen.get_default()
-    if screen is not None:
-        return True
-    else:
-        return False
-
-
 def main():
     Gst.init(sys.argv)
 
-    if not _validation_check():
-        sys.exit()
-        
     cleanup_temporary_files()
 
     _start_window_manager()
