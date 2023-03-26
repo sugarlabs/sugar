@@ -37,7 +37,7 @@ class Clipboard(GObject.GObject):
         'object-added': (GObject.SignalFlags.RUN_FIRST, None,
                          ([object])),
         'object-deleted': (GObject.SignalFlags.RUN_FIRST, None,
-                           ([int])),
+                           ([GObject.TYPE_INT64])),
         'object-selected': (GObject.SignalFlags.RUN_FIRST, None,
                             ([int])),
         'object-state-changed': (GObject.SignalFlags.RUN_FIRST, None,
