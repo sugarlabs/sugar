@@ -198,16 +198,13 @@ def _restart_window_manager():
 def _start_window_manager():
     global _cursor_theme_settings, _cursor_theme
 
-    screen = Wnck.Screen.get_default()
-    if screen is None:
-        return sys.exit()
-
     _cursor_theme_settings = Gio.Settings.new('org.gnome.desktop.interface')
     _cursor_theme = _cursor_theme_settings.get_string('cursor-theme')
     _cursor_theme_settings.set_string('cursor-theme', 'sugar')
 
     _restart_window_manager()
 
+    screen = Wnck.Screen.get_default()
     screen.connect('window-manager-changed', __window_manager_changed_cb)
 
     _check_for_window_manager(screen)
