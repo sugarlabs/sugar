@@ -18,7 +18,7 @@ Installing on Debian or Ubuntu
 ------------------------------
 
 ```
-sudo apt install sucrose
+sudo apt install sucrose 
 ```
 
 Then log out, and log in with the Sugar desktop selected.
@@ -51,3 +51,4 @@ install`.
 
 See also [Setup a development
 environment](docs/development-environment.md).
+_______________________________________________
