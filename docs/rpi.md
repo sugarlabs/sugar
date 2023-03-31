@@ -5,7 +5,31 @@ Sugar can be run on a Raspberry Pi. You will need a display, keyboard and mouse.
 Raspberry Pi OS
 ---------------
 
-Raspberry Pi OS is a derivative of Debian.  Sugar can be installed using [Instructions for Debian](debian.md),
+Raspberry Pi OS is a derivative of Debian.  Sugar can be installed using [Instructions for Debian](debian.md), or using the following steps;
+
+- update the package lists;
+
+```
+sudo apt update
+```
+
+- install Sugar;
+
+```
+sudo apt install sucrose
+```
+
+- choose Sugar for restart by adding a file, like this;
+
+```
+echo sugar > .xsession
+```
+
+- restart the Raspberry pi;
+
+```
+sudo reboot
+```
 
 Fedora Sugar on a Stick
 -----------------------
