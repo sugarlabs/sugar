@@ -1,6 +1,6 @@
 AC_INIT([Sugar],[0.120],[],[sugar])
 
-AC_PREREQ([2.59])
+AC_PREREQ([2.71])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([configure.ac])
@@ -18,6 +18,9 @@ AM_PATH_PYTHON
 AS_IF([$PYTHON -m em </dev/null >/dev/null 2>&1], AC_MSG_RESULT([empy found]), AC_MSG_ERROR([empy not found]))
 
 PKG_CHECK_MODULES(SHELL, gtk+-3.0)
+PKG_CHECK_MODULES(LIBSOUP, [libsoup-3.0])
+AC_SUBST(LIBSOUP_CFLAGS)
+AC_SUBST(LIBSOUP_LIBS)
 
 IT_PROG_INTLTOOL([0.35.0])
 GETTEXT_PACKAGE=sugar
@@ -25,8 +28,7 @@ AC_SUBST([GETTEXT_PACKAGE])
 AM_GLIB_GNU_GETTEXT
 
 AC_ARG_ENABLE(update-mimedb,
-   AC_HELP_STRING([--disable-update-mimedb],
-                   [disable the update-mime-database after install [default=no]]),,
+   AS_HELP_STRING([--disable-update-mimedb],[disable the update-mime-database after install [default=no]]),,
     enable_update_mimedb=yes)
 AM_CONDITIONAL(ENABLE_UPDATE_MIMEDB, test x$enable_update_mimedb = xyes)
 
