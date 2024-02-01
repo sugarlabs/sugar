@@ -19,7 +19,7 @@ import threading
 import http.server
 import socketserver
 
-from gi.repository import Gtk
+from gi.repository import GLib
 
 from sugar3 import env
 from jarabe.util.downloader import Downloader
@@ -29,6 +29,7 @@ os.makedirs(profile_data_dir, exist_ok=True)
 
 tests_dir = os.getcwd()
 data_dir = os.path.join(tests_dir, "data")
+context = GLib.MainContext.default()
 
 
 class TestDownloader(unittest.TestCase):
@@ -58,11 +59,12 @@ class TestDownloader(unittest.TestCase):
         downloader.download_to_temp()
 
         while not self._complete:
-            Gtk.main_iteration()
+            context.iteration(True)
 
         self.assertIsNone(self._result)
         path = downloader.get_local_file_path()
-        text = open(path, "r").read()
+        with open(path, "r") as f:
+            text = f.read()
         self.assertEqual("hello\n", text)
 
     def test_download(self):
@@ -72,9 +74,9 @@ class TestDownloader(unittest.TestCase):
         downloader.download()
 
         while not self._complete:
-            Gtk.main_iteration()
+            context.iteration(True)
 
-        self.assertEqual("hello\n", self._result.get_data())
+        self.assertEqual("hello\n", self._result.get_data().decode())
 
     def test_get_size(self):
         downloader = Downloader("http://0.0.0.0:%d/data/test.txt" % self._port)
@@ -83,6 +85,6 @@ class TestDownloader(unittest.TestCase):
         downloader.get_size()
 
         while not self._complete:
-            Gtk.main_iteration()
+            context.iteration(True)
 
         self.assertEqual(6, self._result)
