@@ -14,13 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 import os
 from urllib.parse import urlparse
 import tempfile
 
 import gi
-gi.require_version('Soup', '2.4')
+gi.require_version('Soup', '3.0')
 from gi.repository import GObject
 from gi.repository import Soup
 from gi.repository import Gio
@@ -42,10 +41,10 @@ def get_soup_session():
     global _session
     if _session is None:
         _session = Soup.Session()
-        _session.set_property("timeout", 60)
-        _session.set_property("idle-timeout", 60)
-        _session.set_property("user-agent", "Sugar/%s" % config.version)
-        _session.add_feature_by_type(Soup.ProxyResolverDefault)
+        _session.set_timeout(60)
+        _session.set_idle_timeout(60)
+        _session.set_user_agent("Sugar/%s" % config.version)
+        _session.set_proxy_resolver(Gio.ProxyResolver.get_default())
     return _session
 
 
@@ -64,7 +63,7 @@ class Downloader(GObject.GObject):
 
     def __init__(self, url, session=None, request_headers=None):
         GObject.GObject.__init__(self)
-        self._uri = Soup.URI.new(url)
+        self._uri = GLib.Uri.parse(url, GLib.UriFlags.NONE)
         self._session = session or get_soup_session()
         self._pending_buffers = []
         self._downloaded_size = 0
@@ -77,13 +76,14 @@ class Downloader(GObject.GObject):
         self._request_headers = request_headers
 
     def _setup_message(self, method="GET"):
-        self._message = Soup.Message(method=method, uri=self._uri)
-        self._message.connect('got-chunk', self._got_chunk_cb)
+        self._message = Soup.Message.new(method=method, uri=self._uri)
+        self._message.connect('got-body-data', self._got_body_data_cb)
         self._message.connect('got-headers', self._headers_cb, None)
         if self._request_headers is not None:
             for header_key in list(self._request_headers.keys()):
-                self._message.request_headers.append(
+                self._message.get_request_headers().append(
                     header_key, self._request_headers[header_key])
+
 
     def download_to_temp(self):
         """
@@ -92,7 +92,7 @@ class Downloader(GObject.GObject):
         is saved. Upon completion, a successful download is indicated by a
         result of None in the complete signal parameters.
         """
-        url = self._uri.to_string(False)
+        url = self._url.to_string()
         temp_file_path = self._get_temp_file_path(url)
         self._output_file = Gio.File.new_for_path(temp_file_path)
         self._output_stream = self._output_file.create(
@@ -107,8 +107,7 @@ class Downloader(GObject.GObject):
         reuslt of None in the complete signal parameters.
         """
         self._setup_message()
-        self._message.response_body.set_accumulate(False)
-        self._session.queue_message(self._message, self._message_cb, None)
+        self._session.send_async(self._message, 0, None, self._message_cb, None)
 
     def download(self, start=None, end=None):
         """
@@ -120,8 +119,8 @@ class Downloader(GObject.GObject):
         """
         self._setup_message()
         if start is not None:
-            self._message.request_headers.set_range(start, end)
-        self._session.queue_message(self._message, self._message_cb, None)
+            self._message.get_request_headers().set_range(start, end)
+        self._session.send_async(self._message, 0, None, self._message_cb, None)
 
     def get_size(self):
         """
@@ -129,10 +128,10 @@ class Downloader(GObject.GObject):
         The size is returned in the result parameter of the 'complete' signal.
         """
         self._setup_message("HEAD")
-        self._session.queue_message(self._message, self._message_cb, None)
+        self._session.send_async(self._message, 0, None, self._message_cb, None)
 
     def _message_cb(self, session, message, user_data):
-        self._status_code = message.status_code
+        self._status_code = message.get_status()
         self._check_if_finished()
 
     def cancel(self):
@@ -140,15 +139,15 @@ class Downloader(GObject.GObject):
         self._session.cancel_message(self._message, SOUP_STATUS_CANCELLED)
 
     def _headers_cb(self, message, user_data):
-        if soup_status_is_successful(message.status_code):
-            self._total_size = message.response_headers.get_content_length()
+        if soup_status_is_successful(message.get_status()):
+            self._total_size = message.get_response_headers().get_content_length()
 
-    def _got_chunk_cb(self, message, buf):
+    def _got_body_data_cb(self, message, chunk_size):
         if self._cancelling or \
-                not soup_status_is_successful(message.status_code):
+                not soup_status_is_successful(message.get_status()):
             return
 
-        data = buf.get_as_bytes()
+        data = Gio.InputStream.read_bytes(chunk_size, None)
         self.emit('got-chunk', data)
         if self._output_stream:
             self._pending_buffers.append(data)
@@ -170,16 +169,11 @@ class Downloader(GObject.GObject):
 
         result = None
         if soup_status_is_successful(self._status_code):
-            if self._message.method == "HEAD":
+            if self._message.get_method() == "HEAD":
                 # this is a get_size request
                 result = self._total_size
-            elif self._message.response_body.get_accumulate():
-                # the message body must be flattened so that it can be
-                # retrieved as GBytes because response_body.data gets
-                # incorrectly treated by introspection as a NULL-terminated
-                # string
-                # https://bugzilla.gnome.org/show_bug.cgi?id=704105
-                result = self._message.response_body.flatten().get_as_bytes()
+            else:
+                result = self._session.send_and_read(self._message, None)
         else:
             result = IOError("HTTP error code %d" % self._status_code)
         self.emit('complete', result)

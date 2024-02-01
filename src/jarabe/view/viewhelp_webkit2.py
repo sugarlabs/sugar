@@ -18,7 +18,7 @@
 import os
 
 import gi
-gi.require_version('WebKit2', '4.0')
+gi.require_version('WebKit2', '4.1')
 
 from gi.repository import WebKit2
 from gi.repository import Gio
