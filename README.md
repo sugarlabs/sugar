@@ -1,6 +1,8 @@
 Sugar
 =====
 
+[![sugar ci](https://github.com/sugarlabs/sugar/actions/workflows/sugar-ci.yml/badge.svg)](https://github.com/sugarlabs/sugar/actions/workflows/sugar-ci.yml)
+
 Sugar is the desktop environment component of a worldwide effort to
 provide every child with an equal opportunity for a quality
 education. Available in more than twenty-five languages, Sugar
