@@ -49,7 +49,6 @@ Derivatives
 Derivatives of Debian include:
 
 -   [Ubuntu](ubuntu.md),
--   [Raspberry Pi OS](rpi.md) .
 
 See Also
 --------

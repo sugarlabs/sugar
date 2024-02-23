@@ -5,7 +5,6 @@
 * [on Ubuntu](ubuntu.md)
 * [on Debian](debian.md)
 * [on Fedora](fedora.md)
-* [on Raspberry Pi](rpi.md)
 
 ## Develop Sugar
 
