@@ -42,7 +42,7 @@ For setting up Sugar on Raspberry Pi for hardware devices, refer to the followin
 Fedora Sugar on a Stick
 -----------------------
 
-Sugar on a Stick has many activities and regular security updates. See [Sugar on a Stick](rpi-soas.md) for how to download and install it. Sugar on a Stick is a spin of Fedora.
+Sugar on a Stick has many activities and regular security updates. See [Sugar on a Stick](https://example.com/rpi-docs/rpi-soas.md) for how to download and install it. Sugar on a Stick is a spin of Fedora.
 
 (Developers may focus on either Fedora or Debian when [setting up a development environment](development-environment.md) for Sugar on Raspberry Pi, because Sugar development on generic computers is focused on those operating systems.)
 
