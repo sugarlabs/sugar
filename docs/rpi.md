@@ -28,7 +28,7 @@ Setting up on Virtual Machines
 
 If you prefer to set up Sugar on Raspberry Pi on virtual machines, follow these instructions:
 
-- [Setting up on Virtual Machines](https://github.com/sugarlabs/RPi-Docs/blob/main/src/virtual-machines-setup.md)
+- [Setting up on Virtual Machines](https://github.com/sugarlabs/RPi-Docs/blob/main/src/virtual-machine.md.md)
 
 Setting up on Hardware
 ---------------
