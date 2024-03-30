@@ -21,10 +21,10 @@ Known Problems:
 -   no datastore entries are created [sugar-datastore #23](https://github.com/sugarlabs/sugar-datastore/pull/23), and;
 -   [Browse does not visit web sites](https://github.com/sugarlabs/browse-activity/issues/119).
 
-Ubuntu 20.10 (Groovy Gorilla)
+Ubuntu 23.04 (Lunar Lobster)
 -------------------
 
-Sugar 0.117 can be installed with the following commands:
+Sugar 0.120 can be installed with the following commands:
 
     sudo apt update
     sudo apt install sucrose
@@ -32,10 +32,10 @@ Sugar 0.117 can be installed with the following commands:
 -   log out,
 -   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
 
-Ubuntu 19.10 (Eoan Ermine)
+Ubuntu 23.10 (Mantic Minotaur)
 -------------------
 
-Sugar 0.112 can be installed with the following commands:
+Sugar 0.120 can be installed with the following commands:
 
     sudo apt update
     sudo apt install sucrose
@@ -43,17 +43,12 @@ Sugar 0.112 can be installed with the following commands:
 -   log out,
 -   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
 
-Known Problems:
 
--   Sugar 0.112 does not start because of [ImportError: No module named popwindow](https://github.com/sugarlabs/sugar/issues/822), in turn because the Sugar Toolkit 0.116 is not compatible with Sugar 0.112,
-
-Ubuntu 19.04 (Disco Dingo)
+Ubuntu 24.04 (Noble Numbat)
 -------------------
 
-Sugar 0.112 is in the universe repository, and can be installed with the following commands:
+Sugar 0.120 can be installed with the following commands:
 
-
-    sudo add-apt-repository universe
     sudo apt update
     sudo apt install sucrose
 
