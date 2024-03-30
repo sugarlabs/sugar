@@ -5,6 +5,28 @@ Using Sugar on Ubuntu
 
 In relation to Sugar, Ubuntu is a downstream distribution project that can be used to run Sugar.
 
+Ubuntu 23.10 (Mantic Minotaur)
+-------------------
+
+Sugar 0.120 can be installed with the following commands:
+
+    sudo apt update
+    sudo apt install sucrose
+
+-   log out,
+-   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
+
+Ubuntu 23.04 (Lunar Lobster)
+-------------------
+
+Sugar 0.120 can be installed with the following commands:
+
+    sudo apt update
+    sudo apt install sucrose
+
+-   log out,
+-   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
+
 Ubuntu 22.04 (Jammy Jellyfish)
 -------------------
 
@@ -21,36 +43,3 @@ Known Problems:
 -   no datastore entries are created [sugar-datastore #23](https://github.com/sugarlabs/sugar-datastore/pull/23), and;
 -   [Browse does not visit web sites](https://github.com/sugarlabs/browse-activity/issues/119).
 
-Ubuntu 23.04 (Lunar Lobster)
--------------------
-
-Sugar 0.120 can be installed with the following commands:
-
-    sudo apt update
-    sudo apt install sucrose
-
--   log out,
--   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
-
-Ubuntu 23.10 (Mantic Minotaur)
--------------------
-
-Sugar 0.120 can be installed with the following commands:
-
-    sudo apt update
-    sudo apt install sucrose
-
--   log out,
--   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
-
-
-Ubuntu 24.04 (Noble Numbat)
--------------------
-
-Sugar 0.120 can be installed with the following commands:
-
-    sudo apt update
-    sudo apt install sucrose
-
--   log out,
--   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
