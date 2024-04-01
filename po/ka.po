@@ -2,119 +2,117 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2022-10-06 06:47+0000\n"
-"Last-Translator: Sourabha <sourabha.project@gmail.com>\n"
+"PO-Revision-Date: 2023-03-25 02:56+0000\n"
+"Last-Translator: NF <rkavt@smartprojects.ge>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: kn\n"
+"Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1665038865.000000\n"
+"X-POOTLE-MTIME: 1679712999.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
-msgstr "ಜಿ ಸಂಯೋಜನೆಗಳಿಗೆ ಸ್ಥಳಾಂತರಗೊಂಡಿದೆ"
+msgstr "გადატანილია GSettings-ში"
 
 #: ../data/org.sugarlabs.gschema.xml.h:2
 msgid "This key shows whether or not GConf values were migrated to GSettings"
 msgstr ""
-"ಜಿಕಾನ್ಫ್ ಮೌಲ್ಯಗಳನ್ನು ಜಿ ಸಂಯೋಜನೆಗಳಿಗೆ ಸ್ಥಳಾಂತರಿಸಲಾಗಿದೆಯೆ ಅಥವಾ ಇಲ್ಲವೇ ಎಂಬುದನ್ನು"
-" ಈ ಕೀ ತೋರಿಸುತ್ತದೆ"
+"ეს მნიშვნელობა მიუთითებს, GConf-ის მნიშვნელობების GSettings-ში მიგრაცია "
+"მოხდა, თუ არა"
 
 #: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
 msgid "Backup URL"
-msgstr "ಬ್ಯಾಕಪ್ ಯು ಆರ್ ಎಲ್ ಸಂರಕ್ಷಿತ"
+msgstr "მარქაფის URL"
 
 #: ../data/org.sugarlabs.gschema.xml.h:4 ../data/sugar.schemas.in.h:12
 msgid "URL where the backup is saved to."
-msgstr "ಬ್ಯಾಕಪ್ ಅನ್ನು ಉಳಿಸಲಾಗಿರುವ ಯು ಅರ್ ಎಲ್."
+msgstr "ბმული, სადაც მარქაფი შეინახება."
 
 #: ../data/org.sugarlabs.gschema.xml.h:5 ../data/sugar.schemas.in.h:31
 msgid "Show Log out"
-msgstr "ಲಾಗ್ ಔಟ್ ತೋರಿಸಿ"
+msgstr "გასვლის ჩვენება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr "ನಿಜವಾದರೆ, ಸಕ್ಕರೆ \"ಲಾಗ್ ಔಟ್\" ಆಯ್ಕೆಯನ್ನು ತೋರಿಸುತ್ತದೆ."
+msgstr "თუ ჩართულია, Sugar \"გასვლის\" ღილაკს გაჩვენებთ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:7 ../data/sugar.schemas.in.h:33
 msgid "Show Restart"
-msgstr "ಮರುಪ್ರಾರಂಭ ತೋರಿಸಿ"
+msgstr "გადატვირთვის ჩვენება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:8 ../data/sugar.schemas.in.h:34
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr "ನಿಜವಾದರೆ, ಸಕ್ಕರೆ \"ರೀಸ್ಟಾರ್ಟ್\" ಆಯ್ಕೆಯನ್ನು ತೋರಿಸುತ್ತದೆ."
+msgstr "თუ ჩართულია, Sugar \"გადატვირთვის\" ღილაკს გაჩვენებთ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
 msgid "Show Shutdown"
-msgstr "ಸ್ಥಗಿತಗೊಳಿಸುವಿಕೆಯನ್ನು ತೋರಿಸಿ"
+msgstr "გამორთვის ჩვენება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
-msgstr "ನಿಜವಾದರೆ, ಸಕ್ಕರೆ \"ಶಟ್ಡೌನ್\" ಆಯ್ಕೆಯನ್ನು ತೋರಿಸುತ್ತದೆ."
+msgstr "თუ ჩართულია, Sugar \"გამორთვის\" ღილაკს გაჩვენებთ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
-msgstr "ನೋಂದಣಿಯನ್ನು ತೋರಿಸಿ"
+msgstr "რეგისტრაციის ჩვენება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
-msgstr ""
-"ನಿಜವಾದರೆ, ಸಕ್ಕರೆ \"ನೋಂದಣಿ\" ಆಯ್ಕೆಯನ್ನು ಸ್ನೇಹಿತ ಪ್ಯಾಲೆಟ್ನಲ್ಲಿ ತೋರಿಸುತ್ತದೆ."
+msgstr "თუ ჩართულია, Sugar-ი პალიტრაზე \"რეგისტრაციის\" პარამეტრს გაჩვენებთ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
 msgid "Bundle IDs of protected activities"
-msgstr "ಸಂರಕ್ಷಿತ ಚಟುವಟಿಕೆಗಳ ಬಂಡಲ್ ಐಡಿಗಳು"
+msgstr "დაცული აქტივობების ID-ების შეკრება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:14 ../data/sugar.schemas.in.h:64
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
-msgstr "ಲಿಸ್ಟ್ ವ್ಯೂನಿಂದ ಈ ಆಕ್ಟಿವಿಟಿಗಳನ್ನೂ ಬಳಕೆದಾರ ಅಳಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ."
+msgstr "მომხმარებლებს ამ აქტივობების სიის ხედიდან წაშლის უფლება არ ექნებათ."
 
 #: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
 msgid "A limit to the number of simultaneously open activities."
-msgstr "ಏಕಕಾಲದಲ್ಲಿ ಮುಕ್ತ ಚಟುವಟಿಕೆಗಳ ಸಂಖ್ಯೆಗೆ ಮಿತಿ."
+msgstr "ერთდროულად ღია აქტივობების მაქსიმალური რაოდენობა."
 
 #: ../data/org.sugarlabs.gschema.xml.h:16 ../data/sugar.schemas.in.h:80
 msgid ""
 "This int is used to set a limit to the number of open activities. By default "
 "(0), there is no limit."
 msgstr ""
-"ಮುಕ್ತ ಚಟುವಟಿಕೆಗಳ ಸಂಖ್ಯೆಗೆ ಮಿತಿಯನ್ನು ಹೊಂದಿಸಲು ಈ ಇಂಟ್ ಅನ್ನು ಬಳಸಲಾಗುತ್ತದೆ.  "
-"ಪೂರ್ವನಿಯೋಜಿತವಾಗಿ (0), ಯಾವುದೇ ಮಿತಿಯಿಲ್ಲ."
+"ეს მთელი რიცხვი ღია აქტივობების რაოდენობის შესაზღუდად გამოიყენება. "
+"ნაგულისხმევად (0) შეზღუდვა არ არსებობს."
 
 #: ../data/org.sugarlabs.gschema.xml.h:17 ../data/sugar.schemas.in.h:1
 msgid "User Name"
-msgstr "ಬಳಕೆದಾರರ ಹೆಸರು"
+msgstr "მომხმარებლის სახელი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:18 ../data/sugar.schemas.in.h:2
 msgid "User name that is used throughout the desktop."
-msgstr "ಡೆಸ್ಕ್‌ಟಾಪ್‌ನಾದ್ಯಂತ ಬಳಸಲಾಗುವ ಬಳಕೆದಾರರ ಹೆಸರು."
+msgstr "სამუშაო მაგიდაზე გამოყენებული მომხმარებლის სახელი."
 
 #: ../data/org.sugarlabs.gschema.xml.h:19 ../data/sugar.schemas.in.h:3
-#, fuzzy
 msgid "Default nick"
-msgstr "ಕೊರತೆಯ ಸೀಳಿಕೆ ಮಾಡು"
+msgstr "ნაგულისხმები მეტსახელი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:20 ../data/sugar.schemas.in.h:4
-#, fuzzy
 msgid ""
 "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
 "long name."
 msgstr ""
-"ಯುನಿಕ್ಸ್ ಖಾತೆಯ ದೀರ್ಘ ಹೆಸರನ್ನು ಮರುಬಳಕೆ ಮಾಡಲು \"ಸಿಸ್ಟಮ್\". \"ಪ್ರಾರಂಭದಲ್ಲಿ "
-"ಸೀಳಿಕೆ ಕೇಳಲು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ."
+"\"გათიშულია\" - მეტსახელის ინიციალიზაციის საკითხავად. \"სისტემური\" UNIX "
+"ანგარიშის გრძელი სახელის გამოსაყენებლად."
 
 #: ../data/org.sugarlabs.gschema.xml.h:21 ../data/sugar.schemas.in.h:5
 msgid "User Color"
-msgstr "ಬಳಕೆದಾರರ ಬಣ್ಣ"
+msgstr "მომხმარებლის ფერი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:22 ../data/sugar.schemas.in.h:6
 msgid ""
@@ -122,232 +120,228 @@ msgid ""
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
-"ಡೆಸ್ಕ್‌ಟಾಪ್‌ನಾದ್ಯಂತ ಬಳಸಲಾಗುವ XO ಐಕಾನ್‌ಗಾಗಿ ಬಣ್ಣ. ಸ್ಟ್ರಿಂಗ್ ಸ್ಟ್ರೋಕ್ ಬಣ್ಣ "
-"ಮತ್ತು ಫಿಲ್ ಬಣ್ಣದಿಂದ ಕೂಡಿದೆ, ಸ್ವರೂಪವು ಆರ್ಜಿಬಿ ಬಣ್ಣಗಳಿಂದ ಕೂಡಿದೆ. ಉದಾಹರಣೆ: "
-"#AC32FF,#9A5200"
+"სამუშაო მაგიდაზე გამოყენებული XO ხატულის ფერი. სტრიქონი შედგება ხაზის და "
+"შევსების ფერისგან. RBG ფერის ფორმატში. მაგ: #AC32FF,#9A5200"
 
 #: ../data/org.sugarlabs.gschema.xml.h:23
 msgid "User Gender"
-msgstr "ಬಳಕೆದಾರರ ಲಿಂಗ"
+msgstr "მომხმარებლის სქესი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:24
 msgid "Gender of the Sugar user, either male, female, or unassigned"
-msgstr "ಸಕ್ಕರೆ ಬಳಕೆದಾರರ ಲಿಂಗ, ಗಂಡು, ಹೆಣ್ಣು ಅಥವಾ ನಿಯೋಜಿಸದ"
+msgstr ""
+"Sugar-ის მომხმარებლის სქესი. შეიძლება იყოს მდედრობითი, მამრობითი ან "
+"მიუნიჭებელი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:25
 msgid "User Birth Timestamp"
-msgstr "ಬಳಕೆದಾರರ ಜನನದ ಟೈಮ್‌ಸ್ಟ್ಯಾಂಪ್"
+msgstr "მომხმარებლის დაბადების დღის დროის შტამპი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:26
 msgid "Birth timestamp (seconds since the epoch)"
-msgstr "ಜನನ ಸಮಯದ ಸ್ಟ್ಯಾಂಪ್ (ಯುಗದಿಂದ ಸೆಕೆಂಡುಗಳು)"
+msgstr "დაბადების დღის დროის შტამპი (ეპოქის შემდეგ გასული წამების რაოდენობა)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:27
 msgid "Group Label"
-msgstr "ಗುಂಪು ಲೇಬಲ್"
+msgstr "ჯგუფის ჭდე"
 
 #: ../data/org.sugarlabs.gschema.xml.h:28
 msgid "Label associated with age, e.g., '2nd Grade'"
-msgstr "ವಯಸ್ಸಿಗೆ ಸಂಬಂಧಿಸಿದ ಲೇಬಲ್, ಉದಾ., '2ನೇ ಗ್ರೇಡ್'"
+msgstr "ასაკთან ასოცირებული ჭდე. მაგ: 'მეორე კლასელი'"
 
 #: ../data/org.sugarlabs.gschema.xml.h:29
 msgid "Background image path"
-msgstr "ಹಿನ್ನೆಲೆ ಚಿತ್ರಕ್ಕೆ ಮಾರ್ಗ"
+msgstr "ფონის გამოსახულების ბილიკი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:30
 msgid "Path to the image to be used as a background."
-msgstr "ಹಿನ್ನೆಲೆ ಚಿತ್ರಕ್ಕೆ ಮಾರ್ಗ."
+msgstr "ფონისთვის გამოსაყენებელი გამოსახულების ბილიკი."
 
 #: ../data/org.sugarlabs.gschema.xml.h:31
 msgid "Background alpha level"
-msgstr "ಹಿನ್ನೆಲೆ ಅಲ್ಫಾ ಮಟ್ಟ"
+msgstr "ფონის ალფას დონე"
 
 #: ../data/org.sugarlabs.gschema.xml.h:32
-#, fuzzy
 msgid "The opacity of the background image."
-msgstr "ಹಿನ್ನಲೆ ಚಿತ್ರದ ಅಪಾರದರ್ಶಕತೆ."
+msgstr "ფონის სურათის გაუმჭვირვალობა."
 
 #: ../data/org.sugarlabs.gschema.xml.h:33
 msgid "Mimetype registry"
-msgstr "ಮೈಮೆಟೈಪ್ ರಿಜಿಸ್ಟ್ರಿ"
+msgstr "Mimetype-ის რეესტრი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:34
 msgid "Consists of key-value pairs mimetypes and their corresponding activity"
 msgstr ""
-"ಕೀ-ಮೌಲ್ಯದ ಜೋಡಿ ಮೈಮೆಟೈಪ್‌ಗಳು ಮತ್ತು ಅವುಗಳ ಅನುಗುಣವಾದ ಚಟುವಟಿಕೆಯನ್ನು "
-"ಒಳಗೊಂಡಿರುತ್ತದೆ"
+"შედგება გასაღები-მნიშვნელობის წყვილის Mimetype-ების და მათი შესაბამისი "
+"აქტივობებისგან"
 
 #: ../data/org.sugarlabs.gschema.xml.h:35 ../data/sugar.schemas.in.h:7
 msgid "Volume Level"
-msgstr "ಧ್ವನಿ ಪರಿಮಾಣ ಮಟ್ಟ"
+msgstr "ხმის დონე"
 
 #: ../data/org.sugarlabs.gschema.xml.h:36 ../data/sugar.schemas.in.h:8
 msgid "Volume level for the sound device."
-msgstr "ಧ್ವನಿ ಸಾಧನಗಳಿಗೆ ಪರಿಮಾಣ ಮಟ್ಟ."
+msgstr "ხმის დონე ხმის მოწყობილობებისთვის."
 
 #: ../data/org.sugarlabs.gschema.xml.h:37 ../data/sugar.schemas.in.h:9
 msgid "Sound Muted"
-msgstr "ಧ್ವನಿ ಮ್ಯೂಟ್ ಮಾಡಲಾಗಿದೆ"
+msgstr "ხმა დადუმებულია"
 
 #: ../data/org.sugarlabs.gschema.xml.h:38 ../data/sugar.schemas.in.h:10
 msgid "Setting for muting the sound device."
-msgstr "ಧ್ವನಿ ಸಾಧನಗಳನ್ನು ಮ್ಯೂಟ್ ಮಾಡುವ ಸೆಟ್ಟಿಂಗ್."
+msgstr "ხმის მოწყობილობის დადუმების პარამეტრი."
 
 #: ../data/org.sugarlabs.gschema.xml.h:39
 msgid "Brightness Level"
-msgstr "ಹೊಳಪು ಮಟ್ಟ"
+msgstr "განათების დონე"
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
-msgstr "ಕಂಪ್ಯೂಟರ್ ಸ್ಕ್ರೀನಿನ ಹೊಳಪು ಮಟ್ಟ."
+msgstr "კომპიუტერის ეკრანის სიკაშკაშის დონე."
 
 #: ../data/org.sugarlabs.gschema.xml.h:41
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
 msgid "Timezone"
-msgstr "ಸಮಯ ವಲಯ"
+msgstr "დროის ზონა"
 
 #: ../data/org.sugarlabs.gschema.xml.h:42 ../data/sugar.schemas.in.h:14
 msgid "Timezone setting for the system."
-msgstr "ಸಿಸ್ಟಮ್ಮಿನ ಸಮಯ ವಲಯದ ಸೆಟ್ಟಿಂಗ್."
+msgstr "დროის სარტყელის პარამეტრი სისტემისთვის."
 
 #: ../data/org.sugarlabs.gschema.xml.h:43
 msgid "Home views"
-msgstr "ಮನೆಯ ವೀಕ್ಷಣೆಗಳು"
+msgstr "საწყისი ხედები"
 
 #: ../data/org.sugarlabs.gschema.xml.h:44
 msgid ""
 "List of home views, including the view icon, the favorite icon and the layout"
-msgstr "ವೀಕ್ಷಣೆ ಐಕಾನ್, ನೆಚ್ಚಿನ ಐಕಾನ್ ಮತ್ತು ಲೇಔಟ್ ಸೇರಿದಂತೆ ಮನೆ ವೀಕ್ಷಣೆಗಳ ಪಟ್ಟಿ"
+msgstr "საწყისი ხედების სია, ხედისა და რჩეული ხატულის და განლაგების ჩათვლით"
 
 #: ../data/org.sugarlabs.gschema.xml.h:45
 msgid "Launcher animation interval"
-msgstr "ಲಾಂಚರ್ ಅನಿಮೇಷನ್ ಮಧ್ಯಂತರ"
+msgstr "გამშვების ანიმაციის ინტერვალი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:46
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
-msgstr ""
-"ಲಾಂಚರ್ ಪಲ್ಸಿಂಗ್ ಐಕಾನ್‌ಗಾಗಿ ಅನಿಮೇಷನ್ ನವೀಕರಣಗಳ ನಡುವೆ ಮಿಲಿಸೆಕೆಂಡ್‌ಗಳಲ್ಲಿ ವಿಳಂಬ."
+msgstr "გამშვების მფეთქავი ხატულის ანიმაციის განახლებებს შორის დაყოვნება."
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
-msgstr "ಅಂಚಿನ ವಿಳಂಬ"
+msgstr "კიდის დაყოვნება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:48 ../data/sugar.schemas.in.h:20
 msgid "Delay for the activation of the frame using the edges."
-msgstr "ಅಂಚುಗಳನ್ನು ಬಳಸಿಕೊಂಡು ಚೌಕಟ್ಟಿನ ಸಕ್ರಿಯಗೊಳಿಸುವಿಕೆಗೆ ವಿಳಂಬ."
+msgstr "კიდეების გამოყენებით ჩარჩოს აქტივაციის დაყოვნება."
 
 #: ../data/org.sugarlabs.gschema.xml.h:49 ../data/sugar.schemas.in.h:21
 msgid "Corner Delay"
-msgstr "ಕಾನರ್ ವಿಳಂಬ"
+msgstr "კუთხის დაყოვნება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:50 ../data/sugar.schemas.in.h:22
 msgid "Delay for the activation of the frame using the corners."
-msgstr "ಮೂಲೆಗಳನ್ನು ಬಳಸಿಕೊಂಡು ಚೌಕಟ್ಟಿನ ಸಕ್ರಿಯಗೊಳಿಸುವಿಕೆಗೆ ವಿಳಂಬ."
+msgstr "კუთხეების გამოყენებით ჩარჩოს აქტივაციის დაყოვნება."
 
 #: ../data/org.sugarlabs.gschema.xml.h:51
-#, fuzzy
 msgid "Trigger Size"
-msgstr "ಪ್ರಚೋದಕ ಗಾತ್ರ"
+msgstr "ტრიგერის ზომა"
 
 #: ../data/org.sugarlabs.gschema.xml.h:52
 msgid "Size of the frame trigger area, in px from the corner/edge."
-msgstr "ಫ್ರೇಮ್ ಟ್ರಿಗ್ಗರ್ ಪ್ರದೇಶದ ಗಾತ್ರ, ಮೂಲೆ/ಅಂಚಿನಿಂದ px ನಲ್ಲಿ."
+msgstr "ჩარჩოს ტრიგერის ადგილის ზომა, პიქსელებში, კუთხიდან/კიდიდან."
 
 #: ../data/org.sugarlabs.gschema.xml.h:53 ../data/sugar.schemas.in.h:23
 msgid "Jabber Server"
-msgstr "ಜಬ್ಬರ್ ಸರ್ವರ್"
+msgstr "Jabber-ის სერვერი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:54 ../data/sugar.schemas.in.h:24
 msgid "URL of the jabber server to use."
-msgstr "ಬಳಸಲು ಜಬ್ಬರ್ ಸರ್ವರ್‌ನ URL."
+msgstr "გამოყენებული Jabber-ის სერვერის ბმული."
 
 #: ../data/org.sugarlabs.gschema.xml.h:55 ../data/sugar.schemas.in.h:29
 msgid "Publish to Gadget"
-msgstr "ಗ್ಯಾಜೆಟ್‌ಗೆ ಪ್ರಕಟಿಸಿ"
+msgstr "გაჯეტში გამოქვეყნება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:56 ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"ನಿಜವಾಗಿದ್ದರೆ, ಜಬ್ಬರ್ ಸರ್ವರ್‌ನ ಇತರ ಬಳಕೆದಾರರಿಗಾಗಿ ಶುಗರ್ ನಮ್ಮನ್ನು ಹುಡುಕುವಂತೆ "
-"ಮಾಡುತ್ತದೆ."
+"თუ ჩართულია, Sugar-ი Jabber-ის სერვერზე სხვა მომხმარებლისთვის ძებნადს "
+"გაგვხდის."
 
 #: ../data/org.sugarlabs.gschema.xml.h:57
 msgid "Social Help Server"
-msgstr "ಸಾಮಾಜಿಕ ಸಹಾಯ ಸರ್ವರ್"
+msgstr "სოციალური დახმარების სერვერი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:58
 msgid "URL of the social help server to use with protocol."
-msgstr "ಪ್ರೋಟೋಕಾಲ್‌ನೊಂದಿಗೆ ಬಳಸಲು ಸಾಮಾಜಿಕ ಸಹಾಯ ಸರ್ವರ್‌ನ URL."
+msgstr "გამოსაყენებელი სოციალური დახმარების სერვერის ბმული პროტოკოლის ჩათვლით."
 
 #: ../data/org.sugarlabs.gschema.xml.h:59 ../data/sugar.schemas.in.h:25
 msgid "Power Automatic"
-msgstr "ಪವರ್ ಸ್ವಯಂಚಾಲಿತ"
+msgstr "ავტომატური კვება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:60
 #: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:26
 msgid "Automatic power management (increases battery life)"
-msgstr "ಸ್ವಯಂಚಾಲಿತ ವಿದ್ಯುತ್ ನಿರ್ವಹಣೆ (ಬ್ಯಾಟರಿ ಜೀವಿತಾವಧಿಯನ್ನು ಹೆಚ್ಚಿಸುತ್ತದೆ)"
+msgstr "კვების ავტომატური მართვა (ზრდის ელემენტის მოხმარების დროს)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:61 ../data/sugar.schemas.in.h:27
 msgid "Power Extreme"
-msgstr "ಪವರ್ ಎಕ್ಸ್ಟ್ರೀಮ್"
+msgstr "ექსტრემალური კვება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:62 ../data/sugar.schemas.in.h:28
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
-"ಎಕ್ಸ್ಟ್ರೀಮ್ ಪವರ್ ಮ್ಯಾನೇಜ್ಮೆಂಟ್ (ವೈರ್ಲೆಸ್ ರೇಡಿಯೊವನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸುತ್ತದೆ, "
-"ಬ್ಯಾಟರಿ ಅವಧಿಯನ್ನು ಹೆಚ್ಚಿಸುತ್ತದೆ)"
+"მუხტის ექსტრემალური დაზოგვა (თიშავს უსადენო რადიოს, ამცირებს ელემენტის "
+"მუხტის გახარჯვას)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:63 ../data/sugar.schemas.in.h:39
 msgid "Keyboard layouts"
-msgstr "ಕೀಬೋರ್ಡ್ ವಿನ್ಯಾಸಗಳು"
+msgstr "კლავიატურის განლაგებები"
 
 #: ../data/org.sugarlabs.gschema.xml.h:64 ../data/sugar.schemas.in.h:40
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
-msgstr "ಕೀಬೋರ್ಡ್ ಲೇಔಟ್‌ಗಳ ಪಟ್ಟಿ. ಪ್ರತಿ ನಮೂದು ಫಾರ್ಮ್ ಲೇಔಟ್‌ನಲ್ಲಿರಬೇಕು (ವೇರಿಯಂಟ್)"
+msgstr "კლავიატურის განლაგების სია. ჩანაწერის ფორმატია განლაგება(ვარიანტი)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:65 ../data/sugar.schemas.in.h:41
-#, fuzzy
 msgid "Keyboard options"
-msgstr "ಕೀಲಮಣೆ ಆಯ್ಕೆಗಳು"
+msgstr "კლავიატურის მორგება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:66 ../data/sugar.schemas.in.h:42
 msgid "List of keyboard options."
-msgstr "ಕೀಬೋರ್ಡ್ ಆಯ್ಕೆಗಳ ಪಟ್ಟಿ"
+msgstr "კლავიატურის პარამეტრების სია."
 
 #: ../data/org.sugarlabs.gschema.xml.h:67 ../data/sugar.schemas.in.h:43
-#, fuzzy
 msgid "Keyboard model"
-msgstr "ಕೀಲಮಣೆ ಮಾದರಿ"
+msgstr "კლავიატურის მოდელი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:68 ../data/sugar.schemas.in.h:44
 msgid "The keyboard model to be used"
-msgstr "ಬಳಸಬೇಕಾದ ಕೀಬೋರ್ಡ್ ಮಾದರಿ"
+msgstr "გამოყენებული კლავიატურის მოდელი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:69 ../data/sugar.schemas.in.h:45
 msgid "Default font face"
-msgstr "ಡೀಫಾಲ್ಟ್ ಫಾಂಟ್ ಮುಖ"
+msgstr "ნაგულისხმები ფონტის სახე"
 
 #: ../data/org.sugarlabs.gschema.xml.h:70 ../data/sugar.schemas.in.h:46
 msgid "Font face that is used throughout the desktop."
-msgstr "ಡೆಸ್ಕ್‌ಟಾಪ್‌ನಾದ್ಯಂತ ಬಳಸಲಾಗುವ ಫಾಂಟ್ ಮುಖ."
+msgstr "სამუშაო მაგიდაზე გამოყენებული ფონტის სახელი."
 
 #: ../data/org.sugarlabs.gschema.xml.h:71 ../data/sugar.schemas.in.h:47
 msgid "Default font size"
-msgstr "ಡೀಫಾಲ್ಟ್ ಫಾಂಟ್ ಗಾತ್ರ"
+msgstr "ფონტის ნაგულისხმები ზომა"
 
 #: ../data/org.sugarlabs.gschema.xml.h:72 ../data/sugar.schemas.in.h:48
 msgid "Font size that is used throughout the desktop."
-msgstr "ಡೆಸ್ಕ್‌ಟಾಪ್‌ನಾದ್ಯಂತ ಬಳಸಲಾಗುವ ಫಾಂಟ್ ಗಾತ್ರ."
+msgstr "სამუშაო მაგიდაზე გამოყენებული ფონტის ზომა."
 
 #: ../data/org.sugarlabs.gschema.xml.h:73 ../data/sugar.schemas.in.h:61
 msgid "Show Sugar Ad-hoc networks"
-msgstr "ಶುಗರ್ ಅಡ್-ಹಾಕ್ ನೆಟ್‌ವರ್ಕ್‌ಗಳನ್ನು ತೋರಿಸಿ"
+msgstr "Sugar-ის Ad-hoc ქსელების ჩვენება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:74 ../data/sugar.schemas.in.h:62
 msgid ""
@@ -355,262 +349,259 @@ msgid ""
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
-"ನಿಜವಾಗಿದ್ದರೆ, ಶುಗರ್ ಚಾನಲ್ 1,6 ಮತ್ತು 11 ಗಾಗಿ ಡೀಫಾಲ್ಟ್ ಅಡ್-ಹಾಕ್ "
-"ನೆಟ್‌ವರ್ಕ್‌ಗಳನ್ನು ತೋರಿಸುತ್ತದೆ. ಶುಗರ್ ಪ್ರಾರಂಭವಾದಾಗ ಯಾವುದೇ \"ತಿಳಿದಿರುವ\" "
-"ನೆಟ್‌ವರ್ಕ್ ಅನ್ನು ನೋಡದಿದ್ದರೆ, ಅದು ಆಡ್-ಹಾಕ್ ನೆಟ್‌ವರ್ಕ್‌ಗೆ ಸ್ವಯಂಸಂಪರ್ಕಿಸುತ್ತದೆ."
+"თუ ჩართულია, Sugar-ი ნაგულისხმებ Ad-hoc ქსელებს გაჩვენებთ არხებისთვის 1, 6 "
+"და 11. თუ Sugar ვერ დაინახავს \"ცნობილ\" ქსელს გაშვებისას, ის Ad-hoc ქსელს "
+"ავტომატურად დაუკავშირდება."
 
 #: ../data/org.sugarlabs.gschema.xml.h:75
 msgid "Enable Ad-hoc autoconnect"
-msgstr "ತಾತ್ಕಾಲಿಕ ಸ್ವಯಂ ಸಂಪರ್ಕವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ"
+msgstr "Ad-hoc-ის ავტომატური მიერთების ჩართვა"
 
 #: ../data/org.sugarlabs.gschema.xml.h:76
 msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
-msgstr "ನಿಜವಾಗಿದ್ದರೆ, ಶುಗರ್ ಅಡ್-ಹಾಕ್ ನೆಟ್‌ವರ್ಕ್‌ಗಳಿಗೆ ಸ್ವಯಂ ಸಂಪರ್ಕಗೊಳ್ಳುತ್ತದೆ."
+msgstr "თუ ჩართულია, Sugar-ი Ad-hoc ქსელებს ავტომატურად მიუერთდება."
 
 #: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr "GSM ನೆಟ್‌ವರ್ಕ್ ಬಳಕೆದಾರಹೆಸರು (ಅಸಮಾನಿತ/ಬಳಕೆಯಾಗದ)"
+msgstr "GSM ქსელის მომხმარებლის სახელი (მოძველებულია/არ გამოიყენება)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:78 ../data/sugar.schemas.in.h:50
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr "GSM ನೆಟ್‌ವರ್ಕ್ ಬಳಕೆದಾರಹೆಸರು ಕಾನ್ಫಿಗರೇಶನ್ (ಅಸಮಾನಿತ/ಬಳಕೆಯಾಗದ)"
+msgstr "GSM ქსელის მომხმარებლის სახელის მორგება (მოძველებულია/არ გამოიყენება)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:79 ../data/sugar.schemas.in.h:51
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr "GSM ನೆಟ್‌ವರ್ಕ್ ಪಾಸ್‌ವರ್ಡ್ (ಅಸಮಾನಿತ/ಬಳಕೆಯಾಗದ)"
+msgstr "GSM ქსელის პაროლი (მოძველებულია/არ გამოიყენება)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:80 ../data/sugar.schemas.in.h:52
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr "GSM ನೆಟ್‌ವರ್ಕ್ ಪಾಸ್‌ವರ್ಡ್ ಕಾನ್ಫಿಗರೇಶನ್ (ಅಸಮಾನಿತ/ಬಳಕೆಯಾಗದ)"
+msgstr "GSM ქსელის პაროლის მორგება (მოძველებულია/არ გამოიყენება)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:81 ../data/sugar.schemas.in.h:53
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr "GSM ನೆಟ್‌ವರ್ಕ್ ಸಂಖ್ಯೆ (ಅಸಮಾನಿತ/ಬಳಕೆಯಾಗದ)"
+msgstr "GSM ქსელის ნომერი (მოძველებულია/არ გამოიყენება)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:82 ../data/sugar.schemas.in.h:54
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr "GSM ನೆಟ್‌ವರ್ಕ್ ಟೆಲಿಫೋನ್ ಸಂಖ್ಯೆ ಕಾನ್ಫಿಗರೇಶನ್ (ಅಸಮಾನಿತ/ಬಳಕೆಯಾಗದ)"
+msgstr "GSM ქსელის ტელეფონის ნომრის მორგება (მოძველებულია/არ გამოიყენება)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:83 ../data/sugar.schemas.in.h:55
-#, fuzzy
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr "GSM ನೆಟ್‌ವರ್ಕ್ APN (ಅಸಮಾನಿತ/ಬಳಕೆಯಾಗದ)"
+msgstr "GSM ქსელის APN-ი (მოძველებულია/არ გამოიყენება)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:84 ../data/sugar.schemas.in.h:56
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
-msgstr "GSM ನೆಟ್‌ವರ್ಕ್ ಪ್ರವೇಶ ಬಿಂದು ಹೆಸರು ಕಾನ್ಫಿಗರೇಶನ್ (ಅಸಮ್ಮಿತ/ಬಳಕೆಯಾಗದ)"
+msgstr ""
+"GSM ქსელის წვდომის წერტილის სახელის მორგება (მოძველებულია/არ გამოიყენება)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:85 ../data/sugar.schemas.in.h:57
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr "GSM ನೆಟ್‌ವರ್ಕ್ ಪಿನ್ (ಅಸಮಾನಿತ/ಬಳಕೆಯಾಗದ)"
+msgstr "GSM ქსელის PIN-ი (მოძველებულია/არ გამოიყენება)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:86 ../data/sugar.schemas.in.h:58
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
-msgstr "GSM ನೆಟ್‌ವರ್ಕ್ ವೈಯಕ್ತಿಕ ಗುರುತಿನ ಸಂಖ್ಯೆ ಕಾನ್ಫಿಗರೇಶನ್ (ಅಸಮಾನಿತ/ಬಳಕೆಯಾಗದ)"
+msgstr ""
+"GSM ქსელის პირადი იდენტიფიკატორის ნომრის მორგება (მოძველებულია/არ "
+"გამოიყენება)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:87 ../data/sugar.schemas.in.h:59
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr "GSM ನೆಟ್‌ವರ್ಕ್ PUK (ಅಸಮಾನಿತ/ಬಳಕೆಯಾಗದ)"
+msgstr "GSM ქსელის PUK-ი (მოძველებულია/არ გამოიყენება)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:88 ../data/sugar.schemas.in.h:60
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
-msgstr "GSM ನೆಟ್‌ವರ್ಕ್ ಪರ್ಸನಲ್ ಅನ್‌ಲಾಕ್ ಕೀ ಕಾನ್ಫಿಗರೇಶನ್ (ಅಸಮ್ಮಿತ/ಬಳಕೆಯಾಗದ)"
+msgstr ""
+"GSM ქსელის პირადი განბლოკვის გასაღების მორგება (მოძველებულია/არ გამოიყენება)"
 
 #: ../data/org.sugarlabs.gschema.xml.h:89
 msgid "TODO: add summary"
-msgstr "TODO: ಸಾರಾಂಶವನ್ನು ಸೇರಿಸಿ"
+msgstr "გასაკეთებელი: შეჯამების დამატება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:90
 msgid "TODO: add description"
-msgstr "TODO: ವಿವರಣೆಯನ್ನು ಸೇರಿಸಿ"
+msgstr "გასაკეთებელი: აღწერის დამატება"
 
 #: ../data/org.sugarlabs.gschema.xml.h:91 ../data/sugar.schemas.in.h:65
 msgid "Pitch value for the speech sugar service"
-msgstr "ಭಾಷಣ ಸಕ್ಕರೆ ಸೇವೆಗೆ ಪಿಚ್ ಮೌಲ್ಯ"
+msgstr "Sugar-ის საუბრის სერვისის მნიშვნელობა"
 
 #: ../data/org.sugarlabs.gschema.xml.h:92 ../data/sugar.schemas.in.h:66
 msgid "Pitch value used by the speech service in Sugar"
-msgstr "ಶುಗರ್‌ನಲ್ಲಿ ಭಾಷಣ ಸೇವೆಯಿಂದ ಬಳಸಲಾಗುವ ಪಿಚ್ ಮೌಲ್ಯ"
+msgstr "Sugar-ის საუბრის სერვისის მიერ გამოყენებული მნიშვნელობა"
 
 #: ../data/org.sugarlabs.gschema.xml.h:93 ../data/sugar.schemas.in.h:67
 msgid "Rate value for the speech sugar service"
-msgstr "ಭಾಷಣ ಸಕ್ಕರೆ ಸೇವೆಗೆ ದರ ಮೌಲ್ಯ"
+msgstr "Sugar-ის წარმოთქმის სერვისის შეაფასების მნიშვნელობა"
 
 #: ../data/org.sugarlabs.gschema.xml.h:94 ../data/sugar.schemas.in.h:68
 msgid "Rate value used by the speech service in Sugar"
-msgstr "ಶುಗರ್‌ನಲ್ಲಿ ಭಾಷಣ ಸೇವೆಯಿಂದ ಬಳಸಲಾಗುವ ದರ ಮೌಲ್ಯ"
+msgstr "Sugar-ის საუბრის სერვისის მიერ გამოყენებული ტემპი"
 
 #: ../data/org.sugarlabs.gschema.xml.h:95 ../data/sugar.schemas.in.h:69
 msgid "Activity update backend."
-msgstr "ಚಟುವಟಿಕೆ ನವೀಕರಣ ಬ್ಯಾಕೆಂಡ್."
+msgstr "აქტივობების განახლების უკანაბოლო."
 
 #: ../data/org.sugarlabs.gschema.xml.h:96 ../data/sugar.schemas.in.h:70
 msgid ""
 "Activity update backend module, followed by a period, followed by the class "
 "name."
 msgstr ""
-"ಚಟುವಟಿಕೆ ಅಪ್‌ಡೇಟ್ ಬ್ಯಾಕೆಂಡ್ ಮಾಡ್ಯೂಲ್, ನಂತರ ಒಂದು ಅವಧಿ, ನಂತರ ತರಗತಿಯ ಹೆಸರು."
+"აქტივობის განახლების უკანაბოლოს მოდული, რომელსაც წერტილი მოსდევს, შემდეგ კი "
+"კლასის სახელი."
 
 #: ../data/org.sugarlabs.gschema.xml.h:97 ../data/sugar.schemas.in.h:71
 msgid "Microformat update URL."
-msgstr "ಮೈಕ್ರೋಫಾರ್ಮ್ಯಾಟ್ ಅಪ್‌ಡೇಟ್ URL."
+msgstr "მიკროფორმატის განახლების ბმული."
 
 #: ../data/org.sugarlabs.gschema.xml.h:98 ../data/sugar.schemas.in.h:72
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
-"ಚಟುವಟಿಕೆ ನವೀಕರಣ ಮಾಹಿತಿಗಾಗಿ ಮೈಕ್ರೋಫಾರ್ಮ್ಯಾಟ್ ಅಪ್‌ಡೇಟ್ ಬ್ಯಾಕೆಂಡ್‌ನಿಂದ URL ಅನ್ನು"
-" ಬಳಸಲಾಗುತ್ತದೆ."
+"მიკროფორმატის განახლების უკანაბოლოს მიერ აქტივობის განახლების "
+"ინფორმაციისთვის გამოყენებული URL."
 
 #: ../data/org.sugarlabs.gschema.xml.h:99 ../data/sugar.schemas.in.h:73
 msgid "Automatic update frequency."
-msgstr "ಸ್ವಯಂಚಾಲಿತ ನವೀಕರಣ ಆವರ್ತನ."
+msgstr "ავტომატური განახლების სიხშირე."
 
 #: ../data/org.sugarlabs.gschema.xml.h:100 ../data/sugar.schemas.in.h:74
 msgid ""
 "Frequency of automatic activity updates, measured in days. 0 means disabled."
 msgstr ""
-"ಸ್ವಯಂಚಾಲಿತ ಚಟುವಟಿಕೆ ನವೀಕರಣಗಳ ಆವರ್ತನ, ದಿನಗಳಲ್ಲಿ ಅಳೆಯಲಾಗುತ್ತದೆ. 0 ಎಂದರೆ "
-"ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ."
+"ავტომატური აქტივობის განახლებების სიხშირე, დღეებში. 0 ნიშნავს გამორთულს."
 
 #: ../data/org.sugarlabs.gschema.xml.h:101 ../data/sugar.schemas.in.h:75
 msgid "Timestamp of last activity update."
-msgstr "ಕೊನೆಯ ಚಟುವಟಿಕೆಯ ನವೀಕರಣದ ಟೈಮ್‌ಸ್ಟ್ಯಾಂಪ್."
+msgstr "აქტივობების ბოლო განახლების დროის შამპი."
 
 #: ../data/org.sugarlabs.gschema.xml.h:102 ../data/sugar.schemas.in.h:76
 msgid ""
 "A unix timestamp (seconds since epoch) of the last successful activity "
 "update."
 msgstr ""
-"ಕೊನೆಯ ಯಶಸ್ವಿ ಚಟುವಟಿಕೆ ನವೀಕರಣದ ಯುನಿಕ್ಸ್ ಟೈಮ್‌ಸ್ಟ್ಯಾಂಪ್ (ಯುಗದಿಂದ ಸೆಕೆಂಡುಗಳು)."
+"ბოლო წარმატებული აქტივობის განახლების Unix დროის შტამპი (წამები ეპოქის "
+"შემდეგ)."
 
 #: ../data/org.sugarlabs.gschema.xml.h:103
 msgid "New ASLO update.json URL."
-msgstr "ಹೊಸ ASLO update.json URL."
+msgstr "ASLO update.json-ის ახალი ბმული."
 
 #: ../data/org.sugarlabs.gschema.xml.h:104
 msgid "URL used by the new ASLO updater to download activity data."
-msgstr ""
-"ಚಟುವಟಿಕೆ ಡೇಟಾವನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲು ಹೊಸ ASLO ಅಪ್‌ಡೇಟರ್‌ನಿಂದ URL ಅನ್ನು "
-"ಬಳಸಲಾಗಿದೆ."
+msgstr "ASLO გამნახლებლის მიერ აქტივობის გადმოსაწერად გამოყენებული URL."
 
 #: ../data/org.sugarlabs.gschema.xml.h:105 ../data/sugar.schemas.in.h:77
 msgid "A description of the hardware available to the user."
-msgstr "ಬಳಕೆದಾರರಿಗೆ ಲಭ್ಯವಿರುವ ಯಂತ್ರಾಂಶದ ವಿವರಣೆ."
+msgstr "მომხმარებლისთვის ხელმისაწვდომი აპარატურის აღწერა."
 
 #: ../data/org.sugarlabs.gschema.xml.h:106 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
 msgstr ""
-"ಈ ಸ್ಟ್ರಿಂಗ್ ಅನ್ನು ನಿಯಂತ್ರಣ ಫಲಕದಲ್ಲಿ ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತದೆ, ಕಂಪ್ಯೂಟರ್ ವಿಭಾಗದ "
-"ಬಗ್ಗೆ."
+"ეს სტრიქონი ნაჩვენებია მართვის პანელში, კომპიუტერის განყოფილების შესახებ."
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
-#, fuzzy
 msgid "About Me"
-msgstr "ನನ್ನ ಬಗ್ಗೆ"
+msgstr "ჩემს შესახებ"
 
 #: ../extensions/cpsection/aboutme/model.py:51
 msgid "You must enter a name."
-msgstr "ನೀವು ಹೆಸರನ್ನು ನಮೂದಿಸಬೇಕು."
+msgstr "სახელი უნდა შეიყვანოთ."
 
 #: ../extensions/cpsection/aboutme/model.py:83
-#, fuzzy, python-format
+#, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr "ಸ್ಟ್ರೋಕ್: ಬಣ್ಣ=%s ವರ್ಣ=%s"
+msgstr "ხაზი:   ფერი=%s ტონი=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:86
-#, fuzzy, python-format
+#, python-format
 msgid "stroke:   %s"
-msgstr "ಸ್ಟ್ರೋಕ್: %s"
+msgstr "ხაზი:   %s"
 
 #: ../extensions/cpsection/aboutme/model.py:88
-#, fuzzy, python-format
+#, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr "ತುಂಬು: ಬಣ್ಣ=%s ವರ್ಣ=%s"
+msgstr "შევსება:     ფერი=%s ტონი=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:90
-#, fuzzy, python-format
+#, python-format
 msgid "fill:     %s"
-msgstr "ಭರ್ತಿ ಮಾಡಿ: %s"
+msgstr "შევსება:     %s"
 
 #: ../extensions/cpsection/aboutme/model.py:102
 msgid "Error in specified color modifiers."
-msgstr "ನಿರ್ದಿಷ್ಟಪಡಿಸಿದ ಬಣ್ಣ ಪರಿವರ್ತಕಗಳಲ್ಲಿ ದೋಷ."
+msgstr "შეცდომა მითითებულ ფერის მოდიფიკატორების."
 
 #: ../extensions/cpsection/aboutme/model.py:105
 msgid "Error in specified colors."
-msgstr "ನಿರ್ದಿಷ್ಟಪಡಿಸಿದ ಬಣ್ಣಗಳಲ್ಲಿ ದೋಷ."
+msgstr "შეცდომა მითითებულ ფერებში."
 
 #: ../extensions/cpsection/aboutme/view.py:243
 msgid "Click to change your color:"
-msgstr "ನಿಮ್ಮ ಬಣ್ಣವನ್ನು ಬದಲಾಯಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ:"
+msgstr "თქვენი ფერის შესაცვლელად დააწკაპუნეთ:"
 
 #: ../extensions/cpsection/aboutme/view.py:294
 #: ../src/jarabe/intro/window.py:203
 msgid "Select gender:"
-msgstr "ಲಿಂಗ ಆಯ್ಕೆ:"
+msgstr "აირჩიეთ სქესი:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
-msgstr "ನನ್ನ ಕಂಪ್ಯೂಟರ್ ಬಗ್ಗೆ"
+msgstr "ჩემი კომპიუტერის შესახებ"
 
 #: ../extensions/cpsection/aboutcomputer/model.py:37
-#, fuzzy
 msgid "Not available"
-msgstr "ಲಭ್ಯವಿರುವುದಿಲ್ಲ"
+msgstr "ხელმიუწვდომელია"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:76
-#, fuzzy
 msgid "Identity"
-msgstr "ಗುರುತು"
+msgstr "იდენტიფიკაცია"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:87
 msgid "Model:"
-msgstr "ಮಾದರಿ:"
+msgstr "მოდელი:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Serial Number:"
-msgstr "ಕ್ರಮ ಸಂಖ್ಯೆ:"
+msgstr "სერიული ნომერი:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:103
-#, fuzzy
 msgid "Software"
-msgstr "ತಂತ್ರಾಂಶ"
+msgstr "პროგრამები"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:112
 msgid "Build:"
-msgstr "ನಿರ್ಮಿತಿ:"
+msgstr "აგება:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:117
 msgid "Sugar:"
-msgstr "ಸಕ್ಕರೆ:"
+msgstr "Sugar:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:122
 msgid "Firmware:"
-msgstr "ಫರ್ಮ್‌ವೇರ್:"
+msgstr "მიკროკოდი:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:127
 msgid "Wireless Firmware:"
-msgstr "ವೈರ್‌ಲೆಸ್ ಫರ್ಮ್‌ವೇರ್:"
+msgstr "უსადენო ინტერფეისის მიკროკოდი:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:134
 #, python-format
 msgid "%d days ago"
-msgstr "%d ದಿನಗಳ ಹಿಂದೆ"
+msgstr "%d დღის წინ"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:136
 #: ../src/jarabe/journal/journaltoolbox.py:169
 msgid "Today"
-msgstr "ಇಂದು"
+msgstr "დღეს"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:139
 msgid "Last system update:"
-msgstr "ಕೊನೆಯ ಸಿಸ್ಟಂ ನವೀಕರಣ:"
+msgstr "ბოლო სისტემური განახლება:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:150
 msgid "Copyright and License"
-msgstr "ಹಕ್ಕುಸ್ವಾಮ್ಯ ಮತ್ತು ಪರವಾನಗಿ"
+msgstr "ლიცენზია და საავტორო უფლებები"
 
 #. TRANS: The word "Sugar" should not be translated.
 #: ../extensions/cpsection/aboutcomputer/view.py:169
@@ -620,248 +611,241 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"ಸಕ್ಕರೆ ನೀವು ನೋಡುತ್ತಿರುವ ಚಿತ್ರಾತ್ಮಕ ಬಳಕೆದಾರ ಇಂಟರ್ಫೇಸ್ ಆಗಿದೆ. ಸಕ್ಕರೆಯು ಉಚಿತ "
-"ಸಾಫ್ಟ್‌ವೇರ್ ಆಗಿದೆ, ಇದು GNU ಜನರಲ್ ಪಬ್ಲಿಕ್ ಲೈಸೆನ್ಸ್‌ನಿಂದ ಆವರಿಸಲ್ಪಟ್ಟಿದೆ ಮತ್ತು "
-"ಅದರಲ್ಲಿ ವಿವರಿಸಿರುವ ಕೆಲವು ಷರತ್ತುಗಳ ಅಡಿಯಲ್ಲಿ ಅದನ್ನು ಬದಲಾಯಿಸಲು ಮತ್ತು/ಅಥವಾ ಅದರ "
-"ಪ್ರತಿಗಳನ್ನು ವಿತರಿಸಲು ನಿಮಗೆ ಸ್ವಾಗತವಿದೆ."
+"Sugar-ი გრაფიკული მომხმარებლის ინტერფეისია, რომელსაც ახლა ხედავთ. Sugar-ი "
+"უფასო პროგრამაა, რომელიც GNU General Public License-ით ვრცელდება. თქვენ "
+"შეგიძლიათ შეცვალოთ და გაავრცელოთ ის წესებით, რომელიც ლიცენზიაშია აღწერილი."
 
 #: ../extensions/cpsection/aboutcomputer/view.py:181
 msgid "Full license:"
-msgstr "ಪೂರ್ಣ ಪರವಾನಗಿ:"
+msgstr "სრული ლიცენზია:"
 
 #: ../extensions/cpsection/background/__init__.py:21
 msgid "Background"
-msgstr "ಹಿನ್ನಲೆ"
+msgstr "ფონი"
 
 #: ../extensions/cpsection/background/view.py:48
 msgid "Select a background:"
-msgstr "ಹಿನ್ನೆಲೆ ಆಯ್ಕೆಮಾಡಿ:"
+msgstr "აირჩიეთ ფონი:"
 
 #: ../extensions/cpsection/background/view.py:57
 msgid "Clear background"
-msgstr "ಸ್ಪಷ್ಟ ಹಿನ್ನೆಲೆ"
+msgstr "ფონის გასუფთავება"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr "ದಿನಾಂಕ ಸಮಯ"
+msgstr "თარიღი & დრო"
 
 #: ../extensions/cpsection/datetime/model.py:100
 msgid "Error: timezone does not exist."
-msgstr "ದೋಷ: ಸಮಯವಲಯ ಅಸ್ತಿತ್ವದಲ್ಲಿಲ್ಲ."
+msgstr "შეცდომა: დროის სარტყელი არ არსებობს."
 
 #: ../extensions/cpsection/frame/__init__.py:21
-#, fuzzy
 msgid "Frame"
-msgstr "ಚೌಕಟ್ಟು"
+msgstr "კადრი"
 
 #: ../extensions/cpsection/frame/view.py:26
-#, fuzzy
 msgid "never"
-msgstr "ಎಂದಿಗೂ ಬೇಡ"
+msgstr "არასოდეს"
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "instantaneous"
-msgstr "ತತ್ಕ್ಷಣದ"
+msgstr "უეცრად"
 
 #: ../extensions/cpsection/frame/view.py:28
 #, python-format
-#, python-format, fuzzy
 msgid "%s seconds"
-msgstr "%s ಸೆಕೆಂಡು"
+msgstr "%s წამი"
 
 #: ../extensions/cpsection/frame/view.py:52
 msgid "Activation Delay"
-msgstr "ಸಕ್ರಿಯಗೊಳಿಸುವಿಕೆ ವಿಳಂಬ"
+msgstr "აქტივაციის დაყოვნება"
 
 #: ../extensions/cpsection/frame/view.py:68
 msgid "Activation Area"
-msgstr "ಸಕ್ರಿಯಗೊಳಿಸುವ ಪ್ರದೇಶ"
+msgstr "აქტივაციის ადგილი"
 
 #: ../extensions/cpsection/frame/view.py:85
 msgid "Corner"
-msgstr "ಮೂಲೆ"
+msgstr "კუთხე"
 
 #: ../extensions/cpsection/frame/view.py:104
-#, fuzzy
 msgid "Edge"
-msgstr "ಅಂಚು"
+msgstr "კუთხე"
 
 #: ../extensions/cpsection/frame/view.py:123
 msgid "Size"
-msgstr "ಗಾತ್ರ"
+msgstr "ზომა"
 
 #: ../extensions/cpsection/frame/view.py:221
 msgid "toolbar size"
-msgstr "ಟೂಲ್ಬಾರ್ ಗಾತ್ರ"
+msgstr "პანელის ზომა"
 
 #: ../extensions/cpsection/frame/view.py:226
 msgid "exact corner or edge"
-msgstr "ನಿಖರವಾದ ಮೂಲೆ ಅಥವಾ ಅಂಚು"
+msgstr "ზუტი კუთხე ან კიდე"
 
 #: ../extensions/cpsection/frame/view.py:228
 msgid "exact corner"
-msgstr "ನಿಖರವಾದ ಮೂಲೆಯಲ್ಲಿ"
+msgstr "ზუსტი კუთხე"
 
 #: ../extensions/cpsection/frame/view.py:230
 msgid "exact edge"
-msgstr "ನಿಖರವಾದ ಅಂಚು"
+msgstr "ზუსტი კიდე"
 
 #: ../extensions/cpsection/frame/view.py:232
 msgid "ignored"
-msgstr "ನಿರ್ಲಕ್ಷಿಸಲಾಗಿದೆ"
+msgstr "იგნორირებულია"
 
 #. TRANS: px as in pixels
 #: ../extensions/cpsection/frame/view.py:235
-#, fuzzy
 msgid "{}px"
-msgstr "{}px"
+msgstr "{}პიქს"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:38
 msgid "Keyboard"
-msgstr "ಕೀಲುಮನೆ"
+msgstr "კლავიატურა"
 
 #: ../extensions/cpsection/keyboard/view.py:240
-#, fuzzy
 msgid "Keyboard Model"
-msgstr "ಕೀಲಮಣೆ ಮಾದರಿ"
+msgstr "კლავიატურის მოდელი"
 
 #: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
-msgstr "ವಿನ್ಯಾಸವನ್ನು ಬದಲಾಯಿಸಲು ಕೀ(ಗಳು)."
+msgstr "ღილაკები კლავიატურის განლაგების შესაცვლელად"
 
 #: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
-msgstr "ಕೀಬೋರ್ಡ್ ಲೇಔಟ್(ಗಳು)"
+msgstr "კლავიატურის განლაგება"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:39
 msgid "Language"
-msgstr "ಭಾಶೆ"
+msgstr "ენა"
 
 #: ../extensions/cpsection/language/model.py:29
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "~/.i18n ಅನ್ನು ಪ್ರವೇಶಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಪ್ರಮಾಣಿತ ಸೆಟ್ಟಿಂಗ್ಗಳನ್ನು ರಚಿಸಿ."
+msgstr "~/.i18n-სთან წვდომის შეცდომა. შექმენით სტანდარტული პარამეტრები."
 
 #: ../extensions/cpsection/language/model.py:156
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "ಕೋಡ್ =%s ಗಾಗಿ ಭಾಷೆಯನ್ನು ನಿರ್ಧರಿಸಲಾಗಲಿಲ್ಲ."
+msgstr "კოდისთვის=%s ენის დადგენა შეუძლებელია."
 
 #: ../extensions/cpsection/language/model.py:179
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "ಕ್ಷಮಿಸಿ ನಾನು '%s' ಮಾತನಾಡುವುದಿಲ್ಲ."
+msgstr "უკაცრავად, მე არ ვიცი '%s'."
 
 #: ../extensions/cpsection/language/view.py:75
 msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
-"ನೀವು ಬಯಸಿದ ಕ್ರಮದಲ್ಲಿ ಭಾಷೆಗಳನ್ನು ಸೇರಿಸಿ. ಅನುವಾದ ಲಭ್ಯವಿಲ್ಲದಿದ್ದರೆ, ಪಟ್ಟಿಯಲ್ಲಿ "
-"ಮುಂದಿನದನ್ನು ಬಳಸಲಾಗುತ್ತದೆ."
+"დაამატეთ ენები სასურველი მიმდევრობით. თუ თარგმანი ხელმისაწვდომი არაა, "
+"გამოყენებული იქნება სიაში შემდეგი."
 
 #: ../extensions/cpsection/language/view.py:383
 #, python-format
 msgid "Error writting language configuration (%s)"
-msgstr "ಭಾಷಾ ಸಂರಚನೆಯನ್ನು ಬರೆಯುವಲ್ಲಿ ದೋಷ (%s)"
+msgstr "ენის კონფიგურაციის ჩაწერის შეცდომა (%s)"
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem"
-msgstr "ಮೋಡೆಮ್"
+msgstr "მოდემი"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
-"ಸೆಲ್ಯುಲಾರ್ (3G) ನೆಟ್‌ವರ್ಕ್‌ಗೆ ಮೊಬೈಲ್ ಬ್ರಾಡ್‌ಬ್ಯಾಂಡ್ ಸಂಪರ್ಕವನ್ನು ಹೊಂದಿಸಲು ನೀವು"
-" ಈ ಕೆಳಗಿನ ಮಾಹಿತಿಯನ್ನು ಒದಗಿಸಬೇಕಾಗುತ್ತದೆ."
+"ფართოზოლოვანი ინტერნეტის 3G ქსელიდან მისაღებად საჭიროა შემდეგი ინფორმაცია."
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr "ದೇಶ:"
+msgstr "ქვეყანა:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr "ಒದಗಿಸುವವರು:"
+msgstr "მომწოდებელი:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr "ಯೋಜನೆ:"
+msgstr "Გეგმა:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
-msgstr "ಬಳಕೆದಾರನ ಹೆಸರು:"
+msgstr "მომხმარებელი:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
-msgstr "ಪ್ರವೇಶ ಪದ:"
+msgstr "პაროლი:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:174
 msgid "Number:"
-msgstr "ಸಂಖ್ಯೆ:"
+msgstr "რიცხვი:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
-msgstr "ಪ್ರವೇಶ ಬಿಂದು ಹೆಸರು (APN):"
+msgstr "წვდომის წერტილის სახელი (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
-msgstr "ವೈಯಕ್ತಿಕ ಗುರುತಿನ ಸಂಖ್ಯೆ (ಪಿನ್):"
+msgstr "პერსონალური იდენტიფიკატორის ნომერი (PIN):"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:162
 #, python-format
 msgid "Plan #%s"
-msgstr "ಯೋಜನೆ #%s"
+msgstr "გეგმა #%s"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:292
 #, python-format
 msgid "Provider %s"
-msgstr "ಪೂರೈಕೆದಾರ %s"
+msgstr "მომწოდებელი %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
 msgid "Network"
-msgstr "ಜಾಲ"
+msgstr "ქსელი"
 
 #: ../extensions/cpsection/network/model.py:88
 msgid "State is unknown."
-msgstr "ರಾಜ್ಯ ತಿಳಿದಿಲ್ಲ."
+msgstr "მდგომარეობა უცნობია."
 
 #: ../extensions/cpsection/network/model.py:104
 msgid "Error in specified radio argument use on/off."
-msgstr "ನಿರ್ದಿಷ್ಟಪಡಿಸಿದ ರೇಡಿಯೋ ಆರ್ಗ್ಯುಮೆಂಟ್ ಬಳಕೆ ಆನ್/ಆಫ್ ನಲ್ಲಿ ದೋಷ."
+msgstr ""
+"შეცდომა მითითებულ რადიოს არგუმენტში. გამოიყენეთ on/off (ჩართვა/გამორთვა)."
 
 #: ../extensions/cpsection/network/model.py:197
 msgid "Error in specified argument use 0/1."
-msgstr "ನಿರ್ದಿಷ್ಟಪಡಿಸಿದ ಆರ್ಗ್ಯುಮೆಂಟ್ ಬಳಕೆ 0/1 ನಲ್ಲಿ ದೋಷ."
+msgstr "არჩევანის შეცდომა. გამოიყენეთ 0/1."
 
 #: ../extensions/cpsection/network/view.py:65
 msgid "Wireless"
-msgstr "ವೈರ್ಲೆಸ್"
+msgstr "უსადენო"
 
 #: ../extensions/cpsection/network/view.py:73
 msgid "The wireless radio may be turned off to save battery life."
-msgstr "ಬ್ಯಾಟರಿ ಜೀವಿತಾವಧಿಯನ್ನು ಉಳಿಸಲು ವೈರ್‌ಲೆಸ್ ರೇಡಿಯೊವನ್ನು ಆಫ್ ಮಾಡಬಹುದು."
+msgstr "ელემენტის მუხტის დასაზოგად შეგიძლიათ უსადენო რადიო გამორთოთ."
 
 #: ../extensions/cpsection/network/view.py:86
 msgid "Radio"
-msgstr "ರೇಡಿಯೋ"
+msgstr "რადიო"
 
 #: ../extensions/cpsection/network/view.py:103
 msgid ""
 "Discard wireless connections if you have trouble connecting to the network"
 msgstr ""
-"ನೆಟ್‌ವರ್ಕ್‌ಗೆ ಸಂಪರ್ಕಿಸಲು ನಿಮಗೆ ಸಮಸ್ಯೆ ಇದ್ದಲ್ಲಿ ವೈರ್‌ಲೆಸ್ ಸಂಪರ್ಕಗಳನ್ನು ತ್ಯಜಿಸಿ"
+"ქსელთან მიერთების პრობლემის ქონის შემთხვევაში მოაცილეთ უსადენო მიერთებები"
 
 #: ../extensions/cpsection/network/view.py:113
 msgid "Discard wireless connections"
-msgstr "ವೈರ್‌ಲೆಸ್ ಸಂಪರ್ಕಗಳನ್ನು ತ್ಯಜಿಸಿ"
+msgstr "უსადენო შეერთებების მოცილება"
 
 #: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
-msgstr "ಸಹಯೋಗ"
+msgstr "კოლაბორაცია"
 
 #: ../extensions/cpsection/network/view.py:137
 msgid ""
@@ -869,13 +853,13 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
-"ಸರ್ವರ್ ನೀವು ಯಾವ ಕೋಣೆಯಲ್ಲಿದ್ದೀರಿ ಎಂಬುದಕ್ಕೆ ಸಮನಾಗಿರುತ್ತದೆ; ಒಂದೇ ಸರ್ವರ್‌ನಲ್ಲಿರು"
-"ವ ಜನರು ಒಂದೇ ನೆಟ್‌ವರ್ಕ್‌ನಲ್ಲಿ ಇಲ್ಲದಿದ್ದರೂ ಸಹ ಒಬ್ಬರನ್ನೊಬ್ಬರು ನೋಡಲು "
-"ಸಾಧ್ಯವಾಗುತ್ತದೆ."
+"სერვერი იგივეა რაც ოთახი, რომელშიც ახლა ბრძანდებით. იგივე სერვერზე მყოფ "
+"ხალხს შეუძლიათ დაუკავშირდნენ ერთმანეთს მაშინაც კი, როცა ისინი იგივე ქსელში "
+"არ არიან."
 
 #: ../extensions/cpsection/network/view.py:147
 msgid "Server:"
-msgstr "ಪೂರೈಕೆದಾರ:"
+msgstr "სერვერი:"
 
 #: ../extensions/cpsection/network/view.py:163
 msgid ""
@@ -883,145 +867,136 @@ msgid ""
 "Sugar Activities.  Changing servers means discussions will happen in a "
 "different place with different people."
 msgstr ""
-"ಸಾಮಾಜಿಕ ಸಹಾಯವು ಡೆವಲಪರ್‌ಗಳೊಂದಿಗೆ ಸಂಪರ್ಕ ಸಾಧಿಸಲು ಮತ್ತು ಸಕ್ಕರೆ ಚಟುವಟಿಕೆಗಳನ್ನು "
-"ಚರ್ಚಿಸಲು ನಿಮಗೆ ಅನುಮತಿಸುವ ವೇದಿಕೆಯಾಗಿದೆ. ಸರ್ವರ್‌ಗಳನ್ನು ಬದಲಾಯಿಸುವುದು ಎಂದರೆ "
-"ವಿಭಿನ್ನ ಜನರೊಂದಿಗೆ ಬೇರೆ ಬೇರೆ ಸ್ಥಳದಲ್ಲಿ ಚರ್ಚೆಗಳು ನಡೆಯುತ್ತವೆ."
 
 #: ../extensions/cpsection/network/view.py:173
 msgid "Social Help Server:"
-msgstr "ಸಾಮಾಜಿಕ ಸಹಾಯ ಸರ್ವರ್:"
+msgstr "სოციალური დახმარების სერვისი:"
 
 #: ../extensions/cpsection/power/__init__.py:24
-#, fuzzy
 msgid "Power"
-msgstr "ವಿದ್ಯುಚ್ಛಕ್ತಿ"
+msgstr "კვება"
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
-msgstr "ಸ್ವಯಂಚಾಲಿತ pm ಆರ್ಗ್ಯುಮೆಂಟ್‌ನಲ್ಲಿ ದೋಷ, ಆನ್/ಆಫ್ ಬಳಸಿ."
+msgstr ""
+"შეცდომა მითითებულ კვების მართვის არგუმენტში. გამოიყენეთ on/off "
+"(ჩართვა/გამორთვა)."
 
 #: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
-msgstr "ವಿದ್ಯುತ್ ನಿರ್ವಹಣೆ"
+msgstr "ენერგიის მართვა"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#, fuzzy
 msgid "Software Update"
-msgstr "ತಂತ್ರಾಂಶ ಅಪ್‌ಡೇಟ್‌"
+msgstr "პროგრამების განახლება"
 
 #: ../extensions/cpsection/updater/view.py:70
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
-"ಸಾಫ್ಟ್‌ವೇರ್ ದೋಷಗಳನ್ನು ಸರಿಪಡಿಸುತ್ತದೆ, ಭದ್ರತಾ ದೋಷಗಳನ್ನು ನಿವಾರಿಸುತ್ತದೆ ಮತ್ತು ಹೊ"
-"ಸ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಒದಗಿಸುತ್ತದೆ."
 
 #: ../extensions/cpsection/updater/view.py:84
 msgid "Update in progress..."
-msgstr "ನವೀಕರಣ ಪ್ರಗತಿಯಲ್ಲಿದೆ..."
+msgstr "მიმდინარეობს განახლება..."
 
 #: ../extensions/cpsection/updater/view.py:119
-#, fuzzy
 msgid "Checking for updates..."
-msgstr "ಅಪ್‌ಡೇಟ್‌ಗಳಿಗಾಗಿ ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ..."
+msgstr "განახლებების შემოწმება..."
 
 #: ../extensions/cpsection/updater/view.py:121
 msgid "Installing updates..."
-msgstr "ನವೀಕರಣಗಳನ್ನು ಸ್ಥಾಪಿಸಲಾಗುತ್ತಿದೆ..."
+msgstr "განახლებების დაყენება..."
 
 #: ../extensions/cpsection/updater/view.py:150
 #, python-format
 msgid "Checking %s..."
-msgstr "%s ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ..."
+msgstr "%s-ის სემოწმება..."
 
 #: ../extensions/cpsection/updater/view.py:152
 msgid "Looking for updates..."
-msgstr "ನವೀಕರಣಗಳಿಗಾಗಿ ಹುಡುಕಲಾಗುತ್ತಿದೆ..."
+msgstr "განახლებების ძებნა…"
 
 #: ../extensions/cpsection/updater/view.py:154
 #, python-format
 msgid "Downloading %s..."
-msgstr "%s ಅನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."
+msgstr "%s-ის გადმოწერა..."
 
 #: ../extensions/cpsection/updater/view.py:156
 #, python-format
 msgid "Updating %s..."
-msgstr "%s ಅನ್ನು ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ..."
+msgstr "%s-ის განახლება..."
 
 #: ../extensions/cpsection/updater/view.py:166
 msgid "Your software is up-to-date"
-msgstr "ನಿಮ್ಮ ಸಾಫ್ಟ್‌ವೇರ್ ಅಪ್-ಟು-ಡೇಟ್ ಆಗಿದೆ"
+msgstr "თქვენი პროგრამა უკვე განახლებულია"
 
 #: ../extensions/cpsection/updater/view.py:168
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] "ನೀವು %s ನವೀಕರಣವನ್ನು ಸ್ಥಾಪಿಸಬಹುದು"
-msgstr[1] "ನೀವು %s ನವೀಕರಣಗಳನ್ನು ಸ್ಥಾಪಿಸಬಹುದು"
+msgstr[0] "შეგიძლიათ დააყენოთ %s განახლება"
+msgstr[1] "შეგიძლიათ დააყენოთ %s განახლება"
 
 #: ../extensions/cpsection/updater/view.py:183
 msgid "Can't connect to the activity server"
-msgstr "ಚಟುವಟಿಕೆ ಸರ್ವರ್‌ಗೆ ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ"
+msgstr "აქტივობის სერვერთან მიერთების შეცდომა"
 
 #: ../extensions/cpsection/updater/view.py:186
 msgid "Verify your connection to internet and try again, or try again later"
 msgstr ""
-"ಇಂಟರ್ನೆಟ್‌ಗೆ ನಿಮ್ಮ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ನಂತರ "
-"ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ"
+"გადაამოწმეთ თქვენი ინტერნეტ-კავშირი და თავიდან სცადეთ, ან სცადეთ მოგვიანებით"
 
 #: ../extensions/cpsection/updater/view.py:206
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] "%s ನವೀಕರಣವನ್ನು ಸ್ಥಾಪಿಸಲಾಗಿದೆ"
-msgstr[1] "%s ನವೀಕರಣಗಳನ್ನು ಸ್ಥಾಪಿಸಲಾಗಿದೆ"
+msgstr[0] "დაყენებულია %s-ის განახლება"
 
 #: ../extensions/cpsection/updater/view.py:288
 msgid "Install selected"
-msgstr "ಸ್ಥಾಪಿಸಿ ಆಯ್ಕೆ ಮಾಡಲಾಗಿದೆ"
+msgstr "მონიშნულის დაყენება"
 
 #: ../extensions/cpsection/updater/view.py:307
 #, python-format
 msgid "Download size: %s"
-msgstr "ಡೌನ್‌ಲೋಡ್ ಗಾತ್ರ: %s"
+msgstr "გადმოწერის ზომა: %s"
 
 #: ../extensions/cpsection/updater/view.py:399
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
-msgstr "ಆವೃತ್ತಿ %(ಪ್ರಸ್ತುತ)ಗಳಿಂದ %(ಹೊಸ)ಗಳವರೆಗೆ (ಗಾತ್ರ: %(ಗಾತ್ರ)s)"
+msgstr "ვერსიიდან %(current)s ვერსიამდე %(new)s (ზომა: %(size)s)"
 
 #: ../extensions/cpsection/updater/view.py:406
 #, python-format
 msgid "Version %(version)s (Size: %(size)s)"
-msgstr "ಆವೃತ್ತಿ %(ಆವೃತ್ತಿ)s (ಗಾತ್ರ: %(ಗಾತ್ರ)s)"
+msgstr "ვერსია %(version)s (ზომა: %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:423
-#, fuzzy
 msgid "None"
-msgstr "ಯಾವುದೂ ಇಲ್ಲ"
+msgstr "არაფერი"
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:426
 msgid "1 KB"
-msgstr "1 ಕೆಬಿ"
+msgstr "1 კბ"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
 #: ../extensions/cpsection/updater/view.py:429
-#, fuzzy, python-format
+#, python-format
 msgid "%.0f KB"
-msgstr "%.0f KB"
+msgstr "%.0f კბ"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
 #: ../extensions/cpsection/updater/view.py:432
-#, fuzzy, python-format
+#, python-format
 msgid "%.1f MB"
-msgstr "%.1f MB"
+msgstr "%.1f მბ"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Web Services"
-msgstr "ವೆಬ್ ಸೇವೆಗಳು"
+msgstr "ვებსერვისები"
 
 #: ../extensions/cpsection/webaccount/view.py:65
 #, python-format
@@ -1029,83 +1004,79 @@ msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
 msgstr ""
-"ಯಾವುದೇ ವೆಬ್ ಸೇವೆಗಳನ್ನು ಸ್ಥಾಪಿಸಲಾಗಿಲ್ಲ.\n"
-"ಹೆಚ್ಚಿನ ವಿವರಗಳಿಗಾಗಿ ದಯವಿಟ್ಟು %s ಗೆ ಭೇಟಿ ನೀಡಿ."
+"ვებსერვისები დაყენებული არაა.\n"
+"მეტი დეტალებისთვის ეწვიეთ %s."
 
 #: ../extensions/deviceicon/audio.py:69
 msgid "My Audio"
-msgstr "ನನ್ನ ಆಡಿಯೋ"
+msgstr "ჩემი ხმა"
 
 #: ../extensions/deviceicon/audio.py:330
 msgid "Speaker"
-msgstr "ಸ್ಪೀಕರ್"
+msgstr "დინამიკი"
 
 #: ../extensions/deviceicon/audio.py:331
 msgid "Microphone"
-msgstr "ಮೈಕ್ರೊಫೋನ್"
+msgstr "მიკროფონი"
 
 #: ../extensions/deviceicon/battery.py:69
 msgid "My Battery"
-msgstr "ನನ್ನ ಬ್ಯಾಟರಿ"
+msgstr "ჩემი ელემენტი"
 
 #: ../extensions/deviceicon/battery.py:151
-#, fuzzy
 msgid "Removed"
-msgstr "ತೆಗೆದು ಹಾಕಲಾಗಿದೆ"
+msgstr "ამოღებულია"
 
 #: ../extensions/deviceicon/battery.py:154
 msgid "Charging"
-msgstr "ಚಾರ್ಜ್ ಆಗುತ್ತಿದೆ"
+msgstr "იტენება"
 
 #: ../extensions/deviceicon/battery.py:157
 msgid "Very little power remaining"
-msgstr "ಬಹಳ ಕಡಿಮೆ ಶಕ್ತಿ ಉಳಿದಿದೆ"
+msgstr "დარჩენილია ელემენტის ძალიან ცოტა მუხტი"
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
 #: ../extensions/deviceicon/battery.py:164
-#, fuzzy, python-format
+#, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(hour)d:%(min).2d ಉಳಿದಿದೆ"
+msgstr "დარჩენილია %(hour)d:%(min).2d"
 
 #: ../extensions/deviceicon/battery.py:167
-#, fuzzy
 msgid "Charged"
-msgstr "ಚಾರ್ಜ್ ಆಗಿದೆ"
+msgstr "დამუხტული"
 
 #: ../extensions/deviceicon/display.py:187
 msgid "My Display"
-msgstr "ನನ್ನ ಪ್ರದರ್ಶನ"
+msgstr "ჩემი ეკრანი"
 
 #: ../extensions/deviceicon/display.py:189
 msgid "Take a screenshot"
-msgstr "ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ತೆಗೆದುಕೊಳ್ಳಿ"
+msgstr "ეკრანის ანაბეჭდის გადაღება"
 
 #: ../extensions/deviceicon/display.py:211
 msgid "Brightness"
-msgstr "ಹೊಳಪು"
+msgstr "სიკაშკაშე"
 
 #: ../extensions/deviceicon/display.py:239
 msgid "Display"
-msgstr "ಪ್ರದರ್ಶನ"
+msgstr "ჩვენება"
 
 #: ../extensions/deviceicon/frame.py:53
 msgid "Show my keyboard"
-msgstr "ನನ್ನ ಕೀಬೋರ್ಡ್ ತೋರಿಸು"
+msgstr "ჩემი კლავიატურის ჩვენება"
 
 #: ../extensions/deviceicon/network.py:48
 #, python-format
-#, python-format, fuzzy
 msgid "IP address: %s"
-msgstr "IP ವಿಳಾಸ: %s"
+msgstr "IP მისამართი: %s"
 
 #: ../extensions/deviceicon/network.py:80
 #: ../extensions/deviceicon/network.py:297
 #: ../src/jarabe/desktop/networkviews.py:134
 #: ../src/jarabe/desktop/networkviews.py:510
-#, fuzzy
 msgid "Disconnect"
-msgstr "ಸಂಪರ್ಕ ಕಡಿತಗೊಳಿಸು"
+msgstr "გათიშვა"
 
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:290
@@ -1113,7 +1084,7 @@ msgstr "ಸಂಪರ್ಕ ಕಡಿತಗೊಳಿಸು"
 #: ../src/jarabe/desktop/networkviews.py:552
 #: ../src/jarabe/desktop/networkviews.py:696
 msgid "Connecting..."
-msgstr "ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ..."
+msgstr "დაკავშირება…"
 
 #: ../extensions/deviceicon/network.py:110
 #: ../extensions/deviceicon/network.py:181
@@ -1121,55 +1092,50 @@ msgstr "ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ..."
 #: ../src/jarabe/desktop/networkviews.py:558
 #: ../src/jarabe/desktop/networkviews.py:702
 msgid "Connected"
-msgstr "ಸಂಪರ್ಕಗೊಂಡಿದೆ"
+msgstr "დაკავშირებულია"
 
 #: ../extensions/deviceicon/network.py:123
 msgid "No wireless connection"
-msgstr "ನಿಸ್ತಂತು ಸಂಪರ್ಕವಿಲ್ಲ"
+msgstr "უკაბელო კავშირის გარეშე"
 
 #: ../extensions/deviceicon/network.py:137
 #: ../extensions/deviceicon/network.py:140
-#, fuzzy
 msgid "Channel"
-msgstr "ವಾಹಿನಿ"
+msgstr "არხი"
 
 #: ../extensions/deviceicon/network.py:138
 #: ../src/jarabe/journal/expandedentry.py:386
 #: ../src/jarabe/journal/listmodel.py:191
 #: ../src/jarabe/journal/listmodel.py:199
-#, fuzzy
 msgid "Unknown"
-msgstr "ಗೊತ್ತಿಲ್ಲದ"
+msgstr "უცნობი"
 
 #: ../extensions/deviceicon/network.py:156
-#, fuzzy
 msgid "Wired Network"
-msgstr "ತಂತಿಯುಕ್ತ ಜಾಲಬಂಧ"
+msgstr "მავთულოვანი შეერთება"
 
 #: ../extensions/deviceicon/network.py:184
-#, fuzzy
 msgid "Speed"
-msgstr "ವೇಗ"
+msgstr "სიჩქარე"
 
 #: ../extensions/deviceicon/network.py:209
 msgid "Wireless modem"
-msgstr "ವೈರ್ಲೆಸ್ ಮೋಡೆಮ್"
+msgstr "უსადენო მოდემი"
 
 #: ../extensions/deviceicon/network.py:278
 msgid "Please wait..."
-msgstr "ದಯಮಾಡಿ ನಿರೀಕ್ಷಿಸಿ..."
+msgstr "გთხოვთ მოიცადოთ..."
 
 #: ../extensions/deviceicon/network.py:282
 #: ../src/jarabe/desktop/networkviews.py:128
 #: ../src/jarabe/desktop/networkviews.py:504
 #: ../src/jarabe/desktop/networkviews.py:647
 msgid "Connect"
-msgstr "ಸಂಪರ್ಕಿಸಿ"
+msgstr "დაკავშირება"
 
 #: ../extensions/deviceicon/network.py:283
-#, fuzzy
 msgid "Disconnected"
-msgstr "ಸಂಪರ್ಕ ಕಡಿತಗೊಳಿಸು"
+msgstr "გათიშულია"
 
 #: ../extensions/deviceicon/network.py:289
 #: ../src/jarabe/controlpanel/toolbar.py:121
@@ -1179,154 +1145,147 @@ msgstr "ಸಂಪರ್ಕ ಕಡಿತಗೊಳಿಸು"
 #: ../src/jarabe/journal/expandedentry.py:157
 #: ../src/jarabe/journal/journaltoolbox.py:587
 #: ../src/jarabe/journal/palettes.py:166
-#, fuzzy
 msgid "Cancel"
-msgstr "ವಜಾ"
+msgstr "გაუქმება"
 
 #: ../extensions/deviceicon/network.py:327
 msgid "Try connection again"
-msgstr "ಮತ್ತೆ ಸಂಪರ್ಕವನ್ನು ಪ್ರಯತ್ನಿಸಿ"
+msgstr "დაკავშირება თავიდან სცადეთ"
 
 #: ../extensions/deviceicon/network.py:330
 #, python-format
 msgid "Error: %s"
-msgstr "ತಪ್ಪು : %s"
+msgstr "შეცდომა: %s"
 
 #: ../extensions/deviceicon/network.py:334
 #, python-format
 msgid "Suggestion: %s"
-msgstr "ಸಲಹೆ: %s"
+msgstr "მინიშნება: %s"
 
 #: ../extensions/deviceicon/network.py:344
 #, python-format
 msgid "Connected for %s"
-msgstr "%s ಗೆ ಸಂಪರ್ಕಿಸಲಾಗಿದೆ"
+msgstr "მიერთებულია %s-თან"
 
 #: ../extensions/deviceicon/network.py:349
 #: ../extensions/deviceicon/network.py:350
 #, python-format
 msgid "%d KB"
-msgstr "%d ಕೆಬಿ"
+msgstr "%d კბ"
 
 #: ../extensions/deviceicon/network.py:355
 msgid "Check your PIN/PUK configuration."
-msgstr "ನಿಮ್ಮ PIN/PUK ಕಾನ್ಫಿಗರೇಶನ್ ಪರಿಶೀಲಿಸಿ."
+msgstr "შეამოწმეთ თქვენი PIN/PUK კონფიგურაცია."
 
 #: ../extensions/deviceicon/network.py:358
 msgid "Check your Access Point Name (APN) configuration"
-msgstr "ನಿಮ್ಮ ಪ್ರವೇಶ ಬಿಂದು ಹೆಸರು (APN) ಕಾನ್ಫಿಗರೇಶನ್ ಅನ್ನು ಪರಿಶೀಲಿಸಿ"
+msgstr "შეამოწმეთ თქვენი წვდომის წერტილის სახელის (APN) კონფგურაცია"
 
 #: ../extensions/deviceicon/network.py:362
 msgid "Check the Number configuration."
-msgstr "ಸಂಖ್ಯೆಯ ಸಂರಚನೆಯನ್ನು ಪರಿಶೀಲಿಸಿ."
+msgstr "შეამოწმეთ ნომრის კონფიგურაცია."
 
 #: ../extensions/deviceicon/network.py:364
 msgid "Check your configuration."
-msgstr "ನಿಮ್ಮ ಸಂರಚನೆಯನ್ನು ಪರಿಶೀಲಿಸಿ."
+msgstr "შეამოწმეთ თქვენი კონფიგურაცია."
 
 #: ../extensions/deviceicon/network.py:619
 msgid "Mesh Network"
-msgstr "ಮೆಶ್ ನೆಟ್ವರ್ಕ್"
+msgstr "ბადის ქსელი"
 
 #: ../extensions/deviceicon/network.py:665
 #, python-format
 msgid "Mesh Network %s"
-msgstr "ಮೆಶ್ ನೆಟ್‌ವರ್ಕ್ %s"
+msgstr "ბადის ქსელი %s"
 
 #: ../extensions/deviceicon/network.py:782
 msgid "No GSM connection available."
-msgstr "ಯಾವುದೇ GSM ಸಂಪರ್ಕ ಲಭ್ಯವಿಲ್ಲ."
+msgstr "GSM მიერთება მიუწვდომელია."
 
 #: ../extensions/deviceicon/network.py:783
 msgid "Create a connection in My Settings."
-msgstr "ನನ್ನ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಸಂಪರ್ಕವನ್ನು ರಚಿಸಿ."
+msgstr "შექმენით შეერთება \"ჩემს შეერთებებში\"."
 
 #: ../extensions/deviceicon/speech.py:49
 msgid "Speech"
-msgstr "ಮಾತು"
+msgstr "საუბარი"
 
 #: ../extensions/deviceicon/speech.py:72
 #: ../extensions/deviceicon/speech.py:147
 #: ../extensions/deviceicon/speech.py:152
 msgid "Say selected text"
-msgstr "ಆಯ್ದ ಪಠ್ಯವನ್ನು ಹೇಳಿ"
+msgstr "მონიშნული ტექსტის წარმოთქმა"
 
 #: ../extensions/deviceicon/speech.py:80
 msgid "Stop playback"
-msgstr "ಪ್ಲೇಬ್ಯಾಕ್ ನಿಲ್ಲಿಸಿ"
+msgstr "დაკვრის გაჩერება"
 
 #: ../extensions/deviceicon/speech.py:89
 msgid "Pitch"
-msgstr "ಪಿಚ್"
+msgstr "Pitch"
 
 #: ../extensions/deviceicon/speech.py:104
-#, fuzzy
 msgid "Rate"
-msgstr "ದರ"
+msgstr "სიხშირე"
 
 #: ../extensions/deviceicon/speech.py:142
 msgid "Pause playback"
-msgstr "ಪ್ಲೇಬ್ಯಾಕ್ ವಿರಾಮಗೊಳಿಸಿ"
+msgstr "დაკვრის შეჩერება"
 
 #: ../extensions/deviceicon/touchpad.py:36
 msgid "finger"
-msgstr "ಬೆರಳು"
+msgstr "თითი"
 
 #: ../extensions/deviceicon/touchpad.py:36
 msgid "stylus"
-msgstr "ಸ್ಟೈಲಸ್"
+msgstr "სტილუსი"
 
 #: ../extensions/deviceicon/touchpad.py:61
 msgid "My touchpad"
-msgstr "ನನ್ನ ಟಚ್‌ಪ್ಯಾಡ್"
+msgstr "ჩემი თაჩპედი"
 
 #: ../extensions/deviceicon/volume.py:62 ../src/jarabe/view/palettes.py:210
 msgid "Show contents"
-msgstr "ವಿಷಯಗಳನ್ನು ತೋರಿಸಿ"
+msgstr "შემცველობის ჩვენება"
 
 #: ../data/sugar.schemas.in.h:15
 msgid "Favorites Layout"
-msgstr "ಮೆಚ್ಚಿನವುಗಳ ಲೇಔಟ್"
+msgstr "სანიშნების განლაგება"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Layout of the favorites view."
-msgstr "ಮೆಚ್ಚಿನವುಗಳ ವೀಕ್ಷಣೆಯ ಲೇಔಟ್."
+msgstr "სანიშნების ხედის განლაგება."
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Favorites resume mode"
-msgstr "ಮೆಚ್ಚಿನವುಗಳು ಪುನರಾರಂಭ ಮೋಡ್"
+msgstr "სანიშნების გაგრძელების რეჟიმი"
 
 #: ../data/sugar.schemas.in.h:18
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
-"ರೆಸ್ಯೂಮ್ ಮೋಡ್‌ನಲ್ಲಿರುವಾಗ, ನೆಚ್ಚಿನ ಐಕಾನ್ ಅನ್ನು ಕ್ಲಿಕ್ ಮಾಡುವುದರಿಂದ ಆ ಚಟುವಟಿಕೆಯ "
-"ಕೊನೆಯ ನಮೂದನ್ನು ಪುನರಾರಂಭಿಸುತ್ತದೆ."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
-"ಸಕ್ಕರೆ-ನಿಯಂತ್ರಣ-ಫಲಕ:ಎಚ್ಚರಿಕೆ, ಒಂದೇ ಹೆಸರಿನೊಂದಿಗೆ ಒಂದಕ್ಕಿಂತ ಹೆಚ್ಚು ಆಯ್ಕೆಗಳು "
-"ಕಂಡುಬಂದಿವೆ: %s ಮಾಡ್ಯೂಲ್: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
-#, fuzzy, python-format
+#, python-format
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr "ಸಕ್ಕರೆ-ನಿಯಂತ್ರಣ ಫಲಕ: ಕೀ =%s ಒಂದು ಲಭ್ಯವಿರುವ ಆಯ್ಕೆಯಾಗಿಲ್ಲ"
+msgstr "sugar-control-panel: გასაღები=%s ხელმისაწვდომი პარამეტრი არაა"
 
 #: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
 msgid "sugar-control-panel: %s"
-msgstr "ಸಕ್ಕರೆ ನಿಯಂತ್ರಣ ಫಲಕ: %s"
+msgstr "sugar-control-panel: %s"
 
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
 #: ../src/jarabe/controlpanel/cmd.py:38
-#, fuzzy
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -1339,105 +1298,91 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
-"ಬಳಕೆ: ಶುಗರ್-ಕಂಟ್ರೋಲ್-ಪ್ಯಾನಲ್ [ಆಯ್ಕೆ] ಕೀ [ಆರ್ಗ್ಸ್ ...] \n"
-"ಸಕ್ಕರೆ ಪರಿಸರಕ್ಕೆ ನಿಯಂತ್ರಣ. \n"
-"ಆಯ್ಕೆಗಳು: \n"
-"-h ಈ ಸಹಾಯ ಸಂದೇಶವನ್ನು ತೋರಿಸಿ ಮತ್ತು ನಿರ್ಗಮಿಸಿ \n"
-"-ಎಲ್ ಲಭ್ಯವಿರುವ ಎಲ್ಲಾ ಆಯ್ಕೆಗಳನ್ನು ಪಟ್ಟಿ ಮಾಡಿ \n"
-"-h ಕೀ ಈ ಕೀ ಬಗ್ಗೆ ಮಾಹಿತಿಯನ್ನು ತೋರಿಸು \n"
-"-g ಕೀಲಿಯು ಪ್ರಸ್ತುತ ಮೌಲ್ಯವನ್ನು ಪಡೆದುಕೊಳ್ಳಿ \n"
-"-s ಕೀ \n"
-" ಗಾಗಿ ಪ್ರಸ್ತುತ ಮೌಲ್ಯವನ್ನು ಹೊಂದಿಸಿ-c ಕೀಲಿ \n"
-" ಗಾಗಿ ಪ್ರಸ್ತುತ ಮೌಲ್ಯವನ್ನು ತೆರವುಗೊಳಿಸಿ"
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid ""
 "To apply your changes you have to restart Sugar.\n"
 "Hit ctrl+alt+erase on the keyboard to trigger a restart."
 msgstr ""
-"ನಿಮ್ಮ ಬದಲಾವಣೆಗಳನ್ನು ಅನ್ವಯಿಸಲು ನೀವು ಶುಗರ್ ಅನ್ನು ಮರುಪ್ರಾರಂಭಿಸಬೇಕು.\n"
-"ಮರುಪ್ರಾರಂಭವನ್ನು ಪ್ರಚೋದಿಸಲು ಕೀಬೋರ್ಡ್‌ನಲ್ಲಿ ctrl+alt+erase ಒತ್ತಿರಿ."
 
 #: ../src/jarabe/controlpanel/gui.py:373 ../src/jarabe/journal/palettes.py:194
 #: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
 #: ../src/jarabe/journal/volumestoolbar.py:304
 msgid "Warning"
-msgstr "ಎಚ್ಚರಿಕೆ"
+msgstr "გაფრთხილება"
 
 #: ../src/jarabe/controlpanel/gui.py:374
 #: ../src/jarabe/controlpanel/sectionview.py:45
 msgid "Changes require restart"
-msgstr "ಬದಲಾವಣೆಗಳಿಗೆ ಮರುಪ್ರಾರಂಭದ ಅಗತ್ಯವಿದೆ"
+msgstr "ცვლილებებს გადატვირთვა ესაჭიროება"
 
 #: ../src/jarabe/controlpanel/gui.py:379
 msgid "Cancel changes"
-msgstr "ಬದಲಾವಣೆಗಳನ್ನು ರದ್ದುಮಾಡಿ"
+msgstr "ცვლილებების გაუქმება"
 
 #: ../src/jarabe/controlpanel/gui.py:384
 msgid "Later"
-msgstr "ನಂತರ"
+msgstr "გვიან"
 
 #: ../src/jarabe/controlpanel/gui.py:388
 msgid "Restart now"
-msgstr "ಈಗ ಪುನರಾರಂಭಿಸು"
+msgstr "ახლა გადატვირთვა"
 
 #: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
 msgid "An activity is not responding."
-msgstr "ಒಂದು ಚಟುವಟಿಕೆಯು ಪ್ರತಿಕ್ರಿಯಿಸುತ್ತಿಲ್ಲ."
+msgstr "აქტივობა არ პასუხობს."
 
 #: ../src/jarabe/controlpanel/gui.py:420 ../src/jarabe/view/buddymenu.py:138
 msgid "You may lose unsaved work if you continue."
-msgstr "ನೀವು ಮುಂದುವರಿದರೆ ಉಳಿಸದ ಕೆಲಸವನ್ನು ಕಳೆದುಕೊಳ್ಳಬಹುದು."
+msgstr "თუ გააგრძელებთ, შეიძლება შეუნახავი სამუშაო დაკარგოთ."
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
 #: ../src/jarabe/journal/journaltoolbox.py:94
 #, python-format
 msgid "Search in %s"
-msgstr "%s ನಲ್ಲಿ ಹುಡುಕಿ"
+msgstr "%s-ში ძებნა"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
-msgstr "ಸಂಯೋಜನೆಗಳು"
+msgstr "მორგება"
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:349
-#, fuzzy
 msgid "Done"
-msgstr "ಆಯಿತು"
+msgstr "დასრულებულია"
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
 msgid "Ok"
-msgstr "ಸರಿ"
+msgstr "დიახ"
 
 #: ../src/jarabe/desktop/activitieslist.py:340
 #, python-format
 msgid "Version %s"
-msgstr "ಆವೃತ್ತಿ %s"
+msgstr "ვერისა %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:424
 #: ../src/jarabe/journal/listview.py:566 ../src/jarabe/journal/iconview.py:301
-#, fuzzy
 msgid "Clear search"
-msgstr "ಹುಡುಕನ್ನು ಅಳಿಸು"
+msgstr "ძიების გასუფთავება"
 
 #: ../src/jarabe/desktop/activitieslist.py:510
 msgid "No matching activities"
-msgstr "ಯಾವುದೇ ಹೊಂದಾಣಿಕೆಯ ಚಟುವಟಿಕೆಗಳಿಲ್ಲ"
+msgstr "შესაბამისი აქტივობების გარეშე"
 
 #: ../src/jarabe/desktop/activitieslist.py:546
 msgid "Confirm erase"
-msgstr "ಅಳಿಸುವಿಕೆಯನ್ನು ದೃಢೀಕರಿಸಿ"
+msgstr "წაშლის დადასტურება"
 
 #: ../src/jarabe/desktop/activitieslist.py:548
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr "ಅಳಿಸುವಿಕೆಯನ್ನು ಖಚಿತಪಡಿಸಿ: ನೀವು %s ಅನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲು ಬಯಸುವಿರಾ?"
+msgstr "დაადასტურეთ წაშლა. მართლა გნებავთ %s-ის სამუდამოდ წაშლა?"
 
 #: ../src/jarabe/desktop/activitieslist.py:552
 #: ../src/jarabe/frame/clipboardmenu.py:65
 #: ../src/jarabe/view/viewsource.py:383
 msgid "Keep"
-msgstr "ಇರಿಸಿಕೊಳ್ಳಿ"
+msgstr "შენარჩუნება"
 
 #: ../src/jarabe/desktop/activitieslist.py:555
 #: ../src/jarabe/desktop/activitieslist.py:625
@@ -1448,88 +1393,86 @@ msgstr "ಇರಿಸಿಕೊಳ್ಳಿ"
 #: ../src/jarabe/journal/journaltoolbox.py:812
 #: ../src/jarabe/journal/palettes.py:138 ../src/jarabe/journal/palettes.py:161
 msgid "Erase"
-msgstr "ಅಳಿಸು"
+msgstr "წაშლა"
 
 #: ../src/jarabe/desktop/activitieslist.py:641
 msgid "Remove favorite"
-msgstr "ಮೆಚ್ಚಿನ ತೆಗೆದುಹಾಕಿ"
+msgstr "სანიშნის წაშლა"
 
 #: ../src/jarabe/desktop/activitieslist.py:645
 msgid "Make favorite"
-msgstr "ಮೆಚ್ಚಿನ ಮಾಡಿ"
+msgstr "სანიშნის დამატება"
 
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:209
 msgid "Freeform"
-msgstr "ಉಚಿತ ರೂಪ"
+msgstr "ხელით მითითება"
 
 #. TRANS: label for the ring layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:305
 msgid "Ring"
-msgstr "ರಿಂಗ್"
+msgstr "ზარი"
 
 #. TRANS: label for the spiral layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:469
 msgid "Spiral"
-msgstr "ಸುರುಳಿಯಾಕಾರದ"
+msgstr "სპირალური"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:537
 msgid "Box"
-msgstr "ಚೌಕ"
+msgstr "ყუთი"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:580
 msgid "Triangle"
-msgstr "ತ್ರಿಕೋನ"
+msgstr "სამკუთხედი"
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
-msgstr "ನೋಂದಣಿ"
+msgstr "რეგისტრაცია"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
-msgstr "ದಯವಿಟ್ಟು ನಿರೀಕ್ಷಿಸಿ, ನಿಮ್ಮ ಶಾಲೆಯ ಸರ್ವರ್‌ಗಾಗಿ ಹುಡುಕಲಾಗುತ್ತಿದೆ."
+msgstr "ვეძებ თქვენი სკოლის სერვერს. მოითმინეთ."
 
 #: ../src/jarabe/desktop/favoritesview.py:387
 msgid "Registration Failed"
-msgstr "ನೋಂದಣಿ ವಿಫಲವಾಗಿದೆ"
+msgstr "რეგისტრაცია ვერ მოხერხდა"
 
 #: ../src/jarabe/desktop/favoritesview.py:390
 msgid "Registration Successful"
-msgstr "ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ"
+msgstr "რეგისტრაცია წარმატებულია"
 
 #: ../src/jarabe/desktop/favoritesview.py:391
 msgid "You are now registered with your school server."
-msgstr "ನೀವು ಈಗ ನಿಮ್ಮ ಶಾಲೆಯ ಸರ್ವರ್‌ನಲ್ಲಿ ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದೀರಿ."
+msgstr "მიერთებული ბრძანდებით თქვენი სკოლის სერვერთან."
 
 #: ../src/jarabe/desktop/favoritesview.py:680
 msgid "Register"
-msgstr "ನೋಂದಣಿ"
+msgstr "რესგისტრაცია"
 
 #: ../src/jarabe/desktop/favoritesview.py:682
 msgid "Register again"
-msgstr "ಮತ್ತೆ ನೋಂದಾಯಿಸಿ"
+msgstr "თავიდან რეგისტრაცია"
 
 #: ../src/jarabe/desktop/homewindow.py:255
 #: ../src/jarabe/desktop/viewtoolbar.py:73
 #: ../src/jarabe/frame/zoomtoolbar.py:57 ../src/jarabe/model/screenshot.py:63
 #: ../src/jarabe/view/viewhelp.py:76
-#, fuzzy
 msgid "Home"
-msgstr "ಮನೆ"
+msgstr "სახლი"
 
 #: ../src/jarabe/desktop/homewindow.py:262
 #: ../src/jarabe/frame/zoomtoolbar.py:53 ../src/jarabe/model/screenshot.py:61
 #: ../src/jarabe/view/viewhelp.py:73
-#, fuzzy
 msgid "Group"
-msgstr "ಗುಂಪು"
+msgstr "ჯგუფი"
 
 #: ../src/jarabe/desktop/homewindow.py:269
 #: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Neighborhood"
-msgstr "ನೆರೆಹೊರೆ"
+msgstr "სამეზობლო"
 
 #: ../src/jarabe/desktop/keydialog.py:92
 #, python-format
@@ -1537,236 +1480,226 @@ msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
-"ವೈರ್‌ಲೆಸ್ ಎನ್‌ಕ್ರಿಪ್ಶನ್ ಕೀ\n"
-" ಗೆ ಅಗತ್ಯವಿದೆವೈರ್‌ಲೆಸ್ ನೆಟ್‌ವರ್ಕ್ '%s'."
+"უსადენო ქსელისთვის %s\n"
+"დაშიფვრის გასაღების მითითება აუცილებელია."
 
 #: ../src/jarabe/desktop/keydialog.py:141
 msgid "Key Type:"
-msgstr "ಕೀ ಪ್ರಕಾರ:"
+msgstr "გასაღების ტიპი:"
 
 #: ../src/jarabe/desktop/keydialog.py:161
 msgid "Authentication Type:"
-msgstr "ದೃಢೀಕರಣದ ಪ್ರಕಾರ:"
+msgstr "ავთენტიფიკაციის ტიპი:"
 
 #: ../src/jarabe/desktop/keydialog.py:224
-#, fuzzy
 msgid "WPA & WPA2 Personal"
-msgstr "WPA & WPA2 ವೈಯಕ್ತಿಕ"
+msgstr "WPA & WPA2 პერსონალური"
 
 #: ../src/jarabe/desktop/keydialog.py:233
 msgid "Wireless Security:"
-msgstr "ನಿಸ್ತಂತು ಭದ್ರತೆ:"
+msgstr "უსადენო შეერთების უსაფრთხოება:"
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
 #: ../src/jarabe/journal/journaltoolbox.py:659
 #: ../src/jarabe/journal/palettes.py:83 ../src/jarabe/view/palettes.py:98
 msgid "Resume"
-msgstr "ಮತ್ತ ಶುರುಮಾಡು"
+msgstr "გაგრძელება"
 
 #: ../src/jarabe/desktop/meshbox.py:89
 #: ../src/jarabe/frame/activitiestray.py:208
 msgid "Join"
-msgstr "ಸೇರಿಕೊಳ್ಳಿ"
+msgstr "შეერთება"
 
 #: ../src/jarabe/desktop/networkviews.py:499
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr "ತಾತ್ಕಾಲಿಕ ನೆಟ್‌ವರ್ಕ್ %d"
+msgstr "Ad-Hoc ქსელი %d"
 
 #: ../src/jarabe/desktop/networkviews.py:643
 #, python-format
 msgid "Mesh Network %d"
-msgstr "ಮೆಶ್ ನೆಟ್‌ವರ್ಕ್ %d"
+msgstr "ბადის ქსელი %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
-msgstr "ಸರ್ವರ್‌ಗೆ ಸಂಪರ್ಕಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ."
+msgstr "სერვერთან მიერთების შეცდომა."
 
 #: ../src/jarabe/desktop/schoolserver.py:151
 msgid "The server could not complete the request."
-msgstr "ಸರ್ವರ್ ವಿನಂತಿಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ."
+msgstr "სერვერმა მოთხოვნა ვერ შეასრულა."
 
 #: ../src/jarabe/desktop/viewtoolbar.py:95
 msgid "List view"
-msgstr "ಪಟ್ಟಿ ವೀಕ್ಷಣೆ"
+msgstr "სიის ხედი"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:97
 #: ../src/jarabe/desktop/viewtoolbar.py:196
 #: ../src/jarabe/desktop/viewtoolbar.py:210
-#, fuzzy, python-format
+#, python-format
 msgid "<Ctrl>%d"
 msgstr "<Ctrl>%d"
 
 #: ../src/jarabe/frame/activitiestray.py:213
 #: ../src/jarabe/frame/activitiestray.py:657
 msgid "Decline"
-msgstr "ನಿರಾಕರಿಸು"
+msgstr "უარყოფა"
 
 #: ../src/jarabe/frame/activitiestray.py:598
-#, fuzzy, python-format
+#, python-format
 msgid "%dB"
-msgstr "%dB"
+msgstr "%dბ"
 
 #: ../src/jarabe/frame/activitiestray.py:600
-#, fuzzy, python-format
+#, python-format
 msgid "%dKB"
-msgstr "%dKB"
+msgstr "%dკბ"
 
 #: ../src/jarabe/frame/activitiestray.py:602
-#, fuzzy, python-format
+#, python-format
 msgid "%dMB"
-msgstr "%dMB"
+msgstr "%dმბ"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:620
 #, python-format
-#, python-format, fuzzy
 msgid "%s of %s"
-msgstr "%s, %s ನಲ್ಲಿ"
+msgstr "%s %s-დან"
 
 #: ../src/jarabe/frame/activitiestray.py:634
 #, python-format
 msgid "Transfer from %s"
-msgstr "%s ರಿಂದ ವರ್ಗಾವಣೆ"
+msgstr "%s-დან მიღება"
 
 #: ../src/jarabe/frame/activitiestray.py:648
 #: ../extensions/cpsection/backup/view.py:324
 msgid "Accept"
-msgstr "ಒಪ್ಪಿಕೊ"
+msgstr "დასტური"
 
 #: ../src/jarabe/frame/activitiestray.py:722
 #: ../src/jarabe/frame/activitiestray.py:736
 #: ../src/jarabe/frame/activitiestray.py:878
 msgid "Dismiss"
-msgstr "ವಜಾ"
+msgstr "მოსილება"
 
 #: ../src/jarabe/frame/activitiestray.py:750
 msgid "The other participant canceled the file transfer"
-msgstr "ಇತರ ಭಾಗವಹಿಸುವವರು ಫೈಲ್ ವರ್ಗಾವಣೆಯನ್ನು ರದ್ದುಗೊಳಿಸಿದ್ದಾರೆ"
+msgstr "სხვა მონაწილემ ფაილის გადაცემა გააუქმა"
 
 #: ../src/jarabe/frame/activitiestray.py:800
 #, python-format
 msgid "Transfer to %s"
-msgstr "%s ಗೆ ವರ್ಗಾಯಿಸಿ"
+msgstr "%s-ზე გაგზავნა"
 
 #: ../src/jarabe/frame/clipboardmenu.py:54
-#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr "ತೆಗೆದು ಹಾಕು"
+msgstr "წაშლა"
 
 #: ../src/jarabe/frame/clipboardmenu.py:60
 #: ../src/jarabe/frame/clipboardmenu.py:83
 msgid "Open"
-msgstr "ತೆಗೆ"
+msgstr "გახსნა"
 
 #: ../src/jarabe/frame/clipboardmenu.py:88
 msgid "Open with"
-msgstr "ಇದರೊಂದಿಗೆ ತೆರೆಯಿರಿ"
+msgstr "გამხსნელი პროგრამა"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
 msgid "%s clipping"
-msgstr "%s ಕ್ಲಿಪಿಂಗ್"
+msgstr "%s ბუფერიდან"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
-#, fuzzy
 msgid "F1"
 msgstr "F1"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:54
-#, fuzzy
 msgid "F2"
 msgstr "F2"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:58
-#, fuzzy
 msgid "F3"
 msgstr "F3"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:62 ../src/jarabe/model/screenshot.py:69
-#, fuzzy
 msgid "Activity"
-msgstr "ಚಟುವಟಿಕೆ"
+msgstr "აქტივობა"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:63
-#, fuzzy
 msgid "F4"
 msgstr "F4"
 
 #: ../src/jarabe/intro/window.py:135
-#, fuzzy
 msgid "Name:"
-msgstr "ಹೆಸರು:"
+msgstr "სახელი:"
 
 #: ../src/jarabe/intro/window.py:174
 msgid "Click to change color:"
-msgstr "ಬಣ್ಣವನ್ನು ಬದಲಾಯಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ:"
+msgstr "ფერის შესაცვლელად დააწკაპუნეთ:"
 
 #: ../src/jarabe/intro/window.py:337 ../src/jarabe/journal/detailview.py:95
-#, fuzzy
 msgid "Back"
-msgstr "ಹಿಂದಕ್ಕೆ"
+msgstr "უკან"
 
 #: ../src/jarabe/intro/window.py:352
 msgid "Next"
-msgstr "ಮುಂದೆ"
+msgstr "შემდეგი"
 
 #: ../src/jarabe/intro/agepicker.py:38
 msgid "Select grade:"
-msgstr "ಗ್ರೇಡ್ ಆಯ್ಕೆಮಾಡಿ:"
+msgstr "არჩიეთ დონე:"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Preschool"
-msgstr "ಶಾಲಾಪೂರ್ವ"
+msgstr "ბაღი"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Kindergarten"
-msgstr "ಶಿಶುವಿಹಾರ"
+msgstr "საბავშვო ბაღი"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "1st Grade"
-msgstr "1 ನೇ ತರಗತಿ"
+msgstr "პირველი კლასი"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "2nd Grade"
-msgstr "2 ನೇ ತರಗತಿ"
+msgstr "მეორე კლასი"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "3rd Grade"
-msgstr "3ನೇ ತರಗತಿ"
+msgstr "მესამე კლასი"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "4th Grade"
-msgstr "4 ನೇ ತರಗತಿ"
+msgstr "მეოთხე კლასი"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "5th Grade"
-msgstr "5 ನೇ ತರಗತಿ"
+msgstr "მეხუთე კლასი"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "6th Grade"
-msgstr "6 ನೇ ತರಗತಿ"
+msgstr "მეექვსე კლასი"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "7th Grade"
-msgstr "7 ನೇ ತರಗತಿ"
+msgstr "მეშვიდე კლასი"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "High School"
-msgstr "ಪ್ರೌಢಶಾಲೆ"
+msgstr "მერვე-მეთორმეტე კლასები"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "Adult"
-msgstr "ವಯಸ್ಕ"
+msgstr "ზრდასრულთა"
 
 #: ../src/jarabe/journal/expandedentry.py:153
 #: ../src/jarabe/journal/journaltoolbox.py:584
 #: ../src/jarabe/journal/palettes.py:163
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
-msgstr "ನೀವು \"%s\" ಅನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲು ಬಯಸುವಿರಾ?"
+msgstr "დარწმუნებული ბრძანდებით, რომ გნებავთ, სამუდამოდ წაშალოთ \"%s\"?"
 
 #: ../src/jarabe/journal/expandedentry.py:296
 #: ../src/jarabe/journal/listmodel.py:185 ../src/jarabe/journal/model.py:794
@@ -1774,741 +1707,727 @@ msgstr "ನೀವು \"%s\" ಅನ್ನು ಶಾಶ್ವತವಾಗಿ ಅ�
 #: ../src/jarabe/journal/volumestoolbar.py:134
 #: ../src/jarabe/journal/iconmodel.py:110
 msgid "Untitled"
-msgstr "ಹೆಸರಿಲ್ಲದ"
+msgstr "უსახელო"
 
 #: ../src/jarabe/journal/expandedentry.py:366
-#, fuzzy
 msgid "No preview"
-msgstr "ಮುನ್ನೋಟವಿಲ್ಲ"
+msgstr "გადახედვის გარეშე"
 
 #: ../src/jarabe/journal/expandedentry.py:386
-#, fuzzy, python-format
+#, python-format
 msgid "Kind: %s"
-msgstr "ಪ್ರಕಾರ: %s"
+msgstr "ტიპი: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:387
 #, python-format
-#, python-format, fuzzy
 msgid "Date: %s"
-msgstr "ದಿನಾಂಕ: %s"
+msgstr "თარიღი: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:388
 #, python-format
-#, python-format, fuzzy
 msgid "Size: %s"
-msgstr "ಗಾತ್ರ: %s"
+msgstr "ზომა: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:412
 #: ../src/jarabe/journal/misc.py:131
-#, fuzzy
 msgid "No date"
-msgstr "ದಿನಾಂಕವಿಲ್ಲ"
+msgstr "თარიღის გარეშე"
 
 #: ../src/jarabe/journal/expandedentry.py:421
 msgid "Participants:"
-msgstr "ಭಾಗವಹಿಸುವವರು:"
+msgstr "მონაწილეები:"
 
 #: ../src/jarabe/journal/expandedentry.py:459
-#, fuzzy
 msgid "Description:"
-msgstr "ವಿವರಣೆ:"
+msgstr "აღწერა:"
 
 #: ../src/jarabe/journal/expandedentry.py:465
 msgid "Tags:"
-msgstr "ಟ್ಯಾಗ್ಗಳು:"
+msgstr "ჭდეები:"
 
 #: ../src/jarabe/journal/expandedentry.py:470
 msgid "Comments:"
-msgstr "ಪ್ರತಿಕ್ರಿಯೆಗಳು:"
+msgstr "კომენტარები:"
 
 #: ../src/jarabe/journal/journalactivity.py:182
 #: ../src/jarabe/journal/journaltoolbox.py:94
 #: ../src/jarabe/journal/palettes.py:260
 #: ../src/jarabe/journal/volumestoolbar.py:349
 #: ../src/jarabe/view/viewhelp.py:79
-#, fuzzy
 msgid "Journal"
-msgstr "ಜರ್ನಲ್"
+msgstr "ჟურნალი"
 
 #: ../src/jarabe/journal/journaltoolbox.py:103
 msgid "Favorite entries"
-msgstr "ಮೆಚ್ಚಿನ ನಮೂದುಗಳು"
+msgstr "რჩეული ჩანაწერები"
 
 #. TRANS: Item on a palette that filters by entry type.
 #: ../src/jarabe/journal/journaltoolbox.py:112
 #: ../src/jarabe/journal/journaltoolbox.py:403
 #: ../src/jarabe/journal/journaltoolbox.py:479
-#, fuzzy
 msgid "Anything"
-msgstr "ಯಾವುದಾದರೂ"
+msgstr "ნებისმიერი"
 
 #: ../src/jarabe/journal/journaltoolbox.py:118
 #: ../src/jarabe/journal/journaltoolbox.py:165
 #: ../src/jarabe/journal/journaltoolbox.py:483
-#, fuzzy
 msgid "Anytime"
-msgstr "ಯಾವಾಗ ಬೇಕಿದ್ದರೂ"
+msgstr "ნებისმიერ დროს"
 
 #: ../src/jarabe/journal/journaltoolbox.py:172
 msgid "Since yesterday"
-msgstr "ನಿನ್ನೆಯಿಂದ"
+msgstr "გუშინდელის შემდეგ"
 
 #: ../src/jarabe/journal/journaltoolbox.py:175
 msgid "Past week"
-msgstr "ಕಳೆದ ವಾರ"
+msgstr "გასული კვირა"
 
 #: ../src/jarabe/journal/journaltoolbox.py:178
 msgid "Past month"
-msgstr "ಕಳೆದ ತಿಂಗಳು"
+msgstr "გასული თვე"
 
 #: ../src/jarabe/journal/journaltoolbox.py:181
 msgid "Past year"
-msgstr "ಕಳೆದ ವರ್ಷ"
+msgstr "გასული წელი"
 
 #: ../src/jarabe/journal/journaltoolbox.py:521
 #: ../src/jarabe/journal/palettes.py:105
 msgid "Copy to"
-msgstr "ನಕಲಿಸಿ"
+msgstr "გადაკოპირება"
 
 #: ../src/jarabe/journal/journaltoolbox.py:529
 #: ../src/jarabe/journal/palettes.py:116 ../src/jarabe/view/viewsource.py:379
 msgid "Duplicate"
-msgstr "ನಕಲು"
+msgstr "დუბლიკაცია"
 
 #: ../src/jarabe/journal/journaltoolbox.py:535
 msgid "Refresh"
-msgstr "ರಿಫ್ರೆಶ್ ಮಾಡಿ"
+msgstr "განახლება"
 
 #: ../src/jarabe/journal/journaltoolbox.py:577
 #: ../src/jarabe/journal/palettes.py:156 ../src/jarabe/journal/palettes.py:374
 #: ../src/jarabe/journal/volumestoolbar.py:312
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr "ನಮೂದನ್ನು ನಕಲಿಸುವಾಗ ದೋಷ. %s"
+msgstr "ჩანაწერის კოპირების შეცდომა. %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:578
 #: ../src/jarabe/journal/palettes.py:157 ../src/jarabe/journal/palettes.py:375
 #: ../src/jarabe/journal/volumestoolbar.py:313
 msgid "Error"
-msgstr "ತಪ್ಪು"
+msgstr "შეცდომა"
 
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:662
 #: ../src/jarabe/journal/palettes.py:86
 msgid "Start"
-msgstr "ಶುರುಮಾಡು"
+msgstr "გაშვება"
 
 #: ../src/jarabe/journal/journaltoolbox.py:682
 #: ../src/jarabe/journal/palettes.py:100 ../src/jarabe/journal/palettes.py:513
 msgid "No activity to start entry"
-msgstr "ಪ್ರವೇಶವನ್ನು ಪ್ರಾರಂಭಿಸಲು ಯಾವುದೇ ಚಟುವಟಿಕೆಯಿಲ್ಲ"
+msgstr "ჩანაწერის გასაშვებად აქტივობა ვერ ვიპოვე"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 msgid "Sort view"
-msgstr "ವಿಂಗಡಣೆ ನೋಟ"
+msgstr "ხედის დალაგება"
 
 #: ../src/jarabe/journal/journaltoolbox.py:711
 msgid "Sort by date modified"
-msgstr "ಮಾರ್ಪಡಿಸಿದ ದಿನಾಂಕದ ಪ್ರಕಾರ ವಿಂಗಡಿಸಿ"
+msgstr "ცვლილების თარიღის მიხედვით დალაგება"
 
 #: ../src/jarabe/journal/journaltoolbox.py:712
 msgid "Sort by date created"
-msgstr "ರಚಿಸಿದ ದಿನಾಂಕದ ಪ್ರಕಾರ ವಿಂಗಡಿಸಿ"
+msgstr "შექმნის თარიღით დალაგება"
 
 #: ../src/jarabe/journal/journaltoolbox.py:713
 msgid "Sort by size"
-msgstr "ಗಾತ್ರದ ಪ್ರಕಾರ ವಿಂಗಡಿಸಿ"
+msgstr "ზომის მიხედვით დალაგება"
 
 #: ../src/jarabe/journal/journaltoolbox.py:778
 msgid "Deselect all"
-msgstr "ಎಲ್ಲವನ್ನೂ ಆಯ್ಕೆ ರದ್ದುಮಾಡಿ"
+msgstr "მონიშვნის მოხსნა"
 
 #: ../src/jarabe/journal/journaltoolbox.py:791
 msgid "Select all"
-msgstr "ಎಲ್ಲವನ್ನು ಆರಿಸು"
+msgstr "ყველას მონიშვნა"
 
 #: ../src/jarabe/journal/journaltoolbox.py:817
 #, python-format
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
-msgstr[0] "ನೀವು %d ನಮೂದನ್ನು ಅಳಿಸಲು ಬಯಸುವಿರಾ?"
-msgstr[1] "ನೀವು %d ನಮೂದುಗಳನ್ನು ಅಳಿಸಲು ಬಯಸುವಿರಾ?"
+msgstr[0] "მართლა გნებავთ %d ჩანაწერის წაშლა?"
 
 #: ../src/jarabe/journal/journaltoolbox.py:831
 #: ../src/jarabe/journal/palettes.py:378
 msgid "Copy"
-msgstr "ನಕಲು ಮಾಡಿ"
+msgstr "კოპირება"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:882
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr "%(ಒಟ್ಟು)d ರಲ್ಲಿ %(ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ)d ಆಯ್ಕೆ ಮಾಡಲಾಗಿದೆ"
+msgstr "მონიშნულია %(selected)d %(total)d-დან"
 
 #: ../src/jarabe/journal/journaltoolbox.py:917
 msgid "Select filter"
-msgstr "ಫಿಲ್ಟರ್ ಆಯ್ಕೆಮಾಡಿ"
+msgstr "აირჩიეთ ფილტრი"
 
 #: ../src/jarabe/journal/listview.py:473 ../src/jarabe/journal/iconview.py:212
 msgid "Your Journal is empty"
-msgstr "ನಿಮ್ಮ ಜರ್ನಲ್ ಖಾಲಿಯಾಗಿದೆ"
+msgstr "თქვენი ჟურნალი ცარიელია"
 
 #: ../src/jarabe/journal/listview.py:476 ../src/jarabe/journal/iconview.py:215
 msgid "Your documents folder is empty"
-msgstr "ನಿಮ್ಮ ಡಾಕ್ಯುಮೆಂಟ್‌ಗಳ ಫೋಲ್ಡರ್ ಖಾಲಿಯಾಗಿದೆ"
+msgstr "თქვენი დოკუმენტების საქაღალდე ცარიელია"
 
 #: ../src/jarabe/journal/listview.py:478 ../src/jarabe/journal/iconview.py:217
 msgid "The device is empty"
-msgstr "ಸಾಧನವು ಖಾಲಿಯಾಗಿದೆ"
+msgstr "მოწყობილობა ცარიელია"
 
 #: ../src/jarabe/journal/listview.py:480 ../src/jarabe/journal/iconview.py:220
 msgid "No matching entries"
-msgstr "ಯಾವುದೇ ಹೊಂದಾಣಿಕೆಯ ನಮೂದುಗಳಿಲ್ಲ"
+msgstr "შესაბამისი ჩანაწერის გარეშე"
 
 #: ../src/jarabe/journal/misc.py:313
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr "%s ಚಟುವಟಿಕೆಯ ಹಳೆಯ ಆವೃತ್ತಿ"
+msgstr "%s აქტივობის ძველი ვერსია"
 
 #: ../src/jarabe/journal/misc.py:314
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr "ನೀವು ಆವೃತ್ತಿ %s ಗೆ ಡೌನ್‌ಗ್ರೇಡ್ ಮಾಡಲು ಬಯಸುವಿರಾ"
+msgstr "გნებავთ ვერსიის ჩამოწევა %s-მდე"
 
 #: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
-msgstr "ನಿಮ್ಮ ಜರ್ನಲ್ ತುಂಬಿದೆ"
+msgstr "თქვენი ჟურნალი სავსეა"
 
 #: ../src/jarabe/journal/modalalert.py:68
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
-"ಹೊಸದಕ್ಕೆ ಸ್ಥಳಾವಕಾಶ ಕಲ್ಪಿಸಲು ದಯವಿಟ್ಟು ಕೆಲವು ಹಳೆಯ ಜರ್ನಲ್ ನಮೂದುಗಳನ್ನು ಅಳಿಸಿ."
+"ახალი ჟურნალის ჩანაწერებისთვის ადგილის გასათავისუფლებლად საჭიროა ძველი "
+"ჟურნალის ჩანაწერები წაშალოთ."
 
 #: ../src/jarabe/journal/modalalert.py:82
 msgid "Show Journal"
-msgstr "ಜರ್ನಲ್ ತೋರಿಸಿ"
+msgstr "ჟურნალის ჩვენება"
 
 #: ../src/jarabe/journal/objectchooser.py:171
 msgid "Choose an object"
-msgstr "ವಸ್ತುವನ್ನು ಆರಿಸಿ"
+msgstr "აირჩიეთ ობიექტი"
 
 #: ../src/jarabe/journal/objectchooser.py:176
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr "%s ಚಟುವಟಿಕೆಯೊಂದಿಗೆ ತೆರೆಯಲು ವಸ್ತುವನ್ನು ಆರಿಸಿ"
+msgstr "აირჩიეთ %s აქტივობასთან გასახსნელი ობიექტი"
 
 #: ../src/jarabe/journal/objectchooser.py:184
 #: ../src/jarabe/view/viewhelp.py:335 ../src/jarabe/view/viewsource.py:579
 msgid "Close"
-msgstr "ಮುಚ್ಚು"
+msgstr "დახურვა"
 
 #: ../src/jarabe/journal/palettes.py:84
 msgid "Resume with"
-msgstr "ಇದರೊಂದಿಗೆ ಪುನರಾರಂಭಿಸಿ"
+msgstr "გაგრძელება"
 
 #: ../src/jarabe/journal/palettes.py:87
 msgid "Start with"
-msgstr "ಇದರೊಂದಿಗೆ ಪ್ರಾರಂಭಿಸಿ"
+msgstr "გახსნა"
 
 #: ../src/jarabe/journal/palettes.py:124
 msgid "Send to"
-msgstr "ಕಳುಹಿಸು"
+msgstr "გაგზავნა"
 
 #: ../src/jarabe/journal/palettes.py:133
 msgid "View Details"
-msgstr "ವಿವರಗಳನ್ನು ವೀಕ್ಷಿಸಿ"
+msgstr "დეტალური ხედი"
 
 #: ../src/jarabe/journal/palettes.py:193
 msgid "Entries without a file cannot be sent."
-msgstr "ಫೈಲ್ ಇಲ್ಲದ ನಮೂದುಗಳನ್ನು ಕಳುಹಿಸಲಾಗುವುದಿಲ್ಲ."
+msgstr "ფაილის გარეშე მყოფი ჩანაწერების გაგზავნა შეუძლებელია."
 
 #: ../src/jarabe/journal/palettes.py:272
 #: ../src/jarabe/journal/volumestoolbar.py:214
-#, fuzzy
 msgid "Documents"
-msgstr "ದಸ್ತಾವೇಜುಗಳು"
+msgstr "დოკუმენტები"
 
 #: ../src/jarabe/journal/palettes.py:363 ../src/jarabe/journal/palettes.py:423
 #: ../src/jarabe/journal/volumestoolbar.py:303
 msgid "Entries without a file cannot be copied."
-msgstr "ಫೈಲ್ ಇಲ್ಲದ ನಮೂದುಗಳನ್ನು ನಕಲು ಮಾಡಲಾಗುವುದಿಲ್ಲ."
+msgstr "ფაილის გარეშე მყოფი ჩანაწერების კოპირება შეუძლებელია."
 
 #: ../src/jarabe/journal/palettes.py:383
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] "ನೀವು %d ನಮೂದನ್ನು ನಕಲಿಸಲು ಬಯಸುವಿರಾ?"
-msgstr[1] "ನೀವು %d ನಮೂದುಗಳನ್ನು ನಕಲಿಸಲು ಬಯಸುವಿರಾ?"
+msgstr[0] "გნებავთ დააკოპიროთ %d ჩანაწერი?"
+msgstr[1] "გნებავთ დააკოპიროთ %d ჩანაწერი?"
 
 #: ../src/jarabe/journal/palettes.py:408
 msgid "Clipboard"
-msgstr "ನಕಲು ಫಲಕ"
+msgstr "გაცვლის ბაფერი"
 
 #: ../src/jarabe/journal/palettes.py:478
 msgid "No friends present"
-msgstr "ಯಾವುದೇ ಸ್ನೇಹಿತರಿಲ್ಲ"
+msgstr "მეგობრების გარეშე"
 
 #: ../src/jarabe/journal/palettes.py:483
 msgid "No valid connection found"
-msgstr "ಯಾವುದೇ ಮಾನ್ಯ ಸಂಪರ್ಕ ಕಂಡುಬಂದಿಲ್ಲ"
+msgstr "სწორი მიერთებების გარეშე"
 
 #: ../src/jarabe/journal/palettes.py:511
 msgid "No activity to resume entry"
-msgstr "ಪ್ರವೇಶವನ್ನು ಪುನರಾರಂಭಿಸಲು ಯಾವುದೇ ಚಟುವಟಿಕೆ ಇಲ್ಲ"
+msgstr "ჩანაწერის გასაგრძელებლად აქტივობა არ არსებობს"
 
 #: ../src/jarabe/journal/palettes.py:580 ../src/jarabe/view/palettes.py:133
-#, fuzzy
 msgid "Stop"
-msgstr "ನಿಲ್ಲಿಸು"
+msgstr "გაჩერება"
 
 #: ../src/jarabe/journal/palettes.py:585
 #: ../extensions/cpsection/backup/view.py:212
 #: ../extensions/cpsection/backup/view.py:265
 msgid "Continue"
-msgstr "ಮುಂದುವರಿಸಿ"
+msgstr "გაგრძელება"
 
 #: ../src/jarabe/journal/palettes.py:622
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr "%(ಒಟ್ಟು)d ನ %(ಸೂಚ್ಯಂಕ)d : %(object_title)s"
+msgstr "%(index)d %(total)d-დან : %(object_title)s"
 
 #: ../src/jarabe/journal/volumestoolbar.py:375
 #: ../src/jarabe/view/palettes.py:251 ../src/jarabe/view/palettes.py:317
-#, fuzzy, python-format
+#, python-format
 msgid "%(free_space)d MB Free"
-msgstr "%(free_space)d MB ಉಚಿತ"
+msgstr "%(free_space)d მბ თავისუფალია"
 
 #: ../src/jarabe/model/desktop.py:85
 #, python-format
 msgid "Favorites view %d"
-msgstr "ಮೆಚ್ಚಿನವುಗಳ ವೀಕ್ಷಣೆ %d"
+msgstr "სანიშნების ხედი %d"
 
 #: ../src/jarabe/model/network.py:217
 msgid "The reason for the device state change is unknown."
-msgstr "ಸಾಧನದ ಸ್ಥಿತಿಯ ಬದಲಾವಣೆಗೆ ಕಾರಣ ತಿಳಿದಿಲ್ಲ."
+msgstr "მოწყობილობის მდგომარეობის ცვლილების მიზეზი უცნობია."
 
 #: ../src/jarabe/model/network.py:219
 msgid "The state change is normal."
-msgstr "ರಾಜ್ಯ ಬದಲಾವಣೆ ಸಹಜ."
+msgstr "მდგომარეობის შეცვლა ნორმალურია."
 
 #: ../src/jarabe/model/network.py:221
 msgid "The device is now managed."
-msgstr "ಸಾಧನವನ್ನು ಈಗ ನಿರ್ವಹಿಸಲಾಗಿದೆ."
+msgstr "მოწყობილობა ახლა მართულია."
 
 #: ../src/jarabe/model/network.py:223
 msgid "The device is no longer managed."
-msgstr "ಸಾಧನವನ್ನು ಇನ್ನು ಮುಂದೆ ನಿರ್ವಹಿಸಲಾಗುವುದಿಲ್ಲ."
+msgstr "მოწყობილობა აღარ იმართება."
 
 #: ../src/jarabe/model/network.py:225
 msgid "The device could not be readied for configuration."
-msgstr "ಕಾನ್ಫಿಗರೇಶನ್‌ಗಾಗಿ ಸಾಧನವನ್ನು ಸಿದ್ಧಗೊಳಿಸಲಾಗಲಿಲ್ಲ."
+msgstr "მოწყობილობის მოსარგებლად მომზადების შეცდომა."
 
 #: ../src/jarabe/model/network.py:227
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
-"IP ಕಾನ್ಫಿಗರೇಶನ್ ಅನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಲಿಲ್ಲ (ಲಭ್ಯವಿರುವ ವಿಳಾಸ, ಕಾಲಾವಧಿ, ಇತ್ಯಾದಿ)"
+"IP კონფიგურაციის რეზერვაცია შეუძლებელია (მისამართი ხელმიუწვდომელია, "
+"მოლოდინის ვადა ამოიწურა და ა.შ.)"
 
 #: ../src/jarabe/model/network.py:230
 msgid "The IP configuration is no longer valid."
-msgstr "IP ಕಾನ್ಫಿಗರೇಶನ್ ಇನ್ನು ಮುಂದೆ ಮಾನ್ಯವಾಗಿಲ್ಲ."
+msgstr "IP-ის კონფიგურაცია უკვე არასწორია."
 
 #: ../src/jarabe/model/network.py:232
 msgid "Secrets were required, but not provided."
-msgstr "ರಹಸ್ಯಗಳು ಬೇಕಾಗಿದ್ದವು, ಆದರೆ ಒದಗಿಸಲಾಗಿಲ್ಲ."
+msgstr "საიდუმლო კოდები აუცილებელია, მაგრამ მითითებული არაა."
 
 #: ../src/jarabe/model/network.py:234
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
-"802.1X ಅರ್ಜಿದಾರರು ಪ್ರವೇಶ ಬಿಂದು ಅಥವಾ ದೃಢೀಕರಣ ಸರ್ವರ್‌ನಿಂದ ಸಂಪರ್ಕ "
-"ಕಡಿತಗೊಳಿಸಿದ್ದಾರೆ."
+"802.1X supplicant-ი წვდომის წერტილიდან ან ავთენტიკაციის სერვერიდან გაითიშა."
 
 #: ../src/jarabe/model/network.py:237
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr "802.1X ಅರ್ಜಿದಾರರ ಕಾನ್ಫಿಗರೇಶನ್ ವಿಫಲವಾಗಿದೆ."
+msgstr "802.1X supplicant-ის მორგების შეცდომა."
 
 #: ../src/jarabe/model/network.py:239
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr "802.1X ಅರ್ಜಿದಾರರು ಅನಿರೀಕ್ಷಿತವಾಗಿ ತ್ಯಜಿಸಿದ್ದಾರೆ ಅಥವಾ ವಿಫಲರಾಗಿದ್ದಾರೆ."
+msgstr "802.1X supplicant გავიდა ან მოულოდნელად გაითიშა."
 
 #: ../src/jarabe/model/network.py:241
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr "802.1X ಅರ್ಜಿದಾರರು ಪ್ರಮಾಣೀಕರಿಸಲು ತುಂಬಾ ಸಮಯ ತೆಗೆದುಕೊಂಡರು."
+msgstr "802.1X supplicant-ს ავტორიზაციისთვის მეტისმეტად დიდი დრო დასჭირდა."
 
 #: ../src/jarabe/model/network.py:243
 msgid "The PPP service failed to start within the allowed time."
-msgstr "ಅನುಮತಿಸಲಾದ ಸಮಯದೊಳಗೆ PPP ಸೇವೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ."
+msgstr "PPP სერვერის მითითებულ დროში გაშვების შეცდომა."
 
 #: ../src/jarabe/model/network.py:245
 msgid "The PPP service disconnected unexpectedly."
-msgstr "PPP ಸೇವೆಯು ಅನಿರೀಕ್ಷಿತವಾಗಿ ಸಂಪರ್ಕ ಕಡಿತಗೊಂಡಿದೆ."
+msgstr "PPP სერვისი მოულოდნელად გაითიშა."
 
 #: ../src/jarabe/model/network.py:247
 msgid "The PPP service quit or failed unexpectedly."
-msgstr "PPP ಸೇವೆಯು ಅನಿರೀಕ್ಷಿತವಾಗಿ ತ್ಯಜಿಸಲ್ಪಟ್ಟಿದೆ ಅಥವಾ ವಿಫಲವಾಗಿದೆ."
+msgstr "PPP სერვისმა მუშაობა დაასრულა ან ავარიულად გაითიშა."
 
 #: ../src/jarabe/model/network.py:249
 msgid "The DHCP service failed to start within the allowed time."
-msgstr "ಅನುಮತಿಸಲಾದ ಸಮಯದೊಳಗೆ DHCP ಸೇವೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ."
+msgstr "DHCP სერვერის მითითებულ დროში გაშვების შეცდომა."
 
 #: ../src/jarabe/model/network.py:251
 msgid "The DHCP service reported an unexpected error."
-msgstr "DHCP ಸೇವೆಯು ಅನಿರೀಕ್ಷಿತ ದೋಷವನ್ನು ವರದಿ ಮಾಡಿದೆ."
+msgstr "DHCP სერვერის მოულოდნელი შეცდომა."
 
 #: ../src/jarabe/model/network.py:253
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr "DHCP ಸೇವೆಯು ಅನಿರೀಕ್ಷಿತವಾಗಿ ನಿರ್ಗಮಿಸಿದೆ ಅಥವಾ ವಿಫಲವಾಗಿದೆ."
+msgstr "DHCP სერვისმა მუშაობა დაასრულა ან ავარიულად გაითიშა."
 
 #: ../src/jarabe/model/network.py:255
 msgid "The shared connection service failed to start."
-msgstr "ಹಂಚಿದ ಸಂಪರ್ಕ ಸೇವೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ."
+msgstr "გაზიარებული კავშირის სერვისის გაშვების შეცდომა."
 
 #: ../src/jarabe/model/network.py:257
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr "ಹಂಚಿದ ಸಂಪರ್ಕ ಸೇವೆಯು ಅನಿರೀಕ್ಷಿತವಾಗಿ ಸ್ಥಗಿತಗೊಂಡಿದೆ ಅಥವಾ ವಿಫಲವಾಗಿದೆ."
+msgstr "გაზიარებული კავშირის  სერვისმა მუშაობა დაასრულა ან ავარიულად გაითიშა."
 
 #: ../src/jarabe/model/network.py:260
 msgid "The AutoIP service failed to start."
-msgstr "AutoIP ಸೇವೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ."
+msgstr "AutoIP-ის სერვისის გაშვების შეცდომა."
 
 #: ../src/jarabe/model/network.py:262
 msgid "The AutoIP service reported an unexpected error."
-msgstr "ಆಟೋಐಪಿ ಸೇವೆಯು ಅನಿರೀಕ್ಷಿತ ದೋಷವನ್ನು ವರದಿ ಮಾಡಿದೆ."
+msgstr "AutoIP სერვერის მოულოდნელი შეცდომა."
 
 #: ../src/jarabe/model/network.py:264
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr "ಆಟೋಐಪಿ ಸೇವೆಯು ಅನಿರೀಕ್ಷಿತವಾಗಿ ಸ್ಥಗಿತಗೊಂಡಿದೆ ಅಥವಾ ವಿಫಲವಾಗಿದೆ"
+msgstr "AutoIP სერვისმა მუშაობა დაასრულა ან ავარიულად გაითიშა."
 
 #: ../src/jarabe/model/network.py:266
 msgid "Dialing failed because the line was busy."
-msgstr "ಲೈನ್ ಕಾರ್ಯನಿರತವಾಗಿರುವ ಕಾರಣ ಡಯಲಿಂಗ್ ವಿಫಲವಾಗಿದೆ"
+msgstr "დარეკვა შეუძლებელია. ხაზი დაკავებულია."
 
 #: ../src/jarabe/model/network.py:268
 msgid "Dialing failed because there was no dial tone."
-msgstr "ಡಯಲ್ ಟೋನ್ ಇಲ್ಲದ ಕಾರಣ ಡಯಲಿಂಗ್ ವಿಫಲವಾಗಿದೆ."
+msgstr "ზუმერის არარსებობის გამო დარეკვა შეუძლებელია."
 
 #: ../src/jarabe/model/network.py:270
 msgid "Dialing failed because there was no carrier."
-msgstr "ಕ್ಯಾರಿಯರ್ ಇಲ್ಲದ ಕಾರಣ ಡಯಲಿಂಗ್ ವಿಫಲವಾಗಿದೆ."
+msgstr "ოპერატორის არარსებობის გამო დარეკვა შეუძლებელია."
 
 #: ../src/jarabe/model/network.py:272
 msgid "Dialing timed out."
-msgstr "ಡಯಲಿಂಗ್ ಸಮಯ ಮೀರಿದೆ."
+msgstr "დარეკვის მოლოდინის დრო გავიდა."
 
 #: ../src/jarabe/model/network.py:274
 msgid "Dialing failed."
-msgstr "ಡಯಲಿಂಗ್ ವಿಫಲವಾಗಿದೆ."
+msgstr "დარეკვის შეცდომა."
 
 #: ../src/jarabe/model/network.py:276
 msgid "Modem initialization failed."
-msgstr "ಮೋಡೆಮ್ ಆರಂಭಿಸುವಿಕೆ ವಿಫಲವಾಗಿದೆ."
+msgstr "მოდემის ინიციალიზაციის შეცდომა."
 
 #: ../src/jarabe/model/network.py:278
 msgid "Failed to select the specified GSM APN"
-msgstr "ನಿರ್ದಿಷ್ಟಪಡಿಸಿದ GSM APN ಅನ್ನು ಆಯ್ಕೆ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ"
+msgstr "მითითებული GSM APN-ის არჩევის შეცდომა"
 
 #: ../src/jarabe/model/network.py:280
 msgid "Not searching for networks."
-msgstr "ನೆಟ್‌ವರ್ಕ್‌ಗಳಿಗಾಗಿ ಹುಡುಕುತ್ತಿಲ್ಲ"
+msgstr "ქსელებს არ ვეძებ."
 
 #: ../src/jarabe/model/network.py:282
 msgid "Network registration was denied."
-msgstr "ನೆಟ್‌ವರ್ಕ್ ನೋಂದಣಿಯನ್ನು ನಿರಾಕರಿಸಲಾಗಿದೆ."
+msgstr "ქსელში რეგისტრაცია უარყოფილია."
 
 #: ../src/jarabe/model/network.py:284
 msgid "Network registration timed out."
-msgstr "ನೆಟ್‌ವರ್ಕ್ ನೋಂದಣಿ ಸಮಯ ಮೀರಿದೆ."
+msgstr "ქსელში რეგისტრაციის მოლოდინის ვადა ამოიწურა."
 
 #: ../src/jarabe/model/network.py:286
 msgid "Failed to register with the requested GSM network."
-msgstr "ವಿನಂತಿಸಿದ GSM ನೆಟ್‌ವರ್ಕ್‌ನೊಂದಿಗೆ ನೋಂದಾಯಿಸಲು ವಿಫಲವಾಗಿದೆ."
+msgstr "მოთხოვნილ GSM ქსელში რეგისტრაციის შეცდომა."
 
 #: ../src/jarabe/model/network.py:288
 msgid "PIN check failed."
-msgstr "ಪಿನ್ ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ."
+msgstr "PIN-ის შემოწმების შეცდომა."
 
 #: ../src/jarabe/model/network.py:290
 msgid "Necessary firmware for the device may be missing."
-msgstr "ಸಾಧನಕ್ಕೆ ಅಗತ್ಯವಾದ ಫರ್ಮ್‌ವೇರ್ ಕಾಣೆಯಾಗಿರಬಹುದು."
+msgstr "შეიძლება მოწყობილობის შესაბამისი მიკროკოდი ნაპოვნი არაა."
 
 #: ../src/jarabe/model/network.py:292
 msgid "The device was removed."
-msgstr "ಸಾಧನವನ್ನು ತೆಗೆದುಹಾಕಲಾಗಿದೆ."
+msgstr "მოწყობილობა გამოერთებულია."
 
 #: ../src/jarabe/model/network.py:294
 msgid "NetworkManager went to sleep."
-msgstr "ನೆಟ್‌ವರ್ಕ್ ಮ್ಯಾನೇಜರ್ ನಿದ್ರೆಗೆ ಜಾರಿದರು."
+msgstr "NetworkManager-მა დაიძინა."
 
 #: ../src/jarabe/model/network.py:296
 msgid "The device's active connection was removed or disappeared."
-msgstr "ಸಾಧನದ ಸಕ್ರಿಯ ಸಂಪರ್ಕವನ್ನು ತೆಗೆದುಹಾಕಲಾಗಿದೆ ಅಥವಾ ಕಣ್ಮರೆಯಾಗಿದೆ."
+msgstr "მოწყობილობის აქტიური მიერთება გამოერთებულია ან გაქრა."
 
 #: ../src/jarabe/model/network.py:299
 msgid "A user or client requested the disconnection."
-msgstr "ಬಳಕೆದಾರ ಅಥವಾ ಕ್ಲೈಂಟ್ ಸಂಪರ್ಕ ಕಡಿತಗೊಳಿಸಲು ವಿನಂತಿಸಿದ್ದಾರೆ."
+msgstr "მომხმარებელმა ან კლიენტმა კავშირის გაწყვეტა მოითხოვა."
 
 #: ../src/jarabe/model/network.py:301
 msgid "The device's carrier/link changed."
-msgstr "ಸಾಧನದ ವಾಹಕ/ಲಿಂಕ್ ಬದಲಾಗಿದೆ."
+msgstr "მოწყობილობის ოპერატორი/არხი შეიცვალა."
 
 #: ../src/jarabe/model/network.py:303
 msgid "The device's existing connection was assumed."
-msgstr "ಸಾಧನದ ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಸಂಪರ್ಕವನ್ನು ಊಹಿಸಲಾಗಿದೆ."
+msgstr "გამოიყენება მოწყობილობის უკვე არსებული მიერთება."
 
 #: ../src/jarabe/model/network.py:305
 msgid "The supplicant is now available."
-msgstr "ಅರ್ಜಿದಾರರು ಈಗ ಲಭ್ಯವಿದ್ದಾರೆ."
+msgstr "Supplicant-ი ახლა ხელმისაწვდომია."
 
 #: ../src/jarabe/model/network.py:307
 msgid "The modem could not be found."
-msgstr "ಮೋಡೆಮ್ ಅನ್ನು ಕಂಡುಹಿಡಿಯಲಾಗಲಿಲ್ಲ."
+msgstr "მოდემის პოვნა შეუძლებელია."
 
 #: ../src/jarabe/model/network.py:309
 msgid "The Bluetooth connection failed or timed out."
-msgstr "ಬ್ಲೂಟೂತ್ ಸಂಪರ್ಕವು ವಿಫಲವಾಗಿದೆ ಅಥವಾ ಸಮಯ ಮೀರಿದೆ."
+msgstr "ბლუთუზის მიერთების შეცდომა ან მისი მოლოდინის ვადა ამოიწურა."
 
 #: ../src/jarabe/model/network.py:311
 msgid "Unused."
-msgstr "ಬಳಕೆಯಾಗಿಲ್ಲ."
+msgstr "გამოუყენებელია."
 
 #: ../src/jarabe/model/screenshot.py:59 ../src/jarabe/view/viewhelp.py:70
-#, fuzzy
 msgid "Mesh"
-msgstr "ಜಾಲರಿ"
+msgstr "ბადე"
 
 #: ../src/jarabe/model/screenshot.py:72
-#, fuzzy
 msgid "Screenshot"
-msgstr "ತೆರೆಚಿತ್ರ"
+msgstr "ეკრანის ანაბეჭდი"
 
 #: ../src/jarabe/model/screenshot.py:74
-#, fuzzy, python-format
+#, python-format
 msgid "Screenshot of \"%s\""
-msgstr "\"%s\" ನ ಸ್ಕ್ರೀನ್‌ಶಾಟ್"
+msgstr "%s-ის ეკრანის ანაბეჭდი"
 
 #: ../src/jarabe/view/alerts.py:38 ../src/jarabe/view/alerts.py:48
 msgid "Activity launcher"
-msgstr "ಚಟುವಟಿಕೆ ಲಾಂಚರ್"
+msgstr "აქტივობის გამშვები"
 
 #: ../src/jarabe/view/alerts.py:39
 #, python-format
 msgid "%s is already running. Please stop %s before launching it again."
-msgstr ""
-"%s ಈಗಾಗಲೇ ಚಾಲನೆಯಲ್ಲಿದೆ. ದಯವಿಟ್ಟು ಅದನ್ನು ಮತ್ತೆ ಪ್ರಾರಂಭಿಸುವ ಮೊದಲು %s ನಿಲ್ಲಿಸಿ."
+msgstr "%s უკვე გაშვებულია. თავიდან გაშვებამდე აუცილებელია %s ჯერ გამორთოთ."
 
 #: ../src/jarabe/view/alerts.py:49
 msgid ""
 "The maximum number of open activities has been reached. Please close an "
 "activity before launching a new one."
 msgstr ""
-"ಮುಕ್ತ ಚಟುವಟಿಕೆಗಳ ಗರಿಷ್ಠ ಸಂಖ್ಯೆಯನ್ನು ತಲುಪಲಾಗಿದೆ. ಹೊಸದನ್ನು ಪ್ರಾರಂಭಿಸುವ ಮೊದಲು "
-"ದಯವಿಟ್ಟು ಚಟುವಟಿಕೆಯನ್ನು ಮುಚ್ಚಿ."
+"მიღწეულია ღია აქტივობების მაქსიმალური რაოდენობა. ახალი აქტივობის გაშვებამდე "
+"საჭიროა ღია აქტივობა დახუროთ."
 
 #: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
-msgstr "ಸ್ನೇಹಿತನನ್ನು ತೆಗೆದುಹಾಕಿ"
+msgstr "მეგობრის წაშლა"
 
 #: ../src/jarabe/view/buddymenu.py:76
 msgid "Make friend"
-msgstr "ಗೆಳೆತನ ಮಾಡು"
+msgstr "მეგობრის დამატება"
 
 #: ../src/jarabe/view/buddymenu.py:108
 msgid "Shutdown"
-msgstr "ಗಣಕ ನಿಲುಗಡೆ"
+msgstr "გამორთვა"
 
 #: ../src/jarabe/view/buddymenu.py:113
 msgid "Restart"
-msgstr "ಮತ್ತೆ ಶುರುಮಾಡು"
+msgstr "რესტარტი"
 
 #: ../src/jarabe/view/buddymenu.py:119
 msgid "Logout"
-msgstr "ಸಂಪರ್ಕ ತೊರೆ"
+msgstr "გასვლა"
 
 #: ../src/jarabe/view/buddymenu.py:124
 msgid "My Settings"
-msgstr "ನನ್ನ ಸೆಟ್ಟಿಂಗ್‌ಗಳು"
+msgstr "ჩემი პარამეტრები"
 
 #: ../src/jarabe/view/buddymenu.py:183
 #, python-format
 msgid "Invite to %s"
-msgstr "%s ಗೆ ಆಹ್ವಾನಿಸಿ"
+msgstr "%s-ზე მიწვევა"
 
 #: ../src/jarabe/view/launcher.py:159
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr "<b>%s</b> ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ."
+msgstr "<b>%s</b>-ის გაშვების შეცდომა."
 
 #: ../src/jarabe/view/palettes.py:53
 msgid "Starting..."
-msgstr "ಆರಂಭಿಕ..."
+msgstr "გაშვება..."
 
 #: ../src/jarabe/view/palettes.py:63
 msgid "Activity failed to start"
-msgstr "ಚಟುವಟಿಕೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ"
+msgstr "აქტივობის გაშვების შეცდომა"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:105
 msgid "View Source"
-msgstr "ಮೂಲವನ್ನು ವೀಕ್ಷಿಸಿ"
+msgstr "წყაროს ნახვა"
 
 #: ../src/jarabe/view/palettes.py:112
 msgid "View Help"
-msgstr "ಸಹಾಯವನ್ನು ವೀಕ್ಷಿಸಿ"
+msgstr "დახმარების ნახვა"
 
 #: ../src/jarabe/view/palettes.py:179
 msgid "Start new"
-msgstr "ಹೊಸದನ್ನು ಪ್ರಾರಂಭಿಸಿ"
+msgstr "ახლის დაწყება"
 
 #: ../src/jarabe/view/palettes.py:266
-#, fuzzy
 msgctxt "Volume"
 msgid "Remove"
-msgstr "ತೆಗೆದು ಹಾಕು"
+msgstr "წაშლა"
 
 #: ../src/jarabe/view/viewhelp.py:304
 msgid "Help Manual"
-msgstr "ಸಹಾಯ ಕೈಪಿಡಿ"
+msgstr "დახმარების სახელმძღვანელო"
 
 #: ../src/jarabe/view/viewhelp.py:318
 msgid "Social Help"
-msgstr "ಸಾಮಾಜಿಕ ಸಹಾಯ"
+msgstr "სოციალური დახმარება"
 
 #: ../src/jarabe/view/viewhelp.py:326
 #, python-format
 msgid "Help: %s"
-msgstr "ಸಹಾಯ: %s"
+msgstr "დახმარება: %s"
 
 #: ../src/jarabe/view/viewsource.py:364
 msgid "Instance Source"
-msgstr "ನಿದರ್ಶನ ಮೂಲ"
+msgstr "ასლის წყარო"
 
 #: ../src/jarabe/view/viewsource.py:392
 #, python-format
 msgid "Do you want to duplicate %s Activity?"
-msgstr "ನೀವು %s ಚಟುವಟಿಕೆಯನ್ನು ನಕಲು ಮಾಡಲು ಬಯಸುವಿರಾ?"
+msgstr "გნებავთ %s აქტივობის წაშლა?"
 
 #: ../src/jarabe/view/viewsource.py:394
 msgid "This may take a few minutes"
-msgstr "ಇದು ಕೆಲವು ನಿಮಿಷಗಳನ್ನು ತೆಗೆದುಕೊಳ್ಳಬಹುದು"
+msgstr "ამას რამდენიმე წუთი შეიძლება დასჭირდეს"
 
 #: ../src/jarabe/view/viewsource.py:408
 msgid "Duplicating activity..."
-msgstr "ನಕಲು ಚಟುವಟಿಕೆ..."
+msgstr "აქტივობის დუბლირება..."
 
 #: ../src/jarabe/view/viewsource.py:447
 msgid "Duplicated"
-msgstr "ನಕಲು ಮಾಡಲಾಗಿದೆ"
+msgstr "დუბლირებული"
 
 #: ../src/jarabe/view/viewsource.py:448
 msgid "The activity has been duplicated"
-msgstr "ಚಟುವಟಿಕೆಯನ್ನು ನಕಲು ಮಾಡಲಾಗಿದೆ"
+msgstr "აქტივობა დუბლირებულია"
 
 #: ../src/jarabe/view/viewsource.py:462
 msgid "Duplicated activity already exists"
-msgstr "ನಕಲಿ ಚಟುವಟಿಕೆ ಈಗಾಗಲೇ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ"
+msgstr "დუბლირებული აქტივობა უკვე არსებობს"
 
 #: ../src/jarabe/view/viewsource.py:463
 msgid "Delete your copy before trying to duplicate the activity again"
-msgstr "ಚಟುವಟಿಕೆಯನ್ನು ಮತ್ತೆ ನಕಲು ಮಾಡಲು ಪ್ರಯತ್ನಿಸುವ ಮೊದಲು ನಿಮ್ಮ ನಕಲನ್ನು ಅಳಿಸಿ"
+msgstr "აქტივობის დუბლირებამდე აუცილებელია მისი თქვენი ასლი წაშალოთ"
 
 #: ../src/jarabe/view/viewsource.py:478
 msgid "Source"
-msgstr "ಮೂಲ"
+msgstr "წყარო"
 
 #: ../src/jarabe/view/viewsource.py:542
 msgid "Activity Bundle Source"
-msgstr "ಚಟುವಟಿಕೆ ಬಂಡಲ್ ಮೂಲ"
+msgstr "Activity Bundle Source"
 
 #: ../src/jarabe/view/viewsource.py:561
 msgid "Sugar Toolkit Source"
-msgstr "ಸಕ್ಕರೆ ಟೂಲ್ಕಿಟ್ ಮೂಲ"
+msgstr "Sugar Toolkit Source"
 
 #: ../src/jarabe/view/viewsource.py:568
 #, python-format
 msgid "View source: %s"
-msgstr "ಮೂಲವನ್ನು ವೀಕ್ಷಿಸಿ: %s"
+msgstr "წყაროს ნახვა: %s"
 
 #: ../src/jarabe/view/viewsource.py:569
 #, python-format
 msgid "View source: %r"
-msgstr "ಮೂಲವನ್ನು ವೀಕ್ಷಿಸಿ: %r"
+msgstr "წყაროს ნახვა: %r"
 
 #: ../src/jarabe/view/viewsource.py:809
 msgid "Please select a file in the left panel."
-msgstr "ದಯವಿಟ್ಟು ಎಡ ಫಲಕದಲ್ಲಿ ಫೈಲ್ ಅನ್ನು ಆಯ್ಕೆಮಾಡಿ."
+msgstr "აირჩიეთ ფაილი მარცხენა პანელში."
 
 #: ../extensions/cpsection/backup/__init__.py:22
 msgid "Backup"
-msgstr "ಬ್ಯಾಕಪ್"
+msgstr "მარქაფი"
 
 #: ../extensions/cpsection/backup/backends/volume.py:61
 #: ../extensions/cpsection/backup/backends/volume.py:171
 msgid "Please connect a device to continue"
-msgstr "ಮುಂದುವರಿಸಲು ಸಾಧನವನ್ನು ಸಂಪರ್ಕಿಸಿ"
+msgstr "გასაგრძელებლად მიაერთეთ მოწყობილობა"
 
 #: ../extensions/cpsection/backup/backends/volume.py:69
 #: ../extensions/cpsection/backup/backends/volume.py:178
 msgid "Select your volume"
-msgstr "ನಿಮ್ಮ ಪರಿಮಾಣವನ್ನು ಆಯ್ಕೆಮಾಡಿ"
+msgstr "აირჩიეთ თქვენი ტომი"
 
 #: ../extensions/cpsection/backup/backends/volume.py:78
 msgid "Not enough space in volume"
-msgstr "ಪರಿಮಾಣದಲ್ಲಿ ಸಾಕಷ್ಟು ಸ್ಥಳವಿಲ್ಲ"
+msgstr "ტომზე საკმარისი ადგილი არაა"
 
 #: ../extensions/cpsection/backup/backends/volume.py:122
 #, python-format
 msgid "Backup from user %s"
-msgstr "%s ಬಳಕೆದಾರರಿಂದ ಬ್ಯಾಕಪ್"
+msgstr "მარქაფი მომხმარებლისგან %s"
 
 #: ../extensions/cpsection/backup/backends/volume.py:191
 msgid "No checkpoints found in the device"
-msgstr "ಸಾಧನದಲ್ಲಿ ಯಾವುದೇ ಚೆಕ್‌ಪಾಯಿಂಟ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ"
+msgstr "მოწყობილობაში საკონტროლო წერტილები ვერ ვიპოვე"
 
 #: ../extensions/cpsection/backup/backends/volume.py:199
 msgid "Select your checkpoint"
-msgstr "ನಿಮ್ಮ ಚೆಕ್‌ಪಾಯಿಂಟ್ ಆಯ್ಕೆಮಾಡಿ"
+msgstr "აირჩიეთ თქვენი საკვანძო წერტილი"
 
 #: ../extensions/cpsection/backup/backends/volume.py:210
 msgid "Not enough space in disk"
-msgstr "ಡಿಸ್ಕ್ನಲ್ಲಿ ಸಾಕಷ್ಟು ಸ್ಥಳವಿಲ್ಲ"
+msgstr "დისკზე საკმარისი ადგილი არაა"
 
 #: ../extensions/cpsection/backup/backends/volume.py:329
 msgid "Local Device Backup"
-msgstr "ಸ್ಥಳೀಯ ಸಾಧನ ಬ್ಯಾಕಪ್"
+msgstr "ლოკალური მოწყობილობის მარქაფი"
 
 #: ../extensions/cpsection/backup/view.py:133
 msgid "Save the contents of your Journal"
-msgstr "ನಿಮ್ಮ ಜರ್ನಲ್‌ನ ವಿಷಯಗಳನ್ನು ಉಳಿಸಿ"
+msgstr "თქვენი ჟურნალის შემცველობის შენახვა"
 
 #: ../extensions/cpsection/backup/view.py:141
 msgid "Restore the contents of your Journal"
-msgstr "ನಿಮ್ಮ ಜರ್ನಲ್‌ನ ವಿಷಯಗಳನ್ನು ಮರುಸ್ಥಾಪಿಸಿ"
+msgstr "თქვენი ჟურნალის შემცველობის აღდგენა"
 
 #: ../extensions/cpsection/backup/view.py:223
 msgid "Please close all the activities, and start again"
-msgstr "ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಚಟುವಟಿಕೆಗಳನ್ನು ಮುಚ್ಚಿ ಮತ್ತು ಮತ್ತೆ ಪ್ರಾರಂಭಿಸಿ"
+msgstr "დახურეთ ყველა აქტივობა და თავიდან სცადეთ"
 
 #: ../extensions/cpsection/backup/view.py:229
 msgid "Select where you want create your backup"
-msgstr "ನಿಮ್ಮ ಬ್ಯಾಕಪ್ ಅನ್ನು ಎಲ್ಲಿ ರಚಿಸಲು ಬಯಸುತ್ತೀರಿ ಎಂಬುದನ್ನು ಆಯ್ಕೆಮಾಡಿ"
+msgstr "აირჩიეთ, სად გნებავთ, მარქაფი შექმნათ"
 
 #: ../extensions/cpsection/backup/view.py:231
 msgid "Select where you want retrieve your restore"
-msgstr "ನಿಮ್ಮ ಮರುಸ್ಥಾಪನೆಯನ್ನು ಎಲ್ಲಿ ಹಿಂಪಡೆಯಲು ಬಯಸುತ್ತೀರಿ ಎಂಬುದನ್ನು ಆಯ್ಕೆಮಾಡಿ"
+msgstr "აირჩიეთ, სად გნებავთ, თქვენი აღდგენა მიიღოთ"
 
 #: ../extensions/cpsection/backup/view.py:271
 msgid "Retry"
-msgstr "ಮರುಪ್ರಯತ್ನಿಸಿ"
+msgstr "გამეორება"
 
 #: ../extensions/cpsection/backup/view.py:290
 msgid "Starting backup..."
-msgstr "ಬ್ಯಾಕಪ್ ಪ್ರಾರಂಭಿಸಲಾಗುತ್ತಿದೆ..."
+msgstr "მარქაფის დასაწყისი..."
 
 #: ../extensions/cpsection/backup/view.py:294
 msgid "Starting restore..."
-msgstr "ಮರುಸ್ಥಾಪನೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲಾಗುತ್ತಿದೆ..."
+msgstr "აღდგენის დასაწყისი..."
 
 #: ../extensions/cpsection/backup/view.py:321
 msgid ""
@@ -2516,26 +2435,23 @@ msgid ""
 "will first be emptied of all its content; then the restored content will be "
 "added."
 msgstr ""
-"ನನ್ನ ಜರ್ನಲ್‌ನ ವಿಷಯವನ್ನು ಮರುಸ್ಥಾಪಿಸಲು ನಾನು ಬಯಸುತ್ತೇನೆ. ಇದನ್ನು ಮಾಡಲು, ನನ್ನ "
-"ಜರ್ನಲ್ ಅನ್ನು ಮೊದಲು ಅದರ ಎಲ್ಲಾ ವಿಷಯಗಳಿಂದ ಖಾಲಿ ಮಾಡಲಾಗುತ್ತದೆ; ನಂತರ ಮರುಸ್ಥಾಪಿಸಲಾದ "
-"ವಿಷಯವನ್ನು ಸೇರಿಸಲಾಗುತ್ತದೆ."
 
 #: ../extensions/cpsection/backup/view.py:327
 msgid "Confirm"
-msgstr "ದೃಢೀಕರಿಸಿ"
+msgstr "დადასტურება"
 
 #: ../extensions/cpsection/backup/view.py:365
 msgid "Operation started"
-msgstr "ಕಾರ್ಯಾಚರಣೆ ಪ್ರಾರಂಭವಾಯಿತು"
+msgstr "ოპერაცია გაეშვა"
 
 #: ../extensions/cpsection/backup/view.py:377
 msgid "Backup finished successfully"
-msgstr "ಬ್ಯಾಕಪ್ ಯಶಸ್ವಿಯಾಗಿ ಮುಗಿದಿದೆ"
+msgstr "მარქაფი წარმატებით დასრულდა"
 
 #: ../extensions/cpsection/backup/view.py:379
 msgid "Restore realized successfully."
-msgstr "ಮರುಸ್ಥಾಪನೆ ಯಶಸ್ವಿಯಾಗಿ ಅರಿತುಕೊಂಡಿದೆ."
+msgstr "აღდგენა წარმატებით ჩატარდა."
 
 #: ../src/jarabe/frame/notification.py:62
 msgid "Clear notifications"
-msgstr "ಅಧಿಸೂಚನೆಗಳನ್ನು ತೆರವುಗೊಳಿಸಿ"
+msgstr "შეტყობინებების გასუფთავება"
