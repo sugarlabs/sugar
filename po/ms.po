@@ -19,11 +19,11 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
-msgstr ""
+msgstr "Lokasi berubah ke GSettings"
 
 #: ../data/org.sugarlabs.gschema.xml.h:2
 msgid "This key shows whether or not GConf values were migrated to GSettings"
-msgstr ""
+msgstr "Butang ini menunjukkan jika tetapan GConf berpindah ke GSettings "
 
 #: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
 msgid "Backup URL"
@@ -51,19 +51,19 @@ msgstr "Jika BENAR, Sugar akan memaparkan pilihan \"Mula semula\"."
 
 #: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
 msgid "Show Shutdown"
-msgstr ""
+msgstr "Paparkan Menutup"
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
-msgstr ""
+msgstr "Jika BENAR, Sugar akan memaparkan pilihan \"Menutup\"."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
-msgstr ""
+msgstr "Paparkan Daftar"
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
-msgstr ""
+msgstr "Kalau BENAR, Sugar akan memaparkan pilihan \"Daftar\" di palet kawan."
 
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
 msgid "Bundle IDs of protected activities"
@@ -120,15 +120,15 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:23
 msgid "User Gender"
-msgstr ""
+msgstr "Jantina Pengguna"
 
 #: ../data/org.sugarlabs.gschema.xml.h:24
 msgid "Gender of the Sugar user, either male, female, or unassigned"
-msgstr ""
+msgstr "Jantina pengguna Sugar, sama ada lelaki, perempuan, atau ditugaskan"
 
 #: ../data/org.sugarlabs.gschema.xml.h:25
 msgid "User Birth Timestamp"
-msgstr ""
+msgstr "Cap Masa Kelahiran Pengguna"
 
 #: ../data/org.sugarlabs.gschema.xml.h:26
 msgid "Birth timestamp (seconds since the epoch)"
@@ -136,7 +136,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:27
 msgid "Group Label"
-msgstr ""
+msgstr "Label Kumpulan"
 
 #: ../data/org.sugarlabs.gschema.xml.h:28
 msgid "Label associated with age, e.g., '2nd Grade'"
@@ -184,11 +184,11 @@ msgstr "Seting bagi menyenyapkan peranti bunyi."
 
 #: ../data/org.sugarlabs.gschema.xml.h:39
 msgid "Brightness Level"
-msgstr ""
+msgstr "Tahap Kecerahan"
 
 #: ../data/org.sugarlabs.gschema.xml.h:40
 msgid "Brightness level for the computer screen."
-msgstr ""
+msgstr "Tahap Kecerahan untuk komputer."
 
 #: ../data/org.sugarlabs.gschema.xml.h:41
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:13
@@ -215,7 +215,7 @@ msgstr ""
 #: ../data/org.sugarlabs.gschema.xml.h:46
 msgid ""
 "Delay in milliseconds between animation updates for launcher pulsing icon."
-msgstr ""
+msgstr "Kelewatan dalam milisaat antara kemas kini animasi untuk ikon berdenyut pelancar."
 
 #: ../data/org.sugarlabs.gschema.xml.h:47 ../data/sugar.schemas.in.h:19
 msgid "Edge Delay"
@@ -352,7 +352,7 @@ msgstr ""
 
 #: ../data/org.sugarlabs.gschema.xml.h:76
 msgid "If TRUE, Sugar will autoconnect to Ad-hoc networks."
-msgstr ""
+msgstr "Jika BENAR, Sugar akan autosambung ke Ad-hoc"
 
 #: ../data/org.sugarlabs.gschema.xml.h:77 ../data/sugar.schemas.in.h:49
 msgid "GSM network username (DEPRECATED/UNUSED)"
@@ -1288,24 +1288,24 @@ msgstr ""
 #: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
 #: ../src/jarabe/journal/volumestoolbar.py:304
 msgid "Warning"
-msgstr ""
+msgstr "Amaran"
 
 #: ../src/jarabe/controlpanel/gui.py:374
 #: ../src/jarabe/controlpanel/sectionview.py:45
 msgid "Changes require restart"
-msgstr ""
+msgstr "Perubahan memerlukan dimulakan semula"
 
 #: ../src/jarabe/controlpanel/gui.py:379
 msgid "Cancel changes"
-msgstr ""
+msgstr "Batalkan perubahan"
 
 #: ../src/jarabe/controlpanel/gui.py:384
 msgid "Later"
-msgstr ""
+msgstr "Kemudian"
 
 #: ../src/jarabe/controlpanel/gui.py:388
 msgid "Restart now"
-msgstr ""
+msgstr "Mulakan semula sekarang"
 
 #: ../src/jarabe/controlpanel/gui.py:419 ../src/jarabe/view/buddymenu.py:137
 msgid "An activity is not responding."
@@ -1373,11 +1373,11 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:812
 #: ../src/jarabe/journal/palettes.py:138 ../src/jarabe/journal/palettes.py:161
 msgid "Erase"
-msgstr ""
+msgstr "Kosongkan"
 
 #: ../src/jarabe/desktop/activitieslist.py:641
 msgid "Remove favorite"
-msgstr ""
+msgstr "Keluarkan "
 
 #: ../src/jarabe/desktop/activitieslist.py:645
 msgid "Make favorite"
@@ -1406,23 +1406,23 @@ msgstr ""
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:580
 msgid "Triangle"
-msgstr ""
+msgstr "Segi Tiga"
 
 #: ../src/jarabe/desktop/favoritesview.py:376
 msgid "Registration"
-msgstr ""
+msgstr "Pendaftaran"
 
 #: ../src/jarabe/desktop/favoritesview.py:377
 msgid "Please wait, searching for your school server."
-msgstr ""
+msgstr "Sila tunggu, tengah mencari pelayan sekolah anda."
 
 #: ../src/jarabe/desktop/favoritesview.py:387
 msgid "Registration Failed"
-msgstr ""
+msgstr "Pendaftaran Gagal"
 
 #: ../src/jarabe/desktop/favoritesview.py:390
 msgid "Registration Successful"
-msgstr ""
+msgstr "Pendaftaran Berjaya"
 
 #: ../src/jarabe/desktop/favoritesview.py:391
 msgid "You are now registered with your school server."
@@ -1430,11 +1430,11 @@ msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:680
 msgid "Register"
-msgstr ""
+msgstr "Daftar"
 
 #: ../src/jarabe/desktop/favoritesview.py:682
 msgid "Register again"
-msgstr ""
+msgstr "Daftar sekali"
 
 #: ../src/jarabe/desktop/homewindow.py:255
 #: ../src/jarabe/desktop/viewtoolbar.py:73
@@ -1452,7 +1452,7 @@ msgstr "Kumpulan"
 #: ../src/jarabe/desktop/homewindow.py:269
 #: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Neighborhood"
-msgstr ""
+msgstr "Kejiranan"
 
 #: ../src/jarabe/desktop/keydialog.py:92
 #, python-format
@@ -1593,15 +1593,15 @@ msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
-msgstr ""
+msgstr "F1"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
-msgstr ""
+msgstr "F3"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:62 ../src/jarabe/model/screenshot.py:69
 msgid "Activity"
@@ -1637,43 +1637,43 @@ msgstr ""
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "Kindergarten"
-msgstr ""
+msgstr "Tadika"
 
 #: ../src/jarabe/intro/agepicker.py:39
 msgid "1st Grade"
-msgstr ""
+msgstr "Darjah 1"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "2nd Grade"
-msgstr ""
+msgstr "Darjah 2"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "3rd Grade"
-msgstr ""
+msgstr "Darjah 3"
 
 #: ../src/jarabe/intro/agepicker.py:40
 msgid "4th Grade"
-msgstr ""
+msgstr "Darjah 4"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "5th Grade"
-msgstr ""
+msgstr "Darjah 5"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "6th Grade"
-msgstr ""
+msgstr "Darjah 6"
 
 #: ../src/jarabe/intro/agepicker.py:41
 msgid "7th Grade"
-msgstr ""
+msgstr "Darjah 7"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "High School"
-msgstr ""
+msgstr "Sekolah Menengah"
 
 #: ../src/jarabe/intro/agepicker.py:42
 msgid "Adult"
-msgstr ""
+msgstr "Orang Dewasa"
 
 #: ../src/jarabe/journal/expandedentry.py:153
 #: ../src/jarabe/journal/journaltoolbox.py:584
@@ -1716,7 +1716,7 @@ msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:421
 msgid "Participants:"
-msgstr ""
+msgstr "Perserta:"
 
 #: ../src/jarabe/journal/expandedentry.py:459
 msgid "Description:"
