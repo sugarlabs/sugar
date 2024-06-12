@@ -19,7 +19,6 @@ from gettext import gettext as _
 import uuid
 import time
 
-
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
@@ -36,8 +35,10 @@ from gi.repository import SugarExt
 from jarabe.journal.journaltoolbox import MainToolbox
 from jarabe.journal.journaltoolbox import AddNewBar
 from jarabe.journal.journaltoolbox import DetailToolbox
+from jarabe.journal.journaltoolbox import DashboardToolBox
 from jarabe.journal.journaltoolbox import EditToolbox
 from jarabe.journal.projectview import ProjectView
+from jarabe.journal.dashboardview import DashboardView
 
 from jarabe.journal.listview import ListView
 from jarabe.journal.listmodel import ListModel
@@ -187,6 +188,7 @@ class JournalViews(object):
     MAIN = 1
     DETAIL = 2
     PROJECT = 3
+    DASHBOARD = 4
 
 
 class JournalActivity(JournalWindow):
@@ -213,6 +215,7 @@ class JournalActivity(JournalWindow):
         self._setup_main_view()
         self._setup_secondary_view()
         self._setup_project_view()
+        self._setup_dashboard_view()
 
         self.add_events(Gdk.EventMask.ALL_EVENTS_MASK)
         self._realized_sid = self.connect('realize', self.__realize_cb)
@@ -282,6 +285,8 @@ class JournalActivity(JournalWindow):
         self._main_toolbox = MainToolbox()
         self._edit_toolbox = EditToolbox(self)
         self._main_view = Gtk.VBox()
+        self._main_toolbox.connect('dashboard-clicked',
+                                   self._show_dashboard_view)
 
         self._add_new_box = AddNewBar(_('Add new project'))
         self._add_new_box.activate.connect(self.__add_project_activate_cb)
@@ -320,6 +325,24 @@ class JournalActivity(JournalWindow):
         self.list_view_signal_connect(self._list_view_project)
         project_vbox.pack_start(self._list_view_project, True, True, 0)
         self._list_view_project.show()
+
+    def _setup_dashboard_view(self):
+        self._dashboard_toolbox = DashboardToolBox()
+        self._dashboard_toolbox.connect('refresh-clicked',
+                                        self._refresh_clicked_cb)
+        self._dashboard_toolbox.connect('journal-clicked',
+                                        self._journal_clicked_cb)
+        self._dashboard_holder = Gtk.VBox()
+        self._dashboard_view = DashboardView()
+        self._dashboard_holder.show_all()
+        self._dashboard_holder.pack_start(self._dashboard_view, True, True, 0)
+
+    def _refresh_clicked_cb(self, i):
+        self._dashboard_view._load_data()
+
+    def _journal_clicked_cb(self, i):
+        self._main_toolbox.clear_query()
+        self.show_main_view()
 
     def get_add_new_box(self):
         return self._add_new_box
@@ -525,6 +548,16 @@ class JournalActivity(JournalWindow):
         self.set_canvas(self._secondary_view)
         self._secondary_view.show()
 
+    def _show_dashboard_view(self, i):
+        self._active_view = JournalViews.DASHBOARD
+        if self.canvas != self._dashboard_holder:
+            self.set_canvas(self._dashboard_holder)
+            self._dashboard_holder.show()
+            self._toolbox = self._dashboard_toolbox
+            self.set_toolbar_box(self._dashboard_toolbox)
+        else:
+            self.set_canvas(self._main_view)
+
     def show_object(self, object_id):
         metadata = model.get(object_id)
         if metadata is None:
@@ -605,7 +638,8 @@ class JournalActivity(JournalWindow):
     def show_journal(self):
         """Become visible and show main view"""
         self.reveal()
-        self.show_main_view()
+        if self._active_view != JournalViews.DASHBOARD:
+            self.show_main_view()
 
     def get_total_number_of_entries(self):
         list_view_model = self.get_list_view().get_model()
