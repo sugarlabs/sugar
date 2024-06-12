@@ -281,6 +281,10 @@ def _new_channels_cb(connection, channels):
         if props[CHANNEL + '.ChannelType'] == CHANNEL_TYPE_FILE_TRANSFER and \
                 not props[CHANNEL + '.Requested']:
 
+            mime = props[CHANNEL_TYPE_FILE_TRANSFER + '.ContentType']
+            if mime == 'x-sugar/from-activity':
+                continue
+
             logging.debug('__new_channels_cb %r', object_path)
 
             incoming_file_transfer = IncomingFileTransfer(connection,
@@ -309,11 +313,20 @@ def _got_dispatch_operation_cb(**kwargs):
     channel_type = channel_properties[CHANNEL + '.ChannelType']
     handle_type = channel_properties[CHANNEL + '.TargetHandleType']
 
-    if handle_type == CONNECTION_HANDLE_TYPE_CONTACT and \
-       channel_type == CHANNEL_TYPE_FILE_TRANSFER:
+    if handle_type != CONNECTION_HANDLE_TYPE_CONTACT or \
+       channel_type != CHANNEL_TYPE_FILE_TRANSFER:
+        return
+
+    mime_type = channel_properties[CHANNEL_TYPE_FILE_TRANSFER + '.ContentType']
+    filename = channel_properties[CHANNEL_TYPE_FILE_TRANSFER + '.Filename']
+
+    bus = dbus.Bus()
+    operation = bus.get_object(CHANNEL_DISPATCHER, dispatch_operation_path)
+    if mime_type == 'x-sugar/from-activity':
+        # The requested activity client is in the file name
+        operation.HandleWith(str(filename))
+    else:
         # We must claim our file transfers so that empathy doesn't get it
-        bus = dbus.Bus()
-        operation = bus.get_object(CHANNEL_DISPATCHER, dispatch_operation_path)
         operation.Claim()
 
 
