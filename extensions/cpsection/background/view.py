@@ -16,13 +16,17 @@
 
 
 import os
+import shutil
 
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GdkPixbuf
 
+from sugar3 import env
+from sugar3 import mime
 from sugar3.graphics import style
+from sugar3.datastore import datastore
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from jarabe.controlpanel.sectionview import SectionView
 
@@ -37,6 +41,7 @@ class Background(SectionView):
         self._model = model
         self._images_loaded = False
         self._append_to_store_sid = None
+        self._journal_images = []
 
         self.connect('realize', self.__realize_cb)
         self.connect('unrealize', self.__unrealize_cb)
@@ -117,6 +122,14 @@ class Background(SectionView):
                     for file_ in files:
                         file_paths.append(os.path.join(root, file_))
 
+        ds_objects, num_objects = datastore.find(
+            {'mime_type': ['image/png', 'image/jpg']})
+
+        for i in range(0, num_objects):
+            file_path = ds_objects[i].get_file_path()
+            file_paths.append(file_path)
+            self._journal_images.append(file_path)
+
         self._append_to_store(file_paths)
         self.setup()
 
@@ -184,6 +197,14 @@ class Background(SectionView):
         image_path, _iter = selected
         iter_ = self._store.get_iter(widget.get_selected_items()[0])
         image_path = self._store.get(iter_, 1)[0]
+
+        if image_path in self._journal_images:
+            extension = image_path.split('.')[-1]
+            filename = 'background.' + extension
+            new_image_path = os.path.join(env.get_profile_path(), filename)
+            shutil.copy(image_path, new_image_path)
+            image_path = new_image_path
+
         self._model.set_background_image_path(image_path)
 
     def _select_background(self):
