@@ -22,7 +22,7 @@ Sugar Live Build is a complete bootable image containing Sugar, the toolkits, an
 
 -   contains all build dependencies, configured source trees (git clones in `/usr/src`), and binaries (`make install`) for Sugar modules and the demonstration activity set.
 
-See [downloads](http://people.sugarlabs.org/~quozl/sugar-live-build/) for the ISO9660 image file.
+See [downloads](https://people.sugarlabs.org/ibiamchihurumnaya/sugar-live-build-20230825/) for the ISO9660 image file.
 
 Once installed, Sugar Live Build can be used to make changes to Sugar, the toolkits, the demonstration activities, or to write new activities.
 
