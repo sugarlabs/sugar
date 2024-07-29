@@ -51,7 +51,7 @@ def generate_unique_id():
     nick = profile.get_nick_name()
     pubkey = profile.get_pubkey()
     m = hashlib.sha1()
-    m.update(pubkey)
+    m.update(pubkey.encode())
     hexhash = m.hexdigest()
 
     nick_letters = "".join([x for x in nick if x.isalpha()])
