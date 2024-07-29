@@ -941,6 +941,7 @@ def get_documents_path():
         return _documents_path
 
     try:
+        subprocess.run(['xdg-user-dirs-update'])
         pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
                                 stdout=subprocess.PIPE)
         documents_path = os.path.normpath(
