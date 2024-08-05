@@ -8,15 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2023-03-25 02:56+0000\n"
+"PO-Revision-Date: 2024-08-06 02:26+0000\n"
 "Last-Translator: NF <rkavt@smartprojects.ge>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: Georgian <http://weblate.sugarlabs.org/projects/core-sugar/"
+"sugar/ka/>\n"
 "Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 2.5.1.1\n"
+"X-Generator: Weblate 5.4.2\n"
 "X-POOTLE-MTIME: 1679712999.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
@@ -867,6 +868,9 @@ msgid ""
 "Sugar Activities.  Changing servers means discussions will happen in a "
 "different place with different people."
 msgstr ""
+"Social Help ფორუმია, რომელიც საშუალებას გაძლევთ, დაუკავშირდეთ პროგრამისტებს "
+"და განიხილოთ Sugar-ის აქტივობები.   სერვერების შეცვლა ნიშნავს, რომ კამათი "
+"სხვადასხვა ადგილას, სხვადასხვა ხალხთან მოხდება."
 
 #: ../extensions/cpsection/network/view.py:173
 msgid "Social Help Server:"
@@ -895,6 +899,8 @@ msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
+"პროგრამების განახლება ასწორებს შეცდომებს, აცილებს უსაფრთხოების მოწყვლადობებს "
+"და მოგაწოდებთ ახალ ფუნქციებს."
 
 #: ../extensions/cpsection/updater/view.py:84
 msgid "Update in progress..."
@@ -1222,7 +1228,7 @@ msgstr "დაკვრის გაჩერება"
 
 #: ../extensions/deviceicon/speech.py:89
 msgid "Pitch"
-msgstr "Pitch"
+msgstr "ხმის სიძლიერე"
 
 #: ../extensions/deviceicon/speech.py:104
 msgid "Rate"
@@ -1265,6 +1271,8 @@ msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
+"გაგრძელების რეჟიმში რჩეულ ხატულაზე დაკმაყოფილება ამ აქტივობის ბოლო ჩანაწერს "
+"გააგრძელებს."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -1272,6 +1280,8 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
+"sugar-control-panel: გაფრთხილება. აღმოჩენილია ერთზე მეტი პარამეტრი იგივე "
+"სახელით: %s მოდული: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -1298,12 +1308,24 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
+"გამოყენება: sugar-control-panel [ პარამეტრები ] key [ არგუმენტები ... ] \n"
+"    Sugar-ის გარემოს მართვა. \n"
+"    პარამეტრები: \n"
+"    -h           ამ დახმარების ჩვენება და გასვლა \n"
+"    -l           ყველა ხელმისაწვდომი პარამეტრის ჩვენება \n"
+"    -h key       ინფორმაციის ჩვენება ამ გასაღების შესახებ \n"
+"    -g key       გასაღების მიმდინარე მნიშვნელობის მიღება \n"
+"    -s key       გასაღების მიმდინარე მნიშვნელობის დაყენება \n"
+"    -c key       გასაღების მიმდინარე მნიშვნელობის გასუფთავება \n"
+"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid ""
 "To apply your changes you have to restart Sugar.\n"
 "Hit ctrl+alt+erase on the keyboard to trigger a restart."
 msgstr ""
+"ცვლილებები ძალაში შესასვლელად Sugar-ის გადატვირთვა გჭირდებათ.\n"
+"დააჭირეთ Ctrl+Alt+Del კლავიატურაზე, რომ გადატვირთოთ კომპიუტერი."
 
 #: ../src/jarabe/controlpanel/gui.py:373 ../src/jarabe/journal/palettes.py:194
 #: ../src/jarabe/journal/palettes.py:364 ../src/jarabe/journal/palettes.py:424
@@ -2031,7 +2053,7 @@ msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
 "IP კონფიგურაციის რეზერვაცია შეუძლებელია (მისამართი ხელმიუწვდომელია, "
-"მოლოდინის ვადა ამოიწურა და ა.შ.)"
+"მოლოდინის ვადა ამოიწურა და ა.შ.)."
 
 #: ../src/jarabe/model/network.py:230
 msgid "The IP configuration is no longer valid."
@@ -2090,7 +2112,7 @@ msgstr "გაზიარებული კავშირის სერვ�
 
 #: ../src/jarabe/model/network.py:257
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr "გაზიარებული კავშირის  სერვისმა მუშაობა დაასრულა ან ავარიულად გაითიშა."
+msgstr "გაზიარებული კავშირის სერვისმა მუშაობა დაასრულა ან ავარიულად გაითიშა."
 
 #: ../src/jarabe/model/network.py:260
 msgid "The AutoIP service failed to start."
@@ -2338,11 +2360,11 @@ msgstr "წყარო"
 
 #: ../src/jarabe/view/viewsource.py:542
 msgid "Activity Bundle Source"
-msgstr "Activity Bundle Source"
+msgstr "აქტივობის ნაკრების წყარო"
 
 #: ../src/jarabe/view/viewsource.py:561
 msgid "Sugar Toolkit Source"
-msgstr "Sugar Toolkit Source"
+msgstr "Sugar-ის ხელსაწყოების წყარო"
 
 #: ../src/jarabe/view/viewsource.py:568
 #, python-format
@@ -2435,6 +2457,8 @@ msgid ""
 "will first be emptied of all its content; then the restored content will be "
 "added."
 msgstr ""
+"მინდა, ჩემი ჟურნალის შემცველობა აღვადგინო. ამის გასაკეთებლად, ჯერ ჩემი "
+"ჟურნალი უნდა გავასუფთავო. შემდეგ მას აღდგენილი შემცველობა დაემატება."
 
 #: ../extensions/cpsection/backup/view.py:327
 msgid "Confirm"
