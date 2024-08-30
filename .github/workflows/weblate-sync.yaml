@@ -9,6 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Create Pull Request
-        run: gh pr create --base main --head weblate-sync -t "Weblate Synchronization" --body ""
+        run: gh pr create --base master --head weblate-sync -t "Weblate Synchronization" --body ""
         env:
           GH_TOKEN: ${{ github.token }}
