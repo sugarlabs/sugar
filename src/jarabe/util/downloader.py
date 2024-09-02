@@ -92,7 +92,7 @@ class Downloader(GObject.GObject):
         is saved. Upon completion, a successful download is indicated by a
         result of None in the complete signal parameters.
         """
-        url = self._url.to_string()
+        url = self._uri.to_string()
         temp_file_path = self._get_temp_file_path(url)
         self._output_file = Gio.File.new_for_path(temp_file_path)
         self._output_stream = self._output_file.create(
