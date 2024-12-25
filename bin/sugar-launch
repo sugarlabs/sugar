@@ -19,28 +19,56 @@ import os
 import sys
 import dbus
 import argparse
+import subprocess
+
+# Check Python version
+if sys.version_info[0] < 3:
+    print(
+        "Warning: This activity requires Python 3. Please ensure you are using the correct version."
+    )
+    sys.exit(1)
 
 from dbus.mainloop.glib import DBusGMainLoop
+
 DBusGMainLoop(set_as_default=True)
 
 from sugar3.activity import activityfactory
 from sugar3.bundle.activitybundle import ActivityBundle
 
 parser = argparse.ArgumentParser("Launch a sugar activity")
-parser.add_argument("bundle_id",
-                    help="the bundle id of the activity")
-parser.add_argument("-d", "--debug", action="store_true",
-                    help="launch activity inside gdb")
-parser.add_argument("-u", "--uri",
-                    help='URI to load')
+parser.add_argument("bundle_id", help="the bundle id of the activity")
+parser.add_argument(
+    "-d", "--debug", action="store_true", help="launch activity inside gdb"
+)
+parser.add_argument("-u", "--uri", help="URI to load")
 
 args = parser.parse_args()
 print(args.bundle_id)
 bus = dbus.SessionBus()
-proxy = bus.get_object('org.laptop.Shell', '/org/laptop/Shell')
-path = dbus.Interface(proxy, 'org.laptop.Shell').GetBundlePath(args.bundle_id)
+proxy = bus.get_object("org.laptop.Shell", "/org/laptop/Shell")
+path = dbus.Interface(proxy, "org.laptop.Shell").GetBundlePath(args.bundle_id)
+
 if not path:
-    print('Cannot find %s bundle.' % args.bundle_id)
+    print("Cannot find %s bundle." % args.bundle_id)
+    sys.exit(1)
+
+# Check if the activity is compatible with Python 3
+activity_path = dbus.Interface(proxy, "org.laptop.Shell").GetBundlePath(args.bundle_id)
+if not os.path.exists(activity_path):
+    print(f"Cannot find {args.bundle_id} bundle.")
+    sys.exit(1)
+
+# Check for Python 2 specific files or indicators
+if (
+    os.path.exists(os.path.join(activity_path, "activity.py"))
+    and subprocess.call(
+        ["grep", "-q", "python2", os.path.join(activity_path, "activity.py")]
+    )
+    == 0
+):
+    print(
+        "Warning: This activity is designed for Python 2 and may not work with Python 3."
+    )
     sys.exit(1)
 
 activity = ActivityBundle(path)
@@ -51,8 +79,8 @@ if args.uri:
 
 
 def _which(exec_file):
-    if 'PATH' in os.environ:
-        envpath = os.environ['PATH']
+    if "PATH" in os.environ:
+        envpath = os.environ["PATH"]
     else:
         return None
 
@@ -74,12 +102,12 @@ def _get_interpreter(exec_file):
 
     f = open(abs_path)
     line = f.readline(100)
-    if line.startswith('#!'):
-        cmds = line[2:].strip().split(' ')
+    if line.startswith("#!"):
+        cmds = line[2:].strip().split(" ")
         cmds.append(abs_path)
 
-        if '/usr/bin/env' in cmds:
-            cmds.remove('/usr/bin/env')
+        if "/usr/bin/env" in cmds:
+            cmds.remove("/usr/bin/env")
 
         return cmds
 
@@ -88,7 +116,7 @@ def _get_interpreter(exec_file):
 
 if args.debug:
     act_args = cmd_args
-    cmd_args = ['gdb', '--args']
+    cmd_args = ["gdb", "--args"]
     cmd_args.extend(_get_interpreter(act_args.pop(0)))
     cmd_args.extend(act_args)
 
