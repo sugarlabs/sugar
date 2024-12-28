@@ -19,7 +19,7 @@ import time
 import os
 import hashlib
 from gettext import gettext as _
-import subprocess
+import re
 
 from gi.repository import Gio
 from gi.repository import Gtk
@@ -91,11 +91,10 @@ def get_icon_name(metadata):
 
     if bundle_id:
         if bundle_id == PROJECT_BUNDLE_ID:
-            file_name = (
-                '/home/broot/sugar-build/build'
-                + '/out/install/share/icons/sugar/'
-                + 'scalable/mimetypes/project-box.svg'
-            )
+            file_name = \
+                '/home/broot/sugar-build/build' + \
+                '/out/install/share/icons/sugar/' + \
+                'scalable/mimetypes/project-box.svg'
             return file_name
 
         activity_info = bundleregistry.get_registry().get_bundle(bundle_id)
@@ -121,7 +120,7 @@ def get_icon_name(metadata):
 
 
 def get_date(metadata):
-    '''Convert from a string in iso format to a more human-like format.'''
+    """ Convert from a string in iso format to a more human-like format. """
     if 'timestamp' in metadata:
         try:
             timestamp = float(metadata['timestamp'])
@@ -202,36 +201,30 @@ def get_activities(metadata):
 def get_bundle_id_from_metadata(metadata):
     activities = get_activities(metadata)
     if not activities:
-        logging.warning(
-            'No activity can open this object, %s.', metadata.get('mime_type', None)
-        )
+        logging.warning('No activity can open this object, %s.',
+                        metadata.get('mime_type', None))
         return None
     return activities[0].get_bundle_id()
 
 
-def resume(metadata, bundle_id=None, alert_window=None, force_bundle_downgrade=False):
+def resume(metadata, bundle_id=None, alert_window=None,
+           force_bundle_downgrade=False):
 
     # These are set later, and used in the following functions.
     bundle = None
     activity_id = None
 
     def launch_activity(object_id):
-        launch(
-            bundle,
-            activity_id=activity_id,
-            object_id=object_id,
-            color=get_icon_color(metadata),
-            alert_window=alert_window,
-        )
+        launch(bundle, activity_id=activity_id, object_id=object_id,
+               color=get_icon_color(metadata), alert_window=alert_window)
 
     def ready_callback(metadata, source, destination):
         launch_activity(destination)
 
     registry = bundleregistry.get_registry()
 
-    ds_bundle, downgrade_required = handle_bundle_installation(
-        metadata, force_bundle_downgrade
-    )
+    ds_bundle, downgrade_required = \
+        handle_bundle_installation(metadata, force_bundle_downgrade)
 
     if ds_bundle is not None and downgrade_required:
         # A bundle is being resumed but we didn't install it as that would
@@ -252,9 +245,8 @@ def resume(metadata, bundle_id=None, alert_window=None, force_bundle_downgrade=F
     if bundle_id is None:
         activities = get_activities(metadata)
         if not activities:
-            logging.warning(
-                'No activity can open this object, %s.', metadata.get('mime_type', None)
-            )
+            logging.warning('No activity can open this object, %s.',
+                            metadata.get('mime_type', None))
             return
         bundle_id = activities[0].get_bundle_id()
 
@@ -267,9 +259,50 @@ def resume(metadata, bundle_id=None, alert_window=None, force_bundle_downgrade=F
         model.copy(metadata, '/', ready_callback=ready_callback)
 
 
+def is_python2_activity(bundle):
+    # Path to the main activity file
+    activity_file_path = os.path.join(bundle.get_path(), 'activity.py')
+
+    if not os.path.exists(activity_file_path):
+        return False  # No activity file found
+
+    with open(activity_file_path, 'r') as f:
+        content = f.read()
+
+    # Check for Python 2 specific syntax patterns
+    python2_patterns = [
+        r'print\s+[^()]*$',  # Print statement without parentheses
+        r'except\s+.*,\s*',  # Old exception syntax
+        r'raw_input\s*\(',    # raw_input function (Python 2)
+        r'long\s+',           # long type (Python 2)
+        r'iteritems\s*\(',    # iteritems method (Python 2)
+        r'xrange\s*\(',       # xrange function (Python 2)
+        r'__future__\s+import\s+print_function',  # Future import for print function
+        r'from\s+ConfigParser',  # ConfigParser module (Python 2)
+        r'from\s+urlparse',      # urlparse module (Python 2)
+        r'from\s+StringIO',      # StringIO module (Python 2)
+        r'from\s+collections\s+import\s+OrderedDict',  # OrderedDict import (Python 2)
+    ]
+
+    # Check for any Python 2 patterns in the content
+    for pattern in python2_patterns:
+        if re.search(pattern, content):
+            return True  # Detected Python 2 syntax
+
+    return False  # Default to Python 3
+
+
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
            invited=False, alert_window=None):
+    
     bundle_id = bundle.get_bundle_id()
+
+    # Check if the activity is a Python 2 activity
+    if is_python2_activity(bundle):
+        logging.warning('Attempted to launch a Python 2 activity: %s', bundle_id)
+        # Emit a failure notification
+        shell.get_model().notify_launch_failed(activity_id)
+        return
 
     if activity_id is None or not activity_id:
         activity_id = activityfactory.create_activity_id()
@@ -277,34 +310,11 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
     logging.debug('launch bundle_id=%s activity_id=%s object_id=%s uri=%s',
                   bundle.get_bundle_id(), activity_id, object_id, uri)
 
-    # Check for Python 2 specific files or indicators
-    activity_path = bundle.get_path()
-    setup_file = os.path.join(activity_path, 'setup.py')
-    activity_info_file = os.path.join(activity_path, 'activity.info')
-
-    # Check setup.py for Python version requirements
-    if os.path.exists(setup_file):
-        with open(setup_file, 'r') as f:
-            content = f.read()
-            if 'python2' in content.lower():
-                logging.warning('Warning: This activity is designed for Python 2 and may not work with Python 3.')
-                return  # Prevent launching the activity
-
-    # Check activity.info for Python version requirements
-    if os.path.exists(activity_info_file):
-        with open(activity_info_file, 'r') as f:
-            for line in f:
-                if 'python-version' in line.lower() and '2' in line:
-                    logging.warning('Warning: This activity is designed for Python 2 and may not work with Python 3.')
-                    return  # Prevent launching the activity
-
     if isinstance(bundle, ContentBundle):
-        # Content bundles are a special case: we treat them as launching
-        # Browse with a specific URI.
         uri = bundle.get_start_uri()
         activities = get_activities_for_mime('text/html')
         if len(activities) == 0:
-            logging.error('No browser available for content bundle')
+            logging.error("No browser available for content bundle")
             return
         bundle = activities[0]
         logging.debug('Launching content bundle with uri %s', uri)
@@ -326,7 +336,6 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
 
     if not shell_model.can_launch_activity_instance(bundle):
         if alert_window is None:
-            from jarabe.desktop import homewindow
             alert_window = homewindow.get_instance()
         if alert_window is not None:
             alerts.show_multiple_instance_alert(
@@ -347,9 +356,8 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
 def _downgrade_option_alert(bundle, metadata):
     alert = ConfirmationAlert()
     alert.props.title = _('Older Version Of %s Activity') % (bundle.get_name())
-    alert.props.msg = (
-        _('Do you want to downgrade to version %s?') % bundle.get_activity_version()
-    )
+    alert.props.msg = _('Do you want to downgrade to version %s?') % \
+        bundle.get_activity_version()
     alert.connect('response', _downgrade_alert_response_cb, metadata)
     journalwindow.get_journal_window().add_alert(alert)
     alert.show()
@@ -375,11 +383,8 @@ def is_journal_bundle(metadata):
 
 
 def is_bundle(metadata):
-    return (
-        is_activity_bundle(metadata)
-        or is_content_bundle(metadata)
-        or is_journal_bundle(metadata)
-    )
+    return is_activity_bundle(metadata) or is_content_bundle(metadata) or \
+        is_journal_bundle(metadata)
 
 
 def can_resume(metadata):
@@ -387,7 +392,7 @@ def can_resume(metadata):
 
 
 def handle_bundle_installation(metadata, force_downgrade=False):
-    '''
+    """
     Check metadata for a journal entry. If the metadata corresponds to a
     bundle, make sure that it is installed, and return the corresponding
     Bundle object.
@@ -400,7 +405,7 @@ def handle_bundle_installation(metadata, force_downgrade=False):
        installation failed.
     2. A flag that indicates whether bundle installation was aborted due to
        a downgrade being required, and force_downgrade was False
-    '''
+    """
     if metadata.get('progress', '').isdigit():
         if int(metadata['progress']) < 100:
             return None, False
@@ -459,5 +464,7 @@ def get_mount_color(mount):
     digest = hash(sha_hash.digest())
     index = digest % len(colors)
 
-    color = XoColor('%s,%s' % (colors[index][0], colors[index][1]))
+    color = XoColor('%s,%s' %
+                    (colors[index][0],
+                     colors[index][1]))
     return color
