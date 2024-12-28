@@ -19,14 +19,6 @@ import os
 import sys
 import dbus
 import argparse
-import subprocess
-
-# Check Python version
-if sys.version_info[0] < 3:
-    print(
-        "Warning: This activity requires Python 3. Please ensure you are using the correct version."
-    )
-    sys.exit(1)
 
 from dbus.mainloop.glib import DBusGMainLoop
 
@@ -47,28 +39,8 @@ print(args.bundle_id)
 bus = dbus.SessionBus()
 proxy = bus.get_object("org.laptop.Shell", "/org/laptop/Shell")
 path = dbus.Interface(proxy, "org.laptop.Shell").GetBundlePath(args.bundle_id)
-
 if not path:
     print("Cannot find %s bundle." % args.bundle_id)
-    sys.exit(1)
-
-# Check if the activity is compatible with Python 3
-activity_path = dbus.Interface(proxy, "org.laptop.Shell").GetBundlePath(args.bundle_id)
-if not os.path.exists(activity_path):
-    print(f"Cannot find {args.bundle_id} bundle.")
-    sys.exit(1)
-
-# Check for Python 2 specific files or indicators
-if (
-    os.path.exists(os.path.join(activity_path, "activity.py"))
-    and subprocess.call(
-        ["grep", "-q", "python2", os.path.join(activity_path, "activity.py")]
-    )
-    == 0
-):
-    print(
-        "Warning: This activity is designed for Python 2 and may not work with Python 3."
-    )
     sys.exit(1)
 
 activity = ActivityBundle(path)
