@@ -7,15 +7,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2017-12-20 07:16+0000\n"
-"Last-Translator: Riella <zafimamy@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2025-01-19 21:34+0000\n"
+"Last-Translator: Gabriella Ralaivao <zafimamy@gmail.com>\n"
+"Language-Team: Malagasy <http://weblate.sugarlabs.org/projects/core-sugar/"
+"sugar/mg/>\n"
 "Language: mg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Pootle 2.5.1.1\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.4.2\n"
 "X-POOTLE-MTIME: 1513754188.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
@@ -1347,7 +1348,7 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:812
 #: ../src/jarabe/journal/palettes.py:138 ../src/jarabe/journal/palettes.py:161
 msgid "Erase"
-msgstr "Soloy"
+msgstr "Mamafa"
 
 #: ../src/jarabe/desktop/activitieslist.py:641
 msgid "Remove favorite"
@@ -1817,7 +1818,7 @@ msgstr[1] ""
 #: ../src/jarabe/journal/journaltoolbox.py:831
 #: ../src/jarabe/journal/palettes.py:378
 msgid "Copy"
-msgstr ""
+msgstr "Mandika"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:882
