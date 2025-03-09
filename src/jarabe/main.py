@@ -49,16 +49,12 @@ DBusGMainLoop(set_as_default=True)
 # define the versions of used libraries that are required
 import gi
 gi.require_version('Gtk', '3.0')
-gi.require_version('Gst', '1.0')
-gi.require_version('Wnck', '3.0')
 gi.require_version('SugarExt', '1.0')
 gi.require_version('GdkX11', '3.0')
 
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
-from gi.repository import Gst
-from gi.repository import Wnck
 
 from sugar3 import env
 
@@ -204,12 +200,6 @@ def _start_window_manager():
 
     _restart_window_manager()
 
-    screen = Wnck.Screen.get_default()
-    screen.connect('window-manager-changed', __window_manager_changed_cb)
-
-    _check_for_window_manager(screen)
-
-
 def _stop_window_manager():
     _cursor_theme_settings.set_string('cursor-theme', _cursor_theme)
     _metacity_process.terminate()
@@ -341,8 +331,6 @@ def _check_group_label():
 
 
 def main():
-    Gst.init(sys.argv)
-
     cleanup_temporary_files()
 
     _start_window_manager()
