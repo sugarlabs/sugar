@@ -723,23 +723,32 @@ class ShellModel(GObject.GObject):
             GLib.source_remove(self._launch_timers[activity_id])
             del self._launch_timers[activity_id]
 
-        timer = GLib.timeout_add_seconds(90, self._check_activity_launched,
+        timer = GLib.timeout_add_seconds(10, self._check_activity_launched,
                                          activity_id)
         self._launch_timers[activity_id] = timer
 
     def notify_launch_failed(self, activity_id):
         home_activity = self.get_activity_by_id(activity_id)
+
         if home_activity:
             logging.debug('Activity %s (%s) launch failed', activity_id,
-                          home_activity.get_type())
+                        home_activity.get_type())
+                        
+            is_python2 = hasattr(self, '_python2_activity_check') and activity_id in self._python2_activity_check
+            
+            if is_python2:
+                home_activity.is_python2_activity = True
+                
+                if hasattr(self, '_python2_activity_check'):
+                    self._python2_activity_check.discard(activity_id)
+                    
             if self.get_launcher(activity_id) is not None:
-                self.emit('launch-failed', home_activity)
+                self.emit('launch-failed', home_activity)                
             else:
-                # activity sent failure notification after closing launcher
                 self._remove_activity(home_activity)
         else:
             logging.error('Model for activity id %s does not exist.',
-                          activity_id)
+                        activity_id)
 
     def _check_activity_launched(self, activity_id):
         del self._launch_timers[activity_id]
