@@ -29,7 +29,7 @@ Installing on Fedora
 --------------------
 
 ```
-sudo dnf groupinstall sugar-desktop
+sudo dnf group install sugar-desktop
 ```
 
 Then restart your computer.  At the *Sign in* select the *Sugar*
