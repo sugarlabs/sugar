@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2025-04-23 11:32+0000\n"
-"Last-Translator: GeunwooPark <qkrrmsdn689@gmail.com>\n"
+"PO-Revision-Date: 2025-05-23 12:20+0000\n"
+"Last-Translator: Aman Sharma <shasarita23@gmail.com>\n"
 "Language-Team: Korean <http://weblate.sugarlabs.org/projects/core-sugar/"
 "sugar/ko/>\n"
 "Language: ko\n"
@@ -24,56 +24,56 @@ msgstr "GSettings로 이전됨"
 
 #: ../data/org.sugarlabs.gschema.xml.h:2
 msgid "This key shows whether or not GConf values were migrated to GSettings"
-msgstr ""
+msgstr "이 키는 GConf 값이 GSettings로 마이그레이션되었는지 여부를 보여줍니다"
 
 #: ../data/org.sugarlabs.gschema.xml.h:3 ../data/sugar.schemas.in.h:11
 msgid "Backup URL"
-msgstr ""
+msgstr "백업 URL"
 
 #: ../data/org.sugarlabs.gschema.xml.h:4 ../data/sugar.schemas.in.h:12
 msgid "URL where the backup is saved to."
-msgstr ""
+msgstr "백업이 저장되는 URL입니다."
 
 #: ../data/org.sugarlabs.gschema.xml.h:5 ../data/sugar.schemas.in.h:31
 msgid "Show Log out"
-msgstr ""
+msgstr "로그아웃 표시"
 
 #: ../data/org.sugarlabs.gschema.xml.h:6 ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr ""
+msgstr "TRUE이면 Sugar는 \"로그아웃\" 옵션을 표시합니다."
 
 #: ../data/org.sugarlabs.gschema.xml.h:7 ../data/sugar.schemas.in.h:33
 msgid "Show Restart"
-msgstr ""
+msgstr "다시 시작 표시"
 
 #: ../data/org.sugarlabs.gschema.xml.h:8 ../data/sugar.schemas.in.h:34
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr ""
+msgstr "TRUE이면 Sugar는 \"다시 시작\" 옵션을 표시합니다."
 
 #: ../data/org.sugarlabs.gschema.xml.h:9 ../data/sugar.schemas.in.h:35
 msgid "Show Shutdown"
-msgstr ""
+msgstr "쇼 종료"
 
 #: ../data/org.sugarlabs.gschema.xml.h:10 ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Shutdown\" option."
-msgstr ""
+msgstr "TRUE이면 Sugar는 \"종료\" 옵션을 표시합니다."
 
 #: ../data/org.sugarlabs.gschema.xml.h:11 ../data/sugar.schemas.in.h:37
 msgid "Show Register"
-msgstr ""
+msgstr "등록 표시"
 
 #: ../data/org.sugarlabs.gschema.xml.h:12 ../data/sugar.schemas.in.h:38
 msgid "If TRUE, Sugar will show a \"Register\" option in the buddy palette."
-msgstr ""
+msgstr "TRUE이면 Sugar는 친구 팔레트에 \"등록\" 옵션을 표시합니다."
 
 #: ../data/org.sugarlabs.gschema.xml.h:13 ../data/sugar.schemas.in.h:63
 msgid "Bundle IDs of protected activities"
-msgstr ""
+msgstr "보호된 활동의 번들 ID"
 
 #: ../data/org.sugarlabs.gschema.xml.h:14 ../data/sugar.schemas.in.h:64
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
-msgstr ""
+msgstr "사용자는 목록 보기를 통해 이러한 활동을 지울 수 없습니다."
 
 #: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
 msgid "A limit to the number of simultaneously open activities."
