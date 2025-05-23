@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2025-05-23 12:20+0000\n"
+"PO-Revision-Date: 2025-05-23 12:57+0000\n"
 "Last-Translator: Aman Sharma <shasarita23@gmail.com>\n"
 "Language-Team: Korean <http://weblate.sugarlabs.org/projects/core-sugar/"
 "sugar/ko/>\n"
@@ -77,17 +77,18 @@ msgstr "사용자는 목록 보기를 통해 이러한 활동을 지울 수 없�
 
 #: ../data/org.sugarlabs.gschema.xml.h:15 ../data/sugar.schemas.in.h:79
 msgid "A limit to the number of simultaneously open activities."
-msgstr ""
+msgstr "동시에 열 수 있는 활동의 수에 제한이 있습니다."
 
 #: ../data/org.sugarlabs.gschema.xml.h:16 ../data/sugar.schemas.in.h:80
 msgid ""
 "This int is used to set a limit to the number of open activities. By default "
 "(0), there is no limit."
-msgstr ""
+msgstr "이 int는 열려 있는 활동의 개수에 제한을 설정하는 데 사용됩니다. 기본값(0)은 "
+"제한이 없습니다."
 
 #: ../data/org.sugarlabs.gschema.xml.h:17 ../data/sugar.schemas.in.h:1
 msgid "User Name"
-msgstr ""
+msgstr "사용자 이름"
 
 #: ../data/org.sugarlabs.gschema.xml.h:18 ../data/sugar.schemas.in.h:2
 msgid "User name that is used throughout the desktop."
@@ -1586,9 +1587,8 @@ msgid "Name:"
 msgstr "이름:"
 
 #: ../src/jarabe/intro/window.py:174
-#, fuzzy
 msgid "Click to change color:"
-msgstr "당신의 색을 바꾸세요:"
+msgstr "색상을 변경하려면 클릭하세요:"
 
 #: ../src/jarabe/intro/window.py:337 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
@@ -1813,7 +1813,7 @@ msgstr[0] ""
 #: ../src/jarabe/journal/journaltoolbox.py:831
 #: ../src/jarabe/journal/palettes.py:378
 msgid "Copy"
-msgstr ""
+msgstr "복사"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:882
