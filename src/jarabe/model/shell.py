@@ -18,7 +18,7 @@ import logging
 import time
 
 from gi.repository import Gio
-from gi.repository import Wnck
+#from gi.repository import Wnck
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -350,8 +350,8 @@ class Activity(GObject.GObject):
             self._set_launch_status(Activity.LAUNCH_FAILED)
 
     def _state_changed_cb(self, main_window, changed_mask, new_state):
-        if changed_mask & Wnck.WindowState.MINIMIZED:
-            if new_state & Wnck.WindowState.MINIMIZED:
+        if changed_mask: # & Wnck.WindowState.MINIMIZED:
+            if new_state: # & Wnck.WindowState.MINIMIZED:
                 self.emit('pause')
             else:
                 self.emit('resume')
@@ -399,11 +399,11 @@ class ShellModel(GObject.GObject):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        self._screen = Wnck.Screen.get_default()
-        self._screen.connect('window-opened', self._window_opened_cb)
-        self._screen.connect('window-closed', self._window_closed_cb)
-        self._screen.connect('active-window-changed',
-                             self._active_window_changed_cb)
+#        self._screen = Wnck.Screen.get_default()
+#        self._screen.connect('window-opened', self._window_opened_cb)
+#        self._screen.connect('window-closed', self._window_closed_cb)
+#        self._screen.connect('active-window-changed',
+#                             self._active_window_changed_cb)
 
         self.zoom_level_changed = dispatch.Signal()
 
@@ -417,7 +417,7 @@ class ShellModel(GObject.GObject):
         self._launchers = {}
         self._modal_dialogs_counter = 0
 
-        self._screen.toggle_showing_desktop(True)
+        #self._screen.toggle_showing_desktop(True)
 
         settings = Gio.Settings.new('org.sugarlabs')
         self._maximum_open_activities = settings.get_int(
@@ -436,9 +436,9 @@ class ShellModel(GObject.GObject):
             del self._launchers[activity_id]
 
     def _update_zoom_level(self, window):
-        if window.get_window_type() == Wnck.WindowType.DIALOG:
+        if window.get_window_type(): # == Wnck.WindowType.DIALOG:
             return
-        if window.get_window_type() == Wnck.WindowType.NORMAL:
+        if window.get_window_type(): # == Wnck.WindowType.NORMAL:
             new_level = self.ZOOM_ACTIVITY
         else:
             new_level = self._desktop_level
@@ -462,7 +462,7 @@ class ShellModel(GObject.GObject):
                                      new_level=new_level)
 
         show_desktop = new_level is not self.ZOOM_ACTIVITY
-        self._screen.toggle_showing_desktop(show_desktop)
+        #self._screen.toggle_showing_desktop(show_desktop)
 
         if new_level is self.ZOOM_ACTIVITY:
             # activate the window, in case it was iconified

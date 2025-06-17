@@ -50,7 +50,7 @@ DBusGMainLoop(set_as_default=True)
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gst', '1.0')
-gi.require_version('Wnck', '3.0')
+#gi.require_version('Wnck', '3.0')
 gi.require_version('SugarExt', '1.0')
 gi.require_version('GdkX11', '3.0')
 
@@ -58,7 +58,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gst
-from gi.repository import Wnck
+#from gi.repository import Wnck
 
 from sugar3 import env
 
@@ -85,7 +85,7 @@ from jarabe import testrunner
 from jarabe.model import brightness
 
 
-_metacity_process = None
+_weston_process = None
 _window_manager_started = False
 _starting_desktop = False
 
@@ -131,17 +131,19 @@ def setup_file_transfer_cb():
 def setup_window_manager():
     logging.debug('STARTUP: window_manager')
 
-    if subprocess.call('metacity-message disable-keybindings',
-                       shell=True):
-        logging.warning('Can not disable metacity keybindings')
+    #if subprocess.call('metacity-message disable-keybindings',
+    #                   shell=True):
+    #    logging.warning('Can not disable metacity keybindings')
 
-    if subprocess.call('metacity-message disable-mouse-button-modifiers',
-                       shell=True):
-        logging.warning('Can not disable metacity mouse button modifiers')
+    #if subprocess.call('metacity-message disable-mouse-button-modifiers',
+    #                   shell=True):
+    #    logging.warning('Can not disable metacity mouse button modifiers')
 
 
-def __window_manager_changed_cb(screen):
-    _check_for_window_manager(screen)
+#def __window_manager_changed_cb(screen):
+def __window_manager_changed_cb():
+    #_check_for_window_manager(screen)
+    _check_for_window_manager()
 
 
 def _complete_desktop_startup():
@@ -160,12 +162,13 @@ def _complete_desktop_startup():
     testrunner.check_environment()
 
 
-def _check_for_window_manager(screen):
-    wm_name = screen.get_window_manager_name()
-    if wm_name is None:
-        return
+#def _check_for_window_manager(screen):
+def _check_for_window_manager():
+    #wm_name = screen.get_window_manager_name()
+    #if wm_name is None:
+    #    return
 
-    screen.disconnect_by_func(__window_manager_changed_cb)
+    #screen.disconnect_by_func(__window_manager_changed_cb)
 
     setup_window_manager()
 
@@ -179,18 +182,19 @@ def _check_for_window_manager(screen):
 
 def __window_manager_failed_cb(fd, condition):
     logging.error('window manager did fail, restarting')
-    GLib.source_remove(_metacity_sid)
+    GLib.source_remove(_weston_sid)
     GLib.timeout_add(1000, _restart_window_manager)
     return False
 
 
 def _restart_window_manager():
-    global _metacity_process, _metacity_sid
+    global _weston_process, _weston_sid
 
-    _metacity_process = subprocess.Popen(
-        ['metacity', '--no-force-fullscreen', '--no-composite'],
+    _weston_process = subprocess.Popen(
+        #['dbus-run-session', 'mutter', '--wayland'],
+        ['mutter', '--wayland'],
         stdout=subprocess.PIPE)
-    _metacity_sid = GLib.io_add_watch(_metacity_process.stdout, GLib.IO_HUP,
+    _weston_sid = GLib.io_add_watch(_weston_process.stdout, GLib.IO_HUP,
                                       __window_manager_failed_cb)
     return False
 
@@ -204,15 +208,16 @@ def _start_window_manager():
 
     _restart_window_manager()
 
-    screen = Wnck.Screen.get_default()
-    screen.connect('window-manager-changed', __window_manager_changed_cb)
+    # screen = Wnck.Screen.get_default()
+    # screen.connect('window-manager-changed', __window_manager_changed_cb)
 
-    _check_for_window_manager(screen)
+    #_check_for_window_manager(screen)
+    _check_for_window_manager()
 
 
 def _stop_window_manager():
     _cursor_theme_settings.set_string('cursor-theme', _cursor_theme)
-    _metacity_process.terminate()
+    _weston_process.terminate()
 
 
 def _begin_desktop_startup():
