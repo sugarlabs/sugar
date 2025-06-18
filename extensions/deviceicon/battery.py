@@ -113,6 +113,8 @@ class DeviceView(TrayIcon):
         self.palette.set_info(current_level, self._model.props.time_remaining,
                               status)
 
+        _settings.set_double('battery-level', current_level)
+
     def __battery_status_changed_cb(self, model):
         self._update_info()
 
@@ -315,4 +317,8 @@ def setup(tray):
         device_prop_iface = dbus.Interface(device, dbus.PROPERTIES_IFACE)
         device_type = device_prop_iface.Get(_UP_DEVICE_IFACE, 'Type')
         if device_type == _UP_TYPE_BATTERY:
-            tray.add_device(DeviceView(device_path))
+            battery = DeviceView(device_path)
+            has_battery = battery._model.props.present
+            if has_battery:
+                _settings.set_boolean('battery-present', has_battery)
+            tray.add_device(battery)
