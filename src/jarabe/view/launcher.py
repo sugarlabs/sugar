@@ -155,15 +155,19 @@ def __launch_failed_cb(home_model, home_activity):
     if launcher is None:
         logging.error('Launcher for %s is missing', activity_id)
     else:
-        launcher.error_text.props.label = _('<b>%s</b> failed to start.') % \
-            home_activity.get_activity_name()
+        if hasattr(home_activity, 'is_python2_activity') and home_activity.is_python2_activity:
+            launcher.error_text.props.label = _('<b>%s</b> cannot start because it was made for an older version.') % \
+                home_activity.get_activity_name()
+        else:
+            launcher.error_text.props.label = _('<b>%s</b> failed to start.') % \
+                home_activity.get_activity_name()
+            
         launcher.error_text.show()
 
         launcher.cancel_button.connect('clicked',
                                        __cancel_button_clicked_cb,
                                        home_activity)
         launcher.cancel_button.show()
-
 
 def __cancel_button_clicked_cb(button, home_activity):
     _destroy_launcher(home_activity)
