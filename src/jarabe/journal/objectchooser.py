@@ -19,7 +19,6 @@ import logging
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import Wnck
 
 from sugar3.graphics import style
 from sugar3.graphics.toolbutton import ToolButton
@@ -64,9 +63,6 @@ class ObjectChooser(Gtk.Window):
             logging.warning('ObjectChooser: No parent window specified')
         else:
             self.connect('realize', self.__realize_cb, parent)
-
-            screen = Wnck.Screen.get_default()
-            screen.connect('window-closed', self.__window_closed_cb, parent)
 
         vbox = Gtk.VBox()
         self.add(vbox)
@@ -115,10 +111,6 @@ class ObjectChooser(Gtk.Window):
     def __realize_cb(self, chooser, parent):
         self.get_window().set_transient_for(parent)
         # TODO: Should we disconnect the signal here?
-
-    def __window_closed_cb(self, screen, window, parent):
-        if window.get_xid() == parent.get_xid():
-            self.destroy()
 
     def __entry_activated_cb(self, list_view, uid):
         self._selected_object_id = uid
