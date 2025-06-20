@@ -72,7 +72,7 @@ from jarabe.journal import journalactivity
 from jarabe.model import notifications
 from jarabe.model import filetransfer
 from jarabe.view import launcher
-from jarabe.model import keyboard
+#from jarabe.model import keyboard
 from jarabe.desktop import homewindow
 from jarabe.model.sound import sound
 from jarabe import intro
@@ -363,7 +363,7 @@ def main():
 
     GLib.idle_add(setup_cursortracker_cb)
     sound.restore()
-    keyboard.setup()
+    #keyboard.setup()
     brightness.get_instance()
 
     sys.path.append(config.ext_path)
