@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gettext import gettext as _
+import os
 import logging
 
 from gi.repository import GLib
@@ -33,6 +34,7 @@ from jarabe.desktop.transitionbox import TransitionBox
 from jarabe.desktop.viewtoolbar import ViewToolbar
 from jarabe.model.shell import ShellModel
 from jarabe.model import shell
+from jarabe import config
 
 
 _HOME_PAGE = 0
@@ -61,6 +63,9 @@ class HomeWindow(Gtk.Window):
         screen.connect('size-changed', self.__screen_size_changed_cb)
         self.set_default_size(screen.get_width(),
                               screen.get_height())
+
+        icons_path = os.path.join(config.data_path, 'icons')
+        Gtk.IconTheme.get_for_screen(screen).append_search_path(icons_path)
 
         self.__screen_size_changed_cb(None)
 

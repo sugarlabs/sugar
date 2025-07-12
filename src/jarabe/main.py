@@ -52,7 +52,6 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gst', '1.0')
 #gi.require_version('Wnck', '3.0')
 gi.require_version('SugarExt', '1.0')
-gi.require_version('GdkX11', '3.0')
 
 from gi.repository import Gio
 from gi.repository import GLib
@@ -266,8 +265,8 @@ def setup_fonts():
     face = settings.get_string('default-face')
     size = settings.get_double('default-size')
 
-    settings = Gtk.Settings.get_default()
-    settings.set_property("gtk-font-name", "%s %f" % (face, size))
+    settings = Gio.Settings.new('org.gnome.desktop.interface')
+    settings.set_string("font-name", "%s %f" % (face, size))
 
 
 def setup_proxy():
@@ -309,18 +308,15 @@ def setup_proxy():
 
 
 def setup_theme():
-    settings = Gtk.Settings.get_default()
+    settings = Gio.Settings.new('org.gnome.desktop.interface')
     sugar_theme = 'sugar-72'
     if 'SUGAR_SCALING' in os.environ:
         if os.environ['SUGAR_SCALING'] == '100':
             sugar_theme = 'sugar-100'
-    settings.set_property('gtk-theme-name', sugar_theme)
-    settings.set_property('gtk-icon-theme-name', 'sugar')
-    settings.set_property('gtk-cursor-blink-timeout', 3)
-    settings.set_property('gtk-button-images', True)
-
-    icons_path = os.path.join(config.data_path, 'icons')
-    Gtk.IconTheme.get_default().append_search_path(icons_path)
+    settings.set_string('gtk-theme', sugar_theme)
+    settings.set_string('icon-theme', 'sugar')
+    settings.set_int('cursor-blink-timeout', 3)
+    #settings.set_property('gtk-button-images', True)
 
 
 def _start_intro(start_on_age_page=False):
