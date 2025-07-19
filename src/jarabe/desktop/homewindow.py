@@ -21,7 +21,6 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
-from gi.repository import GdkX11
 
 from sugar3.graphics import style
 from sugar3.graphics import palettegroup
@@ -45,11 +44,11 @@ _TRANSITION_PAGE = 3
 _instance = None
 
 
-class HomeWindow(Gtk.Window):
+class HomeWindow(Gtk.ApplicationWindow):
 
     def __init__(self):
         logging.debug('STARTUP: Loading the desktop window')
-        Gtk.Window.__init__(self)
+        Gtk.ApplicationWindow.__init__(self):
         self.set_has_resize_grip(False)
 
         accel_group = Gtk.AccelGroup()
@@ -220,14 +219,14 @@ class HomeWindow(Gtk.Window):
 
         return False
 
-    def __map_event_cb(self, window, event):
+    def __map_event_cb(self, widget, event):
         # have to make the desktop window active
         # since metacity doesn't make it on startup
         timestamp = event.get_time()
-        x11_window = self.get_window()
+        window = self.get_window()
         if not timestamp:
-            timestamp = GdkX11.x11_get_server_time(x11_window)
-        x11_window.focus(timestamp)
+            timestamp = Gtk.get_current_event_time()
+        window.focus(timestamp)
 
     def __zoom_level_changed_cb(self, **kwargs):
         old_level = kwargs['old_level']

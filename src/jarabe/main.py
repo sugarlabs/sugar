@@ -50,20 +50,19 @@ DBusGMainLoop(set_as_default=True)
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gst', '1.0')
-#gi.require_version('Wnck', '3.0')
 gi.require_version('SugarExt', '1.0')
 
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gst
-#from gi.repository import Wnck
 
 from sugar3 import env
 
 from jarabe.model.session import get_session_manager
 from jarabe.model.update import updater
 from jarabe.model import screen
+from jarabe.model import shell
 from jarabe.view import keyhandler
 from jarabe.view import gesturehandler
 from jarabe.view import cursortracker
@@ -84,7 +83,7 @@ from jarabe import testrunner
 from jarabe.model import brightness
 
 
-_weston_process = None
+_mutter_process = None
 _window_manager_started = False
 _starting_desktop = False
 
@@ -127,24 +126,6 @@ def setup_file_transfer_cb():
     filetransfer.init()
 
 
-def setup_window_manager():
-    logging.debug('STARTUP: window_manager')
-
-    #if subprocess.call('metacity-message disable-keybindings',
-    #                   shell=True):
-    #    logging.warning('Can not disable metacity keybindings')
-
-    #if subprocess.call('metacity-message disable-mouse-button-modifiers',
-    #                   shell=True):
-    #    logging.warning('Can not disable metacity mouse button modifiers')
-
-
-#def __window_manager_changed_cb(screen):
-def __window_manager_changed_cb():
-    #_check_for_window_manager(screen)
-    _check_for_window_manager()
-
-
 def _complete_desktop_startup():
     launcher.setup()
 
@@ -161,24 +142,6 @@ def _complete_desktop_startup():
     testrunner.check_environment()
 
 
-#def _check_for_window_manager(screen):
-def _check_for_window_manager():
-    #wm_name = screen.get_window_manager_name()
-    #if wm_name is None:
-    #    return
-
-    #screen.disconnect_by_func(__window_manager_changed_cb)
-
-    setup_window_manager()
-
-    global _window_manager_started
-    _window_manager_started = True
-
-    global _starting_desktop
-    if _starting_desktop:
-        _complete_desktop_startup()
-
-
 def __window_manager_failed_cb(fd, condition):
     logging.error('window manager did fail, restarting')
     GLib.source_remove(_weston_sid)
@@ -187,14 +150,13 @@ def __window_manager_failed_cb(fd, condition):
 
 
 def _restart_window_manager():
-    global _weston_process, _weston_sid
+    global _mutter_process, _mutter_sid
 
-    _weston_process = subprocess.Popen(
-        #['dbus-run-session', 'mutter', '--wayland'],
-        ['mutter', '--wayland'],
+    _mutter_process = subprocess.Popen(
+        ['mutter', '--no-x11'],
         stdout=subprocess.PIPE)
-    _weston_sid = GLib.io_add_watch(_weston_process.stdout, GLib.IO_HUP,
-                                      __window_manager_failed_cb)
+    _mutter_sid = GLib.io_add_watch(_weston_process.stdout, GLib.IO_HUP,
+                                    __window_manager_failed_cb)
     return False
 
 
@@ -207,19 +169,17 @@ def _start_window_manager():
 
     _restart_window_manager()
 
-    # screen = Wnck.Screen.get_default()
-    # screen.connect('window-manager-changed', __window_manager_changed_cb)
-
-    #_check_for_window_manager(screen)
-    _check_for_window_manager()
+    global _starting_desktop
+    if _starting_desktop:
+        _complete_desktop_startup()
 
 
 def _stop_window_manager():
     _cursor_theme_settings.set_string('cursor-theme', _cursor_theme)
-    _weston_process.terminate()
+    _mutter_process.terminate()
 
 
-def _begin_desktop_startup():
+def _begin_desktop_startup(shell):
     global _starting_desktop
     _starting_desktop = True
 
@@ -230,11 +190,12 @@ def _begin_desktop_startup():
 
     # open homewindow before window_manager to let desktop appear fast
     home_window = homewindow.get_instance()
-    home_window.show()
+    _shell.add_window(home_window)
+    home_window.present()
 
 
-def __intro_window_done_cb(window):
-    _begin_desktop_startup()
+def __intro_window_done_cb(window, shell):
+    _begin_desktop_startup(shell)
 
     global _window_manager_started
     if _window_manager_started:
@@ -319,9 +280,10 @@ def setup_theme():
     #settings.set_property('gtk-button-images', True)
 
 
-def _start_intro(start_on_age_page=False):
+def _start_intro(shell, start_on_age_page=False):
     window = IntroWindow(start_on_age_page=start_on_age_page)
-    window.connect('done', __intro_window_done_cb)
+    shell.add_window(window)
+    window.connect('done', __intro_window_done_cb, shell)
     window.show()
 
 
@@ -364,12 +326,15 @@ def main():
 
     sys.path.append(config.ext_path)
 
+    _shell = shell.get_model()
+    _shell.run(sys.argv)
+
     if not _check_profile():
-        _start_intro()
+        _start_intro(_shell)
     elif not _check_group_label():
-        _start_intro(start_on_age_page=True)
+        _start_intro(_shell, start_on_age_page=True)
     else:
-        _begin_desktop_startup()
+        _begin_desktop_startup(_shell)
 
     try:
         Gtk.main()
