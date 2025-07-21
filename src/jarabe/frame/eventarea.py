@@ -51,6 +51,7 @@ class EventArea(GObject.GObject):
         settings.connect('changed', self._settings_changed_cb)
         self._settings_changed_cb(settings, None)
 
+        # Figure out a replacement for this.
         #screen = Wnck.Screen.get_default()
         #screen.connect('window-stacking-changed',
         #               self._window_stacking_changed_cb)
