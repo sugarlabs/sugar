@@ -89,7 +89,6 @@ class ActivityButton(RadioToolButton):
         if home_activity.get_icon_path():
             self._icon.props.file = home_activity.get_icon_path()
         else:
-            # Let's see if the X11 window can give us an icon.
             window = home_activity.get_window()
 
             if not window.get_icon_is_fallback():
@@ -390,9 +389,8 @@ class ActivitiesTray(HTray):
         self.scroll_to_item(button)
         # Redraw immediately.
         # The widget may not be realized yet, and then there is no window.
-        x11_window = self.get_window()
-        if x11_window:
-            x11_window.process_updates(True)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
 
     def __activity_changed_cb(self, home_model, home_activity):
         logging.debug('__activity_changed_cb: %r', home_activity)

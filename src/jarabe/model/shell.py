@@ -213,12 +213,6 @@ class Activity(GObject.GObject):
             return None
         return self._activity_info.get_bundle_id()
 
-    def get_bundle_id(self):
-        """Retrieve the bundle ID of our root window"""
-        if self._windows:
-            return getattr(self._windows[0], 'bundle_id')
-        return None
-
     def has_bundle_id(self, bundle_id):
         """Check if a window with the given bundle id is in the windows stack"""
         if self._windows:
@@ -233,7 +227,7 @@ class Activity(GObject.GObject):
 
         This was stored by the add_window method, which was
         called by HomeModel._add_activity, which was called
-        via a callback that looks for all 'window-opened'
+        via a callback that looks for all 'window-added'
         events.
 
         We keep a stack of the windows. The lowest window in the
@@ -586,8 +580,9 @@ class ShellModel(Gtk.Application):
             if activity_id:
                 home_activity = self.get_activity_by_id(activity_id)
 
-                display = Gdk.Display.get_default()
-                gdk_window = display.get_default_group()
+                attributes = Gdk.WindowAttr()
+                attributes.window_type = Gdk.WindowType.FOREIGN
+                gdk_window = Gdk.Window.new(None, attributes, None)
                 gdk_window.set_decorations(0)
 
                 window.maximize()

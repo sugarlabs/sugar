@@ -23,7 +23,6 @@ import json
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import Gdk
-from gi.repository import GdkX11
 from gi.repository import Gio
 
 from sugar3 import env
@@ -227,9 +226,9 @@ class ViewHelp(Gtk.Window):
         window = self.get_window()
         window.set_accept_focus(True)
         if self.parent_window_xid > 0:
-            display = Gdk.Display.get_default()
-            parent = GdkX11.X11Window.foreign_new_for_display(
-                display, self.parent_window_xid)
+            attributes = Gdk.WindowAttr()
+            attributes.window_type = Gdk.WindowType.FOREIGN
+            parent = Gdk.Window.new(None, attributes, None)
             window.set_transient_for(parent)
         shell.get_model().push_modal()
 

@@ -22,7 +22,6 @@ import time
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GdkX11
 from gi.repository import Gio
 import dbus
 import os
@@ -140,15 +139,15 @@ class JournalActivityDBusService(dbus.service.Object):
 
     @dbus.service.method(J_DBUS_INTERFACE, in_signature='is',
                          out_signature='s')
-    def ChooseObject(self, parent_xid, what_filter=''):
+    def ChooseObject(self, parent_id, what_filter=''):
         """
-        This method is keep for backwards compatibility
+        This method is kept for backwards compatibility
         """
         chooser_id = uuid.uuid4().hex
-        if parent_xid > 0:
-            display = Gdk.Display.get_default()
-            parent = GdkX11.X11Window.foreign_new_for_display(
-                display, parent_xid)
+        if parent_id:
+            attributes = Gdk.WindowAttr()
+            attributes.window_type = Gdk.WindowType.FOREIGN
+            parent = Gdk.Window.new(None, attributes, None)
         else:
             parent = None
         chooser = ObjectChooser(parent, what_filter)
@@ -159,13 +158,13 @@ class JournalActivityDBusService(dbus.service.Object):
 
     @dbus.service.method(J_DBUS_INTERFACE, in_signature='issb',
                          out_signature='s')
-    def ChooseObjectWithFilter(self, parent_xid, what_filter='',
+    def ChooseObjectWithFilter(self, parent_id, what_filter='',
                                filter_type=None, show_preview=False):
         chooser_id = uuid.uuid4().hex
-        if parent_xid > 0:
-            display = Gdk.Display.get_default()
-            parent = GdkX11.X11Window.foreign_new_for_display(
-                display, parent_xid)
+        if parent_id:
+            attributes = Gdk.WindowAttr()
+            attributes.window_type = Gdk.WindowType.FOREIGN
+            parent = Gdk.Window.new(None, attributes, None)
         else:
             parent = None
         chooser = ObjectChooser(parent, what_filter, filter_type, show_preview)
