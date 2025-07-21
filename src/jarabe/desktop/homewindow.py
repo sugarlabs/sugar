@@ -48,7 +48,7 @@ class HomeWindow(Gtk.ApplicationWindow):
 
     def __init__(self):
         logging.debug('STARTUP: Loading the desktop window')
-        Gtk.ApplicationWindow.__init__(self):
+        Gtk.ApplicationWindow.__init__(self)
         self.set_has_resize_grip(False)
 
         accel_group = Gtk.AccelGroup()

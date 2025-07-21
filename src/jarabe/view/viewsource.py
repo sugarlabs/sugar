@@ -126,16 +126,16 @@ def setup_view_source(activity):
         except Exception:
             logging.exception('Exception occurred in HandleViewSource():')
 
-    window_xid = activity.get_xid()
-    if window_xid is None:
-        _logger.error('Activity without a window xid')
+    window_id = activity.get_bundle_id()
+    if window_id is None:
+        _logger.error('Activity without a window id')
         return
 
     bundle_path = activity.get_bundle_path()
     bundle_id = activity.get_bundle_id()
 
     if activity.has_shell_window():
-        _logger.debug('A window is already open for %s %s', window_xid,
+        _logger.debug('A window is already open for %s %s', window_id,
                       bundle_path)
         return
 
@@ -161,7 +161,7 @@ def setup_view_source(activity):
     if sugar_toolkit_path is None:
         _logger.error("Path to toolkit not found.")
 
-    view_source = ViewSource(window_xid, bundle_path, document_path,
+    view_source = ViewSource(window_id, bundle_path, document_path,
                              sugar_toolkit_path, activity.get_title())
     activity.push_shell_window(view_source)
     view_source.connect('hide', activity.pop_shell_window)
@@ -171,7 +171,7 @@ def setup_view_source(activity):
 class ViewSource(Gtk.Window):
     __gtype_name__ = 'SugarViewSource'
 
-    def __init__(self, window_xid, bundle_path, document_path,
+    def __init__(self, window_id, bundle_path, document_path,
                  sugar_toolkit_path, title):
         Gtk.Window.__init__(self)
 
@@ -188,7 +188,7 @@ class ViewSource(Gtk.Window):
         height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
-        self._parent_window_xid = window_xid
+        self._parent_window_id = window_id
         self._sugar_toolkit_path = sugar_toolkit_path
         self._gdk_window = self.get_root_window()
 

@@ -102,8 +102,10 @@ class LaunchWindow(Gtk.Window):
         self.resize(Gdk.Screen.width(), Gdk.Screen.height())
 
     def __realize_cb(self, widget):
-        SugarExt.wm_set_activity_id(widget.get_window().get_xid(),
-                                    str(self._activity_id))
+        window = widget.get_window()
+        data = GObject.GObject()
+        setattr(data, 'activity_id', str(self._activity_id))
+        window.set_user_data(data)
 
     def __size_changed_cb(self, screen):
         self._update_size()

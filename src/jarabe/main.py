@@ -155,7 +155,7 @@ def _restart_window_manager():
     _mutter_process = subprocess.Popen(
         ['mutter', '--no-x11'],
         stdout=subprocess.PIPE)
-    _mutter_sid = GLib.io_add_watch(_weston_process.stdout, GLib.IO_HUP,
+    _mutter_sid = GLib.io_add_watch(_mutter_process.stdout, GLib.IO_HUP,
                                     __window_manager_failed_cb)
     return False
 

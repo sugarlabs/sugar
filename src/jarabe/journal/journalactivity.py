@@ -23,6 +23,7 @@ import time
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
+from gi.repository import GObject
 import dbus
 import os
 
@@ -244,10 +245,13 @@ class JournalActivity(JournalWindow):
         self.remove_alert(alert)
 
     def __realize_cb(self, window):
-        xid = window.get_window().get_xid()
-        SugarExt.wm_set_bundle_id(xid, _BUNDLE_ID)
         activity_id = activityfactory.create_activity_id()
-        SugarExt.wm_set_activity_id(xid, str(activity_id))
+        data = GObject.GObject()
+        settattr(data, 'activity_id', str(activity_id))
+        settattr(data, 'bundle_id', _BUNDLE_ID)
+        gdk_window = window.get_window()
+        gdk_window.set_user_data(data)
+
         self.disconnect(self._realized_sid)
         self._realized_sid = None
 

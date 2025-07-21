@@ -21,7 +21,6 @@ from gi.repository import Gio
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GdkX11
 from gi.repository import GLib
 import dbus
 
@@ -152,8 +151,8 @@ class Activity(GObject.GObject):
     def remove_window_by_bundle_id(self, bundle_id):
         """Remove a window from the windows stack."""
         for wnd in self._windows:
-            id = wnd.get_user_data()
-            if getattr(id, 'bundle_id') == bundle_id:
+            data = wnd.get_window().get_user_data()
+            if getattr(data, 'bundle_id') == bundle_id:
                 self._windows.remove(wnd)
                 return True
         return False
@@ -217,7 +216,8 @@ class Activity(GObject.GObject):
         """Check if a window with the given bundle id is in the windows stack"""
         if self._windows:
             for wnd in self._windows:
-                wid = getattr(wnd, 'bundle_id')
+                data = wnd.get_window().get_user_data()
+                wid = getattr(data, 'bundle_id')
                 if wid == bundle_id:
                     return True
         return False
@@ -245,7 +245,8 @@ class Activity(GObject.GObject):
         """Retrieve the activity bundle id for future reference"""
         if not self._windows:
             return None
-        return getattr(self._windows[0], 'bundle_id')
+        data = self._windows[0].get_window().get_user_data()
+        return getattr(data, 'bundle_id')
 
     def is_journal(self):
         """Returns boolean if the activity is of type JournalActivity"""
@@ -280,7 +281,8 @@ class Activity(GObject.GObject):
     def equals(self, activity):
         if self._activity_id and activity.get_activity_id():
             return self._activity_id == activity.get_activity_id()
-        bundle_id = getattr(self._windows[0], bundle_id)
+        data = self._windows[0].get_window().get_user_data()
+        bundle_id = getattr(data, bundle_id)
         if bundle_id and activity.get_bundle_id():
             return bundle_id == activity.get_bundle_id()
         return False
@@ -568,8 +570,9 @@ class ShellModel(Gtk.Application):
                 window.get_type_hint() == Gdk.WindowTypeHint.SPLASHSCREEN:
             home_activity = None
 
-            activity_id = getattr(window, 'activity_id')
-            service_name = getattr(window, 'bundle_id')
+            data = window.get_window().get_user_data()
+            activity_id = getattr(data, 'activity_id')
+            service_name = getattr(data, 'bundle_id')
 
             if service_name:
                 registry = get_registry()
@@ -623,7 +626,8 @@ class ShellModel(Gtk.Application):
     def _window_removed_cb(self, application, window):
         if window.get__type_hint() == Gdk.WindowTypeHint.NORMAL or \
                 window.get_type_hint() == Gdk.WindowTypeHint.SPLASHSCREEN:
-            bundle_id = getattr(window, 'bundle_id')
+            data = window.get_window().get_user_data()
+            bundle_id = getattr(data, 'bundle_id')
             activity = self._get_activity_by_bundle_id(bundle_id)
             if activity is not None:
                 activity.remove_window_by_bundle_id(bundle_id)
@@ -653,7 +657,8 @@ class ShellModel(Gtk.Application):
             while window.get_transient_for() is not None:
                 window = window.get_transient_for()
 
-        bundle_id = getattr(window, 'bundle_id')
+        data = window.get_window().get_user_data()
+        bundle_id = getattr(data, 'bundle_id')
         act = self._get_activity_by_bundle_id(bundle_id)
         if act is not None:
             self._set_active_activity(act)
@@ -690,7 +695,8 @@ class ShellModel(Gtk.Application):
             windows = self.get_windows()
             windows.reverse()
             for window in windows:
-                bundle_id = getattr(window.get_user_data(), 'bundle_id')
+                data = window.get_window().get_user_data()
+                bundle_id = getattr(data, 'bundle_id')
                 new_activity = self._get_activity_by_bundle_id(bundle_id)
                 if new_activity is not None:
                     self._set_active_activity(new_activity)
