@@ -436,14 +436,14 @@ class MetadataLookup(GObject.GObject):
             if filename not in self._namelist:
                 continue
             cp = ConfigParser()
-            cp.readfp(StringIO(self._zf.read(filename)))
+            cp.read_file(StringIO(self._zf.read(filename)))
             return cp.get('Activity', 'name')
         return None
 
     def _activity_info_lookup(self, parameter):
         filename = os.path.join(self._prefix, 'activity', 'activity.info')
         cp = ConfigParser()
-        cp.readfp(StringIO(self._zf.read(filename)))
+        cp.read_file(StringIO(self._zf.read(filename)))
         if cp.has_option('Activity', parameter):
             return cp.get('Activity', parameter)
         return ''
@@ -451,7 +451,7 @@ class MetadataLookup(GObject.GObject):
     def _library_info_lookup(self, parameter):
         filename = os.path.join(self._prefix, 'library', 'library.info')
         cp = ConfigParser()
-        cp.readfp(StringIO(self._zf.read(filename)))
+        cp.read_file(StringIO(self._zf.read(filename)))
         if cp.has_option('Library', parameter):
             return cp.get('Library', parameter)
         return ''
