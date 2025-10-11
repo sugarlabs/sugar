@@ -206,8 +206,9 @@ class CountryCodeParser(object):
         try:
             return self._data[country_code]
         except KeyError:
-            raise KeyError('Not found country name for code "%s"'
-                           % country_code)
+            logging.warning('Not found country name for code "%s"'
+                            % country_code)
+            return country_code
 
 
 class ServiceProvidersParser(object):
