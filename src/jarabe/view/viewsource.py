@@ -71,7 +71,10 @@ def _is_web_activity(bundle_path):
 
 def _is_gtk3_activity(bundle_path, bundle_id):
     setup_py_path = os.path.join(bundle_path, 'setup.py')
-    main_filename = '/'.join(bundle_id.split('.')[-1]) + '.py'
+    # Use the last segment of the bundle id as the main filename.
+    # Joining the string directly caused it to be iterated by character
+    # (e.g. '/'.join('hello') -> 'h/e/l/l/o'), which is incorrect.
+    main_filename = bundle_id.split('.')[-1] + '.py'
     main_file_path = os.path.join(bundle_path, main_filename)
     all_files = os.listdir(bundle_path)
     try_paths = [setup_py_path, main_file_path] + all_files
