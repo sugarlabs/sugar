@@ -27,11 +27,10 @@ from gi.repository import GObject
 import dbus
 import os
 
-from sugar3.graphics.alert import ErrorAlert
-from sugar3 import env
-from sugar3.datastore import datastore
-from sugar3.activity import activityfactory
-from gi.repository import SugarExt
+from sugar4.graphics.alert import ErrorAlert
+from sugar4 import env
+from sugar4.datastore import datastore
+from sugar4.activity import activityfactory
 
 from jarabe.journal.journaltoolbox import MainToolbox
 from jarabe.journal.journaltoolbox import AddNewBar
@@ -55,7 +54,7 @@ from jarabe.journal.listmodel import ListModel
 
 from jarabe.model import session, shell
 
-from sugar3.graphics import style
+from sugar4.graphics import style
 
 J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'

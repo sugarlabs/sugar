@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sugar3 import logger
+from sugar4 import logger
 
 logger.cleanup()
 logger.start('shell')
@@ -48,7 +48,7 @@ DBusGMainLoop(set_as_default=True)
 
 # define the versions of used libraries that are required
 import gi
-gi.require_version('Gtk', '3.0')
+#gi.require_version('Gtk', '3.0')
 gi.require_version('Gst', '1.0')
 gi.require_version('SugarExt', '1.0')
 
@@ -57,7 +57,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gst
 
-from sugar3 import env
+from sugar4 import env
 
 from jarabe.model.session import get_session_manager
 from jarabe.model.update import updater
@@ -152,8 +152,10 @@ def __window_manager_failed_cb(fd, condition):
 def _restart_window_manager():
     global _mutter_process, _mutter_sid
 
+    #_mutter_process = subprocess.Popen(
+    #    ['mutter', '--wayland'],
     _mutter_process = subprocess.Popen(
-        ['mutter', '--no-x11'],
+        ['dbus-run-session', 'mutter', '--wayland'],
         stdout=subprocess.PIPE)
     _mutter_sid = GLib.io_add_watch(_mutter_process.stdout, GLib.IO_HUP,
                                     __window_manager_failed_cb)
@@ -167,7 +169,14 @@ def _start_window_manager():
     _cursor_theme = _cursor_theme_settings.get_string('cursor-theme')
     _cursor_theme_settings.set_string('cursor-theme', 'sugar')
 
-    _restart_window_manager()
+    #_restart_window_manager()
+    global _mutter_process, _mutter_sid
+
+    _mutter_process = subprocess.Popen(
+        ['mutter', '--wayland'],
+        stdout=subprocess.PIPE)
+    _mutter_sid = GLib.io_add_watch(_mutter_process.stdout, GLib.IO_HUP,
+                                    __window_manager_failed_cb)
 
     global _starting_desktop
     if _starting_desktop:
@@ -180,22 +189,23 @@ def _stop_window_manager():
 
 
 def _begin_desktop_startup(shell):
+    logging.warning("Running begin desktop")
     global _starting_desktop
     _starting_desktop = True
 
+
     UIService()
+
+    home_window = homewindow.get_instance()
+    shell.add_window(home_window)
+    home_window.show()
 
     session_manager = get_session_manager()
     session_manager.start()
 
-    # open homewindow before window_manager to let desktop appear fast
-    home_window = homewindow.get_instance()
-    _shell.add_window(home_window)
-    home_window.present()
 
-
-def __intro_window_done_cb(window, shell):
-    _begin_desktop_startup(shell)
+def __intro_window_done_cb(window):
+    _begin_desktop_startup()
 
     global _window_manager_started
     if _window_manager_started:
@@ -282,8 +292,9 @@ def setup_theme():
 
 def _start_intro(shell, start_on_age_page=False):
     window = IntroWindow(start_on_age_page=start_on_age_page)
+
     shell.add_window(window)
-    window.connect('done', __intro_window_done_cb, shell)
+    window.connect('done', __intro_window_done_cb)
     window.show()
 
 
@@ -303,7 +314,8 @@ def _check_group_label():
     return intro.check_group_label()
 
 
-def main():
+def main(shell):
+    logging.warning("Running main")
     Gst.init(sys.argv)
 
     cleanup_temporary_files()
@@ -319,22 +331,19 @@ def main():
     # even when we initially get blocked on the intro screen
     GLib.idle_add(unfreeze_screen_cb)
 
+    if not _check_profile():
+        _start_intro(shell)
+    elif not _check_group_label():
+        _start_intro(shell, start_on_age_page=True)
+    else:
+        _begin_desktop_startup()
+
     GLib.idle_add(setup_cursortracker_cb)
     sound.restore()
     #keyboard.setup()
     brightness.get_instance()
 
     sys.path.append(config.ext_path)
-
-    _shell = shell.get_model()
-    _shell.run(sys.argv)
-
-    if not _check_profile():
-        _start_intro(_shell)
-    elif not _check_group_label():
-        _start_intro(_shell, start_on_age_page=True)
-    else:
-        _begin_desktop_startup(_shell)
 
     try:
         Gtk.main()
@@ -344,4 +353,6 @@ def main():
     _stop_window_manager()
 
 
-main()
+shell = shell.get_model()
+shell.connect('activate', main)
+shell.run(None)

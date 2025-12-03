@@ -21,7 +21,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 from gi.repository import SugarExt
-from sugar3.graphics import style
+from sugar4.graphics import style
 
 from jarabe.model import shell
 from jarabe.view.pulsingicon import PulsingIcon
@@ -142,6 +142,7 @@ def add_launcher(activity_id, icon_path, icon_color):
     launch_window = LaunchWindow(activity_id, icon_path, icon_color)
     launch_window.show()
 
+    model.add_window(launch_window)
     model.register_launcher(activity_id, launch_window)
 
 
@@ -185,4 +186,5 @@ def _destroy_launcher(home_activity):
         return
 
     shell.get_model().unregister_launcher(activity_id)
+    shell.get_model().remove_window(launcher)
     launcher.destroy()

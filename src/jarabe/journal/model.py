@@ -32,9 +32,9 @@ from gi.repository import GLib
 
 from gi.repository import SugarExt
 
-from sugar3 import dispatch
-from sugar3 import mime
-from sugar3 import util
+from sugar4 import dispatch
+from sugar4 import mime
+from sugar4 import util
 
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'

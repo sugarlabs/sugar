@@ -25,12 +25,12 @@ from gi.repository import GObject
 from gi.repository import Gdk
 from gi.repository import Gio
 
-from sugar3 import env
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.radiotoolbutton import RadioToolButton
-from sugar3.bundle.activitybundle import get_bundle_instance
+from sugar4 import env
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.toolbutton import ToolButton
+from sugar4.graphics.radiotoolbutton import RadioToolButton
+from sugar4.bundle.activitybundle import get_bundle_instance
 from jarabe.model import shell
 from jarabe.view.viewhelp_webkit2 import Browser
 

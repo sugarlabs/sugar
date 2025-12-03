@@ -29,8 +29,8 @@ import configparser
 from gi.repository import Gio
 import ctypes
 
-from sugar3 import dispatch
-from sugar3 import env
+from sugar4 import dispatch
+from sugar4 import env
 
 from jarabe.model.update.updater import check_urgent_update
 

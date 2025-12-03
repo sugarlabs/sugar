@@ -23,7 +23,7 @@ import logging
 from gettext import gettext as _
 
 import gi
-gi.require_version('GtkSource', '3.0')
+gi.require_version('GtkSource', '4')
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Pango
@@ -34,20 +34,20 @@ from gi.repository import GdkPixbuf
 import dbus
 from gi.repository import Gio
 
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.alert import Alert
-from sugar3.graphics.alert import ConfirmationAlert
-from sugar3.graphics.alert import NotifyAlert
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.palettemenu import PaletteMenuBox
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.radiotoolbutton import RadioToolButton
-from sugar3.bundle.activitybundle import get_bundle_instance
-from sugar3.datastore import datastore
-from sugar3.env import get_user_activities_path
-from sugar3 import mime
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics.alert import Alert
+from sugar4.graphics.alert import ConfirmationAlert
+from sugar4.graphics.alert import NotifyAlert
+from sugar4.graphics.toolbutton import ToolButton
+from sugar4.graphics.palettemenu import PaletteMenuBox
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.radiotoolbutton import RadioToolButton
+from sugar4.bundle.activitybundle import get_bundle_instance
+from sugar4.datastore import datastore
+from sugar4.env import get_user_activities_path
+from sugar4 import mime
 
 from jarabe.view import customizebundle
 

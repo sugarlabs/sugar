@@ -18,7 +18,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 
 from gi.repository import SugarExt
-from sugar3 import dispatch
+from sugar4 import dispatch
 
 
 _PLAYBACK = 0

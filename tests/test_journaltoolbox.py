@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sugar3.test import unittest
-from sugar3.test import uitree
+from sugar4.test import unittest
+from sugar4.test import uitree
 
 ACCOUNT_NAME = 'mock'
 

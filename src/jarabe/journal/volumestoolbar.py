@@ -29,11 +29,11 @@ import json
 import tempfile
 import shutil
 
-from sugar3.graphics.radiotoolbutton import RadioToolButton
-from sugar3.graphics.palette import Palette
-from sugar3.graphics import style
-from sugar3 import env
-from sugar3 import profile
+from sugar4.graphics.radiotoolbutton import RadioToolButton
+from sugar4.graphics.palette import Palette
+from sugar4.graphics import style
+from sugar4 import env
+from sugar4 import profile
 
 from jarabe.journal import model
 from jarabe.journal.misc import get_mount_icon_name

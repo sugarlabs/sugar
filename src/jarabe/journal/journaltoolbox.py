@@ -26,24 +26,24 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.toolbarbox import ToolbarBox
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.toggletoolbutton import ToggleToolButton
-from sugar3.graphics.palette import ToolInvoker
-from sugar3.graphics.palettemenu import PaletteMenuBox
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.icon import Icon, EventIcon
-from sugar3.graphics.alert import Alert
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics import iconentry
-from sugar3.graphics import style
-from sugar3 import mime
-from sugar3 import profile
-from sugar3.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
-from sugar3.graphics.objectchooser import FILTER_TYPE_GENERIC_MIME
-from sugar3.graphics.objectchooser import FILTER_TYPE_ACTIVITY
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.toolbarbox import ToolbarBox
+from sugar4.graphics.toolbutton import ToolButton
+from sugar4.graphics.toggletoolbutton import ToggleToolButton
+from sugar4.graphics.palette import ToolInvoker
+from sugar4.graphics.palettemenu import PaletteMenuBox
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar4.graphics.icon import Icon, EventIcon
+from sugar4.graphics.alert import Alert
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics import iconentry
+from sugar4.graphics import style
+from sugar4 import mime
+from sugar4 import profile
+from sugar4.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
+from sugar4.graphics.objectchooser import FILTER_TYPE_GENERIC_MIME
+from sugar4.graphics.objectchooser import FILTER_TYPE_ACTIVITY
 
 from jarabe.model import bundleregistry
 from jarabe.journal import misc

@@ -19,7 +19,7 @@ from gi.repository import GObject
 from gi.repository import GLib
 #from gi.repository import Wnck
 
-from sugar3.graphics import style
+from sugar4.graphics import style
 
 
 _MAX_DELAY = 1000

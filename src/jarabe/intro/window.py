@@ -26,11 +26,11 @@ from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import GLib
 
-from sugar3 import env
-from sugar3 import profile
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.xocolor import XoColor
+from sugar4 import env
+from sugar4 import profile
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.xocolor import XoColor
 
 from jarabe.intro import agepicker
 from jarabe.intro import colorpicker

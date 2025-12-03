@@ -24,7 +24,7 @@ from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Gio
 
-from sugar3.bundle.helpers import bundle_from_archive
+from sugar4.bundle.helpers import bundle_from_archive
 
 from jarabe.model import bundleregistry
 from jarabe.util.downloader import Downloader

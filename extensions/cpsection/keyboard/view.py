@@ -28,8 +28,8 @@ from gi.repository import Pango
 import logging
 from gettext import gettext as _
 
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.config import data_path

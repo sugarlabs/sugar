@@ -24,12 +24,12 @@ from gi.repository import Gio
 from gi.repository import Gtk
 import json
 
-from sugar3.bundle.helpers import bundle_from_dir
-from sugar3.bundle.activitybundle import ActivityBundle
-from sugar3.bundle.bundleversion import NormalizedVersion
-from sugar3.bundle.bundle import MalformedBundleException, \
+from sugar4.bundle.helpers import bundle_from_dir
+from sugar4.bundle.activitybundle import ActivityBundle
+from sugar4.bundle.bundleversion import NormalizedVersion
+from sugar4.bundle.bundle import MalformedBundleException, \
     AlreadyInstalledException, RegistrationException
-from sugar3 import env
+from sugar4 import env
 
 from jarabe.model import desktop
 from jarabe.model import mimeregistry

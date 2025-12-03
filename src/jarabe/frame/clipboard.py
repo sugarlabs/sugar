@@ -23,7 +23,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3 import mime
+from sugar4 import mime
 
 from jarabe.frame.clipboardobject import ClipboardObject, Format
 

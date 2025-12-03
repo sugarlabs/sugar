@@ -23,10 +23,10 @@ from gi.repository import Gdk
 from gi.repository import GLib
 import gettext
 
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
 
-from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItem
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert

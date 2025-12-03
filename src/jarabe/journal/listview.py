@@ -24,13 +24,13 @@ from gi.repository import Gdk
 from gi.repository import Pango
 from gi.repository import GdkPixbuf
 
-from sugar3.graphics import style
-from sugar3.graphics.alert import ConfirmationAlert
-from sugar3.graphics.icon import Icon, CellRendererIcon
-from sugar3.graphics.scrollingdetector import ScrollingDetector
-from sugar3 import util
-from sugar3 import profile
-from sugar3.graphics.palettewindow import TreeViewInvoker
+from sugar4.graphics import style
+from sugar4.graphics.alert import ConfirmationAlert
+from sugar4.graphics.icon import Icon, CellRendererIcon
+from sugar4.graphics.scrollingdetector import ScrollingDetector
+from sugar4 import util
+from sugar4 import profile
+from sugar4.graphics.palettewindow import TreeViewInvoker
 
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette

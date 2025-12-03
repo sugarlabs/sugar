@@ -17,6 +17,9 @@
 import logging
 import time
 
+import gi
+gi.require_version("Casilda", "1.0")
+
 from gi.repository import Gio
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -24,9 +27,8 @@ from gi.repository import Gdk
 from gi.repository import GLib
 import dbus
 
-from sugar3 import dispatch
-from sugar3 import profile
-from gi.repository import SugarExt
+from sugar4 import dispatch
+from sugar4 import profile
 
 from jarabe.model.bundleregistry import get_registry
 
@@ -396,8 +398,22 @@ class ShellModel(Gtk.Application):
     ZOOM_HOME = 2
     ZOOM_ACTIVITY = 3
 
-    def __init__(self, application_service="org.laptop.Shell"):
-        Gtk.Application.__init__(self, application_id=application_service)
+    def __init__(self, application_id="org.laptop.Shell"):
+        Gtk.Application.__init__(
+            self,
+            application_id=application_id,
+            flags=Gio.ApplicationFlags.IS_SERVICE)
+        self.set_default()
+
+        self.compositor = Casilda.Compositor()
+        self.compositor.spawn_async(
+            None,
+            None,
+            None,
+            GLib.SpawnFlags.DEFAULT
+        )
+
+        logging.warning("shell initialized")
 
         self.connect('window-added', self._window_added_cb)
         self.connect('window-removed', self._window_removed_cb)
@@ -423,6 +439,10 @@ class ShellModel(Gtk.Application):
             'maximum-number-of-open-activities')
 
         self._launch_timers = {}
+
+    def add_window(self, window):
+        window.set_child(self.compositor)
+        super().add_window(window)
 
     def get_launcher(self, activity_id):
         return self._launchers.get(str(activity_id))
@@ -566,6 +586,7 @@ class ShellModel(Gtk.Application):
            them.
 
          """
+        logging.warning(f"adding window: {window.__name__}")
         if window.get_type_hint() == Gdk.WindowTypeHint.NORMAL or \
                 window.get_type_hint() == Gdk.WindowTypeHint.SPLASHSCREEN:
             home_activity = None

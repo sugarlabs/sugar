@@ -15,6 +15,7 @@
 
 import os
 import logging
+import importlib
 from gettext import gettext as _
 
 from gi.repository import GObject
@@ -22,9 +23,9 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3.graphics.icon import Icon
-from sugar3.graphics import style
-from sugar3.graphics.alert import Alert, TimeoutAlert
+from sugar4.graphics.icon import Icon
+from sugar4.graphics import style
+from sugar4.graphics.alert import Alert, TimeoutAlert
 
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
@@ -299,12 +300,10 @@ class ControlPanel(Gtk.Window):
 
         self._current_option = option
 
-        mod = __import__('.'.join(('cpsection', option, 'view')),
-                         globals(), locals(), ['view'])
+        mod = importlib.import_module('.'.join(('cpsection', option, 'view')))
         view_class = getattr(mod, self._options[option]['view'], None)
 
-        mod = __import__('.'.join(('cpsection', option, 'model')),
-                         globals(), locals(), ['model'])
+        mod = importlib.import_module('.'.join(('cpsection', option, 'model')))
         model = ModelWrapper(mod)
 
         try:
@@ -347,8 +346,7 @@ class ControlPanel(Gtk.Window):
             if os.path.isdir(os.path.join(path, item)) and \
                     os.path.exists(os.path.join(path, item, '__init__.py')):
                 try:
-                    mod = __import__('.'.join(('cpsection', item)),
-                                     globals(), locals(), [item])
+                    mod = importlib.import_module('.'.join(('cpsection', item)))
                     view_class = getattr(mod, 'CLASS', None)
                     if view_class is not None:
                         options[item] = {}

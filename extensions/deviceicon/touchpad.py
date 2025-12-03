@@ -21,10 +21,10 @@ from gi.repository import Gtk
 
 import logging
 
-from sugar3 import profile
-from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.palette import Palette
-from sugar3.graphics import style
+from sugar4 import profile
+from sugar4.graphics.tray import TrayIcon
+from sugar4.graphics.palette import Palette
+from sugar4.graphics import style
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 

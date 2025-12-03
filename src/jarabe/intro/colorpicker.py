@@ -16,9 +16,9 @@
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3.graphics.icon import Icon
-from sugar3.graphics import style
-from sugar3.graphics.xocolor import XoColor
+from sugar4.graphics.icon import Icon
+from sugar4.graphics import style
+from sugar4.graphics.xocolor import XoColor
 
 
 class ColorPicker(Gtk.EventBox):

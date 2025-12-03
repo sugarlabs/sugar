@@ -22,8 +22,8 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
 
-from sugar3.graphics import style
-from sugar3.graphics import palettegroup
+from sugar4.graphics import style
+from sugar4.graphics import palettegroup
 
 from jarabe.desktop.meshbox import MeshBox
 from jarabe.desktop.homebox import HomeBox

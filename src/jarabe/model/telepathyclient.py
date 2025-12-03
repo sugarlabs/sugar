@@ -29,7 +29,7 @@ CLIENT_INTERFACE_REQUESTS = TelepathyGLib.IFACE_CLIENT_INTERFACE_REQUESTS
 CONNECTION_HANDLE_TYPE_ROOM = TelepathyGLib.HandleType.ROOM
 CONNECTION_HANDLE_TYPE_CONTACT = TelepathyGLib.HandleType.CONTACT
 
-from sugar3 import dispatch
+from sugar4 import dispatch
 
 
 SUGAR_CLIENT_SERVICE = 'org.freedesktop.Telepathy.Client.Sugar'

@@ -16,12 +16,13 @@
 
 import os
 import logging
+import importlib
 
 from gi.repository import GLib
 from gi.repository import Gdk
-from gi.repository import SugarExt
+#from gi.repository import SugarExt
 
-from sugar3.test import uitree
+from sugar4.test import uitree
 
 from jarabe.model.sound import sound
 from jarabe.model import shell
@@ -79,11 +80,11 @@ class KeyHandler(object):
         self._keycode_pressed = 0
         self._keystate_pressed = 0
 
-        self._key_grabber = SugarExt.KeyGrabber()
-        self._key_grabber.connect('key-pressed',
-                                  self._key_pressed_cb)
-        self._key_grabber.connect('key-released',
-                                  self._key_released_cb)
+        #self._key_grabber = SugarExt.KeyGrabber()
+        #self._key_grabber.connect('key-pressed',
+        #                          self._key_pressed_cb)
+        #self._key_grabber.connect('key-released',
+        #                          self._key_released_cb)
 
         self._tabbing_handler = TabbingHandler(self._frame, _TABBING_MODIFIER)
 
@@ -92,8 +93,7 @@ class KeyHandler(object):
                 module_name = f[:-3]
                 try:
                     logging.debug('Loading module %r', module_name)
-                    module = __import__('globalkey.' + module_name, globals(),
-                                        locals(), [module_name])
+                    module = importlib.import_module('globalkey.' + module_name, globals())
                     for key in module.BOUND_KEYS:
                         if key in _actions_table:
                             raise ValueError('Key %r is already bound' % key)
@@ -101,7 +101,7 @@ class KeyHandler(object):
                 except Exception:
                     logging.exception('Exception while loading extension:')
 
-        self._key_grabber.grab_keys(list(_actions_table.keys()))
+        #self._key_grabber.grab_keys(list(_actions_table.keys()))
 
     def _change_volume(self, step=None, value=None):
         if step is not None:

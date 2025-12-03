@@ -15,7 +15,7 @@
 
 import logging
 
-from sugar3.graphics import style
+from sugar4.graphics import style
 
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.model.buddy import get_owner_instance
