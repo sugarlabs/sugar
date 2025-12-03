@@ -436,11 +436,11 @@ class ClipboardMenu(MenuItem):
         self.connect('activate', self.__copy_to_clipboard_cb)
 
     def __copy_to_clipboard_cb(self, menu_item):
-        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        clipboard = Gtk.Display.get_default().get_clipboard()
         uid_list = self._get_uid_list_cb()
         if len(uid_list) == 1:
             uid = uid_list[0]
-            file_path = model.get_file(uid)
+            file_path = 'file://' + model.get_file(uid))
             if not file_path or not os.path.exists(file_path):
                 logging.warn('Entries without a file cannot be copied.')
                 self.emit('volume-error',
@@ -448,31 +448,14 @@ class ClipboardMenu(MenuItem):
                           _('Warning'))
                 return
 
-            # XXX SL#4307 - until set_with_data bindings are fixed upstream
-            if hasattr(clipboard, 'set_with_data'):
-                clipboard.set_with_data(
-                    [Gtk.TargetEntry.new('text/uri-list', 0, 0)],
-                    self.__clipboard_get_func_cb,
-                    self.__clipboard_clear_func_cb,
-                    None)
-           # else:
-           #     SugarExt.clipboard_set_with_data(
-           #         clipboard,
-           #         [Gtk.TargetEntry.new('text/uri-list', 0, 0)],
-           #         self.__clipboard_get_func_cb,
-           #         self.__clipboard_clear_func_cb,
-           #         None)
-
-    def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
-        # Get hold of a reference so the temp file doesn't get deleted
-        for uid in self._get_uid_list_cb():
-            self._temp_file_path = model.get_file(uid)
-            logging.debug('__clipboard_get_func_cb %r', self._temp_file_path)
-            selection_data.set_uris(['file://' + self._temp_file_path])
-
-    def __clipboard_clear_func_cb(self, clipboard, data):
-        # Release and delete the temp file
-        self._temp_file_path = None
+            try:
+                value = GObject.Value(GObject.TYPE_STRING, file_path)
+                clipboard.set(value)
+            except:
+                SugarExt.clipboard_set_with_data(
+                    clipboard,
+                    'text/uri-list',
+                    file_path)
 
 
 class FriendsMenu(Gtk.Menu):
