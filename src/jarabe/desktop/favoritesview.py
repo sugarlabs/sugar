@@ -214,11 +214,15 @@ class FavoritesView(ViewContainer):
         return False
 
     def __button_press_cb(self, widget, event):
-        if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:
+        if event.type != Gdk.EventType.BUTTON_PRESS:
+            return False
+
+        if event.button == 1 and event.state & Gdk.ModifierType.MOD1_MASK:
             self._last_clicked_icon = widget
             self._pressed_button = event.button
             self._press_start_x = event.x
             self._press_start_y = event.y
+
         return False
 
     def __motion_notify_event_cb(self, widget, event):
@@ -515,7 +519,13 @@ class ActivityIcon(CanvasIcon):
         if self.palette is not None:
             self.palette.popdown(immediate=True)
 
-        if self._resume_mode and self._journal_entries:
+        # Check if Alt is pressed to invert resume behavior
+        event = Gtk.get_current_event()
+        use_resume_mode = self._resume_mode
+        if event and (event.state & Gdk.ModifierType.MOD1_MASK):
+            use_resume_mode = not use_resume_mode
+
+        if use_resume_mode and self._journal_entries:
             self._resume(self._journal_entries[0])
         else:
             misc.launch(self._activity_info)
