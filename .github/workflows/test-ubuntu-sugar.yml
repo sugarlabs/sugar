@@ -1,0 +1,72 @@
+name: Test Sugar Installation on Ubuntu
+
+on:
+  push:
+    branches: [ ubuntu-24.04-docs ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test-ubuntu-22:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: System Info
+        run: |
+          echo "=== Ubuntu Version ==="
+          lsb_release -a
+          echo ""
+          echo "=== Testing Sugar Installation on Ubuntu 22.04 ==="
+          
+      - name: Update packages
+        run: sudo apt update
+        
+      - name: Install Sugar (sucrose)
+        run: sudo apt install -y sucrose
+        
+      - name: Verify Sugar Installation
+        run: |
+          echo "=== Installed Sugar Packages ==="
+          dpkg -l | grep sugar
+          echo ""
+          echo "=== Sugar Version ==="
+          apt-cache policy sucrose
+          echo ""
+          echo "=== Sugar Desktop File ==="
+          cat /usr/share/xsessions/sugar.desktop || echo "Desktop file location may differ"
+          
+      - name: List Sugar Activities
+        run: |
+          echo "=== Installed Activities ==="
+          dpkg -l | grep -i activity || echo "Activities listed above"
+
+  test-ubuntu-24:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: System Info
+        run: |
+          echo "=== Ubuntu Version ==="
+          lsb_release -a
+          echo ""
+          echo "=== Testing Sugar Installation on Ubuntu 24.04 ==="
+          
+      - name: Update packages
+        run: sudo apt update
+        
+      - name: Install Sugar (sucrose)
+        run: sudo apt install -y sucrose
+        
+      - name: Verify Sugar Installation
+        run: |
+          echo "=== Installed Sugar Packages ==="
+          dpkg -l | grep sugar
+          echo ""
+          echo "=== Sugar Version ==="
+          apt-cache policy sucrose
+          echo ""
+          echo "=== Sugar Desktop File ==="
+          cat /usr/share/xsessions/sugar.desktop || echo "Desktop file location may differ"
+          
+      - name: List Sugar Activities
+        run: |
+          echo "=== Installed Activities ==="
+          dpkg -l | grep -i activity || echo "Activities listed above"
