@@ -17,6 +17,7 @@ import sys
 import logging
 
 import dbus
+from dbus import service
 
 from sugar4 import dispatch
 
@@ -30,12 +31,12 @@ _DBUS_PATH = '/org/freedesktop/Notifications'
 _instance = None
 
 
-class NotificationService(dbus.service.Object):
+class NotificationService(service.Object):
 
     def __init__(self):
         bus = dbus.SessionBus()
-        bus_name = dbus.service.BusName(_DBUS_SERVICE, bus=bus)
-        dbus.service.Object.__init__(self, bus_name, _DBUS_PATH)
+        bus_name = service.BusName(_DBUS_SERVICE, bus=bus)
+        service.Object.__init__(self, bus_name, _DBUS_PATH)
 
         self._notification_counter = 0
         self.notification_received = dispatch.Signal()
@@ -54,7 +55,7 @@ class NotificationService(dbus.service.Object):
             del self._buffer[name]
         self.buffer_cleared.send(self, app_name=name)
 
-    @dbus.service.method(_DBUS_IFACE,
+    @service.method(_DBUS_IFACE,
                          in_signature='susssava{sv}i', out_signature='u')
     def Notify(self, app_name, replaces_id, app_icon, summary, body, actions,
                hints, expire_timeout):
@@ -96,23 +97,23 @@ class NotificationService(dbus.service.Object):
 
         return notification_id
 
-    @dbus.service.method(_DBUS_IFACE, in_signature='u', out_signature='')
+    @service.method(_DBUS_IFACE, in_signature='u', out_signature='')
     def CloseNotification(self, notification_id):
         self.notification_cancelled.send(self, notification_id=notification_id)
 
-    @dbus.service.method(_DBUS_IFACE, in_signature='', out_signature='as')
+    @service.method(_DBUS_IFACE, in_signature='', out_signature='as')
     def GetCapabilities(self):
         return []
 
-    @dbus.service.method(_DBUS_IFACE, in_signature='', out_signature='ssss')
+    @service.method(_DBUS_IFACE, in_signature='', out_signature='ssss')
     def GetServerInformation(self):
         return 'Sugar Shell', 'Sugar', config.version, '1.2'
 
-    @dbus.service.signal(_DBUS_IFACE, signature='uu')
+    @service.signal(_DBUS_IFACE, signature='uu')
     def NotificationClosed(self, notification_id, reason):
         pass
 
-    @dbus.service.signal(_DBUS_IFACE, signature='us')
+    @service.signal(_DBUS_IFACE, signature='us')
     def ActionInvoked(self, notification_id, action_key):
         pass
 
