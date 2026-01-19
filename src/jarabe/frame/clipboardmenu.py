@@ -85,14 +85,9 @@ class ClipboardMenu(Palette):
             return
 
         child.set_text(_('Open with'))
-        submenu = self._open_item.get_submenu()
-        if submenu is None:
-            submenu = Gtk.Menu()
-            self._open_item.set_submenu(submenu)
-            submenu.show()
-        else:
-            for item in submenu.get_children():
-                submenu.remove(item)
+        submenu = Gio.Menu.new()
+        self._open_item.set_submenu(submenu)
+        submenu.show()
 
         for service_name in activities:
             registry = bundleregistry.get_registry()
@@ -101,10 +96,10 @@ class ClipboardMenu(Palette):
             if not activity_info:
                 logging.warning('Activity %s is unknown.', service_name)
 
-            item = Gtk.MenuItem(activity_info.get_name())
+            item = Gio.MenuItem(activity_info.get_name())
             item.connect('activate', self._open_submenu_item_activate_cb,
                          service_name)
-            submenu.append(item)
+            submenu.append_item(item)
             item.show()
 
     def _update_items_visibility(self):

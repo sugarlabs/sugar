@@ -18,14 +18,15 @@ import logging
 from gettext import gettext as _
 import uuid
 import time
+import dbus
+import os
+from dbus import service
 
 
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GObject
-import dbus
-import os
 
 from sugar4.graphics.alert import ErrorAlert
 from sugar4 import env
@@ -67,19 +68,19 @@ _journal = None
 PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
 
-class JournalActivityDBusService(dbus.service.Object):
+class JournalActivityDBusService(service.Object):
 
     def __init__(self, parent):
         self._parent = parent
         session_bus = dbus.SessionBus()
-        bus_name = dbus.service.BusName(J_DBUS_SERVICE,
+        bus_name = service.BusName(J_DBUS_SERVICE,
                                         bus=session_bus,
                                         replace_existing=False,
                                         allow_replacement=False)
         logging.debug('bus_name: %r', bus_name)
-        dbus.service.Object.__init__(self, bus_name, J_DBUS_PATH)
+        service.Object.__init__(self, bus_name, J_DBUS_PATH)
 
-    @dbus.service.method(J_DBUS_INTERFACE, in_signature='ss',
+    @service.method(J_DBUS_INTERFACE, in_signature='ss',
                          out_signature='s')
     def GetBundlePath(self, bundle_id, object_id):
         '''
@@ -99,7 +100,7 @@ class JournalActivityDBusService(dbus.service.Object):
             return ''
         return bundle.get_path()
 
-    @dbus.service.method(J_DBUS_INTERFACE, in_signature='ss',
+    @service.method(J_DBUS_INTERFACE, in_signature='ss',
                          out_signature='b')
     def LaunchBundle(self, bundle_id, object_id):
         '''
@@ -117,7 +118,7 @@ class JournalActivityDBusService(dbus.service.Object):
 
         return launch_bundle(bundle_id, object_id)
 
-    @dbus.service.method(J_DBUS_INTERFACE,
+    @service.method(J_DBUS_INTERFACE,
                          in_signature='s', out_signature='')
     def ShowObject(self, object_id):
         """Pop-up journal and show object with object_id"""
@@ -137,7 +138,7 @@ class JournalActivityDBusService(dbus.service.Object):
         chooser.destroy()
         del chooser
 
-    @dbus.service.method(J_DBUS_INTERFACE, in_signature='is',
+    @service.method(J_DBUS_INTERFACE, in_signature='is',
                          out_signature='s')
     def ChooseObject(self, parent_id, what_filter=''):
         """
@@ -156,7 +157,7 @@ class JournalActivityDBusService(dbus.service.Object):
 
         return chooser_id
 
-    @dbus.service.method(J_DBUS_INTERFACE, in_signature='issb',
+    @service.method(J_DBUS_INTERFACE, in_signature='issb',
                          out_signature='s')
     def ChooseObjectWithFilter(self, parent_id, what_filter='',
                                filter_type=None, show_preview=False):
@@ -173,11 +174,11 @@ class JournalActivityDBusService(dbus.service.Object):
 
         return chooser_id
 
-    @dbus.service.signal(J_DBUS_INTERFACE, signature='ss')
+    @service.signal(J_DBUS_INTERFACE, signature='ss')
     def ObjectChooserResponse(self, chooser_id, object_id):
         pass
 
-    @dbus.service.signal(J_DBUS_INTERFACE, signature='s')
+    @service.signal(J_DBUS_INTERFACE, signature='s')
     def ObjectChooserCancelled(self, chooser_id):
         pass
 

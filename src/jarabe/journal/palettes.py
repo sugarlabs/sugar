@@ -241,7 +241,7 @@ class ObjectPalette(Palette):
         Palette.popup(self, immediate)
 
 
-class CopyMenu(Gtk.Menu):
+class CopyMenu(Gtk.PopoverMenu):
     __gtype_name__ = 'JournalCopyMenu'
 
     __gsignals__ = {
@@ -250,7 +250,7 @@ class CopyMenu(Gtk.Menu):
     }
 
     def __init__(self, journalactivity, get_uid_list_cb):
-        Gtk.Menu.__init__(self)
+        Gtk.PopoverMenu.__init__(self)
         CopyMenuBuilder(journalactivity, get_uid_list_cb,
                         self.__volume_error_cb, self)
 
@@ -272,38 +272,47 @@ class CopyMenuBuilder():
 
         self._mount_added_hid = None
         self._mount_removed_hid = None
+
         self._create_menu_items()
 
     def _create_menu_items(self):
+        self.g_menu = Gio.Menu.new()
+        application = Gio.Application.get_default()
         if self._add_clipboard_menu:
+            copy_action = Gio.SimpleAction.new("copy_clipboard", None)
+            application.add_action(copy_action)
             clipboard_menu = ClipboardMenu(self._get_uid_list_cb)
             clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
                                           pixel_size=style.SMALL_ICON_SIZE))
             clipboard_menu.connect('volume-error', self.__volume_error_cb)
-            self._menu.append(clipboard_menu)
+            self.g_menu.append_item(clipboard_menu)
             clipboard_menu.show()
 
         if self._journalactivity.get_mount_point() != '/':
             color = profile.get_color()
+            volume_action = Gio.SimpleAction.new("copy_volume", None)
+            application.add_action(volume_action)
             journal_menu = VolumeMenu(self._journalactivity,
                                       self._get_uid_list_cb, _('Journal'), '/')
             journal_menu.set_image(Icon(icon_name='activity-journal',
                                         xo_color=color,
                                         pixel_size=style.SMALL_ICON_SIZE))
             journal_menu.connect('volume-error', self.__volume_error_cb)
-            self._menu.append(journal_menu)
+            self.g_menu.append_item(journal_menu)
             journal_menu.show()
 
         documents_path = model.get_documents_path()
         if documents_path is not None and \
                 self._journalactivity.get_mount_point() != documents_path:
+            volume_action = Gio.SimpleAction.new("copy_volume", None)
+            application.add_action(volume_action)
             documents_menu = VolumeMenu(self._journalactivity,
                                         self._get_uid_list_cb, _('Documents'),
                                         documents_path)
             documents_menu.set_image(Icon(icon_name='user-documents',
                                           pixel_size=style.SMALL_ICON_SIZE))
             documents_menu.connect('volume-error', self.__volume_error_cb)
-            self._menu.append(documents_menu)
+            self.g_menu.append_item(documents_menu)
             documents_menu.show()
 
         volume_monitor = Gio.VolumeMonitor.get()
@@ -322,8 +331,9 @@ class CopyMenuBuilder():
                 if hasattr(account, 'get_shared_journal_entry'):
                     entry = account.get_shared_journal_entry()
                     if hasattr(entry, 'get_share_menu'):
-                        self._menu.append(entry.get_share_menu(
-                                          self._get_uid_list_cb))
+                        self.g_menu.append(entry.get_share_menu(
+                                          self._get_uid_list_cb), None)
+        self._menu.set_menu_model(self.g_menu)
 
     def update_mount_point(self):
         for menu_item in self._menu.get_children():
@@ -373,6 +383,7 @@ class VolumeMenu(MenuItem):
         self._get_uid_list_cb = get_uid_list_cb
         self._journalactivity = journalactivity
         self._mount_point = mount_point
+        self.set_detailed_action("copy_volume")
         self.connect('activate', self.__copy_to_volume_cb)
 
     def __copy_to_volume_cb(self, menu_item):
@@ -430,6 +441,7 @@ class ClipboardMenu(MenuItem):
 
     def __init__(self, get_uid_list_cb):
         MenuItem.__init__(self, _('Clipboard'))
+        self.set_detailed_action("copy_clipboard")
 
         self._temp_file_path = None
         self._get_uid_list_cb = get_uid_list_cb
@@ -440,7 +452,7 @@ class ClipboardMenu(MenuItem):
         uid_list = self._get_uid_list_cb()
         if len(uid_list) == 1:
             uid = uid_list[0]
-            file_path = 'file://' + model.get_file(uid))
+            file_path = 'file://' + model.get_file(uid)
             if not file_path or not os.path.exists(file_path):
                 logging.warn('Entries without a file cannot be copied.')
                 self.emit('volume-error',
@@ -453,12 +465,11 @@ class ClipboardMenu(MenuItem):
                 clipboard.set(value)
             except:
                 SugarExt.clipboard_set_with_data(
-                    clipboard,
                     'text/uri-list',
                     file_path)
 
 
-class FriendsMenu(Gtk.Menu):
+class FriendsMenu(Gtk.PopoverMenu):
     __gtype_name__ = 'JournalFriendsMenu'
 
     __gsignals__ = {
@@ -467,8 +478,9 @@ class FriendsMenu(Gtk.Menu):
     }
 
     def __init__(self):
-        Gtk.Menu.__init__(self)
+        Gtk.PopoverMenu.__init__(self)
 
+        self.g_menu = Gio.Menu.new()
         if filetransfer.file_transfer_available():
             friends_model = friends.get_model()
             for friend in friends_model:
@@ -478,50 +490,55 @@ class FriendsMenu(Gtk.Menu):
                                          xo_color=friend.get_color())
                     menu_item.connect('activate', self.__item_activate_cb,
                                       friend)
-                    self.append(menu_item)
+                    self.g_menu.append_item(menu_item)
                     menu_item.show()
 
-            if not self.get_children():
+            if not self.g_menu.get_n_items():
                 menu_item = MenuItem(_('No friends present'))
                 menu_item.set_sensitive(False)
-                self.append(menu_item)
+                self.g_menu.append(menu_item)
                 menu_item.show()
         else:
             menu_item = MenuItem(_('No valid connection found'))
             menu_item.set_sensitive(False)
-            self.append(menu_item)
+            self.g_menu.append(menu_item)
             menu_item.show()
+
+        self.set_menu_model(self.g_menu)
 
     def __item_activate_cb(self, menu_item, friend):
         self.emit('friend-selected', friend)
 
 
-class StartWithMenu(Gtk.Menu):
+class StartWithMenu(Gtk.PopoverMenu):
     __gtype_name__ = 'JournalStartWithMenu'
 
     def __init__(self, metadata):
-        Gtk.Menu.__init__(self)
+        Gtk.PopoverMenu.__init__(self)
 
         self._metadata = metadata
 
+        self.g_menu = Gio.Menu.new()
         for activity_info in misc.get_activities(metadata):
             menu_item = MenuItem(activity_info.get_name())
             menu_item.set_image(Icon(file=activity_info.get_icon(),
                                      pixel_size=style.SMALL_ICON_SIZE))
             menu_item.connect('activate', self.__item_activate_cb,
                               activity_info.get_bundle_id())
-            self.append(menu_item)
+            self.g_menu.append_item(menu_item)
             menu_item.show()
 
-        if not self.get_children():
+        if not self.g_menu.get_n_items():
             if metadata.get('activity_id', ''):
                 resume_label = _('No activity to resume entry')
             else:
                 resume_label = _('No activity to start entry')
             menu_item = MenuItem(resume_label)
             menu_item.set_sensitive(False)
-            self.append(menu_item)
+            self.append_item(menu_item)
             menu_item.show()
+
+        self.set_menu_model(self.g_menu)
 
     def __item_activate_cb(self, menu_item, service_name):
         mime_type = self._metadata.get('mime_type', '')
