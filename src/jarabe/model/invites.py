@@ -30,8 +30,8 @@ CHANNEL_TYPE_TEXT = TelepathyGLib.IFACE_CHANNEL_TYPE_TEXT
 CLIENT = TelepathyGLib.IFACE_CLIENT
 HANDLE_TYPE_ROOM = TelepathyGLib.HandleType.ROOM
 
-from sugar3.graphics.xocolor import XoColor
-from sugar3 import profile
+from sugar4.graphics.xocolor import XoColor
+from sugar4 import profile
 
 from jarabe.model import telepathyclient
 from jarabe.model import bundleregistry

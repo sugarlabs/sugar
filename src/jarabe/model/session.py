@@ -16,7 +16,7 @@
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
-from gi.repository import SugarExt
+#from gi.repository import SugarExt
 import dbus
 import os
 import logging
@@ -45,27 +45,27 @@ class SessionManager(GObject.GObject):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        address = SugarExt.xsmp_init()
-        os.environ['SESSION_MANAGER'] = address
-        SugarExt.xsmp_run()
+        #address = SugarExt.xsmp_init()
+        #os.environ['SESSION_MANAGER'] = address
+        #SugarExt.xsmp_run()
 
-        self.session = SugarExt.Session.create_global()
+        #self.session = SugarExt.Session.create_global()
         self._shell_model = shell.get_model()
         self._shutdown_tries = 0
         self._logout_mode = None
 
-    def start(self):
-        self.session.start()
-        self.session.connect('shutdown-completed',
-                             self.__shutdown_completed_cb)
+    #def start(self):
+        #self.session.start()
+        #self.session.connect('shutdown-completed',
+        #                     self.__shutdown_completed_cb)
 
     def initiate_shutdown(self, logout_mode):
         self._logout_mode = logout_mode
         self.shutdown_signal.emit()
-        self.session.initiate_shutdown()
+        #self.session.initiate_shutdown()
 
     def cancel_shutdown(self):
-        self.session.cancel_shutdown()
+        #self.session.cancel_shutdown()
         self._shutdown_tries = 0
         self._logout_mode = None
 
@@ -110,7 +110,7 @@ class SessionManager(GObject.GObject):
                         pm.Reboot(True)
                 except:
                     logging.exception('Can not stop sugar')
-                    self.session.cancel_shutdown()
+                    #self.session.cancel_shutdown()
                     return
             else:
                 CONSOLEKIT_DBUS_PATH = '/org/freedesktop/ConsoleKit/Manager'
@@ -126,10 +126,10 @@ class SessionManager(GObject.GObject):
                         pm.Restart()
                 except:
                     logging.exception('Can not stop sugar')
-                    self.session.cancel_shutdown()
+                    #self.session.cancel_shutdown()
                     return
 
-        SugarExt.xsmp_shutdown()
+        #SugarExt.xsmp_shutdown()
         Gtk.main_quit()
 
 

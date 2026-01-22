@@ -21,11 +21,11 @@ from gi.repository import Gdk
 from gi.repository import SugarExt
 from gi.repository import GLib
 
-from sugar3.graphics.radiotoolbutton import RadioToolButton
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics import style
-from sugar3 import profile
+from sugar4.graphics.radiotoolbutton import RadioToolButton
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics import style
+from sugar4 import profile
 
 from jarabe.frame import clipboard
 from jarabe.frame.clipboardmenu import ClipboardMenu
@@ -89,44 +89,22 @@ class ClipboardIcon(RadioToolButton):
             raise ValueError('Object is not complete, cannot be put into the'
                              ' clipboard.')
 
-        targets = self._get_targets()
-        if targets:
-            x_clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        clipboard = Gdk.Display.get_default().get_clipboard()
+        try:
+            content_provider = Gdk.ContentProvider.new_for_bytes(
+                self._cb_object.get_mime_type(),
+                self._cb_object)
+            stored = clipboard.set_content(content_provider)
+        # this is empty as I don't yet know what exceptions can be raised here.
+        except:
+             stored = SugarExt.clipboard_set_with_data(
+                self._cb_object.get_mime_type(),
+                self._cb_object)
 
-            # XXX SL#4307 - until set_with_data bindings are fixed upstream
-            if hasattr(x_clipboard, 'set_with_data'):
-                stored = x_clipboard.set_with_data(
-                    targets,
-                    self._clipboard_data_get_cb,
-                    self._clipboard_clear_cb,
-                    targets)
-            else:
-                stored = SugarExt.clipboard_set_with_data(
-                    x_clipboard,
-                    targets,
-                    self._clipboard_data_get_cb,
-                    self._clipboard_clear_cb,
-                    targets)
-
-            if not stored:
-                logging.error('GtkClipboard.set_with_data failed!')
-            else:
-                self.owns_clipboard = True
-
-    def _clipboard_data_get_cb(self, x_clipboard, selection, info, targets):
-        selection_target = selection.get_target()
-        entries_targets = [entry.target for entry in targets]
-        if not str(selection_target) in entries_targets:
-            logging.warning('ClipboardIcon._clipboard_data_get_cb: asked %s'
-                            ' but only have %r.', selection_target,
-                            entries_targets)
-            return
-        data = self._cb_object.get_formats()[str(selection_target)].get_data()
-        selection.set(selection_target, 8, data)
-
-    def _clipboard_clear_cb(self, x_clipboard, targets):
-        logging.debug('ClipboardIcon._clipboard_clear_cb')
-        self.owns_clipboard = False
+        if not stored:
+            logging.error('GtkClipboard.set_with_data failed!')
+        else:
+            self.owns_clipboard = True
 
     def _object_state_changed_cb(self, cb_service, cb_object):
         if cb_object != self._cb_object:
@@ -195,10 +173,3 @@ class ClipboardIcon(RadioToolButton):
             self._put_in_clipboard()
         else:
             self.owns_clipboard = False
-
-    def _get_targets(self):
-        targets = []
-        for format_type in list(self._cb_object.get_formats().keys()):
-            targets.append(Gtk.TargetEntry.new(format_type,
-                                               Gtk.TargetFlags.SAME_APP, 0))
-        return targets

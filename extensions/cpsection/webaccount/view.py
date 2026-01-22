@@ -23,8 +23,8 @@ from gi.repository import Gdk
 from jarabe.webservice.accountsmanager import get_webaccount_services
 from jarabe.controlpanel.sectionview import SectionView
 
-from sugar3.graphics.icon import CanvasIcon, Icon
-from sugar3.graphics import style
+from sugar4.graphics.icon import CanvasIcon, Icon
+from sugar4.graphics import style
 
 
 def get_service_name(service):
