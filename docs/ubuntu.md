@@ -5,6 +5,17 @@ Using Sugar on Ubuntu
 
 In relation to Sugar, Ubuntu is a downstream distribution project that can be used to run Sugar.
 
+Ubuntu 24.04 LTS (Noble Numbat)
+-------------------
+
+Sugar 0.121 can be installed with the following commands:
+
+    sudo apt update
+    sudo apt install sucrose
+
+-   log out,
+-   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
+
 Ubuntu 23.10 (Mantic Minotaur)
 -------------------
 
@@ -27,7 +38,7 @@ Sugar 0.120 can be installed with the following commands:
 -   log out,
 -   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md),
 
-Ubuntu 22.04 (Jammy Jellyfish)
+Ubuntu 22.04 LTS (Jammy Jellyfish)
 -------------------
 
 Sugar 0.118 can be installed with the following commands:
