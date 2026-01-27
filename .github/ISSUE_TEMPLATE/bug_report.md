@@ -1,32 +1,37 @@
 ---
-name: 🐞 Bug Report
-about: Report a problem or unexpected behavior
+name: Bug Report
+about: Report a problem with Sugar
 title: "[Bug]: "
 labels: bug
-assignees: ""
 ---
 
-### Description
-A clear and concise description of what the bug is.
+### Sugar Version (e.g. Sugar 0.118)
+
+### Sugar Environment
+- [ ] SOAS (Sugar on a Stick)
+- [ ] Live build
+- [ ] Packaged Sugar (Ubuntu, Debian, Fedora)
+
+### Operating System (e.g. Fedora, Ubuntu)
 
 ### Steps to Reproduce
-1. Go to '...'
-2. Click on '...'
-3. See error
+1.
+2.
+3.
 
 ### Expected Behavior
-Describe what you expected to happen.
+What should have happened.
 
 ### Actual Behavior
-Describe what actually happened.
+What actually is happening.
 
-### Screenshots (if applicable)
-Add screenshots to help explain the problem.
+### Logs 
+Sugar shell logs:
+~/.sugar/default/logs/shell.log
 
-### Environment
-- OS:
-- Sugar Version:
-- Browser (if applicable):
+Activity logs:
+~/.sugar/default/logs/bundle_id.log  
+(where bundle_id looks like org.laptop.HelpActivity)
 
-### Additional Information
-Any other context or information that may help.
+### Screenshots (optional)
+If applicable, please add a screenshot to provide better clarity of the issue.
