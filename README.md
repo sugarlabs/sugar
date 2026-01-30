@@ -51,3 +51,8 @@ install`.
 
 See also [Setup a development
 environment](docs/development-environment.md).
+
+Contributing
+------------
+
+Sugar is a product of Sugar Labs.  See our [Guide to Contributing](https://github.com/sugarlabs/sugar-docs/blob/master/src/contributing.md).
