@@ -154,6 +154,9 @@ class ViewHelp(Gtk.Window):
         self._mode = _MODE_HELP if has_local_help else _MODE_SOCIAL_HELP
 
         Gtk.Window.__init__(self)
+        if not has_local_help and not get_social_help_server():
+            self._show_help_not_installed()
+            return
         box = Gtk.Box()
         box.set_orientation(Gtk.Orientation.VERTICAL)
         self.add(box)
@@ -198,6 +201,34 @@ class ViewHelp(Gtk.Window):
         self._social_help_state = None
 
         self._load_mode(self._mode)
+
+    def _show_help_not_installed(self):
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL,
+                      spacing=style.DEFAULT_SPACING)
+        box.set_border_width(style.GRID_CELL_SIZE)
+        self.add(box)
+
+        icon = Icon(icon_name='dialog-information',
+                    pixel_size=style.LARGE_ICON_SIZE,
+                    fill_color=style.COLOR_BUTTON_GREY.get_svg())
+        box.pack_start(icon, False, False, 0)
+
+        label = Gtk.Label()
+        label.set_markup(
+            '<b>%s</b>\n\n%s' % (
+                _('Help not available'),
+                _('The Help activity is not installed.\n'
+                  'Please install it to view help content.')
+            )
+        )
+        label.set_justify(Gtk.Justification.CENTER)
+        box.pack_start(label, False, False, 0)
+
+        close = Gtk.Button(label=_('Close'))
+        close.connect('clicked', lambda b: self.destroy())
+        box.pack_start(close, False, False, 0)
+
+        box.show_all()
 
     def __stop_clicked_cb(self, widget):
         self.destroy()
