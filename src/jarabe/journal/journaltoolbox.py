@@ -90,12 +90,17 @@ class MainToolbox(ToolbarBox):
         self._default_filter_type = default_filter_type
 
         self.search_entry = iconentry.IconEntry()
+        self._search_has_focus = False
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
                                              'entry-search')
         text = _('Search in %s') % _('Journal')
         self.search_entry.set_placeholder_text(text)
         self.search_entry.connect('activate', self._search_entry_activated_cb)
         self.search_entry.connect('changed', self._search_entry_changed_cb)
+        self.search_entry.connect('focus-in-event',
+                                  self._search_focus_in_cb)
+        self.search_entry.connect('focus-out-event',
+                                   self._search_focus_out_cb)
         self.search_entry.add_clear_button()
         self._autosearch_timer = None
         self._add_widget(self.search_entry, expand=True)
@@ -318,7 +323,12 @@ class MainToolbox(ToolbarBox):
     def _search_entry_activated_cb(self, search_entry):
         if self._autosearch_timer:
             GLib.source_remove(self._autosearch_timer)
+
+        had_focus = self._search_has_focus
         self._update_if_needed()
+
+        if had_focus:
+            GLib.idle_add(self._restore_search_focus)
 
     def _search_entry_changed_cb(self, search_entry):
         if not search_entry.props.text:
@@ -334,6 +344,23 @@ class MainToolbox(ToolbarBox):
         logging.debug('_autosearch_timer_cb')
         self._autosearch_timer = None
         self.search_entry.activate()
+        return False
+
+    def _search_focus_in_cb(self, widget, event):
+        self._search_has_focus = True
+        return False
+
+    def _search_focus_out_cb(self, widget, event):
+        self._search_has_focus = False
+        return False
+
+    def _restore_search_focus(self):
+        if not self.search_entry.get_mapped():
+            return False
+
+        self.search_entry.grab_focus()
+        text_len = len(self.search_entry.props.text)
+        self.search_entry.set_position(text_len)
         return False
 
     def set_mount_point(self, mount_point):
