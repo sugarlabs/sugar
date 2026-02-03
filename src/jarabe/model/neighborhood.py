@@ -1032,6 +1032,13 @@ class Neighborhood(GObject.GObject):
             return
 
         registry = bundleregistry.get_registry()
+        if 'type' not in properties:
+            logging.debug(
+                'Activity update received without type property: %r',
+                properties.keys()
+            )
+            return
+
         bundle = registry.get_bundle(properties['type'])
         if not bundle:
             logging.warning('Ignoring shared activity we don''t have')
