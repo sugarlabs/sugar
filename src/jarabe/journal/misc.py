@@ -207,7 +207,8 @@ def get_bundle_id_from_metadata(metadata):
 
 
 def resume(metadata, bundle_id=None, alert_window=None,
-           force_bundle_downgrade=False):
+           force_bundle_downgrade=False, force_new_instance=False):
+
 
     # These are set later, and used in the following functions.
     bundle = None
@@ -215,7 +216,9 @@ def resume(metadata, bundle_id=None, alert_window=None,
 
     def launch_activity(object_id):
         launch(bundle, activity_id=activity_id, object_id=object_id,
-               color=get_icon_color(metadata), alert_window=alert_window)
+               color=get_icon_color(metadata), alert_window=alert_window,
+               force_new_instance=force_new_instance)
+
 
     def ready_callback(metadata, source, destination):
         launch_activity(destination)
@@ -259,7 +262,7 @@ def resume(metadata, bundle_id=None, alert_window=None,
 
 
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
-           invited=False, alert_window=None):
+           invited=False, alert_window=None, force_new_instance=False):
 
     bundle_id = bundle.get_bundle_id()
 
@@ -282,7 +285,7 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
 
     shell_model = shell.get_model()
     activity = shell_model.get_activity_by_id(activity_id)
-    if activity is not None:
+    if activity is not None and not force_new_instance:
         logging.debug('re-launch %r', activity.get_window())
         activity.get_window().activate(Gtk.get_current_event_time())
         return
