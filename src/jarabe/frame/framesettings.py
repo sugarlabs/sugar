@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007, Red Hat, Inc.
+# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,12 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-_view = None
+from gi.repository import Gio
+
+_settings = None
 
 
-def get_view():
-    global _view
-    if not _view:
-        from jarabe.frame.frame import Frame
-        _view = Frame()
-    return _view
+def get_settings():
+    global _settings
+    if _settings is None:
+        _settings = Gio.Settings.new('org.sugarlabs.frame')
+    return _settings
