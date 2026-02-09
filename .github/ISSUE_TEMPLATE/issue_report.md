@@ -18,4 +18,4 @@ labels: Issue
 
 ### Screenshots (optional)
 You can add screenshots if helpful.
-How to take a screenshot:  [Adding a Screenshot](https://help.sugarlabs.org/en/how_to_help.html#make-changes)
+How to take a screenshot:  [Adding a Screenshot](https://help.sugarlabs.org/en/paint.html#extending)
