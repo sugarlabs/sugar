@@ -18,7 +18,6 @@ import logging
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GLib
-from gi.repository import Gio
 
 from sugar3.graphics import animator
 from sugar3.graphics import style
@@ -26,6 +25,7 @@ from sugar3.graphics import palettegroup
 from sugar3 import profile
 
 from jarabe.frame.eventarea import EventArea
+from jarabe.frame.framesettings import get_settings
 from jarabe.frame.activitiestray import ActivitiesTray
 from jarabe.frame.zoomtoolbar import ZoomToolbar
 from jarabe.frame.friendstray import FriendsTray
@@ -60,7 +60,7 @@ class Frame(object):
     def __init__(self):
         logging.debug('STARTUP: Loading the frame')
 
-        self.settings = Gio.Settings.new('org.sugarlabs.frame')
+        self.settings = get_settings()
         self._palette_group = palettegroup.get_group('frame')
 
         self._left_panel = None

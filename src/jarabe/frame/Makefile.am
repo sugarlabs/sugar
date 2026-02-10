@@ -10,6 +10,7 @@ sugar_PYTHON =				\
 	clipboardtray.py		\
 	devicestray.py			\
 	frameinvoker.py			\
+	framesettings.py		\
 	friendstray.py			\
 	eventarea.py			\
 	frame.py			\
