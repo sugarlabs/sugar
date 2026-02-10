@@ -48,6 +48,28 @@ from jarabe.journal import journalwindow
 PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
 
+def _is_python2_activity(bundle):
+    """Check if the activity bundle is a Python 2 activity.
+    
+    Python 2 activities use 'sugar-activity' command.
+    Python 3 activities use 'sugar-activity3' or other commands.
+    
+    Returns True if the bundle is a Python 2 activity.
+    """
+    try:
+        command = bundle.get_command()
+        # Python 2 activities specifically use 'sugar-activity' without the '3'
+        # and are not web activities
+        if command.startswith('sugar-activity'):
+            if not command.startswith('sugar-activity3') and \
+               not command.startswith('sugar-activity-web'):
+                return True
+        return False
+    except Exception as e:
+        logging.warning('Error checking activity Python version: %s', e)
+        return False
+
+
 def _get_icon_for_mime(mime_type):
     generic_types = mime.get_all_generic_types()
     for generic_type in generic_types:
@@ -262,6 +284,28 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
            invited=False, alert_window=None):
 
     bundle_id = bundle.get_bundle_id()
+
+    # Check if this is a Python 2 activity
+    if _is_python2_activity(bundle):
+        logging.error('Cannot launch Python 2 activity: %s. '
+                     'This activity requires Python 2 which is not supported.',
+                     bundle.get_name())
+        
+        if alert_window is None:
+            from jarabe.desktop import homewindow
+            alert_window = homewindow.get_instance()
+        
+        if alert_window is not None:
+            from sugar3.graphics.alert import NotifyAlert
+            alert = NotifyAlert(10)
+            alert.props.title = _('Python 2 Activity Not Supported')
+            alert.props.msg = _('The activity "%s" requires Python 2 and '
+                              'cannot run on this system. Please contact '
+                              'the activity maintainer for a Python 3 version.') % \
+                              bundle.get_name()
+            alert_window.add_alert(alert)
+            alert.show()
+        return
 
     if activity_id is None or not activity_id:
         activity_id = activityfactory.create_activity_id()
