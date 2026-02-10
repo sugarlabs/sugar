@@ -301,7 +301,7 @@ class MainToolbox(ToolbarBox):
         elif self._when_filter == _ACTION_PAST_MONTH:
             date_range = (today_start - timedelta(30), right_now)
         elif self._when_filter == _ACTION_PAST_YEAR:
-            date_range = (today_start - timedelta(356), right_now)
+            date_range = (today_start - timedelta(365), right_now)
 
         return (time.mktime(date_range[0].timetuple()),
                 time.mktime(date_range[1].timetuple()))
