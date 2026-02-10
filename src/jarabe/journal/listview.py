@@ -167,6 +167,7 @@ class BaseListView(Gtk.Bin):
         self._last_progress_bar_pulse = None
         self._scroll_position = 0.
         self._projects_view_active = False
+        self._last_toggled_path = None
 
         Gtk.Bin.__init__(self)
 
@@ -183,6 +184,8 @@ class BaseListView(Gtk.Bin):
         self.tree_view = TreeView(self._journalactivity)
         self.tree_view.connect('detail-clicked', self.__detail_clicked_cb)
         self.tree_view.connect('volume-error', self.__volume_error_cb)
+        self.tree_view.connect('button-press-event',
+                               self.__treeview_button_press_cb)
         selection = self.tree_view.get_selection()
         selection.set_mode(Gtk.SelectionMode.SINGLE)
         self.tree_view.props.fixed_height_mode = True
@@ -428,10 +431,52 @@ class BaseListView(Gtk.Bin):
         cell.props.active = self._model.is_selected(uid)
 
     def __cell_select_toggled_cb(self, cell, path):
+        self._last_toggled_path = Gtk.TreePath(path)
         tree_iter = self._model.get_iter(path)
         uid = self._model[tree_iter][ListModel.COLUMN_UID]
         self._model.set_selected(uid, not cell.get_active())
         self.emit('selection-changed', len(self._model.get_selected_items()))
+
+    def __treeview_button_press_cb(self, tree_view, event):
+        if not self._enable_multi_operations:
+            return False
+
+        if event.button != 1:
+            return False
+
+        state = event.state
+        shift_pressed = state & Gdk.ModifierType.SHIFT_MASK
+
+        pos = tree_view.get_path_at_pos(int(event.x), int(event.y))
+        if pos is None:
+            return False
+
+        path, column, _, _ = pos
+
+        # Only react when clicking checkbox column
+        if not isinstance(column.get_cells()[0], Gtk.CellRendererToggle):
+            return False
+
+        if not shift_pressed or self._last_toggled_path is None:
+            self._last_toggled_path = path
+            return False
+
+        model = self._model
+        start = self._last_toggled_path.get_indices()[0]
+        end = path.get_indices()[0]
+
+        if start > end:
+            start, end = end, start
+
+        for row in range(start, end + 1):
+            iter_ = model.get_iter(Gtk.TreePath((row,)))
+            uid = model[iter_][ListModel.COLUMN_UID]
+            model.set_selected(uid, True)
+
+        self.emit('selection-changed',
+                  len(model.get_selected_items()))
+
+        return True
 
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
