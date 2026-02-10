@@ -163,8 +163,9 @@ class ClipboardTray(tray.VTray):
         self._context_map.add_context(context, object_id, len(context_targets))
 
         for target in context_targets:
-            if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
-                widget.drag_get_data(context, target, time)
+            if str(target) in ('TIMESTAMP', 'TARGETS'):
+                continue
+            widget.drag_get_data(context, target, time)
 
         cb_service.set_object_percent(object_id, percent=100)
 
