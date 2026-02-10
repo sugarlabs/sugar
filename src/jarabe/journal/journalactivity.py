@@ -370,6 +370,9 @@ class JournalActivity(JournalWindow):
             return
 
         chooser = ActivityChooser()
+        chooser.set_modal(True)
+        chooser.set_transient_for(self.get_window())
+
         activity.push_shell_window(chooser)
         chooser.connect('hide', activity.pop_shell_window)
 
