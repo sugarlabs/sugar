@@ -959,15 +959,26 @@ def get_documents_path():
         return _documents_path
 
     try:
-        subprocess.run(['xdg-user-dirs-update'])
-        pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
-                                stdout=subprocess.PIPE)
-        documents_path = os.path.normpath(
-            pipe.communicate()[0].strip().decode())
-        if os.path.exists(documents_path) and \
+        subprocess.run(['xdg-user-dirs-update'], check=False)
+
+        result = subprocess.run(
+            ['xdg-user-dir', 'DOCUMENTS'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            check=False
+        )
+
+        documents_path = os.path.normpath(result.stdout.strip())
+
+        if documents_path and \
+                os.path.exists(documents_path) and \
                 os.environ.get('HOME') != documents_path:
             _documents_path = documents_path
+
     except OSError as exception:
         if exception.errno != errno.ENOENT:
             logging.exception('Could not run xdg-user-dir')
+
     return _documents_path
+
