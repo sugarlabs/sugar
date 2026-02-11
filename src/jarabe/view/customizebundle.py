@@ -19,10 +19,10 @@ import hashlib
 
 from gi.repository import Gtk
 
-from sugar3 import profile
-from sugar3.activity import bundlebuilder
-from sugar3.datastore import datastore
-from sugar3.env import get_user_activities_path
+from sugar4 import profile
+from sugar4.activity import bundlebuilder
+from sugar4.datastore import datastore
+from sugar4.env import get_user_activities_path
 
 import logging
 _logger = logging.getLogger('CustomizeBundle')

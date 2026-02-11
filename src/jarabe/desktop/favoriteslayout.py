@@ -21,7 +21,7 @@ from gettext import gettext as _
 
 from gi.repository import Gdk
 
-from sugar3.graphics import style
+from sugar4.graphics import style
 
 from jarabe.model import bundleregistry
 from jarabe.desktop.grid import Grid

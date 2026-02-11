@@ -26,9 +26,9 @@ from jarabe.journal.detailview import BackBar
 from jarabe.journal.listview import ListView
 from jarabe.journal import model
 
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
 
 _SERVICE_NAME = 'org.laptop.Activity'
 _SERVICE_PATH = '/org/laptop/Activity'

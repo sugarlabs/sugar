@@ -23,12 +23,12 @@ from gi.repository import Gio
 from gi.repository import GLib
 import dbus
 
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.alert import TimeoutAlert
-from sugar3.graphics import style
-from sugar3.bundle.activitybundle import ActivityBundle
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.alert import TimeoutAlert
+from sugar4.graphics import style
+from sugar4.bundle.activitybundle import ActivityBundle
 
 from jarabe.model import shell
 from jarabe.model import friends

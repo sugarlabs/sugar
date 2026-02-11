@@ -18,8 +18,8 @@ import logging
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3.graphics import tray
-from sugar3.graphics import style
+from sugar4.graphics import tray
+from sugar4.graphics import style
 
 from jarabe.frame import clipboard
 from jarabe.frame.clipboardicon import ClipboardIcon

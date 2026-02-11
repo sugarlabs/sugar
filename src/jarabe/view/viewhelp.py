@@ -23,15 +23,14 @@ import json
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import Gdk
-from gi.repository import GdkX11
 from gi.repository import Gio
 
-from sugar3 import env
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.radiotoolbutton import RadioToolButton
-from sugar3.bundle.activitybundle import get_bundle_instance
+from sugar4 import env
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.toolbutton import ToolButton
+from sugar4.graphics.radiotoolbutton import RadioToolButton
+from sugar4.bundle.activitybundle import get_bundle_instance
 from jarabe.model import shell
 from jarabe.view.viewhelp_webkit2 import Browser
 
@@ -126,10 +125,10 @@ def setup_view_help(activity):
     # check whether the execution was from an activity
     bundle_path = activity.get_bundle_path()
     if bundle_path is None:
-        window_xid = 0
+        window_id = ""
     else:
         # get activity name and window id
-        window_xid = activity.get_xid()
+        window_id = activity.get_bundle_id()
 
     if not should_show_view_help(activity):
         return
@@ -137,17 +136,17 @@ def setup_view_help(activity):
     if shell.get_model().has_modal():
         return
 
-    viewhelp = ViewHelp(activity, window_xid)
+    viewhelp = ViewHelp(activity, window_id)
     activity.push_shell_window(viewhelp)
     viewhelp.connect('hide', activity.pop_shell_window)
     viewhelp.show()
 
 
 class ViewHelp(Gtk.Window):
-    parent_window_xid = None
+    parent_window_id = None
 
-    def __init__(self, activity, window_xid):
-        self.parent_window_xid = window_xid
+    def __init__(self, activity, window_id):
+        self.parent_window_id = window_id
 
         url, title = get_help_url_and_title(activity)
         has_local_help = url is not None
@@ -226,10 +225,10 @@ class ViewHelp(Gtk.Window):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         window = self.get_window()
         window.set_accept_focus(True)
-        if self.parent_window_xid > 0:
-            display = Gdk.Display.get_default()
-            parent = GdkX11.X11Window.foreign_new_for_display(
-                display, self.parent_window_xid)
+        if self.parent_window_id:
+            attributes = Gdk.WindowAttr()
+            attributes.window_type = Gdk.WindowType.FOREIGN
+            parent = Gdk.Window.new(None, attributes, None)
             window.set_transient_for(parent)
         shell.get_model().push_modal()
 

@@ -23,7 +23,7 @@ gi.require_version('WebKit2', '4.1')
 from gi.repository import WebKit2
 from gi.repository import Gio
 
-from sugar3 import env
+from sugar4 import env
 
 
 def _get_current_language():

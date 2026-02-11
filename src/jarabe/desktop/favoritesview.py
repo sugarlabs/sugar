@@ -27,16 +27,16 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.icon import CanvasIcon
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.alert import Alert, ErrorAlert
-from sugar3.graphics.xocolor import XoColor
-from sugar3.activity import activityfactory
-from sugar3 import dispatch
-from sugar3.datastore import datastore
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.icon import CanvasIcon
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar4.graphics.alert import Alert, ErrorAlert
+from sugar4.graphics.xocolor import XoColor
+from sugar4.activity import activityfactory
+from sugar4 import dispatch
+from sugar4.datastore import datastore
 
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette

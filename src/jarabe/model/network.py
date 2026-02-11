@@ -23,14 +23,14 @@ import os
 import uuid
 
 import dbus
-import dbus.service
+from dbus import service
 from gi.repository import GObject
 import configparser
 from gi.repository import Gio
 import ctypes
 
-from sugar3 import dispatch
-from sugar3 import env
+from sugar4 import dispatch
+from sugar4 import env
 
 from jarabe.model.update.updater import check_urgent_update
 
@@ -594,11 +594,11 @@ def set_connected():
     check_urgent_update()
 
 
-class SecretAgent(dbus.service.Object):
+class SecretAgent(service.Object):
 
     def __init__(self):
         self._bus = dbus.SystemBus()
-        dbus.service.Object.__init__(self, self._bus, NM_SECRET_AGENT_PATH)
+        service.Object.__init__(self, self._bus, NM_SECRET_AGENT_PATH)
         self.secrets_request = dispatch.Signal()
         proxy = self._bus.get_object(NM_IFACE, NM_AGENT_MANAGER_PATH)
         proxy.Register("org.sugarlabs.sugar",
@@ -612,7 +612,7 @@ class SecretAgent(dbus.service.Object):
     def _register_error_cb(self, error):
         logging.error("Failed to register SecretAgent: %s", error)
 
-    @dbus.service.method(NM_SECRET_AGENT_IFACE,
+    @service.method(NM_SECRET_AGENT_IFACE,
                          async_callbacks=('reply', 'error'),
                          in_signature='a{sa{sv}}osasb',
                          out_signature='a{sa{sv}}',

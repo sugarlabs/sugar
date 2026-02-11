@@ -23,16 +23,16 @@ from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
 
-from sugar3 import env
-from sugar3 import profile
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuBox
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.icon import Icon
-from sugar3.graphics import style
-from sugar3.graphics.xocolor import XoColor
-from sugar3.activity.i18n import pgettext
+from sugar4 import env
+from sugar4 import profile
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.palettemenu import PaletteMenuBox
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar4.graphics.icon import Icon
+from sugar4.graphics import style
+from sugar4.graphics.xocolor import XoColor
+from sugar4.activity.i18n import pgettext
 
 from jarabe.model import shell
 from jarabe.view.viewsource import setup_view_source

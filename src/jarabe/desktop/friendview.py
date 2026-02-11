@@ -16,8 +16,8 @@
 
 from gi.repository import Gtk
 
-from sugar3.graphics import style
-from sugar3.graphics.icon import CanvasIcon
+from sugar4.graphics import style
+from sugar4.graphics.icon import CanvasIcon
 
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.model import bundleregistry

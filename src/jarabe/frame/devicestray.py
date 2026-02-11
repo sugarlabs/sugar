@@ -15,8 +15,9 @@
 
 import os
 import logging
+import importlib
 
-from sugar3.graphics import tray
+from sugar4.graphics import tray
 
 from jarabe import config
 
@@ -30,8 +31,7 @@ class DevicesTray(tray.HTray):
             if f.endswith('.py') and not f.startswith('__'):
                 module_name = f[:-3]
                 try:
-                    mod = __import__('deviceicon.' + module_name, globals(),
-                                     locals(), [module_name])
+                    mod = importlib.import_module('deviceicon.' + module_name, globals())
                     mod.setup(self)
                 except Exception:
                     logging.exception('Exception while loading extension:')
