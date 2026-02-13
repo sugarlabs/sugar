@@ -163,6 +163,8 @@ class AboutMe(SectionView):
         self.restart_alerts = alerts if alerts else set()
         self.props.is_deferrable = False
         self._nick_sid = 0
+        self._age_sid = 0
+        self._pending_age = None
         self._color_valid = True
         self._nick_valid = True
         self._color = None
@@ -419,4 +421,25 @@ class AboutMe(SectionView):
         return False
 
     def __age_changed_cb(self, event, age):
-        save_age(age)
+        if self._age_sid:
+            GLib.source_remove(self._age_sid)
+
+        self._pending_age = age
+        self._age_sid = GLib.timeout_add(
+            self._APPLY_TIMEOUT,
+            self.__age_timeout_cb
+        )
+        return False
+
+    def __age_timeout_cb(self):
+        self._age_sid = 0
+
+        if self._pending_age == self._saved_age:
+            return False
+
+        save_age(self._pending_age)
+        self._saved_age = self._pending_age
+
+        return False
+
+
