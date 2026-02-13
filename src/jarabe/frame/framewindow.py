@@ -148,10 +148,12 @@ class FrameWindow(Gtk.Window):
     def _enter_notify_cb(self, window, event):
         if event.detail != Gdk.NotifyType.INFERIOR:
             self.hover = True
+            self.queue_draw()
 
     def _leave_notify_cb(self, window, event):
         if event.detail != Gdk.NotifyType.INFERIOR:
             self.hover = False
+            self.queue_draw()
 
     def _size_changed_cb(self, screen):
         self._update_size()
