@@ -1,0 +1,88 @@
+#!/bin/bash
+# Sugar Development Launcher
+# Provides a safe way to run Sugar without display manager integration
+# Addresses issue #978 - display manager freezing problems
+
+set -e
+
+# Setup logging
+LOG_DIR="${HOME}/.sugar/default/logs"
+LOG_FILE="${LOG_DIR}/sugar-dev.log"
+mkdir -p "$LOG_DIR"
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}
+
+log "=== Sugar Development Session Starting ==="
+
+# Check if running in graphical environment
+if [ -z "$DISPLAY" ]; then
+    echo "ERROR: No DISPLAY environment variable detected."
+    echo "Please run this command from within a graphical desktop session."
+    log "ERROR: No DISPLAY set"
+    exit 1
+fi
+
+log "DISPLAY: $DISPLAY"
+
+# Check for required commands
+check_command() {
+    if ! command -v "$1" &> /dev/null; then
+        echo "ERROR: Required command '$1' not found."
+        echo "Install it with: sudo apt install $2"
+        log "ERROR: Missing $1"
+        return 1
+    fi
+    log "✓ Found: $1"
+    return 0
+}
+
+MISSING=0
+check_command "metacity" "metacity" || MISSING=1
+check_command "sugar-session" "sugar (build from source)" || MISSING=1
+check_command "python3" "python3" || MISSING=1
+
+if [ $MISSING -eq 1 ]; then
+    log "FATAL: Missing dependencies"
+    exit 1
+fi
+
+# Check Python modules
+if ! python3 -c "import gi" 2>/dev/null; then
+    echo "ERROR: Python GI module not found."
+    echo "Install it with: sudo apt install python3-gi"
+    log "ERROR: Missing python3-gi"
+    exit 1
+fi
+log "✓ Python GI available"
+
+# Start window manager in background
+log "Starting metacity window manager..."
+metacity --replace &
+METACITY_PID=$!
+sleep 2
+
+# Display info to user
+echo ""
+echo "=========================================="
+echo "  Sugar Development Session"
+echo "=========================================="
+echo ""
+echo "Running Sugar in windowed mode"
+echo "This avoids display manager integration issues"
+echo ""
+echo "Log file: $LOG_FILE"
+echo "To exit: Close Sugar windows or press Ctrl+C"
+echo ""
+
+# Start Sugar
+log "Launching sugar-session..."
+trap "log 'Received interrupt signal'; kill $METACITY_PID 2>/dev/null || true; exit 0" INT TERM
+
+sugar-session 2>&1 | tee -a "$LOG_FILE"
+
+# Cleanup
+log "Cleaning up..."
+kill $METACITY_PID 2>/dev/null || true
+log "=== Sugar Development Session Ended ==="
