@@ -474,3 +474,4 @@ def get_mount_color(mount):
                     (colors[index][0],
                      colors[index][1]))
     return color
+
