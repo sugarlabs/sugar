@@ -5,6 +5,17 @@ Using Sugar on Ubuntu
 
 In relation to Sugar, Ubuntu is a downstream distribution project that can be used to run Sugar.
 
+Ubuntu 24.04 (Noble Numbat)
+-------------------
+
+Sugar 0.121 can be installed with the following commands:
+
+    sudo apt update
+    sudo apt install sucrose
+
+-   log out,
+-   [log in with the Sugar desktop selected](https://github.com/sugarlabs/sugar-docs/blob/master/src/sugar-logging-in.md).
+
 Ubuntu 23.10 (Mantic Minotaur)
 -------------------
 
@@ -43,23 +54,3 @@ Known Problems:
 -   no datastore entries are created [sugar-datastore #23](https://github.com/sugarlabs/sugar-datastore/pull/23), and;
 -   [Browse does not visit web sites](https://github.com/sugarlabs/browse-activity/issues/119).
 
-Ubuntu 24.04 (Noble Numbat)
--------------------
-
-Sugar 0.121 can be installed with the following commands:
-
-    sudo apt update
-    sudo apt install sucrose
-
--   log out,
--   log in with the Sugar desktop selected,
-
-Manual Testing Verification:
-
-Sugar was manually tested on a fresh Ubuntu 24.04 LTS installation.
-
-Verified:
-- Sugar session launches successfully
-- Core activities (Write, Paint) open and function correctly
-- Activity Library allows downloading activities
-- Journal saves and reopens activity entries properly
