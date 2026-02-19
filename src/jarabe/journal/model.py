@@ -30,8 +30,6 @@ import dbus
 from gi.repository import Gio
 from gi.repository import GLib
 
-from gi.repository import SugarExt
-
 from sugar3 import dispatch
 from sugar3 import mime
 from sugar3 import util
@@ -851,12 +849,6 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
         metadata_dir_path = os.path.join(metadata_dir_path, subdir)
     os.makedirs(metadata_dir_path, exist_ok=True)
 
-    # Set the HIDDEN attrib even when the metadata directory already
-    # exists for backward compatibility; but don't set it in ~/Documents
-    if not metadata['mountpoint'] == get_documents_path():
-        if not SugarExt.fat_set_hidden_attrib(metadata_dir_path):
-            logging.error('Could not set hidden attribute on %s' %
-                          (metadata_dir_path))
 
     preview = None
     if 'preview' in metadata_copy:
