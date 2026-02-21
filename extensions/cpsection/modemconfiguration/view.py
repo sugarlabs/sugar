@@ -23,7 +23,7 @@ from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
 
-from sugar3.graphics import style
+from sugar4.graphics import style
 
 from jarabe.controlpanel.sectionview import SectionView
 

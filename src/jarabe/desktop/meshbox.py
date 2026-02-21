@@ -23,12 +23,12 @@ import dbus
 from gi.repository import GObject
 from gi.repository import Gio
 
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.icon import CanvasIcon
-from sugar3.graphics import style
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuBox
-from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.icon import CanvasIcon
+from sugar4.graphics import style
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.palettemenu import PaletteMenuBox
+from sugar4.graphics.palettemenu import PaletteMenuItem
 
 from jarabe.model import neighborhood
 from jarabe.model.buddy import get_owner_instance

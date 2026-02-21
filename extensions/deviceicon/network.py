@@ -28,16 +28,16 @@ from gi.repository import GLib
 from gi.repository import GObject
 import dbus
 
-from sugar3.graphics.icon import get_icon_state
-from sugar3.graphics import style
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.icon import Icon
-from sugar3.graphics import xocolor
-from sugar3 import profile
+from sugar4.graphics.icon import get_icon_state
+from sugar4.graphics import style
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar4.graphics.toolbutton import ToolButton
+from sugar4.graphics.tray import TrayIcon
+from sugar4.graphics.icon import Icon
+from sugar4.graphics import xocolor
+from sugar4 import profile
 
 from jarabe.model import network
 from jarabe.frame.frameinvoker import FrameWidgetInvoker

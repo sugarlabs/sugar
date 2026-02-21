@@ -18,6 +18,7 @@ import getopt
 import os
 from gettext import gettext as _
 import logging
+import importlib
 
 from jarabe import config
 
@@ -65,8 +66,7 @@ def load_modules():
         if os.path.isdir(os.path.join(path, item)) and \
                 os.path.exists(os.path.join(path, item, 'model.py')):
             try:
-                module = __import__('.'.join(('cpsection', item, 'model')),
-                                    globals(), locals(), ['model'])
+                module = importlib.import_module('.'.join(('cpsection', item, 'model')))
             except Exception:
                 logging.exception('Exception while loading extension:')
             else:

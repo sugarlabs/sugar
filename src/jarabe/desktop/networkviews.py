@@ -24,14 +24,14 @@ import dbus
 
 from gi.repository import Gtk
 
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics import xocolor
-from sugar3.graphics import style
-from sugar3.graphics.icon import get_icon_state
-from sugar3.graphics import palette
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3 import profile
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics import xocolor
+from sugar4.graphics import style
+from sugar4.graphics.icon import get_icon_state
+from sugar4.graphics import palette
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4 import profile
 
 from jarabe.view.pulsingicon import EventPulsingIcon
 from jarabe.desktop import keydialog

@@ -17,9 +17,9 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gettext import gettext as _
 
-from sugar3.graphics.icon import Icon
-from sugar3.graphics import style
-from sugar3 import profile
+from sugar4.graphics.icon import Icon
+from sugar4.graphics import style
+from sugar4 import profile
 
 
 class ModalAlert(Gtk.Window):
