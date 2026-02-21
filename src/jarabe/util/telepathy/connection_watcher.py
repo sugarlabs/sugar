@@ -18,6 +18,7 @@
 # FIXME: this sould go upstream, in telepathy-python
 
 import logging
+from functools import partial
 
 import dbus
 from dbus import PROPERTIES_IFACE
@@ -88,37 +89,29 @@ class ConnectionWatcher(GObject.GObject):
             self._remove_connection(service_name, path)
 
     def _prepare_conn_cb(self, object_path, conn_proxy):
-        self.connection = {}
-        self.object_path = object_path
-        self.conn_proxy = conn_proxy
-        self.conn_ready = False
-        self.connection["service_name"] = object_path.replace('/', '.')[1:]
-        self.connection[PROPERTIES_IFACE] = dbus.Interface(
-            self.conn_proxy, PROPERTIES_IFACE)
-        self.connection[CONNECTION_INTERFACE_REQUESTS] = \
-            dbus.Interface(self.conn_proxy, CONNECTION_INTERFACE_REQUESTS)
-        self.connection[CONN_INTERFACE] = \
-            dbus.Interface(self.conn_proxy, CONN_INTERFACE)
-        self.connection[CONN_INTERFACE].GetInterfaces(
-            reply_handler=self.__conn_get_interfaces_reply_cb,
+        connection = {}
+        connection["service_name"] = object_path.replace('/', '.')[1:]
+        connection[PROPERTIES_IFACE] = dbus.Interface(
+            conn_proxy, PROPERTIES_IFACE)
+        connection[CONNECTION_INTERFACE_REQUESTS] = \
+            dbus.Interface(conn_proxy, CONNECTION_INTERFACE_REQUESTS)
+        connection[CONN_INTERFACE] = \
+            dbus.Interface(conn_proxy, CONN_INTERFACE)
+        connection[CONN_INTERFACE].GetInterfaces(
+            reply_handler=partial(self.__conn_get_interfaces_reply_cb,
+                                  object_path, conn_proxy, connection),
             error_handler=self.__error_handler_cb)
 
-    def __conn_get_interfaces_reply_cb(self, interfaces):
+    def __conn_get_interfaces_reply_cb(self, object_path, conn_proxy,
+                                       connection, interfaces):
         for interface in interfaces:
-            self.connection[interface] = dbus.Interface(
-                self.conn_proxy, interface)
-        self.conn_ready = True
-        self._conn_ready_cb()
+            connection[interface] = dbus.Interface(conn_proxy, interface)
 
-    def _conn_ready_cb(self):
-        if not self.conn_ready:
+        if object_path in self._connections:
             return
 
-        if self.object_path in self._connections:
-            return
-
-        self._connections[self.object_path] = self.connection
-        self.emit('connection-added', self.connection)
+        self._connections[object_path] = connection
+        self.emit('connection-added', connection)
 
     def _add_connection(self, service_name, path):
         if path in self._connections:
