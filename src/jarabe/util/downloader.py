@@ -76,7 +76,7 @@ class Downloader(GObject.GObject):
         self._request_headers = request_headers
 
     def _setup_message(self, method="GET"):
-        self._message = Soup.Message.new(method=method, uri=self._uri)
+        self._message = Soup.Message.new_from_uri(method, self._uri)
         self._message.connect('got-body-data', self._got_body_data_cb)
         self._message.connect('got-headers', self._headers_cb, None)
         if self._request_headers is not None:
