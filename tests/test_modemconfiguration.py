@@ -31,9 +31,8 @@ class CountryCodeParserTest(unittest.TestCase):
         self.assertEqual(CountryCodeParser().get('es'), 'Spain')
         self.assertEqual(CountryCodeParser().get('zw'), 'Zimbabwe')
 
-    def test_raise_if_not_found(self):
-        with self.assertRaises(KeyError):
-            CountryCodeParser().get('xx')
+    def test_fallback_if_not_found(self):
+        self.assertEqual(CountryCodeParser().get('xx'), 'xx')
 
 
 class ServiceProvidersParserTest(unittest.TestCase):
