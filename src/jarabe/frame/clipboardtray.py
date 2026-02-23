@@ -58,12 +58,12 @@ class ContextMap(object):
 
 class ClipboardTray(tray.VTray):
 
-    MAX_ITEMS = Gdk.Screen.height() // style.GRID_CELL_SIZE - 2
 
     def __init__(self):
         tray.VTray.__init__(self, align=tray.ALIGN_TO_END)
         self._icons = {}
         self._context_map = ContextMap()
+        self._max_items = Gdk.Screen.height() // style.GRID_CELL_SIZE - 2
 
         cb_service = clipboard.get_instance()
         cb_service.connect('object-added', self._object_added_cb)
@@ -114,7 +114,7 @@ class ClipboardTray(tray.VTray):
         icon.show()
         self._icons[cb_object.get_id()] = icon
 
-        objects_to_delete = self.get_children()[:-self.MAX_ITEMS]
+        objects_to_delete = self.get_children()[:-self._max_items]
         for icon in objects_to_delete:
             logging.debug('ClipboardTray: deleting surplus object')
             cb_service = clipboard.get_instance()
