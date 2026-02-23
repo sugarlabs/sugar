@@ -228,6 +228,9 @@ class Frame(object):
         window = NotificationWindow()
 
         screen = Gdk.Screen.get_default()
+        if screen is None:
+            logging.debug('Frame: screen not available for notification')
+            return 0
         if corner == Gtk.CornerType.TOP_LEFT:
             window.move(0, 0)
         elif corner == Gtk.CornerType.TOP_RIGHT:
