@@ -34,6 +34,17 @@ from sugar3.graphics.xocolor import XoColor
 from jarabe.intro.genderpicker import GENDERS
 
 _group_labels = None
+_settings = None
+
+
+def _get_settings():
+    global _settings
+
+    if _settings is None:
+        _settings = Gio.Settings.new('org.sugarlabs.user')
+
+    return _settings
+
 _SECONDS_PER_YEAR = 365 * 24 * 60 * 60.
 _DEFAULT_PROMPT = _('Select grade:')
 _DEFAULT_LABELS = [_('Preschool'), _('Kindergarten'), _('1st Grade'),
@@ -87,7 +98,7 @@ def group_label_to_age(label):
 def load_age():
     group_labels = get_group_labels()
 
-    settings = Gio.Settings.new('org.sugarlabs.user')
+    settings = _get_settings()
     birth_timestamp = settings.get_int('birth-timestamp')
 
     if birth_timestamp == 0:
@@ -109,11 +120,14 @@ def load_age():
 
 def save_age(age):
     birth_timestamp = calculate_birth_timestamp(age)
-    settings = Gio.Settings.new('org.sugarlabs.user')
-    settings.set_int('birth-timestamp', birth_timestamp)
+    settings = _get_settings()
 
-    # Record the label so we know it was set
-    settings.set_string('group-label', age_to_group_label(age))
+    if settings.get_int('birth-timestamp') != birth_timestamp:
+        settings.set_int('birth-timestamp', birth_timestamp)
+
+    group_label = age_to_group_label(age)
+    if settings.get_string('group-label') != group_label:
+        settings.set_string('group-label', group_label)
 
 
 class GroupLabels():
@@ -233,7 +247,10 @@ class AgePicker(Gtk.Grid):
 
         self._configure(width)
 
-        Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
+        screen = Gdk.Screen.get_default()
+        if screen is not None:
+            screen.connect('size-changed', self._configure_cb)
+
 
     def _configure_cb(self, event=None):
         width = Gdk.Screen.width()
