@@ -22,9 +22,9 @@ from gi.repository import GObject
 from gi.repository import GLib
 from gettext import gettext as _
 
-from sugar3.graphics import style
-from sugar3.graphics.xocolor import XoColor, colors
-from sugar3.graphics.icon import EventIcon
+from sugar4.graphics import style
+from sugar4.graphics.xocolor import XoColor, colors
+from sugar4.graphics.icon import EventIcon
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert

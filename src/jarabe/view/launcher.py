@@ -21,7 +21,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 from gi.repository import SugarExt
-from sugar3.graphics import style
+from sugar4.graphics import style
 
 from jarabe.model import shell
 from jarabe.view.pulsingicon import PulsingIcon
@@ -102,8 +102,10 @@ class LaunchWindow(Gtk.Window):
         self.resize(Gdk.Screen.width(), Gdk.Screen.height())
 
     def __realize_cb(self, widget):
-        SugarExt.wm_set_activity_id(widget.get_window().get_xid(),
-                                    str(self._activity_id))
+        window = widget.get_window()
+        data = GObject.GObject()
+        setattr(data, 'activity_id', str(self._activity_id))
+        window.set_user_data(data)
 
     def __size_changed_cb(self, screen):
         self._update_size()
@@ -140,6 +142,7 @@ def add_launcher(activity_id, icon_path, icon_color):
     launch_window = LaunchWindow(activity_id, icon_path, icon_color)
     launch_window.show()
 
+    model.add_window(launch_window)
     model.register_launcher(activity_id, launch_window)
 
 
@@ -183,4 +186,5 @@ def _destroy_launcher(home_activity):
         return
 
     shell.get_model().unregister_launcher(activity_id)
+    shell.get_model().remove_window(launcher)
     launcher.destroy()

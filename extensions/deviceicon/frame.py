@@ -16,9 +16,9 @@
 import logging
 from gettext import gettext as _
 
-from sugar3 import profile
-from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.palette import Palette
+from sugar4 import profile
+from sugar4.graphics.tray import TrayIcon
+from sugar4.graphics.palette import Palette
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 import jarabe.frame

@@ -22,7 +22,7 @@ from gi.repository import Gdk
 
 import dbus
 
-from sugar3.graphics import style
+from sugar4.graphics import style
 from jarabe.model import network
 
 

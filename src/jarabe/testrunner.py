@@ -19,7 +19,7 @@ import subprocess
 
 from gi.repository import GLib
 
-from sugar3.logger import get_logs_dir
+from sugar4.logger import get_logs_dir
 
 
 def _test_child_watch_cb(pid, condition, log_file):

@@ -24,14 +24,14 @@ from gi.repository import GLib
 from gi.repository import Gtk
 import json
 
-from sugar3.graphics import style
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.icon import CanvasIcon, get_icon_file_name
-from sugar3.graphics.icon import Icon, CellRendererIcon
-from sugar3.graphics.alert import Alert, ConfirmationAlert
-from sugar3.util import format_size
-from sugar3.graphics.objectchooser import get_preview_pixbuf
-from sugar3.activity.activity import PREVIEW_SIZE
+from sugar4.graphics import style
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics.icon import CanvasIcon, get_icon_file_name
+from sugar4.graphics.icon import Icon, CellRendererIcon
+from sugar4.graphics.alert import Alert, ConfirmationAlert
+from sugar4.util import format_size
+from sugar4.graphics.objectchooser import get_preview_pixbuf
+from sugar4.activity.activity import PREVIEW_SIZE
 
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette

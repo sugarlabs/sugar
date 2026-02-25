@@ -15,9 +15,9 @@
 
 from gi.repository import Gtk
 
-from sugar3.graphics.icon import Icon
-from sugar3.graphics import style
-from sugar3 import profile
+from sugar4.graphics.icon import Icon
+from sugar4.graphics import style
+from sugar4 import profile
 
 
 class KeepIcon(Gtk.ToggleButton):

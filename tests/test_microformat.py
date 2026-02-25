@@ -16,7 +16,7 @@
 import unittest
 import os
 
-from sugar3.bundle.bundleversion import NormalizedVersion
+from sugar4.bundle.bundleversion import NormalizedVersion
 
 from jarabe.model.update.microformat import _UpdateHTMLParser
 from jarabe.model.update.microformat import MetadataLookup

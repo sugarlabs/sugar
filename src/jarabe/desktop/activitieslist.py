@@ -26,16 +26,16 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3 import profile
-from sugar3 import util
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon, CellRendererIcon
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.alert import Alert
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.scrollingdetector import ScrollingDetector
-from sugar3.graphics.palettewindow import TreeViewInvoker
-from sugar3.datastore import datastore
+from sugar4 import profile
+from sugar4 import util
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon, CellRendererIcon
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics.alert import Alert
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.scrollingdetector import ScrollingDetector
+from sugar4.graphics.palettewindow import TreeViewInvoker
+from sugar4.datastore import datastore
 
 from jarabe.model import bundleregistry
 from jarabe.model import desktop

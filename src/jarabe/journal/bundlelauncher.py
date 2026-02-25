@@ -14,9 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import logging
 
-from sugar3.activity import activityfactory
-from sugar3.activity.activityhandle import ActivityHandle
-from sugar3.datastore import datastore
+from sugar4.activity import activityfactory
+from sugar4.activity.activityhandle import ActivityHandle
+from sugar4.datastore import datastore
 
 from jarabe.model import bundleregistry
 from jarabe.journal.misc import get_activities_for_mime

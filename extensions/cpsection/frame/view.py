@@ -18,7 +18,7 @@ from gi.repository import Gtk
 from gi.repository import GLib
 from gettext import gettext as _
 
-from sugar3.graphics import style
+from sugar4.graphics import style
 
 from jarabe.controlpanel.sectionview import SectionView
 

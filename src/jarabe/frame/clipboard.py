@@ -23,7 +23,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3 import mime
+from sugar4 import mime
 
 from jarabe.frame.clipboardobject import ClipboardObject, Format
 
@@ -99,8 +99,8 @@ class Clipboard(GObject.GObject):
         cb_object = self._objects.pop(object_id)
         cb_object.destroy()
         if not self._objects:
-            gtk_clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-            gtk_clipboard.clear()
+            gtk_clipboard = Gtk.Display.get_default().get_clipboard()
+            gtk_clipboard.set_content(None)
         self.emit('object-deleted', object_id)
         logging.debug('Deleted object with object_id %r', object_id)
 

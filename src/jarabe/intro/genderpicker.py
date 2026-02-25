@@ -19,9 +19,9 @@ from gi.repository import Gtk
 from gi.repository import Gio
 from gi.repository import GObject
 
-from sugar3.graphics.icon import EventIcon
-from sugar3.graphics import style
-from sugar3.graphics.xocolor import XoColor
+from sugar4.graphics.icon import EventIcon
+from sugar4.graphics import style
+from sugar4.graphics.xocolor import XoColor
 
 
 GENDERS = ['female', 'male']

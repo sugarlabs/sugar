@@ -21,7 +21,7 @@ import socketserver
 
 from gi.repository import GLib
 
-from sugar3 import env
+from sugar4 import env
 from jarabe.util.downloader import Downloader
 
 profile_data_dir = os.path.join(env.get_profile_path(), 'data')

@@ -15,7 +15,7 @@
 
 import logging
 
-from sugar3.graphics.tray import VTray, TrayIcon
+from sugar4.graphics.tray import VTray, TrayIcon
 
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker

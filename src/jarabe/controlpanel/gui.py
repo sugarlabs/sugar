@@ -15,17 +15,17 @@
 
 import os
 import logging
+import importlib
 from gettext import gettext as _
 
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GdkX11
 
-from sugar3.graphics.icon import Icon
-from sugar3.graphics import style
-from sugar3.graphics.alert import Alert, TimeoutAlert
+from sugar4.graphics.icon import Icon
+from sugar4.graphics import style
+from sugar4.graphics.alert import Alert, TimeoutAlert
 
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
@@ -39,8 +39,8 @@ _logger = logging.getLogger('ControlPanel')
 class ControlPanel(Gtk.Window):
     __gtype_name__ = 'SugarControlPanel'
 
-    def __init__(self, window_xid=0):
-        self.parent_window_xid = window_xid
+    def __init__(self, window_id):
+        self.parent_window_id = window_id
         Gtk.Window.__init__(self)
 
         self._calculate_max_columns()
@@ -93,10 +93,10 @@ class ControlPanel(Gtk.Window):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         window = self.get_window()
         window.set_accept_focus(True)
-        if self.parent_window_xid > 0:
-            display = Gdk.Display.get_default()
-            parent = GdkX11.X11Window.foreign_new_for_display(
-                display, self.parent_window_xid)
+        if self.parent_window_id:
+            attributes = Gdk.WindowAttr()
+            attributes.window_type = Gdk.WindowType.FOREIGN
+            parent = Gdk.Window.new(None, attributes, None)
             window.set_transient_for(parent)
 
         # the modal windows counter is updated to disable hot keys - SL#4601
@@ -300,12 +300,10 @@ class ControlPanel(Gtk.Window):
 
         self._current_option = option
 
-        mod = __import__('.'.join(('cpsection', option, 'view')),
-                         globals(), locals(), ['view'])
+        mod = importlib.import_module('.'.join(('cpsection', option, 'view')))
         view_class = getattr(mod, self._options[option]['view'], None)
 
-        mod = __import__('.'.join(('cpsection', option, 'model')),
-                         globals(), locals(), ['model'])
+        mod = importlib.import_module('.'.join(('cpsection', option, 'model')))
         model = ModelWrapper(mod)
 
         try:
@@ -348,8 +346,7 @@ class ControlPanel(Gtk.Window):
             if os.path.isdir(os.path.join(path, item)) and \
                     os.path.exists(os.path.join(path, item, '__init__.py')):
                 try:
-                    mod = __import__('.'.join(('cpsection', item)),
-                                     globals(), locals(), [item])
+                    mod = importlib.import_module('.'.join(('cpsection', item)))
                     view_class = getattr(mod, 'CLASS', None)
                     if view_class is not None:
                         options[item] = {}

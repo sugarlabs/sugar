@@ -25,20 +25,20 @@ from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3.graphics import style
-from sugar3.graphics.tray import HTray
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.radiotoolbutton import RadioToolButton
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.icon import Icon, get_icon_file_name
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuBox
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.datastore import datastore
-from sugar3 import mime
-from sugar3 import env
-from sugar3 import profile
+from sugar4.graphics import style
+from sugar4.graphics.tray import HTray
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics.radiotoolbutton import RadioToolButton
+from sugar4.graphics.toolbutton import ToolButton
+from sugar4.graphics.icon import Icon, get_icon_file_name
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.palettemenu import PaletteMenuBox
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar4.datastore import datastore
+from sugar4 import mime
+from sugar4 import env
+from sugar4 import profile
 
 from jarabe.model import shell
 from jarabe.model import invites
@@ -89,7 +89,6 @@ class ActivityButton(RadioToolButton):
         if home_activity.get_icon_path():
             self._icon.props.file = home_activity.get_icon_path()
         else:
-            # Let's see if the X11 window can give us an icon.
             window = home_activity.get_window()
 
             if not window.get_icon_is_fallback():
@@ -390,9 +389,8 @@ class ActivitiesTray(HTray):
         self.scroll_to_item(button)
         # Redraw immediately.
         # The widget may not be realized yet, and then there is no window.
-        x11_window = self.get_window()
-        if x11_window:
-            x11_window.process_updates(True)
+        while Gtk.events_pending():
+            Gtk.main_iteration()
 
     def __activity_changed_cb(self, home_model, home_activity):
         logging.debug('__activity_changed_cb: %r', home_activity)

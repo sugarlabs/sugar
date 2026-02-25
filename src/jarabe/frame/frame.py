@@ -20,10 +20,10 @@ from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gio
 
-from sugar3.graphics import animator
-from sugar3.graphics import style
-from sugar3.graphics import palettegroup
-from sugar3 import profile
+from sugar4.graphics import animator
+from sugar4.graphics import style
+from sugar4.graphics import palettegroup
+from sugar4 import profile
 
 from jarabe.frame.eventarea import EventArea
 from jarabe.frame.activitiestray import ActivitiesTray
