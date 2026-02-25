@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+from functools import partial
 
 from gi.repository import GObject
 import dbus
@@ -122,34 +123,23 @@ class OwnerBuddyModel(BaseBuddyModel):
                 self._prepare_conn(path, conn_proxy)
 
     def _prepare_conn(self, object_path, conn_proxy):
-        self.connection = {}
-        self.object_path = object_path
-        self.conn_proxy = conn_proxy
-        self.conn_ready = False
-        self.connection[CONNECTION] = \
-            dbus.Interface(self.conn_proxy, CONNECTION)
-        self.connection[CONNECTION].GetInterfaces(
-            reply_handler=self.__conn_get_interfaces_reply_cb,
+        connection = {CONNECTION: dbus.Interface(conn_proxy, CONNECTION)}
+        connection[CONNECTION].GetInterfaces(
+            reply_handler=partial(self.__conn_get_interfaces_reply_cb,
+                                  conn_proxy, connection),
             error_handler=self.__error_handler_cb)
 
-    def __conn_get_interfaces_reply_cb(self, interfaces):
+    def __conn_get_interfaces_reply_cb(self, conn_proxy, connection,
+                                       interfaces):
         for interface in interfaces:
-            self.connection[interface] = dbus.Interface(
-                self.conn_proxy, interface)
-        self.conn_ready = True
-        self.__connection_ready_cb(self.connection)
-
-    def __connection_ready_cb(self, connection):
-        if not self.conn_ready:
-            return
-
+            connection[interface] = dbus.Interface(conn_proxy, interface)
         self._sync_properties_on_connection(connection)
 
     def __name_owner_changed_cb(self, name, old, new):
         if name.startswith(CONNECTION + '.') and not old and new:
             path = '/' + name.replace('.', '/')
-            self.conn_proxy = dbus.Bus().get_object(name, path)
-            self._prepare_conn(path, self.conn_proxy)
+            conn_proxy = dbus.Bus().get_object(name, path)
+            self._prepare_conn(path, conn_proxy)
 
     def __property_changed_cb(self, buddy, pspec):
         self._sync_properties()
