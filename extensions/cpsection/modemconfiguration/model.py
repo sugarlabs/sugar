@@ -283,7 +283,12 @@ class ServiceProviders(object):
         self._countries = self._db.get_countries()
         country_idx = 0
         if country_code is not None:
-            country_idx = self._db.get_country_idx_by_code(country_code)
+            try:
+                country_idx = self._db.get_country_idx_by_code(country_code)
+            except ValueError:
+                logging.warning(
+                    'Not found provider country for code "%s"' % country_code
+                )
         self._current_country = country_idx
         self._providers = self._db.get_providers(self._current_country)
 
