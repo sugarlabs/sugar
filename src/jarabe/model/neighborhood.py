@@ -534,7 +534,8 @@ class _Account(GObject.GObject):
                 if buddy_handle == self._self_handle:
                     home_model = shell.get_model()
                     activity = home_model.get_active_activity()
-                    if activity.get_activity_id() == activity_id:
+                    if activity is not None and \
+                            activity.get_activity_id() == activity_id:
                         connection = self._connection[
                             CONNECTION_INTERFACE_BUDDY_INFO]
                         connection.SetCurrentActivity(
