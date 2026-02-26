@@ -36,6 +36,11 @@
             <summary>A limit to the number of simultaneously open activities.</summary>
             <description>This int is used to set a limit to the number of open activities. By default (0), there is no limit.</description>
         </key>
+        <key name="variable-buddy-icon" type="b">
+            <default>false</default>
+            <summary>Enable/Disable variable appeareance of the buddy icon</summary>
+            <description>This will enable variable appearance of buddy icon on Sugar Desktop.</description>
+        </key>
         <child name="user" schema="org.sugarlabs.user" />
         <child name="journal" schema="org.sugarlabs.journal" />
         <child name="sound" schema="org.sugarlabs.sound" />
@@ -217,6 +222,16 @@
             <default>90</default>
             <summary>Grace Time</summary>
             <description>Defer forced shutdown to at least this many seconds since Sugar was started.</description>
+        </key>
+        <key name="battery-present" type="b">
+            <default>false</default>
+            <summary>Battery Presence</summary>
+            <description>Whether the machine is battery equipped or not.</description>
+        </key>
+        <key name="battery-level" type="d">
+            <default>100</default>
+            <summary>Battery Level</summary>
+            <description>Current battery level of the machine.</description>
         </key>
     </schema>
     <schema id="org.sugarlabs.peripherals" path="/org/sugarlabs/peripherals/">
