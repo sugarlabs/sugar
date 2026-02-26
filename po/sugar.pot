@@ -1905,7 +1905,7 @@ msgstr ""
 msgid "Invite to %s"
 msgstr ""
 
-#: src/jarabe/view/launcher.py:158
+#: src/jarabe/view/launcher.py:162
 #, python-format
 msgid "<b>%s</b> failed to start."
 msgstr ""
@@ -2004,4 +2004,9 @@ msgstr ""
 
 #: src/jarabe/view/viewsource.py:814
 msgid "Please select a file in the left panel."
+msgstr ""
+
+#: ../src/jarabe/view/launcher.py:159
+#, python-format
+msgid "<b>%s</b> cannot start because it was made for an older version."
 msgstr ""
