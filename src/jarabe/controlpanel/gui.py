@@ -242,7 +242,7 @@ class ControlPanel(Gtk.Window):
         self.grab_focus()
 
     def __key_press_event_cb(self, window, event):
-        if event.keyval == Gdk.KEY_Return:
+        if event.keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
             if len(self._selected) == 1:
                 self.show_section_view(self._selected[0])
                 return True
@@ -315,6 +315,11 @@ class ControlPanel(Gtk.Window):
 
             self._set_canvas(self._section_view)
             self._section_view.show()
+        except Exception:
+            logging.exception('Failed to load section view for %s', option)
+            self._section_view = None
+            self._show_main_view()
+            return
         finally:
             self.unbusy()
 
@@ -371,12 +376,18 @@ class ControlPanel(Gtk.Window):
         return options
 
     def __cancel_clicked_cb(self, widget):
+        if self._section_view is None:
+            self._show_main_view()
+            return
         self._section_view.undo()
         self._options[self._current_option]['alerts'] = []
         self._section_toolbar.accept_button.set_sensitive(True)
         self._show_main_view()
 
     def __accept_clicked_cb(self, widget):
+        if self._section_view is None:
+            self._show_main_view()
+            return
         if hasattr(self._section_view, "apply"):
             self._section_view.apply()
 

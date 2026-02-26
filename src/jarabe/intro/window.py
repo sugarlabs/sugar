@@ -447,7 +447,7 @@ class IntroWindow(Gtk.Window):
         return False
 
     def __key_press_cb(self, widget, event):
-        if Gdk.keyval_name(event.keyval) == 'Return':
+        if Gdk.keyval_name(event.keyval) in ('Return', 'KP_Enter'):
             next(self._intro_box)
             return True
         if Gdk.keyval_name(event.keyval) == 'Escape':
