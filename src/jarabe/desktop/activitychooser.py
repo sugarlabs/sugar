@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+import uuid
 
 from gi.repository import GLib
 from gettext import gettext as _
@@ -22,7 +23,6 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
 
-from sugar4.activity import activityfactory
 from sugar4.graphics import iconentry
 from sugar4.graphics import style
 from sugar4.graphics.toolbutton import ToolButton
@@ -199,7 +199,7 @@ class ActivityChooser(Gtk.Window):
 
                 row = model[0]
                 bundle_id = row[self.tree_view._model.column_bundle_id]
-                activity_id = activityfactory.create_activity_id()
+                activity_id = str(uuid.uuid4())
 
                 self.emit('activity-selected', bundle_id, activity_id)
                 self.destroy()
@@ -213,7 +213,7 @@ class ActivityChooser(Gtk.Window):
 
     def _got_row_tree_view(self, row):
         bundle_id = row[self.tree_view._model.column_bundle_id]
-        activity_id = activityfactory.create_activity_id()
+        activity_id = str(uuid.uuid4())
         self.emit('activity-selected', bundle_id, activity_id)
         self.destroy()
 

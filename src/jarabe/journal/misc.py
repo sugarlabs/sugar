@@ -15,6 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import uuid
+import subprocess
 import time
 import os
 import hashlib
@@ -24,7 +26,6 @@ from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar4.activity import activityfactory
 from sugar4.activity.activityhandle import ActivityHandle
 from sugar4.graphics.icon import get_icon_file_name
 from sugar4.graphics.xocolor import XoColor
@@ -258,13 +259,24 @@ def resume(metadata, bundle_id=None, alert_window=None,
         model.copy(metadata, '/', ready_callback=ready_callback)
 
 
+def launch_activity(bundle, handle):
+    cmd = bundle.get_command().split()
+    if getattr(handle, 'activity_id', None):
+        cmd.extend(['-a', handle.activity_id])
+    if getattr(handle, 'object_id', None):
+        cmd.extend(['-o', handle.object_id])
+    if getattr(handle, 'uri', None):
+        cmd.extend(['-u', handle.uri])
+    subprocess.Popen(cmd, cwd=getattr(bundle, 'path', '/'))
+
+
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
            invited=False, alert_window=None):
 
     bundle_id = bundle.get_bundle_id()
 
     if activity_id is None or not activity_id:
-        activity_id = activityfactory.create_activity_id()
+        activity_id = str(uuid.uuid4())
 
     logging.debug('launch bundle_id=%s activity_id=%s object_id=%s uri=%s',
                   bundle.get_bundle_id(), activity_id, object_id, uri)
@@ -312,7 +324,7 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
                                      object_id=object_id,
                                      uri=uri,
                                      invited=invited)
-    activityfactory.create(bundle, activity_handle)
+    launch_activity(bundle, activity_handle)
 
 
 def _downgrade_option_alert(bundle, metadata):

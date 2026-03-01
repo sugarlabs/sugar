@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import uuid
 from gettext import gettext as _
 
 from gi.repository import GObject
@@ -34,7 +35,6 @@ from sugar4.graphics.palettemenu import PaletteMenuItem
 from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar4.graphics.alert import Alert, ErrorAlert
 from sugar4.graphics.xocolor import XoColor
-from sugar4.activity import activityfactory
 from sugar4 import dispatch
 from sugar4.datastore import datastore
 
@@ -508,7 +508,7 @@ class ActivityIcon(CanvasIcon):
 
     def _resume(self, journal_entry):
         if not journal_entry['activity_id']:
-            journal_entry['activity_id'] = activityfactory.create_activity_id()
+            journal_entry['activity_id'] = str(uuid.uuid4())
         misc.resume(journal_entry, self._activity_info.get_bundle_id())
 
     def _activate(self):

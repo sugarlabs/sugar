@@ -31,7 +31,7 @@ from gi.repository import GObject
 from sugar4.graphics.alert import ErrorAlert
 from sugar4 import env
 from sugar4.datastore import datastore
-from sugar4.activity import activityfactory
+
 
 from jarabe.journal.journaltoolbox import MainToolbox
 from jarabe.journal.journaltoolbox import AddNewBar
@@ -245,7 +245,7 @@ class JournalActivity(JournalWindow):
         self.remove_alert(alert)
 
     def __realize_cb(self, window):
-        activity_id = activityfactory.create_activity_id()
+        activity_id = str(uuid.uuid4())
         data = GObject.GObject()
         settattr(data, 'activity_id', str(activity_id))
         settattr(data, 'bundle_id', _BUNDLE_ID)
@@ -663,7 +663,7 @@ def initialize_journal_object(title=None, bundle_id=None,
         icon_color = settings.get_string('color')
 
     if not activity_id:
-        activity_id = activityfactory.create_activity_id()
+        activity_id = str(uuid.uuid4())
 
     jobject = datastore.create()
     jobject.metadata['title'] = title

@@ -14,12 +14,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import logging
 
-from sugar4.activity import activityfactory
 from sugar4.activity.activityhandle import ActivityHandle
 from sugar4.datastore import datastore
 
 from jarabe.model import bundleregistry
 from jarabe.journal.misc import get_activities_for_mime
+from jarabe.journal.misc import launch_activity
 
 
 def get_bundle(bundle_id=None, object_id=None):
@@ -70,5 +70,5 @@ def launch_bundle(bundle_id=None, object_id=None):
                                      object_id=object_id,
                                      uri=None,
                                      invited=False)
-    activityfactory.create(bundle, activity_handle)
+    launch_activity(bundle, activity_handle)
     return True
