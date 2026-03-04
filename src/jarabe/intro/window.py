@@ -427,7 +427,10 @@ class IntroWindow(Gtk.Window):
         Gtk.Window.__init__(self)
 
         self.props.decorated = False
-        self.maximize()
+
+        screen = self.get_screen()
+        self.set_default_size(screen.get_width(), screen.get_height())
+        self.move(0, 0)
 
         self._intro_box = _IntroBox(start_on_age_page)
         self._intro_box.connect('done', self._done_cb)
