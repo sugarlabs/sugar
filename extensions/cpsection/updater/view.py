@@ -22,6 +22,7 @@ import logging
 
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import GLib
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon, CellRendererIcon
@@ -77,7 +78,7 @@ class ActivityUpdater(SectionView):
 
         state = self._model.get_state()
         if state in (updater.STATE_IDLE, updater.STATE_CHECKED):
-            self._refresh()
+            GLib.idle_add(self._refresh)
         elif state in (updater.STATE_CHECKING, updater.STATE_DOWNLOADING,
                        updater.STATE_UPDATING):
             self._switch_to_progress_pane()
