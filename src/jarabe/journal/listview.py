@@ -696,9 +696,19 @@ class BaseListView(Gtk.Bin):
         return self._model
 
     def select_all(self):
-        self.get_model().select_all()
+        model = self.get_model()
+        model.select_none()
+
+        tree_model = self.tree_view.get_model()
+        if tree_model is not None:
+            for row in range(len(tree_model)):
+                path = Gtk.TreePath(row)
+                uid = tree_model[path][ListModel.COLUMN_UID]
+                if uid is not None:
+                    model.set_selected(uid, True)
+
         self.tree_view.queue_draw()
-        self.emit('selection-changed', len(self._model.get_selected_items()))
+        self.emit('selection-changed', len(model.get_selected_items()))
 
     def select_none(self):
         self.get_model().select_none()
