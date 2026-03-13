@@ -126,8 +126,8 @@ class ActivityButton(RadioToolButton):
     def __journal_drag_data_received_cb(self, widget, context, x, y, selection,
                                         targetType, time):
         data = None
-        if selection.get_pixbuf() is not None:
-            data = selection.get_pixbuf()
+        if selection.render_pixbuf() is not None:
+            data = selection.render_pixbuf()
         if len(selection.get_uris()) != 0:
             data = selection.get_uris()[0].encode()
         if selection.get_text() is not None:
