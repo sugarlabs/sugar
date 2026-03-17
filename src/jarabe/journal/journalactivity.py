@@ -370,6 +370,12 @@ class JournalActivity(JournalWindow):
             return
 
         chooser = ActivityChooser()
+
+        parent_window = self.get_window()
+        if parent_window is not None:
+            chooser.set_transient_for(parent_window)
+            chooser.set_destroy_with_parent(True)
+
         activity.push_shell_window(chooser)
         chooser.connect('hide', activity.pop_shell_window)
 
