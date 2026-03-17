@@ -47,6 +47,7 @@ class Browser():
             'help', self.__app_scheme_cb, None)
 
         self._webview.connect('load-changed', self.__load_changed_cb)
+        self._webview.connect('load-failed', self.__load_failed_cb)
         toolbar.update_back_forward(False, False)
         toolbar.connect('back-clicked', self.__back_cb)
         toolbar.connect('forward-clicked', self.__forward_cb)
@@ -66,8 +67,17 @@ class Browser():
                        -1, Gio.content_type_guess(path, None)[0])
 
     def __load_changed_cb(self, widget, event):
+        if event == WebKit2.LoadEvent.STARTED:
+            self._toolbar.set_loading(True)
+        elif event == WebKit2.LoadEvent.FINISHED:
+            self._toolbar.set_loading(False)
+
         self._toolbar.update_back_forward(self._webview.can_go_back(),
                                           self._webview.can_go_forward())
+
+    def __load_failed_cb(self, widget, load_event, failing_uri, error):
+        self._toolbar.set_loading(False)
+        return False
 
     def __back_cb(self, widget):
         self._webview.go_back()
@@ -79,6 +89,8 @@ class Browser():
         return self._webview.get_session_state()
 
     def load_state(self, state, url):
+        self._toolbar.set_loading(True)
+
         if state is None:
             self._webview.load_uri(url)
         else:
