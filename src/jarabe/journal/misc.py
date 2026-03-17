@@ -249,6 +249,17 @@ def resume(metadata, bundle_id=None, alert_window=None,
             return
         bundle_id = activities[0].get_bundle_id()
 
+    # "Resume with" can select a different activity than the one that
+    # originally created the entry. If the saved activity_id is still
+    # running with another bundle, force a new instance for the selected
+    # bundle instead of re-focusing the old activity.
+    if activity_id:
+        shell_model = shell.get_model()
+        running_activity = shell_model.get_activity_by_id(activity_id)
+        if running_activity is not None and \
+                running_activity.get_bundle_id() != bundle_id:
+            activity_id = None
+
     bundle = registry.get_bundle(bundle_id)
 
     if metadata.get('mountpoint', '/') == '/':
