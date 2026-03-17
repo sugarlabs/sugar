@@ -80,7 +80,7 @@ def create_profile(user_profile):
 
     logging.debug("Generating user keypair")
 
-    cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % (keypath, )
+    cmd = "ssh-keygen -q -t rsa -b 2048 -f %s -C '' -N ''" % (keypath, )
     (s, o) = subprocess.getstatusoutput(cmd)
     if s != 0:
         logging.error('Could not generate key pair: %d %s', s, o)
