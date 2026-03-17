@@ -76,6 +76,11 @@ _MAXIMUM_PALETTE_COLUMNS = 4
 
 class MainToolbox(ToolbarBox):
 
+    __gsignals__ = {
+        'dashboard-clicked': (GObject.SignalFlags.RUN_FIRST, None,
+                              ([])),
+    }
+
     query_changed_signal = GObject.Signal('query-changed',
                                           arg_types=([object]))
 
@@ -113,6 +118,13 @@ class MainToolbox(ToolbarBox):
                                        self._proj_list_button_clicked_cb)
         self.toolbar.insert(self._proj_list_button, -1)
         self._proj_list_button.show()
+
+        self._dashboard_button = ToggleToolButton('activity-journal')
+        self._dashboard_button.set_tooltip(_('Dashboard'))
+        self._dashboard_button.connect('toggled',
+                                       self._dashboard_clicked_cb)
+        self.toolbar.insert(self._dashboard_button, -1)
+        self._dashboard_button.show()
 
         if not self._proj_list_button.props.active:
             self._what_widget_contents = None
@@ -476,6 +488,9 @@ class MainToolbox(ToolbarBox):
             self._what_search_button.show()
         self._update_if_needed()
 
+    def _dashboard_clicked_cb(self, dashboard_button):
+        self.emit('dashboard-clicked')
+
     def __favorite_button_toggled_cb(self, favorite_button):
         self._update_if_needed()
 
@@ -510,6 +525,9 @@ class MainToolbox(ToolbarBox):
             self._what_widget.show()
             self._what_search_button.show()
             self._proj_list_button.props.active = False
+
+        if self._dashboard_button.props.active:
+            self._dashboard_button.props.active = False
 
         self._update_if_needed()
 
@@ -765,6 +783,37 @@ class SortingButton(ToolButton):
 
     def get_current_sort(self):
         return (self._property, self._order)
+
+
+class DashboardToolBox(ToolbarBox):
+
+    __gsignals__ = {
+        'refresh-clicked': (GObject.SignalFlags.RUN_FIRST, None,
+                            ([])),
+        'journal-clicked': (GObject.SignalFlags.RUN_FIRST, None,
+                            ([])),
+    }
+
+    def __init__(self):
+        ToolbarBox.__init__(self)
+
+        self.journal_button = ToolButton('activity-journal')
+        self.journal_button.connect('clicked', self._journal_clicked_cb)
+        self.journal_button.show()
+        self.toolbar.insert(self.journal_button, -1)
+
+        refresh_button = ToolButton('view-refresh')
+        refresh_button.set_tooltip_text(_("Refresh Data"))
+        refresh_button.connect('clicked', self._load_data)
+        refresh_button.show()
+        self.toolbar.insert(refresh_button, -1)
+        self.show()
+
+    def _load_data(self, widget=None):
+        self.emit('refresh-clicked')
+
+    def _journal_clicked_cb(self, widget=None):
+        self.emit('journal-clicked')
 
 
 class EditToolbox(ToolbarBox):

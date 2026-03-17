@@ -2,6 +2,7 @@ sugardir = $(pythondir)/jarabe/journal
 sugar_PYTHON =				\
 	__init__.py			\
 	bundlelauncher.py		\
+	dashboardview.py	\
 	detailview.py			\
 	expandedentry.py		\
 	iconview.py			\
