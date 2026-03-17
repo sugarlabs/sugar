@@ -14,13 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from jarabe.frame import get_view
-
-frame = get_view()
+from jarabe.frame.framesettings import get_settings
 
 
 def get_corner_delay():
-    corner_delay = frame.settings.get_int('corner-delay')
+    corner_delay = get_settings().get_int('corner-delay')
     return corner_delay
 
 
@@ -34,12 +32,12 @@ def set_corner_delay(delay):
     delay: 100 (100 milliseconds)
     never: 1000 (disable activation)
     """
-    frame.settings.set_int('corner-delay', int(delay))
+    get_settings().set_int('corner-delay', int(delay))
     return 0
 
 
 def get_edge_delay():
-    edge_delay = frame.settings.get_int('edge-delay')
+    edge_delay = get_settings().get_int('edge-delay')
     return edge_delay
 
 
@@ -53,12 +51,12 @@ def set_edge_delay(delay):
     delay: 100 (100 milliseconds)
     never: 1000 (disable activation)
     """
-    frame.settings.set_int('edge-delay', int(delay))
+    get_settings().set_int('edge-delay', int(delay))
     return 0
 
 
 def get_trigger_size():
-    trigger_size = frame.settings.get_int('trigger-size')
+    trigger_size = get_settings().get_int('trigger-size')
     return trigger_size
 
 
@@ -72,5 +70,5 @@ def set_trigger_size(size):
 
     exactly on the edge: 1
     """
-    frame.settings.set_int('trigger-size', int(size))
+    get_settings().set_int('trigger-size', int(size))
     return 0
