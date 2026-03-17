@@ -728,7 +728,9 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True,
             ready_callback(metadata, file_path, metadata['uid'])
 
     def error_handler(error):
-        logging.error('Could not create/update datastore entry')
+        logging.error('Could not create/update datastore entry: %s', error)
+        if ready_callback:
+            ready_callback(metadata, file_path, metadata.get('uid', ''))
 
     logging.debug('model.write %r %r %r', metadata.get('uid', ''), file_path,
                   update_mtime)
