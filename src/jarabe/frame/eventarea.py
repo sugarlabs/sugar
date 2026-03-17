@@ -17,7 +17,6 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import GLib
-from gi.repository import Wnck
 
 from sugar3.graphics import style
 
@@ -50,10 +49,6 @@ class EventArea(GObject.GObject):
 
         settings.connect('changed', self._settings_changed_cb)
         self._settings_changed_cb(settings, None)
-
-        screen = Wnck.Screen.get_default()
-        screen.connect('window-stacking-changed',
-                       self._window_stacking_changed_cb)
 
     def _box(self, tag):
         box = Gtk.Invisible()
@@ -152,7 +147,3 @@ class EventArea(GObject.GObject):
     def hide(self):
         for box in list(self._boxes.values()):
             box.hide()
-
-    def _window_stacking_changed_cb(self, screen):
-        for box in list(self._boxes.values()):
-            box.get_window().raise_()

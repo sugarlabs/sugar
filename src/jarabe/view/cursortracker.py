@@ -17,8 +17,6 @@ import logging
 
 from gi.repository import Gdk
 
-from gi.repository import SugarExt
-
 _instance = None
 
 
@@ -42,7 +40,6 @@ def setup():
         if device.get_source() == Gdk.InputSource.TOUCHSCREEN:
             logging.debug('Cursor Tracker: found touchscreen, '
                           'will track input.')
-            _instance = SugarExt.CursorTracker()
             break
 
     if not _instance:

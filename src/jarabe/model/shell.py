@@ -18,7 +18,6 @@ import logging
 import time
 
 from gi.repository import Gio
-from gi.repository import Wnck
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -399,12 +398,6 @@ class ShellModel(GObject.GObject):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        self._screen = Wnck.Screen.get_default()
-        self._screen.connect('window-opened', self._window_opened_cb)
-        self._screen.connect('window-closed', self._window_closed_cb)
-        self._screen.connect('active-window-changed',
-                             self._active_window_changed_cb)
-
         self.zoom_level_changed = dispatch.Signal()
 
         self._desktop_level = self.ZOOM_HOME
@@ -416,8 +409,6 @@ class ShellModel(GObject.GObject):
         self._tabbing_activity = None
         self._launchers = {}
         self._modal_dialogs_counter = 0
-
-        self._screen.toggle_showing_desktop(True)
 
         settings = Gio.Settings.new('org.sugarlabs')
         self._maximum_open_activities = settings.get_int(
@@ -462,7 +453,6 @@ class ShellModel(GObject.GObject):
                                      new_level=new_level)
 
         show_desktop = new_level is not self.ZOOM_ACTIVITY
-        self._screen.toggle_showing_desktop(show_desktop)
 
         if new_level is self.ZOOM_ACTIVITY:
             # activate the window, in case it was iconified
