@@ -21,7 +21,7 @@ from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 
 
-class InlineAlert(Gtk.HBox):
+class InlineAlert(Gtk.Box):
     """UI interface for Inline alerts
 
     Inline alerts are different from the other alerts beause they are
@@ -51,18 +51,15 @@ class InlineAlert(Gtk.HBox):
         self._msg_label = Gtk.Label()
         self._msg_label.set_max_width_chars(150)
         self._msg_label.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
-        self._msg_label.set_alignment(0, 0.5)
-        self._msg_label.modify_fg(Gtk.StateType.NORMAL,
-                                  style.COLOR_SELECTION_GREY.get_gdk_color())
+        self._msg_label.set_halign(Gtk.Align.START)
+        
 
-        Gtk.HBox.__init__(self, **kwargs)
+        Gtk.Box.__init__(self, **kwargs)
 
         self.set_spacing(style.DEFAULT_SPACING)
-        self.modify_bg(Gtk.StateType.NORMAL,
-                       style.COLOR_WHITE.get_gdk_color())
-
-        self.pack_start(self._icon, False, False, 0)
-        self.pack_start(self._msg_label, False, False, 0)
+        
+        self.append(self.msg_label)
+        self.append(self._msg_label)
         self._msg_label.show()
         self._icon.show()
 
