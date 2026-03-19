@@ -73,11 +73,11 @@ about the layout can be accessed with fields of the class."""
 _favorites_settings = None
 
 
-class FavoritesBox(Gtk.VBox):
+class FavoritesBox(Gtk.Box):
     __gtype_name__ = 'SugarFavoritesBox'
 
     def __init__(self, favorite_view):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
         self.favorite_view = favorite_view
         self._view = FavoritesView(self)

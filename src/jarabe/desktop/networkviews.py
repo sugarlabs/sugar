@@ -124,7 +124,7 @@ class WirelessNetworkView(EventPulsingIcon):
         p = palette.Palette(primary_text=self._display_name,
                             icon=self._palette_icon)
 
-        self.menu_box = Gtk.VBox()
+        self.menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         self._connect_item = PaletteMenuItem(_('Connect'))
         icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='dialog-ok')
@@ -527,7 +527,7 @@ class SugarAdhocView(EventPulsingIcon):
         palette_ = palette.Palette(_('Ad-hoc Network %d') % (self._channel, ),
                                    icon=self._palette_icon)
 
-        self.menu_box = Gtk.VBox()
+        self.menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         self._connect_item = PaletteMenuItem(_('Connect'))
         icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='dialog-ok')
@@ -671,7 +671,7 @@ class OlpcMeshView(EventPulsingIcon):
     def _create_palette(self):
         _palette = palette.Palette(_('Mesh Network %d') % (self._channel, ))
 
-        self.menu_box = Gtk.VBox()
+        self.menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         self._connect_item = PaletteMenuItem(_('Connect'))
         icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='dialog-ok')

@@ -149,7 +149,7 @@ class WEPKeyDialog(KeyDialog):
         self.key_combo.set_active(0)
         self.key_combo.connect('changed', self.__key_combo_changed_cb)
 
-        hbox = Gtk.HBox()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         hbox.pack_start(Gtk.Label(_('Key Type:')), True, True, 0)
         hbox.pack_start(self.key_combo, True, True, 0)
         hbox.show_all()
@@ -169,7 +169,7 @@ class WEPKeyDialog(KeyDialog):
         self.auth_combo.add_attribute(cell, 'text', 0)
         self.auth_combo.set_active(0)
 
-        hbox = Gtk.HBox()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         hbox.pack_start(Gtk.Label(_('Authentication Type:')), True, True, 0)
         hbox.pack_start(self.auth_combo, True, True, 0)
         hbox.show_all()
