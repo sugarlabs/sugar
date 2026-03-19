@@ -23,10 +23,10 @@ from jarabe.view.buddyicon import BuddyIcon
 from jarabe.model import bundleregistry
 
 
-class FriendView(Gtk.VBox):
+class FriendView(Gtk.Box):
 
     def __init__(self, buddy, **kwargs):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
         # round icon sizes to an even number so that it can be accurately
         # centered in a larger bounding box also of even dimensions
