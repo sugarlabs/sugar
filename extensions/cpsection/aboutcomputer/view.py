@@ -43,7 +43,7 @@ class AboutComputer(SectionView):
         self.pack_start(scrollwindow, True, True, 0)
         scrollwindow.show()
 
-        self._vbox = Gtk.VBox()
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         scrollwindow.add_with_viewport(self._vbox)
         self._vbox.show()
 
@@ -53,7 +53,7 @@ class AboutComputer(SectionView):
         self._setup_copyright()
 
     def create_information_box(self, label_text, value_text):
-        box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label = Gtk.Label(label=label_text)
         label.set_alignment(1, 0)
         label.modify_fg(Gtk.StateType.NORMAL,
@@ -77,7 +77,7 @@ class AboutComputer(SectionView):
         label_identity.set_alignment(0, 0)
         self._vbox.pack_start(label_identity, False, True, 0)
         label_identity.show()
-        vbox_identity = Gtk.VBox()
+        vbox_identity = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         vbox_identity.set_border_width(style.DEFAULT_SPACING * 2)
         vbox_identity.set_spacing(style.DEFAULT_SPACING)
 
@@ -104,7 +104,7 @@ class AboutComputer(SectionView):
         label_software.set_alignment(0, 0)
         self._vbox.pack_start(label_software, False, True, 0)
         label_software.show()
-        box_software = Gtk.VBox()
+        box_software = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box_software.set_border_width(style.DEFAULT_SPACING * 2)
         box_software.set_spacing(style.DEFAULT_SPACING)
 
@@ -151,7 +151,7 @@ class AboutComputer(SectionView):
         label_copyright.set_alignment(0, 0)
         self._vbox.pack_start(label_copyright, False, True, 0)
         label_copyright.show()
-        vbox_copyright = Gtk.VBox()
+        vbox_copyright = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         vbox_copyright.set_border_width(style.DEFAULT_SPACING * 2)
         vbox_copyright.set_spacing(style.DEFAULT_SPACING)
 

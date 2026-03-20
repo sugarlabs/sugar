@@ -53,7 +53,7 @@ class Frame(SectionView):
         label.set_alignment(0, 0)
         self.pack_start(label, False, True, 0)
 
-        box = Gtk.VBox()
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box.set_border_width(style.DEFAULT_SPACING * 2)
         box.set_spacing(style.DEFAULT_SPACING)
 
@@ -69,7 +69,7 @@ class Frame(SectionView):
         label.set_alignment(0, 0)
         self.pack_start(label, False, True, 0)
 
-        box = Gtk.VBox()
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box.set_border_width(style.DEFAULT_SPACING * 2)
         box.set_spacing(style.DEFAULT_SPACING)
 
@@ -81,7 +81,7 @@ class Frame(SectionView):
         self.setup()
 
     def _setup_corner(self):
-        box_delay = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        box_delay = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label_delay = Gtk.Label(label=_('Corner'))
         label_delay.set_alignment(1, 0.75)
         label_delay.modify_fg(Gtk.StateType.NORMAL,
@@ -100,7 +100,7 @@ class Frame(SectionView):
         return box_delay
 
     def _setup_edge(self):
-        box_delay = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        box_delay = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label_delay = Gtk.Label(label=_('Edge'))
         label_delay.set_alignment(1, 0.75)
         label_delay.modify_fg(Gtk.StateType.NORMAL,
@@ -119,7 +119,7 @@ class Frame(SectionView):
         return box_delay
 
     def _setup_trigger(self):
-        box_trigger = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        box_trigger = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label_trigger = Gtk.Label(label=_('Size'))
         label_trigger.set_alignment(1, 0.75)
         label_trigger.modify_fg(Gtk.StateType.NORMAL,

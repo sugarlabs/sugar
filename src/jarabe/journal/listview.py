@@ -588,7 +588,7 @@ class BaseListView(Gtk.Bin):
         alignment = Gtk.Alignment.new(0.5, 0.5, 0.1, 0.1)
         background_box.add(alignment)
 
-        box = Gtk.VBox()
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         alignment.add(box)
 
         icon = Icon(pixel_size=style.LARGE_ICON_SIZE,

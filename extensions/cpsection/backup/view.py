@@ -77,7 +77,7 @@ class _BackupButton(Gtk.EventBox):
 
         Gtk.EventBox.__init__(self, **kwargs)
 
-        self._vbox = Gtk.VBox()
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._icon = Icon(icon_name=self._icon_name,
                           pixel_size=self._pixel_size,
                           xo_color=XoColor('#000000,#000000'))
@@ -119,13 +119,13 @@ class _BackupButton(Gtk.EventBox):
             return self._title
 
 
-class SelectBackupRestorePanel(Gtk.VBox):
+class SelectBackupRestorePanel(Gtk.Box):
 
     def __init__(self, view):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
         self._view = view
-        hbox = Gtk.HBox()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
 
         self.backup_btn = _BackupButton(
             icon_name='backup-backup',

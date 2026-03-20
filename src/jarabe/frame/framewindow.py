@@ -32,9 +32,9 @@ class FrameContainer(Gtk.Bin):
         self._position = position
 
         if self.is_vertical():
-            box = Gtk.VBox()
+            box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         else:
-            box = Gtk.HBox()
+            box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.add(box)
         box.show()
 

@@ -32,7 +32,7 @@ config.ext_path = extension_dir
 sys.path.append(config.ext_path)
 
 window = Gtk.Window()
-box = Gtk.HBox()
+box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 box.show()
 window.add(box)
 

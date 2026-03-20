@@ -39,18 +39,18 @@ class LaunchWindow(Gtk.Window):
         self.props.type_hint = Gdk.WindowTypeHint.SPLASHSCREEN
         self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
-        canvas = Gtk.VBox()
+        canvas = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         canvas.show()
         self.add(canvas)
 
         bar_size = Gdk.Screen.height() / 5 * 2
 
-        header = Gtk.VBox()
+        header = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         header.set_size_request(-1, bar_size)
         header.show()
         canvas.pack_start(header, False, True, 0)
 
-        box = Gtk.HBox()
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         box.set_size_request(Gdk.Screen.width() / 5, -1)
         box.show()
         canvas.pack_start(box, True, True, 0)
@@ -67,7 +67,7 @@ class LaunchWindow(Gtk.Window):
         self._activity_icon.show()
         box.pack_start(self._activity_icon, True, False, 0)
 
-        footer = Gtk.VBox(spacing=style.DEFAULT_SPACING)
+        footer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
         footer.set_size_request(-1, bar_size)
         footer.show()
         canvas.pack_end(footer, False, True, 0)

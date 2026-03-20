@@ -19,7 +19,7 @@ from gi.repository import Gtk
 from gettext import gettext as _
 
 
-class SectionView(Gtk.VBox):
+class SectionView(Gtk.Box):
     __gtype_name__ = 'SugarSectionView'
 
     __gsignals__ = {
@@ -40,7 +40,7 @@ class SectionView(Gtk.VBox):
     _APPLY_TIMEOUT = 1000
 
     def __init__(self):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self._is_valid = True
         self._is_cancellable = True
         self._is_deferrable = True

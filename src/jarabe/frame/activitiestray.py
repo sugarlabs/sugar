@@ -728,7 +728,7 @@ class IncomingTransferPalette(BaseTransferPalette):
             box.append_item(separator)
             separator.show()
 
-            inner_box = Gtk.VBox()
+            inner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
             inner_box.set_spacing(style.DEFAULT_PADDING)
             box.append_item(inner_box, vertical_padding=0)
             inner_box.show()
@@ -764,7 +764,7 @@ class IncomingTransferPalette(BaseTransferPalette):
             box.append_item(separator)
             separator.show()
 
-            inner_box = Gtk.VBox()
+            inner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
             inner_box.set_spacing(style.DEFAULT_PADDING)
             box.append_item(inner_box, vertical_padding=0)
             inner_box.show()
@@ -803,7 +803,7 @@ class IncomingTransferPalette(BaseTransferPalette):
                 box.append_item(menu_item)
                 menu_item.show()
 
-                inner_box = Gtk.VBox()
+                inner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
                 inner_box.set_spacing(style.DEFAULT_PADDING)
                 box.append_item(inner_box, vertical_padding=0)
                 inner_box.show()
@@ -886,7 +886,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
             box.append_item(separator)
             separator.show()
 
-            inner_box = Gtk.VBox()
+            inner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
             inner_box.set_spacing(style.DEFAULT_PADDING)
             box.append_item(inner_box, vertical_padding=0)
             inner_box.show()
@@ -919,7 +919,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
             box.append_item(separator)
             separator.show()
 
-            inner_box = Gtk.VBox()
+            inner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
             inner_box.set_spacing(style.DEFAULT_PADDING)
             box.append_item(inner_box, vertical_padding=0)
             inner_box.show()

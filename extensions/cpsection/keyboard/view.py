@@ -63,7 +63,7 @@ def _build_ISO_639_dictionary():
         logging.error('%s not found' % (ISO_DATA_FILE))
 
 
-class LayoutCombo(Gtk.HBox):
+class LayoutCombo(Gtk.Box):
     """
     Custom GTK widget with two comboboxes side by side, one for layout, and
     the other for variants for the selected layout.
@@ -214,7 +214,7 @@ class Keyboard(SectionView):
         self.pack_start(scrollwindow, True, True, 0)
         scrollwindow.show()
 
-        self._vbox = Gtk.VBox()
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         scrollwindow.add_with_viewport(self._vbox)
 
         self.__kmodel_sid = None
@@ -238,7 +238,7 @@ class Keyboard(SectionView):
         self._vbox.pack_start(label_kmodel, False, True, 0)
         label_kmodel.show_all()
 
-        box_kmodel = Gtk.VBox()
+        box_kmodel = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box_kmodel.set_border_width(style.DEFAULT_SPACING * 2)
         box_kmodel.set_spacing(style.DEFAULT_SPACING)
 
@@ -299,7 +299,7 @@ class Keyboard(SectionView):
         self._vbox.pack_start(label_group_option, False, True, 0)
         label_group_option.show_all()
 
-        box_group_option = Gtk.VBox()
+        box_group_option = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box_group_option.set_border_width(style.DEFAULT_SPACING * 2)
         box_group_option.set_spacing(style.DEFAULT_SPACING)
 

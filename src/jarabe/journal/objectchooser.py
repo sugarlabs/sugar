@@ -68,7 +68,7 @@ class ObjectChooser(Gtk.Window):
             #screen = Wnck.Screen.get_default()
             #screen.connect('window-closed', self.__window_closed_cb, parent)
 
-        vbox = Gtk.VBox()
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(vbox)
         vbox.show()
 

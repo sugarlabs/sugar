@@ -98,7 +98,7 @@ class Language(SectionView):
         self._table.show()
         scrolled.add_with_viewport(self._table)
 
-        self._lang_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._lang_alert_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         self.pack_start(self._lang_alert_box, False, True, 0)
 
         self._lang_alert = InlineAlert()

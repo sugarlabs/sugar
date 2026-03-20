@@ -74,7 +74,7 @@ class TimeZone(SectionView):
         self.pack_start(self._scrolled_window, True, True, 0)
         self._scrolled_window.show()
 
-        self._zone_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._zone_alert_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         self.pack_start(self._zone_alert_box, False, False, 0)
 
         self._zone_alert = InlineAlert()

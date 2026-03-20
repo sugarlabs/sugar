@@ -36,7 +36,7 @@ class Power(SectionView):
         self.set_spacing(style.DEFAULT_SPACING)
         group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
-        self._automatic_pm_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._automatic_pm_alert_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
 
         separator_pm = Gtk.HSeparator()
         self.pack_start(separator_pm, False, True, 0)
@@ -46,11 +46,11 @@ class Power(SectionView):
         label_pm.set_alignment(0, 0)
         self.pack_start(label_pm, False, True, 0)
         label_pm.show()
-        box_pm = Gtk.VBox()
+        box_pm = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box_pm.set_border_width(style.DEFAULT_SPACING * 2)
         box_pm.set_spacing(style.DEFAULT_SPACING)
 
-        box_automatic_pm = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        box_automatic_pm = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label_automatic_pm = Gtk.Label(
             label=_('Automatic power management (increases battery life)'))
         label_automatic_pm.set_alignment(0, 0.5)

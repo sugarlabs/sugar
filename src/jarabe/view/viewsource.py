@@ -196,7 +196,7 @@ class ViewSource(Gtk.Window):
         self.connect('destroy', self.__destroy_cb, document_path)
         self.connect('key-press-event', self.__key_press_event_cb)
 
-        self._vbox = Gtk.VBox()
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(self._vbox)
         self._vbox.show()
 

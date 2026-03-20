@@ -78,7 +78,7 @@ class Background(SectionView):
 
         alpha = self._model.get_background_alpha_level()
 
-        alpha_box = Gtk.HBox()
+        alpha_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         alpha_buttons = []
         alpha_icons = [
             [1.0, 'network-wireless-000'],

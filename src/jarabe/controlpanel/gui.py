@@ -62,8 +62,8 @@ class ControlPanel(Gtk.Window):
         self._section_toolbar = None
         self._main_toolbar = None
 
-        self._vbox = Gtk.VBox()
-        self._hbox = Gtk.HBox()
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self._hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(self._hbox, True, True, 0)
         self._hbox.show()
 

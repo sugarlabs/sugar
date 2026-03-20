@@ -130,7 +130,7 @@ class BatteryPalette(Palette):
         self.set_content(self._progress_widget)
         self._progress_widget.show()
 
-        inner_box = Gtk.VBox()
+        inner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         inner_box.set_spacing(style.DEFAULT_PADDING)
         self._progress_widget.append_item(inner_box, vertical_padding=0)
         inner_box.show()
