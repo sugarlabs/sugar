@@ -35,19 +35,27 @@ class TabbingHandler(object):
         self._mouse = None
 
         display = Gdk.Display.get_default()
-        device_manager = display.get_device_manager()
-        devices = device_manager.list_devices(Gdk.DeviceType.MASTER)
-        for device in devices:
-            if device.get_source() == Gdk.InputSource.KEYBOARD:
-                self._keyboard = device
-            if device.get_source() == Gdk.InputSource.MOUSE:
-                self._mouse = device
+        if display is None:
+            logging.debug('TabbingHandler: display not available')
+        else:
+            device_manager = display.get_device_manager()
+            devices = device_manager.list_devices(Gdk.DeviceType.MASTER)
+            for device in devices:
+                if device.get_source() == Gdk.InputSource.KEYBOARD:
+                    self._keyboard = device
+                if device.get_source() == Gdk.InputSource.MOUSE:
+                    self._mouse = device
 
     def _start_tabbing(self, event_time):
         if not self._tabbing:
             logging.debug('Grabing the input.')
 
             screen = Gdk.Screen.get_default()
+            if screen is None or self._keyboard is None or self._mouse is None:
+                logging.debug('TabbingHandler: cannot start tabbing '
+                              '(no screen or devices)')
+                return
+
             window = screen.get_root_window()
 
             keyboard_grab_result = self._keyboard.grab(
@@ -161,12 +169,14 @@ class TabbingHandler(object):
             next_activity.get_window().activate(event_time)
 
     def stop(self, event_time):
-        self._keyboard.ungrab(event_time)
-        self._mouse.ungrab(event_time)
+        if self._keyboard is not None:
+            self._keyboard.ungrab(event_time)
+
+        if self._mouse is not None:
+            self._mouse.ungrab(event_time)
+
         self._tabbing = False
-
         self._frame.hide()
-
         self._cancel_timeout()
         self._activate_current(event_time)
 
