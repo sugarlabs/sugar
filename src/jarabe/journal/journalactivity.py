@@ -284,7 +284,7 @@ class JournalActivity(JournalWindow):
     def _setup_main_view(self):
         self._main_toolbox = MainToolbox()
         self._edit_toolbox = EditToolbox(self)
-        self._main_view = Gtk.VBox()
+        self._main_view = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         self._add_new_box = AddNewBar(_('Add new project'))
         self._add_new_box.activate.connect(self.__add_project_activate_cb)
@@ -348,7 +348,7 @@ class JournalActivity(JournalWindow):
         self._project_view.show_all()
 
     def _setup_secondary_view(self):
-        self._secondary_view = Gtk.VBox()
+        self._secondary_view = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         self._detail_toolbox = DetailToolbox(self)
         self._detail_toolbox.connect('volume-error', self.volume_error_cb)

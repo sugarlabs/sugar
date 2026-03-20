@@ -92,10 +92,10 @@ class DeviceView(TrayIcon):
         self._update_output_info()
 
 
-class AudioManagerWidget(Gtk.VBox):
+class AudioManagerWidget(Gtk.Box):
 
     def __init__(self, text, icon_name, device):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self._device = device
 
         self._ok_icon = Icon(icon_name='dialog-ok')

@@ -123,14 +123,14 @@ class NumberEntry(Gtk.Entry):
         self.set_text(''.join([i for i in text if i in '0123456789']))
 
 
-class SettingBox(Gtk.HBox):
+class SettingBox(Gtk.Box):
     """
     Base class for "lines" on the screen representing configuration
     settings.
     """
 
     def __init__(self, name, size_group=None):
-        Gtk.HBox.__init__(self, spacing=style.DEFAULT_SPACING)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label = Gtk.Label(name)
         label.modify_fg(Gtk.StateType.NORMAL,
                         style.COLOR_SELECTION_GREY.get_gdk_color())
@@ -141,7 +141,7 @@ class SettingBox(Gtk.HBox):
         label.show()
 
 
-class ComboSettingBox(Gtk.VBox):
+class ComboSettingBox(Gtk.Box):
     """
     Container for sets of different settings selected by a top-level
     setting.
@@ -152,7 +152,7 @@ class ComboSettingBox(Gtk.VBox):
 
     def __init__(self, name, setting, setting_key,
                  option_sets, size_group=None):
-        Gtk.VBox.__init__(self, spacing=style.DEFAULT_SPACING)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
 
         setting_box = SettingBox(name, size_group)
         self.pack_start(setting_box, False, False, 0)
@@ -171,7 +171,7 @@ class ComboSettingBox(Gtk.VBox):
         combo_box.add_attribute(cell_renderer, 'text', 0)
         combo_box.props.id_column = 1
 
-        self._settings_box = Gtk.VBox()
+        self._settings_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._settings_box.show()
         self.pack_start(self._settings_box, False, False, 0)
 
@@ -192,7 +192,7 @@ class ComboSettingBox(Gtk.VBox):
         new_box.show()
 
 
-class OptionalSettingsBox(Gtk.VBox):
+class OptionalSettingsBox(Gtk.Box):
     """
     Container for settings (de)activated by a top-level setting.
 
@@ -201,7 +201,7 @@ class OptionalSettingsBox(Gtk.VBox):
     """
 
     def __init__(self, name, setting, setting_key, contents_box):
-        Gtk.VBox.__init__(self, spacing=style.DEFAULT_SPACING)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
 
         check_button = Gtk.CheckButton()
         check_button.props.label = name
@@ -310,14 +310,14 @@ class Network(SectionView):
         self.set_spacing(style.DEFAULT_SPACING)
         group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
-        self._radio_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._radio_alert_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
 
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         self.add(scrolled)
         scrolled.show()
 
-        workspace = Gtk.VBox()
+        workspace = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         scrolled.add_with_viewport(workspace)
         workspace.show()
 
@@ -329,7 +329,7 @@ class Network(SectionView):
         label_wireless.set_alignment(0, 0)
         workspace.pack_start(label_wireless, False, True, 0)
         label_wireless.show()
-        box_wireless = Gtk.VBox()
+        box_wireless = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box_wireless.set_border_width(style.DEFAULT_SPACING * 2)
         box_wireless.set_spacing(style.DEFAULT_SPACING)
 
@@ -340,7 +340,7 @@ class Network(SectionView):
         radio_info.show()
         box_wireless.pack_start(radio_info, False, True, 0)
 
-        box_radio = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        box_radio = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         self._button = Gtk.CheckButton()
         self._button.set_alignment(0, 0)
         box_radio.pack_start(self._button, False, True, 0)
@@ -370,7 +370,7 @@ class Network(SectionView):
         wireless_info.show()
         box_wireless.pack_start(wireless_info, False, True, 0)
 
-        box_clear_wireless = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        box_clear_wireless = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         self._clear_wireless_button = Gtk.Button()
         self._clear_wireless_button.set_label(
             _('Discard wireless connections'))
@@ -393,7 +393,7 @@ class Network(SectionView):
         label_mesh.set_alignment(0, 0)
         workspace.pack_start(label_mesh, False, True, 0)
         label_mesh.show()
-        box_mesh = Gtk.VBox()
+        box_mesh = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box_mesh.set_border_width(style.DEFAULT_SPACING * 2)
         box_mesh.set_spacing(style.DEFAULT_SPACING)
 
@@ -406,7 +406,7 @@ class Network(SectionView):
         box_mesh.pack_start(server_info, False, True, 0)
         server_info.show()
 
-        box_server = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        box_server = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label_server = Gtk.Label(label=_('Server:'))
         label_server.set_alignment(1, 0.5)
         label_server.modify_fg(Gtk.StateType.NORMAL,
@@ -432,7 +432,7 @@ class Network(SectionView):
         box_mesh.pack_start(social_help_info, False, True, 0)
         social_help_info.show()
 
-        social_help_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        social_help_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         social_help_label = Gtk.Label(label=_('Social Help Server:'))
         social_help_label.set_alignment(1, 0.5)
         social_help_label.modify_fg(Gtk.StateType.NORMAL,
@@ -467,7 +467,7 @@ class Network(SectionView):
         workspace.pack_start(label_proxy, False, True, 0)
         label_proxy.show()
 
-        box_proxy = Gtk.VBox()
+        box_proxy = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box_proxy.set_border_width(style.DEFAULT_SPACING * 2)
         box_proxy.set_spacing(style.DEFAULT_SPACING)
         workspace.pack_start(box_proxy, False, True, 0)
@@ -502,11 +502,11 @@ class Network(SectionView):
 
         size_group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
-        automatic_proxy_box = Gtk.VBox(spacing=style.DEFAULT_SPACING)
-        manual_proxy_box = Gtk.VBox(spacing=style.DEFAULT_SPACING)
+        automatic_proxy_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
+        manual_proxy_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
 
-        option_sets = [('None', 'none', Gtk.VBox()),
-                       ('Use system proxy', 'system', Gtk.VBox()),
+        option_sets = [('None', 'none', Gtk.Box(orientation=Gtk.Orientation.VERTICAL)),
+                       ('Use system proxy', 'system', Gtk.Box(orientation=Gtk.Orientation.VERTICAL)),
                        ('Manual', 'manual', manual_proxy_box),
                        ('Automatic', 'auto', automatic_proxy_box)]
 
@@ -542,7 +542,7 @@ class Network(SectionView):
             self._proxy_settings[schema], size_group)
         manual_proxy_box.pack_start(box_http, False, False, 0)
         box_http.show()
-        auth_contents_box = Gtk.VBox(spacing=style.DEFAULT_SPACING)
+        auth_contents_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
         auth_box = OptionalSettingsBox(
             _('Use authentication'),
             self._proxy_settings[schema],

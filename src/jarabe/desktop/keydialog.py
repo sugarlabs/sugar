@@ -242,7 +242,7 @@ class WPAKeyDialog(KeyDialog):
         self.combo.add_attribute(cell, 'text', 0)
         self.combo.set_active(0)
 
-        self.hbox = Gtk.HBox()
+        self.hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.hbox.pack_start(Gtk.Label(_('Wireless Security:')), True, True, 0)
         self.hbox.pack_start(self.combo, True, True, 0)
         self.hbox.show_all()

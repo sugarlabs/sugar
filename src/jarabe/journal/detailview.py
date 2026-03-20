@@ -26,7 +26,7 @@ from jarabe.journal.expandedentry import ExpandedEntry
 from jarabe.journal import model
 
 
-class DetailView(Gtk.VBox):
+class DetailView(Gtk.Box):
     __gtype_name__ = 'DetailView'
 
     __gsignals__ = {
@@ -38,7 +38,7 @@ class DetailView(Gtk.VBox):
         self._metadata = None
         self._expanded_entry = None
 
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
         back_bar = BackBar()
         back_bar.connect('button-release-event',
@@ -85,7 +85,7 @@ class BackBar(Gtk.EventBox):
         Gtk.EventBox.__init__(self)
         self.modify_bg(Gtk.StateType.NORMAL,
                        style.COLOR_PANEL_GREY.get_gdk_color())
-        hbox = Gtk.HBox(spacing=style.DEFAULT_PADDING)
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_PADDING)
         hbox.set_border_width(style.DEFAULT_PADDING)
         icon = Icon(icon_name='go-previous', pixel_size=style.SMALL_ICON_SIZE,
                     fill_color=style.COLOR_TOOLBAR_GREY.get_svg())

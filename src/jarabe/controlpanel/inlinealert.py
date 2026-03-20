@@ -21,7 +21,7 @@ from sugar4.graphics import style
 from sugar4.graphics.icon import Icon
 
 
-class InlineAlert(Gtk.HBox):
+class InlineAlert(Gtk.Box):
     """UI interface for Inline alerts
 
     Inline alerts are different from the other alerts beause they are
@@ -55,7 +55,7 @@ class InlineAlert(Gtk.HBox):
         self._msg_label.modify_fg(Gtk.StateType.NORMAL,
                                   style.COLOR_SELECTION_GREY.get_gdk_color())
 
-        Gtk.HBox.__init__(self, **kwargs)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.HORIZONTAL, **kwargs)
 
         self.set_spacing(style.DEFAULT_SPACING)
         self.modify_bg(Gtk.StateType.NORMAL,

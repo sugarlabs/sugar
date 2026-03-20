@@ -37,17 +37,17 @@ from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 
-class NotificationBox(Gtk.VBox):
+class NotificationBox(Gtk.Box):
 
     LINES = 3
     MAX_ENTRIES = 3
     ELLIPSIS_AND_BREAKS = 6
 
     def __init__(self, name):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self._name = name
 
-        self._notifications_box = Gtk.VBox()
+        self._notifications_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._notifications_box.show()
 
         self._scrolled_window = Gtk.ScrolledWindow()

@@ -77,7 +77,7 @@ class ResourcePalette(Palette):
 
         self._icon = icon
 
-        vbox = Gtk.VBox()
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.set_content(vbox)
 
         self._status_text = Gtk.Label()
