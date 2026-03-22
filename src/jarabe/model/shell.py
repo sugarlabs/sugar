@@ -72,7 +72,7 @@ class Activity(GObject.GObject):
         _windows -- GtkWindows registered for the activity. The lowest
                     one in the stack is the main window.
         """
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._windows = []
         self._service = None

@@ -105,7 +105,7 @@ class Friends(GObject.GObject):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._friends = {}
         self._path = os.path.join(env.get_profile_path(), 'friends')

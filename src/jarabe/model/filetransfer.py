@@ -64,7 +64,7 @@ new_file_transfer = dispatch.Signal()
 class BaseFileTransfer(GObject.GObject):
 
     def __init__(self, connection):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._connection = connection
         self._state = FT_STATE_NONE
         self._transferred_bytes = 0

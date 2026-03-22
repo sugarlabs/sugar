@@ -36,7 +36,7 @@ class Grid(SugarExt.Grid):
     }
 
     def __init__(self, width, height):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._children = []
         self._child_rects = {}

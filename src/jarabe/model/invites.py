@@ -161,7 +161,7 @@ class Invites(GObject.GObject):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._dispatch_operations = {}
 

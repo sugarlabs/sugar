@@ -245,7 +245,7 @@ class DeviceModelAudio(GObject.GObject):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._device = None
         self._last_level = 0

@@ -39,7 +39,7 @@ class Brightness(GObject.GObject):
     changed_signal = GObject.Signal('changed', arg_types=([int]))
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._path = None
         self._helper_path = None
         self._max_brightness = None

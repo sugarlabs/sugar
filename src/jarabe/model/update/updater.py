@@ -66,7 +66,7 @@ class Updater(GObject.GObject):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         settings = Gio.Settings.new(_UPDATE_KEYS_PATH)
         backend = settings.get_string(_UPDATE_BACKEND_KEY)

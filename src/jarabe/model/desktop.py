@@ -33,7 +33,7 @@ class DesktopViewModel(GObject.GObject):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._number_of_views = 1
         self._view_icons = None

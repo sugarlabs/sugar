@@ -75,7 +75,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     _PAGE_SIZE = 10
 
     def __init__(self, query):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._last_requested_index = None
         self._temp_drag_file_uid = None

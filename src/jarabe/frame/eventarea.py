@@ -36,7 +36,7 @@ class EventArea(GObject.GObject):
     }
 
     def __init__(self, settings):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._hover = False
         self._sids = {}

@@ -197,7 +197,7 @@ class DeviceModel(GObject.GObject):
     }
 
     def __init__(self, battery):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._battery = UPowerGlib.Device()
         self._battery.set_object_path_sync(battery, None)
         self._connect_battery()

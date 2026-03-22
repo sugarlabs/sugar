@@ -45,7 +45,7 @@ class Clipboard(GObject.GObject):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._objects = {}
         self._next_id = 0
