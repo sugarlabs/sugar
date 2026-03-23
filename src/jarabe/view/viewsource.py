@@ -184,8 +184,11 @@ class ViewSource(Gtk.Window):
         self.set_border_width(style.LINE_WIDTH)
         self.set_has_resize_grip(False)
 
-        width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 2
-        height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
+        display = Gdk.Display.get_default()
+        monitor = display.get_monitors().get_item(0)
+        geometry = monitor.get_geometry()
+        width = geometry.width - style.GRID_CELL_SIZE * 2
+        height = geometry.height - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
         self._parent_window_id = window_id

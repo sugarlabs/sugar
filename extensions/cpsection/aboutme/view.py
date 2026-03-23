@@ -213,18 +213,16 @@ class AboutMe(SectionView):
             self._nick_alert.props.msg = self.restart_msg
             self._nick_alert.show()
 
-        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_in_panel.add(grid)
+        grid.set_halign(Gtk.Align.CENTER)
+        grid.set_valign(Gtk.Align.START)
         grid.show()
-
-        center_alert = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_alert.add(alert_grid)
+ 
+        alert_grid.set_halign(Gtk.Align.CENTER)
+        alert_grid.set_valign(Gtk.Align.START)
         alert_grid.show()
-
-        self.pack_start(center_in_panel, False, False, 0)
-        self.pack_start(center_alert, False, False, 0)
-        center_in_panel.show()
-        center_alert.show()
+ 
+        self.append(grid)
+        self.append(alert_grid)
 
     def _setup_color(self):
         grid = Gtk.Grid()
@@ -250,7 +248,7 @@ class AboutMe(SectionView):
         current = 0
         for picker_index in sorted(self._pickers.keys()):
             if picker_index == _CURRENT_COLOR:
-                left_separator = Gtk.SeparatorToolItem()
+                left_separator = Gtk.Separator()
                 grid.attach(left_separator, current, 1, 1, 1)
                 left_separator.show()
                 current += 1
@@ -261,7 +259,7 @@ class AboutMe(SectionView):
             current += 1
 
             if picker_index == _CURRENT_COLOR:
-                right_separator = Gtk.SeparatorToolItem()
+                right_separator = Gtk.Separator()
                 right_separator.show()
                 grid.attach(right_separator, current, 1, 1, 1)
                 current += 1
