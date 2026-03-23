@@ -429,12 +429,18 @@ class MeshBox(ViewContainer):
             icon.set_filter(self._query)
 
         self._buddies[buddy_model.props.key] = icon
+def _remove_buddy(self, buddy_model):
+    logging.debug('MeshBox._remove_buddy')
 
-    def _remove_buddy(self, buddy_model):
-        logging.debug('MeshBox._remove_buddy')
-        icon = self._buddies[buddy_model.props.key]
-        self.remove(icon)
-        del self._buddies[buddy_model.props.key]
+    key = buddy_model.props.key
+    icon = self._buddies.get(key)
+
+    if not icon:
+        logging.warning(f"Buddy key {key} not found during removal")
+        return
+
+    self.remove(icon)
+    del self._buddies[key]
 
     def __buddy_notify_current_activity_cb(self, buddy_model, pspec):
         logging.debug('MeshBox.__buddy_notify_current_activity_cb %s',
