@@ -28,7 +28,7 @@ from sugar4.graphics import iconentry
 from sugar4.graphics import style
 
 
-class MainToolbar(Gtk.Toolbar):
+class MainToolbar(Gtk.Box):
     """ Main toolbar of the control panel
     """
     __gtype_name__ = 'MainToolbar'
@@ -47,8 +47,8 @@ class MainToolbar(Gtk.Toolbar):
 
         self._add_separator()
 
-        tool_item = Gtk.ToolItem()
-        self.insert(tool_item, -1)
+        tool_item = Gtk.Box()
+        self.append(tool_item)
         tool_item.show()
         self._search_entry = iconentry.IconEntry()
         self._search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
@@ -90,7 +90,7 @@ class MainToolbar(Gtk.Toolbar):
         self.emit('stop-clicked')
 
 
-class SectionToolbar(Gtk.Toolbar):
+class SectionToolbar(Gtk.Box):
     """ Toolbar of the sections of the control panel
     """
     __gtype_name__ = 'SectionToolbar'
@@ -148,7 +148,7 @@ class SectionToolbar(Gtk.Toolbar):
         separator.show()
 
     def _add_widget(self, widget, expand=False):
-        tool_item = Gtk.ToolItem()
+        tool_item = Gtk.Box()
         tool_item.set_expand(expand)
 
         tool_item.add(widget)
