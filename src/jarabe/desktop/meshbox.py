@@ -432,18 +432,34 @@ class MeshBox(ViewContainer):
 
     def _remove_buddy(self, buddy_model):
         logging.debug('MeshBox._remove_buddy')
-        icon = self._buddies[buddy_model.props.key]
+
+        key = buddy_model.props.key
+        icon = self._buddies.get(key)
+
+        if not icon:
+            logging.warning(f"Buddy key {key} not found during removal")
+            return
+
         self.remove(icon)
-        del self._buddies[buddy_model.props.key]
+        del self._buddies[key]
 
     def __buddy_notify_current_activity_cb(self, buddy_model, pspec):
-        logging.debug('MeshBox.__buddy_notify_current_activity_cb %s',
-                      buddy_model.props.current_activity)
-        if buddy_model.props.current_activity is None:
-            if buddy_model.props.key not in self._buddies:
+        key = buddy_model.props.key
+        activity = buddy_model.props.current_activity
+        logging.debug(f"[STATE] key={key}, activity={activity}, exists={key in self._buddies}")
+
+        if activity is None:
+            if key not in self._buddies:
+                logging.debug(f"Adding buddy {key}")
                 self._add_buddy(buddy_model)
-        elif buddy_model.props.key in self._buddies:
-            self._remove_buddy(buddy_model)
+            else:
+                logging.debug(f"Buddy {key} already exists, skipping add")
+        else:
+            if key in self._buddies:
+                logging.debug(f"Removing buddy {key}")
+                self._remove_buddy(buddy_model)
+            else:
+                logging.debug(f"Buddy {key} not found, skipping remove")
 
     def _add_activity(self, activity_model):
         icon = ActivityView(activity_model)
