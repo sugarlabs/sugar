@@ -101,12 +101,10 @@ class Background(SectionView):
         for button in alpha_buttons:
             button.connect('toggled', self._set_alpha_cb)
 
-        alpha_alignment = Gtk.Alignment()
-        alpha_alignment.set(0.5, 0, 0, 0)
-        alpha_alignment.add(alpha_box)
+        alpha_box.set_halign(Gtk.Align.CENTER)
+        alpha_box.set_valign(Gtk.Align.START)
         alpha_box.show()
-        self.pack_start(alpha_alignment, False, False, 0)
-        alpha_alignment.show()
+        self.pack_start(alpha_box, False, False, 0)
 
         self._paths_list = []
 

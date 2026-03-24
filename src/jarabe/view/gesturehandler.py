@@ -36,7 +36,10 @@ class GestureHandler(object):
     def __init__(self, frame):
         self._frame = frame
 
-        #self._gesture_grabber = SugarExt.GestureGrabber()
+        try:
+            self._gesture_grabber = SugarExt.GestureGrabber()
+        except Exception:
+            self._gesture_grabber = None
         self._controller = []
 
         screen = Gdk.Screen.get_default()
@@ -50,12 +53,16 @@ class GestureHandler(object):
     def _add_controller(self):
         for controller in self._controller:
             #self._gesture_grabber.remove(controller)
+            pass
 
         self._track_gesture_for_area(SugarGestures.SwipeDirectionFlags.DOWN,
                                      0, 0, Gdk.Screen.width(),
                                      style.GRID_CELL_SIZE)
 
     def _track_gesture_for_area(self, directions, x, y, width, height):
+        if self._gesture_grabber is None:
+            return
+
         rectangle = Gdk.Rectangle()
         rectangle.x = x
         rectangle.y = y

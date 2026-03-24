@@ -72,14 +72,12 @@ class ModalAlert(Gtk.Window):
                               fill=False, padding=0)
         self._message.show()
 
-        alignment = Gtk.Alignment.new(xalign=0.5, yalign=0.5,
-                                      xscale=0.0, yscale=0.0)
-        self._vbox.pack_start(alignment, expand=False, fill=True, padding=0)
-        alignment.show()
-
         self._show_journal = Gtk.Button()
         self._show_journal.set_label(_('Show Journal'))
-        alignment.add(self._show_journal)
+        self._show_journal.set_halign(Gtk.Align.CENTER)
+        self._show_journal.set_valign(Gtk.Align.CENTER)
+        self._vbox.pack_start(self._show_journal, expand=False,
+                              fill=True, padding=0)
         self._show_journal.show()
         self._show_journal.connect('clicked', self.__show_journal_cb)
 
