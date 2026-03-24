@@ -45,7 +45,7 @@ class ConnectionWatcher(GObject.GObject):
     }
 
     def __init__(self, bus=None):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         if bus is None:
             self.bus = dbus.Bus()

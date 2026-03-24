@@ -72,7 +72,7 @@ class BundleRegistry(GObject.GObject):
 
     def __init__(self):
         logging.debug('STARTUP: Loading the bundle registry')
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._mime_defaults = self._load_mime_defaults()
 

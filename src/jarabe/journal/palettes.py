@@ -579,7 +579,7 @@ class BatchOperator(GObject.GObject):
                  uid_list,
                  alert_title, alert_message,
                  operation_cb):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._journalactivity = journalactivity
 

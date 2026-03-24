@@ -639,7 +639,7 @@ class AccessPoint(GObject.GObject):
     }
 
     def __init__(self, device, model):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self.device = device
         self.model = model
 
@@ -787,7 +787,7 @@ class Connection(GObject.GObject):
     }
 
     def __init__(self, bus, path):
-        GObject.GObject.__init__(self)
+        super().__init__()
         obj = bus.get_object(NM_SERVICE, path)
         self._connection = dbus.Interface(obj, NM_CONNECTION_IFACE)
         self._removed_handle = self._connection.connect_to_signal(

@@ -43,7 +43,7 @@ class SessionManager(GObject.GObject):
     MAX_SHUTDOWN_TRIES = 10
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         #address = SugarExt.xsmp_init()
         #os.environ['SESSION_MANAGER'] = address

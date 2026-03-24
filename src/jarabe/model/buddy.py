@@ -43,7 +43,7 @@ class BaseBuddyModel(GObject.GObject):
         self._tags = None
         self._current_activity = None
 
-        GObject.GObject.__init__(self, **kwargs)
+        super().__init__(**kwargs)
 
     def get_nick(self):
         return self._nick

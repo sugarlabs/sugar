@@ -62,7 +62,7 @@ class Downloader(GObject.GObject):
     }
 
     def __init__(self, url, session=None, request_headers=None):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._uri = GLib.Uri.parse(url, GLib.UriFlags.NONE)
         self._session = session or get_soup_session()
         self._pending_buffers = []

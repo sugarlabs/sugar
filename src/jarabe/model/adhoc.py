@@ -57,7 +57,7 @@ class AdHocManager(GObject.GObject):
     _CHANNEL_11 = 11
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._bus = dbus.SystemBus()
         self._device = None

@@ -356,7 +356,7 @@ class MetadataLookup(GObject.GObject):
     }
 
     def __init__(self, url):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._url = url
         self._icon_file_name = None
         self._size = None

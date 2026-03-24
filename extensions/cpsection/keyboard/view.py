@@ -75,7 +75,7 @@ class LayoutCombo(Gtk.Box):
     }
 
     def __init__(self, keyboard_manager, n):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._keyboard_manager = keyboard_manager
         self._index = n
 

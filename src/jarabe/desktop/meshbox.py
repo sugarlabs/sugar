@@ -180,7 +180,7 @@ class DeviceObserver(GObject.GObject):
     }
 
     def __init__(self, device):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._bus = dbus.SystemBus()
         self.device = device
 

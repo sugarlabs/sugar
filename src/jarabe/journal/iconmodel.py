@@ -46,7 +46,7 @@ class IconModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     _PAGE_SIZE = 100
 
     def __init__(self, query):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._last_requested_index = None
         self._cached_row = None

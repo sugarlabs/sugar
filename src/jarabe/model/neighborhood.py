@@ -87,7 +87,7 @@ class ActivityModel(GObject.GObject):
     }
 
     def __init__(self, activity_id, room_handle):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self.activity_id = activity_id
         self.room_handle = room_handle
@@ -188,7 +188,7 @@ class _Account(GObject.GObject):
     }
 
     def __init__(self, account_path):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self.object_path = account_path
 
@@ -754,7 +754,7 @@ class Neighborhood(GObject.GObject):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._buddies = {None: get_owner_instance()}
         self._activities = {}
