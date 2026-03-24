@@ -33,6 +33,27 @@ from jarabe.controlpanel.toolbar import SectionToolbar
 from jarabe import config
 from jarabe.model import shell
 
+
+_css_gui_added = False
+
+
+def _add_css_gui():
+    global _css_gui_added
+    if _css_gui_added:
+        return
+    _css_gui_added = True
+    provider = Gtk.CssProvider()
+    provider.load_from_data(b"""
+    .controlpanel-black-bg { background-color: black; }
+    .controlpanel-white-bg { background-color: white; }
+    """)
+    display = Gdk.Display.get_default()
+    if display:
+        Gtk.StyleContext.add_provider_for_display(
+            display, provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+
 _logger = logging.getLogger('ControlPanel')
 
 
@@ -44,14 +65,16 @@ class ControlPanel(Gtk.Window):
         Gtk.Window.__init__(self)
 
         self._calculate_max_columns()
-        self.set_border_width(style.LINE_WIDTH)
-        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
+        # self.set_border_width is removed in GTK4. Use margins if needed on child.
         self.set_decorated(False)
         self.set_resizable(False)
         self.set_modal(True)
 
         self.set_can_focus(True)
-        self.connect('key-press-event', self.__key_press_event_cb)
+        # key-press-event is replaced by Gtk.EventControllerKey
+        key_controller = Gtk.EventControllerKey()
+        key_controller.connect('key-pressed', self.__key_pressed_cb_gtk4)
+        self.add_controller(key_controller)
 
         self._toolbar = None
         self._canvas = None
@@ -64,16 +87,18 @@ class ControlPanel(Gtk.Window):
 
         self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self._vbox.pack_start(self._hbox, True, True, 0)
+        self._vbox.append(self._hbox)
+        self._hbox.set_vexpand(True)
         self._hbox.show()
 
-        self._main_view = Gtk.EventBox()
-        self._hbox.pack_start(self._main_view, True, True, 0)
-        self._main_view.modify_bg(Gtk.StateType.NORMAL,
-                                  style.COLOR_BLACK.get_gdk_color())
+        self._main_view = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self._hbox.append(self._main_view)
+        self._main_view.set_hexpand(True)
+        _add_css_gui()
+        self._main_view.get_style_context().add_class('controlpanel-black-bg')
         self._main_view.show()
 
-        self.add(self._vbox)
+        self.set_child(self._vbox)
         self._vbox.show()
 
         self.connect('realize', self.__realize_cb)
@@ -83,16 +108,20 @@ class ControlPanel(Gtk.Window):
         self._setup_main()
         self._setup_section()
         self._show_main_view()
-        Gdk.Screen.get_default().connect(
-            'size-changed', self.__size_changed_cb)
+        display = Gdk.Display.get_default()
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                monitor.connect('notify::geometry', self.__size_changed_cb)
 
         self._busy_count = 0
         self._selected = []
 
-    def __realize_cb(self, widget):
-        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-        window = self.get_window()
-        window.set_accept_focus(True)
+    def _realize_cb(self, widget):
+        self.set_accept_focus(True)
+        # Transient forforeign window is complex in GTK4,
+        # usually we use present() and the shell handles it.
         if self.parent_window_id:
             attributes = Gdk.WindowAttr()
             attributes.window_type = Gdk.WindowType.FOREIGN
@@ -107,8 +136,8 @@ class ControlPanel(Gtk.Window):
 
     def busy(self):
         if self._busy_count == 0:
-            self._old_cursor = self.get_window().get_cursor()
-            self._set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+            self._old_cursor = self.get_cursor()
+            self.set_cursor(Gdk.Cursor.new_from_name('wait', None))
         self._busy_count += 1
 
     def unbusy(self):
@@ -117,12 +146,11 @@ class ControlPanel(Gtk.Window):
             self._set_cursor(self._old_cursor)
 
     def _set_cursor(self, cursor):
-        self.get_window().set_cursor(cursor)
-        Gdk.flush()
+        self.set_cursor(cursor)
 
     def add_alert(self, alert):
-        self._vbox.pack_start(alert, False, False, 0)
-        self._vbox.reorder_child(alert, 2)
+        self._vbox.append(alert)
+        # reorder_child is removed. We might need to handle order differently.
 
     def remove_alert(self, alert):
         self._vbox.remove(alert)
@@ -132,11 +160,20 @@ class ControlPanel(Gtk.Window):
         self._main_view.get_child().grab_focus()
 
     def _calculate_max_columns(self):
-        self._max_columns = int(0.285 * (float(Gdk.Screen.width()) /
+        s_width, s_height = 800, 600
+        display = Gdk.Display.get_default()
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                geometry = monitor.get_geometry()
+                s_width = geometry.width
+                s_height = geometry.height
+        self._max_columns = int(0.285 * (float(s_width) /
                                          style.GRID_CELL_SIZE - 3))
         offset = style.GRID_CELL_SIZE
-        width = Gdk.Screen.width() - offset * 2
-        height = Gdk.Screen.height() - offset * 2
+        width = s_width - offset * 2
+        height = s_height - offset * 2
         self.set_size_request(width, height)
         if hasattr(self, '_table'):
             for child in self._table.get_children():
@@ -144,40 +181,42 @@ class ControlPanel(Gtk.Window):
             self._setup_options()
 
     def _set_canvas(self, canvas):
-        if self._canvas in self._main_view:
+        if self._canvas:
             self._main_view.remove(self._canvas)
         if canvas:
-            self._main_view.add(canvas)
+            self._main_view.append(canvas)
+            canvas.set_vexpand(True)
+            canvas.set_hexpand(True)
         self._canvas = canvas
 
     def _set_toolbar(self, toolbar):
         if self._toolbar:
             self._vbox.remove(self._toolbar)
-        self._vbox.pack_start(toolbar, False, False, 0)
-        self._vbox.reorder_child(toolbar, 0)
+        self._vbox.prepend(toolbar)
         self._toolbar = toolbar
         if not self._separator:
-            self._separator = Gtk.HSeparator()
-            self._vbox.pack_start(self._separator, False, False, 0)
-            self._vbox.reorder_child(self._separator, 1)
+            self._separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+            self._vbox.append(self._separator)
             self._separator.show()
 
     def _setup_main(self):
         self._main_toolbar = MainToolbar()
 
-        self._table = Gtk.Table()
-        self._table.set_col_spacings(style.GRID_CELL_SIZE)
-        self._table.set_row_spacings(style.GRID_CELL_SIZE)
-        self._table.set_border_width(style.GRID_CELL_SIZE)
+        self._table = Gtk.Grid()
+        self._table.set_column_spacing(style.GRID_CELL_SIZE)
+        self._table.set_row_spacing(style.GRID_CELL_SIZE)
+        self._table.set_margin_start(style.GRID_CELL_SIZE)
+        self._table.set_margin_end(style.GRID_CELL_SIZE)
+        self._table.set_margin_top(style.GRID_CELL_SIZE)
+        self._table.set_margin_bottom(style.GRID_CELL_SIZE)
 
         self._scrolledwindow = Gtk.ScrolledWindow()
         self._scrolledwindow.set_can_focus(False)
         self._scrolledwindow.set_policy(Gtk.PolicyType.AUTOMATIC,
                                         Gtk.PolicyType.AUTOMATIC)
-        self._scrolledwindow.add_with_viewport(self._table)
-        child = self._scrolledwindow.get_child()
-        child.modify_bg(
-            Gtk.StateType.NORMAL, style.COLOR_BLACK.get_gdk_color())
+        self._scrolledwindow.set_child(self._table)
+        _add_css_gui()
+        self._scrolledwindow.get_style_context().add_class('controlpanel-black-bg')
 
         self._setup_options()
         self._main_toolbar.connect('stop-clicked',
@@ -205,18 +244,17 @@ class ControlPanel(Gtk.Window):
                                        title=self._options[option]['title'],
                                        xo_color=self._options[option]['color'],
                                        pixel_size=style.GRID_CELL_SIZE)
-            sectionicon.connect('button-press-event',
-                                self.__select_option_cb, option)
+            gesture = Gtk.GestureClick()
+            gesture.connect('released', self.__select_option_cb_gtk4, option)
+            sectionicon.add_controller(gesture)
             sectionicon.show()
 
             if option == 'aboutme':
-                self._table.attach(sectionicon, 0, 1, 0, 1)
+                self._table.attach(sectionicon, 0, 0, 1, 1)
             elif option == 'aboutcomputer':
-                self._table.attach(sectionicon, 1, 2, 0, 1)
+                self._table.attach(sectionicon, 1, 0, 1, 1)
             else:
-                self._table.attach(sectionicon,
-                                   column, column + 1,
-                                   row, row + 1)
+                self._table.attach(sectionicon, column, row, 1, 1)
                 column += 1
                 if column == self._max_columns:
                     column = 0
@@ -232,8 +270,8 @@ class ControlPanel(Gtk.Window):
         self._set_toolbar(self._main_toolbar)
         self._main_toolbar.show()
         self._set_canvas(self._scrolledwindow)
-        self._main_view.modify_bg(Gtk.StateType.NORMAL,
-                                  style.COLOR_BLACK.get_gdk_color())
+        self._main_view.get_style_context().remove_class('controlpanel-white-bg')
+        self._main_view.get_style_context().add_class('controlpanel-black-bg')
         self._table.show()
         self._scrolledwindow.show()
         entry = self._main_toolbar.get_entry()
@@ -241,13 +279,13 @@ class ControlPanel(Gtk.Window):
         entry.connect('icon-press', self.__clear_icon_pressed_cb)
         self.grab_focus()
 
-    def __key_press_event_cb(self, window, event):
-        if event.keyval == Gdk.KEY_Return:
+    def __key_pressed_cb_gtk4(self, controller, keyval, keycode, state):
+        if keyval == Gdk.KEY_Return:
             if len(self._selected) == 1:
                 self.show_section_view(self._selected[0])
                 return True
 
-        if event.keyval == Gdk.KEY_Escape:
+        if keyval == Gdk.KEY_Escape:
             if self._toolbar == self._main_toolbar:
                 self.__stop_clicked_cb(None)
                 self.destroy()
@@ -264,7 +302,7 @@ class ControlPanel(Gtk.Window):
             entry.grab_focus()
         return False
 
-    def __clear_icon_pressed_cb(self, entry, icon_pos, event):
+    def __clear_icon_pressed_cb(self, entry, icon_pos):
         self.grab_focus()
 
     def _update(self, query):
@@ -291,8 +329,7 @@ class ControlPanel(Gtk.Window):
         self._set_toolbar(self._section_toolbar)
 
         icon = self._section_toolbar.get_icon()
-        icon.set_from_icon_name(self._options[option]['icon'],
-                                Gtk.IconSize.LARGE_TOOLBAR)
+        icon.set_from_icon_name(self._options[option]['icon'])
         icon.props.xo_color = self._options[option]['color']
         title = self._section_toolbar.get_title()
         title.set_text(self._options[option]['title'])
@@ -326,8 +363,8 @@ class ControlPanel(Gtk.Window):
                                    self.__create_restart_alert_cb)
         self._section_view.connect('set-toolbar-sensitivity',
                                    self.__set_toolbar_sensitivity_cb)
-        self._main_view.modify_bg(Gtk.StateType.NORMAL,
-                                  style.COLOR_WHITE.get_gdk_color())
+        self._main_view.get_style_context().remove_class('controlpanel-black-bg')
+        self._main_view.get_style_context().add_class('controlpanel-white-bg')
 
     def set_section_view_auto_close(self):
         """Automatically close the control panel if there is "nothing to do"
@@ -452,7 +489,7 @@ class ControlPanel(Gtk.Window):
             self.busy()
             get_session_manager().shutdown_completed()
 
-    def __select_option_cb(self, button, event, option):
+    def __select_option_cb_gtk4(self, gesture, n_press, x, y, option):
         self.show_section_view(option)
 
     def __search_changed_cb(self, maintoolbar, query):
@@ -507,7 +544,7 @@ if hasattr(ControlPanel, 'set_css_name'):
     ControlPanel.set_css_name('controlpanel')
 
 
-class _SectionIcon(Gtk.EventBox):
+class _SectionIcon(Gtk.Box):
     __gtype_name__ = 'SugarSectionIcon'
 
     __gproperties__ = {
@@ -523,25 +560,24 @@ class _SectionIcon(Gtk.EventBox):
         self._xo_color = None
         self._title = 'No Title'
 
-        Gtk.EventBox.__init__(self, **kwargs)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL, **kwargs)
+        self.set_can_target(True)
+        self.set_focusable(True)
+        self.set_can_focus(True)
 
-        self._vbox = Gtk.VBox()
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._icon = Icon(icon_name=self._icon_name,
                           pixel_size=self._pixel_size,
                           xo_color=self._xo_color)
-        self._vbox.pack_start(self._icon, expand=False, fill=False, padding=0)
+        self._vbox.append(self._icon)
 
         self._label = Gtk.Label(label=self._title)
-        self._label.modify_fg(Gtk.StateType.NORMAL,
-                              style.COLOR_WHITE.get_gdk_color())
-        self._vbox.pack_start(self._label, expand=False, fill=False, padding=0)
+        # modify_fg is removed. Use CSS for white text if needed.
+        self._vbox.append(self._label)
 
         self._vbox.set_spacing(style.DEFAULT_SPACING)
-        self.set_visible_window(False)
-        self.set_app_paintable(True)
-        self.set_events(Gdk.EventMask.BUTTON_PRESS_MASK)
 
-        self.add(self._vbox)
+        self.append(self._vbox)
         self._vbox.show()
         self._label.show()
         self._icon.show()

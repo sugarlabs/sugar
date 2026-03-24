@@ -116,9 +116,10 @@ class AudioManagerWidget(Gtk.Box):
         grid.attach(label, 1, 0, 1, 1)
         grid.show()
 
-        alignment = Gtk.Alignment()
-        alignment.set(0.5, 0, 0, 0)
-        alignment.add(grid)
+        alignment = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        alignment.set_halign(Gtk.Align.CENTER)
+        alignment.set_valign(Gtk.Align.START)
+        alignment.append(grid)
         alignment.show()
 
         self.add(alignment)
@@ -152,11 +153,12 @@ class AudioManagerWidget(Gtk.Box):
         grid.attach(button, 1, 0, 1, 1)
         grid.show()
 
-        alignment = Gtk.Alignment()
-        alignment.set(0.5, 0, 0, 0)
-        alignment.set_padding(0, 0, style.DEFAULT_SPACING,
-                              style.DEFAULT_SPACING)
-        alignment.add(grid)
+        alignment = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        alignment.set_halign(Gtk.Align.CENTER)
+        alignment.set_valign(Gtk.Align.START)
+        alignment.set_margin_start(style.DEFAULT_SPACING)
+        alignment.set_margin_end(style.DEFAULT_SPACING)
+        alignment.append(grid)
         alignment.show()
 
         self.add(alignment)

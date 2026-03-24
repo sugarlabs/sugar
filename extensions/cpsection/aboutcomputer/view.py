@@ -160,7 +160,15 @@ class AboutComputer(SectionView):
                          ' Contributors.'
         label_copyright = Gtk.Label(label=copyright_text)
         label_copyright.set_alignment(0, 0)
-        label_copyright.set_size_request(Gdk.Screen.width() / 2, -1)
+        _label_width = 400
+        _display = Gdk.Display.get_default()
+        if _display:
+            _monitors = _display.get_monitors()
+            if _monitors.get_n_items() > 0:
+                _mon = _monitors.get_item(0)
+                _geo = _mon.get_geometry()
+                _label_width = _geo.width / 2
+        label_copyright.set_size_request(int(_label_width), -1)
         label_copyright.set_line_wrap(True)
         label_copyright.show()
         vbox_copyright.pack_start(label_copyright, False, True, 0)
@@ -175,7 +183,15 @@ class AboutComputer(SectionView):
         label_info.set_alignment(0, 0)
         label_info.set_max_width_chars(80)
         label_info.set_line_wrap(True)
-        label_info.set_size_request(Gdk.Screen.width() / 2, -1)
+        _label_width2 = 400
+        _display2 = Gdk.Display.get_default()
+        if _display2:
+            _monitors2 = _display2.get_monitors()
+            if _monitors2.get_n_items() > 0:
+                _mon2 = _monitors2.get_item(0)
+                _geo2 = _mon2.get_geometry()
+                _label_width2 = _geo2.width / 2
+        label_info.set_size_request(int(_label_width2), -1)
         label_info.show()
         vbox_copyright.pack_start(label_info, False, True, 0)
 
@@ -189,7 +205,15 @@ class AboutComputer(SectionView):
             label_license = Gtk.Label(label=license_text)
             label_license.set_alignment(0, 0)
             label_license.set_line_wrap(True)
-            label_license.set_size_request(Gdk.Screen.width() / 2, -1)
+            _label_width3 = 400
+            _display3 = Gdk.Display.get_default()
+            if _display3:
+                _monitors3 = _display3.get_monitors()
+                if _monitors3.get_n_items() > 0:
+                    _mon3 = _monitors3.get_item(0)
+                    _geo3 = _mon3.get_geometry()
+                    _label_width3 = _geo3.width / 2
+            label_license.set_size_request(int(_label_width3), -1)
             label_license.show()
 
             separator = Gtk.HSeparator()

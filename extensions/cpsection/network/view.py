@@ -416,7 +416,15 @@ class Network(SectionView):
         label_server.show()
         self._entry = Gtk.Entry()
         self._entry.set_alignment(0)
-        self._entry.set_size_request(int(Gdk.Screen.width() / 3), -1)
+        _entry_width = int(800 / 3)
+        _display = Gdk.Display.get_default()
+        if _display:
+            _monitors = _display.get_monitors()
+            if _monitors.get_n_items() > 0:
+                _mon = _monitors.get_item(0)
+                _geo = _mon.get_geometry()
+                _entry_width = int(_geo.width / 3)
+        self._entry.set_size_request(_entry_width, -1)
         box_server.pack_start(self._entry, False, True, 0)
         self._entry.show()
         box_mesh.pack_start(box_server, False, True, 0)
@@ -443,8 +451,15 @@ class Network(SectionView):
 
         self._social_help_entry = Gtk.Entry()
         self._social_help_entry.set_alignment(0)
-        self._social_help_entry.set_size_request(
-            int(Gdk.Screen.width() / 3), -1)
+        _combo_width = int(800 / 3)
+        _display2 = Gdk.Display.get_default()
+        if _display2:
+            _monitors2 = _display2.get_monitors()
+            if _monitors2.get_n_items() > 0:
+                _mon2 = _monitors2.get_item(0)
+                _geo2 = _mon2.get_geometry()
+                _combo_width = int(_geo2.width / 3)
+        self._social_help_entry.set_size_request(_combo_width, -1)
         social_help_box.pack_start(self._social_help_entry, False, True, 0)
         self._social_help_entry.show()
         box_mesh.pack_start(social_help_box, False, True, 0)

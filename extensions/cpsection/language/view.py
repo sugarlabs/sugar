@@ -429,7 +429,7 @@ class FilterToolItem(Gtk.ToolItem):
         self._button.show()
         self._button.connect('clicked', self.button_cb)
 
-        event_box = Gtk.EventBox()
+        event_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._label_widget = Gtk.Label()
         self._label_widget.set_alignment(0.0, 0.5)
         self._label_widget.set_use_markup(True)
@@ -506,8 +506,16 @@ def set_palette_list(palette_list):
     item_width = req2.width
     item_height = req2.height + style.DEFAULT_PADDING
 
-    palette_width = int(Gdk.Screen.width() / 2)
-    palette_height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 3
+    palette_width = int(800 / 2)
+    palette_height = 600 - style.GRID_CELL_SIZE * 3
+    display = Gdk.Display.get_default()
+    if display:
+        monitors = display.get_monitors()
+        if monitors.get_n_items() > 0:
+            monitor = monitors.get_item(0)
+            geometry = monitor.get_geometry()
+            palette_width = int(geometry.width / 2)
+            palette_height = geometry.height - style.GRID_CELL_SIZE * 3
 
     nx = min(3, int(palette_width / item_width))
     ny = min(8, int(palette_height / item_height), len(palette_list))

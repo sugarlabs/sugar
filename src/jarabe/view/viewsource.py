@@ -184,8 +184,16 @@ class ViewSource(Gtk.Window):
         self.set_border_width(style.LINE_WIDTH)
         self.set_has_resize_grip(False)
 
-        width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 2
-        height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
+        width = 800 - style.GRID_CELL_SIZE * 2
+        height = 600 - style.GRID_CELL_SIZE * 2
+        display = Gdk.Display.get_default()
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                geometry = monitor.get_geometry()
+                width = geometry.width - style.GRID_CELL_SIZE * 2
+                height = geometry.height - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
         self._parent_window_id = window_id
@@ -801,7 +809,14 @@ class SourceDisplay(Gtk.ScrolledWindow):
             media_box.add(image)
 
         if icon:
-            h = Gdk.Screen.width() / 3
+            h = 800 / 3
+            display = Gdk.Display.get_default()
+            if display:
+                monitors = display.get_monitors()
+                if monitors.get_n_items() > 0:
+                    monitor = monitors.get_item(0)
+                    geometry = monitor.get_geometry()
+                    h = geometry.width / 3
             icon = Icon(icon_name=icon, pixel_size=h)
             media_box.add(icon)
 
@@ -812,7 +827,7 @@ class SourceDisplay(Gtk.ScrolledWindow):
         nofile_label = Gtk.Label()
         nofile_label.set_text(_("Please select a file in the left panel."))
 
-        nofile_box = Gtk.EventBox()
+        nofile_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         nofile_box.modify_bg(Gtk.StateType.NORMAL, Gdk.color_parse('white'))
 
         nofile_box.add(nofile_label)
@@ -820,8 +835,8 @@ class SourceDisplay(Gtk.ScrolledWindow):
         self._replace_with_viewport(nofile_box)
 
 
-class ImageBox(Gtk.EventBox):
+class ImageBox(Gtk.Box):
     __gtype_name__ = 'SugarViewSourceImageBox'
 
     def __init__(self):
-        Gtk.EventBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)

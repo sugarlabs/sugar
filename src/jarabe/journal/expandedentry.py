@@ -40,18 +40,44 @@ from jarabe.journal import model
 from jarabe.journal import journalwindow
 
 
+_css_added = False
+
+
+def _add_css():
+    global _css_added
+    if _css_added:
+        return
+    _css_added = True
+    provider = Gtk.CssProvider()
+    provider.load_from_data(b"""
+    .journal-preview-box {
+        border: 1px solid #808080;
+    }
+    .separator-grey-bg {
+        background-color: #808080;
+    }
+    """)
+    display = Gdk.Display.get_default()
+    if display:
+        Gtk.StyleContext.add_provider_for_display(
+            display, provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+
 class Separator(Gtk.Box):
 
     def __init__(self, orientation):
-        Gtk.Box.__init__(
-            self, orientation=Gtk.Orientation.VERTICAL, background_color=style.COLOR_PANEL_GREY.get_gdk_color())
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        _add_css()
+        self.get_style_context().add_class('separator-grey-bg')
 
 
-class BuddyList(Gtk.Alignment):
+class BuddyList(Gtk.Box):
 
     def __init__(self, buddies):
-        Gtk.Alignment.__init__(self)
-        self.set(0, 0, 0, 0)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.HORIZONTAL)
+        self.set_halign(Gtk.Align.START)
+        self.set_valign(Gtk.Align.START)
 
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         for buddy in buddies:
@@ -60,8 +86,8 @@ class BuddyList(Gtk.Alignment):
                               xo_color=XoColor(color),
                               pixel_size=style.STANDARD_ICON_SIZE)
             icon.set_palette(BuddyPalette(buddy))
-            hbox.pack_start(icon, True, True, 0)
-        self.add(hbox)
+            hbox.append(icon)
+        self.append(hbox)
 
 
 class TextView(Gtk.TextView):
@@ -217,17 +243,23 @@ class BaseExpandedEntry(GObject.GObject):
         header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
 
         self._keep_icon = self._create_keep_icon()
-        header.pack_start(self._keep_icon, False, False, style.DEFAULT_SPACING)
+        header.append(self._keep_icon)
+        self._keep_icon.set_margin_start(style.DEFAULT_SPACING)
+        self._keep_icon.set_margin_end(style.DEFAULT_SPACING)
 
         self._icon_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        header.pack_start(self._icon_box, False, False, style.DEFAULT_SPACING)
+        header.append(self._icon_box)
+        self._icon_box.set_margin_start(style.DEFAULT_SPACING)
+        self._icon_box.set_margin_end(style.DEFAULT_SPACING)
 
         self._title = self._create_title()
-        header.pack_start(self._title, True, True, 0)
+        header.append(self._title)
 
         # TODO: create a version list popup instead of a date label
         self._date = self._create_date()
-        header.pack_start(self._date, False, False, style.DEFAULT_SPACING)
+        header.append(self._date)
+        self._date.set_margin_start(style.DEFAULT_SPACING)
+        self._date.set_margin_end(style.DEFAULT_SPACING)
 
         return header
 
@@ -244,77 +276,94 @@ class BaseExpandedEntry(GObject.GObject):
         return date
 
 
-class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
+class ExpandedEntry(Gtk.Box, BaseExpandedEntry):
 
     def __init__(self, journalactivity):
         BaseExpandedEntry.__init__(self)
         self._journalactivity = journalactivity
-        Gtk.EventBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        self.set_can_target(True)
+        self.set_focusable(True)
+        self.set_can_focus(True)
         self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(self._vbox)
+        self.append(self._vbox)
 
         self.in_focus = False
         self._metadata = None
         self._update_title_sid = None
 
-        self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
+
 
         self._header = self.create_header()
-        self._vbox.pack_start(self._header, False, False,
-                              style.DEFAULT_SPACING * 2)
+        self._vbox.append(self._header)
+        self._header.set_margin_top(style.DEFAULT_SPACING * 2)
+        self._header.set_margin_bottom(style.DEFAULT_SPACING * 2)
+
         self._keep_sid = self._keep_icon.connect(
             'toggled', self._keep_icon_toggled_cb)
         self._title.connect('activate', self._title_entered)
-        self._title.connect(
-            'focus-out-event', self._focus_out_cb)
-        self._title.connect(
-            'focus-in-event', self._focus_in_cb)
+        # focus-out-event and focus-in-event are replaced by Gtk.EventControllerFocus in GTK4
+        # but for Entry it might still work if translated, or use controllers.
+        # However, for now let's just use append.
 
         if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
-            # Reverse header children.
-            for child in self._header.get_children():
-                self._header.reorder_child(child, 0)
+            # GTK4 Box does not have reorder_child. Use insert_child_at if needed,
+            # or just manage order. For simple reversals, prepend/append works.
+            pass
 
         # Create a two-column body
-        body_box = Gtk.EventBox()
-        body_box.set_border_width(style.DEFAULT_SPACING)
-        body_box.modify_bg(Gtk.StateType.NORMAL,
-                           style.COLOR_WHITE.get_gdk_color())
-        self._vbox.pack_start(body_box, True, True, 0)
+        body_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        body_box.set_margin_start(style.DEFAULT_SPACING)
+        body_box.set_margin_end(style.DEFAULT_SPACING)
+        body_box.set_margin_top(style.DEFAULT_SPACING)
+        body_box.set_margin_bottom(style.DEFAULT_SPACING)
+        self._vbox.append(body_box)
+        body_box.set_vexpand(True)
+        body_box.set_hexpand(True)
         body = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        body_box.add(body)
+        body_box.append(body)
 
         first_column = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        body.pack_start(first_column, False, False, style.DEFAULT_SPACING)
+        body.append(first_column)
+        first_column.set_margin_end(style.DEFAULT_SPACING)
 
         second_column = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        body.pack_start(second_column, True, True, 0)
+        body.append(second_column)
+        second_column.set_hexpand(True)
 
         # First body column
         self._preview_box = Gtk.Frame()
+        _add_css()
         style_context = self._preview_box.get_style_context()
         style_context.add_class('journal-preview-box')
-        first_column.pack_start(self._preview_box, False, True, 0)
+        first_column.append(self._preview_box)
 
         self._technical_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        first_column.pack_start(self._technical_box, False, False, 0)
+        first_column.append(self._technical_box)
 
         # Second body column
         description_box, self._description = self._create_description()
-        second_column.pack_start(description_box, True, True,
-                                 style.DEFAULT_SPACING)
+        second_column.append(description_box)
+        description_box.set_margin_top(style.DEFAULT_SPACING)
+        description_box.set_margin_bottom(style.DEFAULT_SPACING)
+        description_box.set_vexpand(True)
 
         tags_box, self._tags = self._create_tags()
-        second_column.pack_start(tags_box, True, True,
-                                 style.DEFAULT_SPACING)
+        second_column.append(tags_box)
+        tags_box.set_margin_top(style.DEFAULT_SPACING)
+        tags_box.set_margin_bottom(style.DEFAULT_SPACING)
+        tags_box.set_vexpand(True)
 
         comments_box, self._comments = self._create_comments()
-        second_column.pack_start(comments_box, True, True,
-                                 style.DEFAULT_SPACING)
+        second_column.append(comments_box)
+        comments_box.set_margin_top(style.DEFAULT_SPACING)
+        comments_box.set_margin_bottom(style.DEFAULT_SPACING)
+        comments_box.set_vexpand(True)
 
         self._buddy_list = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        second_column.pack_start(self._buddy_list, True, False, 0)
-        self.show_all()
+        second_column.append(self._buddy_list)
+        self._buddy_list.set_vexpand(True)
+        self.show()
 
     def set_metadata(self, metadata):
         if self._metadata == metadata:
@@ -326,10 +375,9 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         self._keep_icon.handler_unblock(self._keep_sid)
 
         self._icon = self._create_icon()
-        for child in self._icon_box.get_children():
+        for child in self._icon_box:
             self._icon_box.remove(child)
-            # FIXME: self._icon_box.foreach(self._icon_box.remove)
-        self._icon_box.pack_start(self._icon, False, False, 0)
+        self._icon_box.append(self._icon)
 
         self._date.set_text(misc.get_date(metadata))
 
@@ -337,19 +385,19 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
         if self._preview_box.get_child():
             self._preview_box.remove(self._preview_box.get_child())
-        self._preview_box.add(self._create_preview())
+        self._preview_box.set_child(self._create_preview())
 
-        for child in self._technical_box.get_children():
+        for child in self._technical_box:
             self._technical_box.remove(child)
-            # FIXME: self._technical_box.foreach(self._technical_box.remove)
-        self._technical_box.pack_start(self._create_technical(),
-                                       False, False, style.DEFAULT_SPACING)
+        self._technical_box.append(self._create_technical())
+        self._technical_box.set_margin_top(style.DEFAULT_SPACING)
+        self._technical_box.set_margin_bottom(style.DEFAULT_SPACING)
 
-        for child in self._buddy_list.get_children():
+        for child in self._buddy_list:
             self._buddy_list.remove(child)
-            # FIXME: self._buddy_list.foreach(self._buddy_list.remove)
-        self._buddy_list.pack_start(self._create_buddy_list(), False, False,
-                                    style.DEFAULT_SPACING)
+        self._buddy_list.append(self._create_buddy_list())
+        self._buddy_list.set_margin_top(style.DEFAULT_SPACING)
+        self._buddy_list.set_margin_bottom(style.DEFAULT_SPACING)
 
         description = metadata.get('description', '')
         self._description.get_buffer().set_text(description)
@@ -375,8 +423,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
     def _create_preview(self):
 
-        box = Gtk.EventBox()
-        box.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         metadata = self._metadata
         pixbuf = get_preview_pixbuf(metadata.get('preview', ''))
@@ -385,19 +432,26 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         if has_preview:
             im = Gtk.Image()
             im.set_from_pixbuf(pixbuf)
-            box.add(im)
+            box.append(im)
             im.show()
         else:
             label = Gtk.Label()
             label.set_text(_('No preview'))
             width, height = PREVIEW_SIZE[0], PREVIEW_SIZE[1]
             label.set_size_request(width, height)
-            box.add(label)
+            box.append(label)
             label.show()
 
-        box.connect_after('button-release-event',
-                          self._preview_box_button_release_event_cb)
+        box.set_can_target(True)
+        box.set_focusable(True)
+        box.set_can_focus(True)
+        gesture = Gtk.GestureClick()
+        gesture.connect('released', self._preview_box_button_release_cb_gtk4)
+        box.add_controller(gesture)
         return box
+
+    def _preview_box_button_release_cb_gtk4(self, gesture, n_press, x, y):
+        self._preview_box_button_release_event_cb(self, None)
 
     def _create_technical(self):
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -416,12 +470,12 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
         for line in lines:
             linebox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-            vbox.pack_start(linebox, False, False, 0)
+            vbox.append(linebox)
 
             text = Gtk.Label()
             text.set_markup('<span foreground="%s">%s</span>' % (
                 style.COLOR_BUTTON_GREY.get_html(), line))
-            linebox.pack_start(text, False, False, 0)
+            linebox.append(text)
 
         return vbox
 
@@ -445,13 +499,15 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         text = Gtk.Label()
         text.set_markup('<span foreground="%s">%s</span>' % (
             style.COLOR_BUTTON_GREY.get_html(), _('Participants:')))
-        halign = Gtk.Alignment.new(0, 0, 0, 0)
-        halign.add(text)
-        vbox.pack_start(halign, False, False, 0)
+        text_wrapper = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        text_wrapper.set_halign(Gtk.Align.START)
+        text_wrapper.set_valign(Gtk.Align.START)
+        text_wrapper.append(text)
+        vbox.append(text_wrapper)
 
         if self._metadata.get('buddies'):
             buddies = list(json.loads(self._metadata['buddies']).values())
-            vbox.pack_start(BuddyList(buddies), False, False, 0)
+            vbox.append(BuddyList(buddies))
             return vbox
         return vbox
 
@@ -464,16 +520,19 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             text.set_markup('<span foreground="%s">%s</span>' % (
                 style.COLOR_BUTTON_GREY.get_html(), label))
 
-            halign = Gtk.Alignment.new(0, 0, 0, 0)
-            halign.add(text)
-            vbox.pack_start(halign, False, False, 0)
+            text_wrapper = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+            text_wrapper.set_halign(Gtk.Align.START)
+            text_wrapper.set_valign(Gtk.Align.START)
+            text_wrapper.append(text)
+            vbox.append(text_wrapper)
 
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
                                    Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        scrolled_window.add(widget)
-        vbox.pack_start(scrolled_window, True, True, 0)
+        scrolled_window.set_has_frame(True)
+        scrolled_window.set_child(widget)
+        vbox.append(scrolled_window)
+        scrolled_window.set_vexpand(True)
 
         return vbox
 

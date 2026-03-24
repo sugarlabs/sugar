@@ -80,7 +80,7 @@ class ActivityChooser(Gtk.Window):
         self.set_can_focus(True)
 
         self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(self._vbox)
+        self.set_child(self._vbox)
         self._vbox.show()
 
         self._title_box = TitleBox()
@@ -89,19 +89,28 @@ class ActivityChooser(Gtk.Window):
             self.__close_button_clicked_cb)
         self._title_box.set_size_request(-1, style.GRID_CELL_SIZE)
 
-        self._vbox.pack_start(self._title_box, False, True, 0)
+        self._vbox.append(self._title_box)
         self._title_box.show()
 
+        s_height = 600
+        display = Gdk.Display.get_default()
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                if monitor:
+                    s_height = monitor.get_geometry().height
+
         self.set_size_request(
-            (Gdk.Screen.height() - style.GRID_CELL_SIZE * 3) * 3 / 4,
-            (Gdk.Screen.height() - style.GRID_CELL_SIZE * 2) * 2 / 3)
+            int((s_height - style.GRID_CELL_SIZE * 3) * 3 / 4),
+            int((s_height - style.GRID_CELL_SIZE * 2) * 2 / 3))
         self.connect('key-press-event', self.__key_press_event_cb)
         self.connect('realize', self.__realize_cb)
 
         self._list_view = ActivitiesList()
 
         self.search_bar = SearchBar()
-        self._vbox.pack_start(self.search_bar, False, False, 0)
+        self._vbox.append(self.search_bar)
         self.search_bar.connect('query-changed',
                                 self.__toolbar_query_changed_cb)
         self.search_bar.search_entry.connect('key-press-event',
@@ -111,9 +120,10 @@ class ActivityChooser(Gtk.Window):
         self._scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
                                          Gtk.PolicyType.AUTOMATIC)
 
-        self._scrolled_window.add(self._list_view)
+        self._scrolled_window.set_child(self._list_view)
 
-        self._vbox.pack_start(self._scrolled_window, True, True, 0)
+        self._vbox.append(self._scrolled_window)
+        self._scrolled_window.set_vexpand(True)
 
         self._list_view.show()
         self._list_view.connect('clear-clicked',

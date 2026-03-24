@@ -122,8 +122,7 @@ class Frame(SectionView):
         box_trigger = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label_trigger = Gtk.Label(label=_('Size'))
         label_trigger.set_alignment(1, 0.75)
-        label_trigger.modify_fg(Gtk.StateType.NORMAL,
-                                style.COLOR_SELECTION_GREY.get_gdk_color())
+        label_trigger.get_style_context().add_class('frame-label')
         box_trigger.pack_start(label_trigger, False, True, 0)
         self._group.add_widget(label_trigger)
 
@@ -148,6 +147,11 @@ class Frame(SectionView):
             'value-changed', self.__edge_delay_changed_cb)
         self._trigger_size_change_handler = self._trigger_size_slider.connect(
             'value-changed', self.__trigger_size_changed_cb)
+
+    def _setup_css(self):
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_data(b".frame-label { color: #808080; }")
+        self.get_style_context().add_provider_for_display(Gdk.Display.get_default(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
     def undo(self):
         self._corner_delay_slider.disconnect(self._corner_delay_change_handler)

@@ -35,36 +35,40 @@ _SERVICE_PATH = '/org/laptop/Activity'
 _SERVICE_INTERFACE = 'org.laptop.Activity'
 
 
-class ProjectView(Gtk.EventBox, BaseExpandedEntry):
+class ProjectView(Gtk.Box, BaseExpandedEntry):
 
     __gsignals__ = {
         'go-back-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, **kwargs):
-        Gtk.EventBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        self.set_can_target(True)
+        self.set_focusable(True)
+        self.set_can_focus(True)
         BaseExpandedEntry.__init__(self)
         self.project_metadata = None
         self._service = None
         self._activity_id = None
         self._project = None
-        self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
         self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(self._vbox)
+        self.append(self._vbox)
 
         back_bar = BackBar()
-        back_bar.connect('button-release-event',
-                         self.__back_bar_release_event_cb)
-        self._vbox.pack_start(back_bar, False, True, 0)
+        back_bar.connect_click(self.__back_bar_release_event_cb)
+        self._vbox.append(back_bar)
 
         header = self.create_header()
-        self._vbox.pack_start(header, False, False, style.DEFAULT_SPACING * 2)
+        self._vbox.append(header)
+        header.set_margin_top(style.DEFAULT_SPACING * 2)
+        header.set_margin_bottom(style.DEFAULT_SPACING * 2)
         header.show()
 
         description_box, self._description = self._create_description()
-        self._vbox.pack_start(description_box, False, True,
-                              style.DEFAULT_SPACING / 3)
+        self._vbox.append(description_box)
+        description_box.set_margin_top(style.DEFAULT_SPACING / 3)
+        description_box.set_margin_bottom(style.DEFAULT_SPACING / 3)
 
         self._title.connect('focus-out-event', self._title_focus_out_event_cb)
 
@@ -74,7 +78,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         self._icon = Icon(icon_name='project-box',
                           pixel_size=style.MEDIUM_ICON_SIZE)
         self._icon.xo_color = XoColor(icon_color)
-        self._icon_box.pack_start(self._icon, False, False, 0)
+        self._icon_box.append(self._icon)
 
     def get_vbox(self):
         return self._vbox
@@ -89,9 +93,8 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
     def get_mount_point(self):
         return '/'
 
-    def __back_bar_release_event_cb(self, back_bar, event):
+    def __back_bar_release_event_cb(self, back_bar):
         self.emit('go-back-clicked')
-        return False
 
     def set_project_metadata(self, project_metadata):
         self.project_metadata = project_metadata
@@ -139,15 +142,19 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
             text.set_markup('<span foreground="%s">%s</span>' % (
                 style.COLOR_BUTTON_GREY.get_html(), label))
 
-            halign = Gtk.Alignment.new(0, 0, 0, 0)
-            halign.add(text)
-            vbox.pack_start(halign, False, False, 0)
+            text_wrapper = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+            text_wrapper.set_halign(Gtk.Align.START)
+            text_wrapper.set_valign(Gtk.Align.START)
+            text_wrapper.append(text)
+            vbox.append(text_wrapper)
 
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
                                    Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        scrolled_window.add(widget)
-        vbox.pack_start(scrolled_window, True, True, 0)
+        scrolled_window.set_has_frame(True)
+        scrolled_window.set_child(widget)
+        vbox.append(scrolled_window)
+        scrolled_window.set_vexpand(True)
+        scrolled_window.set_hexpand(True)
 
         return vbox

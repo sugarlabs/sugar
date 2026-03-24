@@ -21,22 +21,28 @@ from sugar4.graphics import style
 from sugar4.graphics.xocolor import XoColor
 
 
-class ColorPicker(Gtk.EventBox):
+class ColorPicker(Gtk.Box):
 
     def __init__(self):
-        Gtk.EventBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        self.set_can_target(True)
+        self.set_focusable(True)
+        self.set_can_focus(True)
         self._xo_color = None
 
         self._xo = Icon(pixel_size=style.XLARGE_ICON_SIZE,
                         icon_name='computer-xo')
         self._set_random_colors()
-        self.connect('button-press-event', self._button_press_cb)
-        self.add(self._xo)
+
+        gesture = Gtk.GestureClick()
+        gesture.connect('pressed', self._button_press_cb)
+        self.add_controller(gesture)
+
+        self.append(self._xo)
         self._xo.show()
 
-    def _button_press_cb(self, widget, event):
-        if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:
-            self._set_random_colors()
+    def _button_press_cb(self, gesture, n_press, x, y):
+        self._set_random_colors()
 
     def get_color(self):
         return self._xo_color

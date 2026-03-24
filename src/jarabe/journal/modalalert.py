@@ -22,6 +22,23 @@ from sugar4.graphics import style
 from sugar4 import profile
 
 
+_css_modal_added = False
+
+
+def _add_css_modal():
+    global _css_modal_added
+    if _css_modal_added:
+        return
+    _css_modal_added = True
+    provider = Gtk.CssProvider()
+    provider.load_from_data(b'.modal-alert-bg { background-color: black; }')
+    display = Gdk.Display.get_default()
+    if display:
+        Gtk.StyleContext.add_provider_for_display(
+            display, provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+
 class ModalAlert(Gtk.Window):
 
     __gtype_name__ = 'SugarModalAlert'
@@ -31,21 +48,32 @@ class ModalAlert(Gtk.Window):
 
         self.set_border_width(style.LINE_WIDTH)
         offset = style.GRID_CELL_SIZE
-        width = Gdk.Screen.width() - offset * 2
-        height = Gdk.Screen.height() - offset * 2
+        width = 800 - offset * 2
+        height = 600 - offset * 2
+        display = Gdk.Display.get_default()
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                geometry = monitor.get_geometry()
+                width = geometry.width - offset * 2
+                height = geometry.height - offset * 2
         self.set_size_request(width, height)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_decorated(False)
         self.set_resizable(False)
         self.set_modal(True)
 
-        self._main_view = Gtk.EventBox()
+        self._main_view = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._vbox.set_spacing(style.DEFAULT_SPACING)
-        self._vbox.set_border_width(style.GRID_CELL_SIZE * 2)
-        self._main_view.modify_bg(Gtk.StateType.NORMAL,
-                                  style.COLOR_BLACK.get_gdk_color())
-        self._main_view.add(self._vbox)
+        self._vbox.set_margin_start(style.GRID_CELL_SIZE * 2)
+        self._vbox.set_margin_end(style.GRID_CELL_SIZE * 2)
+        self._vbox.set_margin_top(style.GRID_CELL_SIZE * 2)
+        self._vbox.set_margin_bottom(style.GRID_CELL_SIZE * 2)
+        _add_css_modal()
+        self._main_view.get_style_context().add_class('modal-alert-bg')
+        self._main_view.append(self._vbox)
         self._vbox.show()
 
         color = profile.get_color()
@@ -72,14 +100,15 @@ class ModalAlert(Gtk.Window):
                               fill=False, padding=0)
         self._message.show()
 
-        alignment = Gtk.Alignment.new(xalign=0.5, yalign=0.5,
-                                      xscale=0.0, yscale=0.0)
-        self._vbox.pack_start(alignment, expand=False, fill=True, padding=0)
-        alignment.show()
+        btn_wrapper = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        btn_wrapper.set_halign(Gtk.Align.CENTER)
+        btn_wrapper.set_valign(Gtk.Align.CENTER)
+        self._vbox.pack_start(btn_wrapper, expand=False, fill=True, padding=0)
+        btn_wrapper.show()
 
         self._show_journal = Gtk.Button()
         self._show_journal.set_label(_('Show Journal'))
-        alignment.add(self._show_journal)
+        btn_wrapper.append(self._show_journal)
         self._show_journal.show()
         self._show_journal.connect('clicked', self.__show_journal_cb)
 

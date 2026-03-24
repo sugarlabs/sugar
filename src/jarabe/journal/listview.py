@@ -146,7 +146,7 @@ class TreeView(Gtk.TreeView):
         self._invoker.detach()
 
 
-class BaseListView(Gtk.Bin):
+class BaseListView(Gtk.Box):
     __gtype_name__ = 'JournalBaseListView'
 
     __gsignals__ = {
@@ -168,7 +168,7 @@ class BaseListView(Gtk.Bin):
         self._scroll_position = 0.
         self._projects_view_active = False
 
-        Gtk.Bin.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
         self.connect('map', self.__map_cb)
         self.connect('unmap', self.__unmap_cb)
@@ -177,7 +177,7 @@ class BaseListView(Gtk.Bin):
         self._scrolled_window = Gtk.ScrolledWindow()
         self._scrolled_window.set_policy(Gtk.PolicyType.NEVER,
                                          Gtk.PolicyType.AUTOMATIC)
-        self.add(self._scrolled_window)
+        self.append(self._scrolled_window)
         self._scrolled_window.show()
 
         self.tree_view = TreeView(self._journalactivity)
@@ -186,7 +186,7 @@ class BaseListView(Gtk.Bin):
         selection = self.tree_view.get_selection()
         selection.set_mode(Gtk.SelectionMode.SINGLE)
         self.tree_view.props.fixed_height_mode = True
-        self._scrolled_window.add(self.tree_view)
+        self._scrolled_window.set_child(self.tree_view)
         self.tree_view.show()
 
         self.cell_title = None
@@ -359,11 +359,14 @@ class BaseListView(Gtk.Bin):
 
     def do_size_allocate(self, allocation):
         self.set_allocation(allocation)
-        self.get_child().size_allocate(allocation)
+        child = self.get_first_child()
+        if child:
+            child.size_allocate(allocation)
 
     def do_size_request(self, requisition):
-        requisition.width, requisition.height = \
-            self.get_child().size_request()
+        child = self.get_first_child()
+        if child:
+            requisition.width, requisition.height = child.size_request()
 
     def __destroy_cb(self, widget):
         if self._model is not None:
@@ -558,75 +561,87 @@ class BaseListView(Gtk.Bin):
             self._last_progress_bar_pulse = time.time()
 
     def _start_progress_bar(self):
-        alignment = Gtk.Alignment.new(xalign=0.5, yalign=0.5,
-                                      xscale=0.5, yscale=0)
-        self.remove(self.get_child())
-        self.add(alignment)
+        alignment = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        alignment.set_halign(Gtk.Align.CENTER)
+        alignment.set_valign(Gtk.Align.CENTER)
+        child = self.get_first_child()
+        if child:
+            self.remove(child)
+        self.append(alignment)
         alignment.show()
 
         self._progress_bar = Gtk.ProgressBar()
         self._progress_bar.props.pulse_step = 0.01
         self._last_progress_bar_pulse = time.time()
-        alignment.add(self._progress_bar)
+        alignment.append(self._progress_bar)
         self._progress_bar.show()
 
     def _stop_progress_bar(self):
         if self._progress_bar is None:
             return
-        self.remove(self.get_child())
-        self.add(self._scrolled_window)
+        child = self.get_first_child()
+        if child:
+            self.remove(child)
+        self.append(self._scrolled_window)
         self._progress_bar = None
 
     def _show_message(self, message, show_clear_query=False):
-        self.remove(self.get_child())
+        child = self.get_first_child()
+        if child:
+            self.remove(child)
 
-        background_box = Gtk.EventBox()
-        background_box.modify_bg(Gtk.StateType.NORMAL,
-                                 style.COLOR_WHITE.get_gdk_color())
-        self.add(background_box)
+        background_box = Gtk.Box()
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_data(b".bg-white { background-color: #FFFFFF; }")
+        background_box.get_style_context().add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        background_box.get_style_context().add_class("bg-white")
+        self.append(background_box)
 
-        alignment = Gtk.Alignment.new(0.5, 0.5, 0.1, 0.1)
-        background_box.add(alignment)
+        alignment = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        alignment.set_halign(Gtk.Align.CENTER)
+        alignment.set_valign(Gtk.Align.CENTER)
+        background_box.append(alignment)
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        alignment.add(box)
+        alignment.append(box)
 
         icon = Icon(pixel_size=style.LARGE_ICON_SIZE,
                     icon_name='activity-journal',
                     stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
                     fill_color=style.COLOR_TRANSPARENT.get_svg())
-        box.pack_start(icon, expand=True, fill=False, padding=0)
+        box.append(icon)
 
         label = Gtk.Label()
         color = style.COLOR_BUTTON_GREY.get_html()
         label.set_markup('<span weight="bold" color="%s">%s</span>' % (
             color, GLib.markup_escape_text(message)))
-        box.pack_start(label, expand=True, fill=False, padding=0)
+        box.append(label)
 
         if not self.get_projects_view_active():
             if show_clear_query:
-                button_box = Gtk.HButtonBox()
-                button_box.set_layout(Gtk.ButtonBoxStyle.CENTER)
-                box.pack_start(button_box, False, True, 0)
+                button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+                button_box.set_halign(Gtk.Align.CENTER)
+                box.append(button_box)
                 button_box.show()
 
                 button = Gtk.Button(label=_('Clear search'))
                 button.connect('clicked', self.__clear_button_clicked_cb)
                 button.props.image = Icon(icon_name='dialog-cancel',
                                           pixel_size=style.SMALL_ICON_SIZE)
-                button_box.pack_start(button, expand=True, fill=False,
-                                      padding=0)
+                button_box.append(button)
 
-        background_box.show_all()
+        background_box.show()
 
     def __clear_button_clicked_cb(self, button):
         self.emit('clear-clicked')
 
     def _clear_message(self):
-        if self.get_child() == self._scrolled_window:
+        if self.get_first_child() == self._scrolled_window:
             return
-        self.remove(self.get_child())
-        self.add(self._scrolled_window)
+        child = self.get_first_child()
+        if child:
+            self.remove(child)
+        self.append(self._scrolled_window)
         self._scrolled_window.show()
 
     def update_dates(self):

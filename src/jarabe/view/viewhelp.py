@@ -164,8 +164,16 @@ class ViewHelp(Gtk.Window):
         self.set_border_width(style.LINE_WIDTH)
         self.set_has_resize_grip(False)
 
-        width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 2
-        height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
+        width = 800 - style.GRID_CELL_SIZE * 2
+        height = 600 - style.GRID_CELL_SIZE * 2
+        display = Gdk.Display.get_default()
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                geometry = monitor.get_geometry()
+                width = geometry.width - style.GRID_CELL_SIZE * 2
+                height = geometry.height - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
         self.connect('realize', self.__realize_cb)

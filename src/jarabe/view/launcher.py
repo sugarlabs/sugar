@@ -43,7 +43,14 @@ class LaunchWindow(Gtk.Window):
         canvas.show()
         self.add(canvas)
 
-        bar_size = Gdk.Screen.height() / 5 * 2
+        bar_size = 600 / 5 * 2
+        display = Gdk.Display.get_default()
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                geometry = monitor.get_geometry()
+                bar_size = geometry.height / 5 * 2
 
         header = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         header.set_size_request(-1, bar_size)
@@ -51,7 +58,14 @@ class LaunchWindow(Gtk.Window):
         canvas.pack_start(header, False, True, 0)
 
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        box.set_size_request(Gdk.Screen.width() / 5, -1)
+        box_width = 800 / 5
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                geometry = monitor.get_geometry()
+                box_width = geometry.width / 5
+        box.set_size_request(int(box_width), -1)
         box.show()
         canvas.pack_start(box, True, True, 0)
 
@@ -76,7 +90,9 @@ class LaunchWindow(Gtk.Window):
         self.error_text.props.use_markup = True
         footer.pack_start(self.error_text, False, True, 0)
 
-        button_box = Gtk.Alignment.new(0.5, 0, 0, 0)
+        button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        button_box.set_halign(Gtk.Align.CENTER)
+        button_box.set_valign(Gtk.Align.START)
         button_box.show()
         footer.pack_start(button_box, False, True, 0)
         self.cancel_button = Gtk.Button(stock=Gtk.STOCK_STOP)
@@ -84,8 +100,12 @@ class LaunchWindow(Gtk.Window):
 
         self.connect('realize', self.__realize_cb)
 
-        screen = Gdk.Screen.get_default()
-        screen.connect('size-changed', self.__size_changed_cb)
+        display = Gdk.Display.get_default()
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                monitor.connect('notify::geometry', self.__size_changed_cb)
 
         self._home = shell.get_model()
         self._home.connect('active-activity-changed',
@@ -93,7 +113,15 @@ class LaunchWindow(Gtk.Window):
 
         self.connect('destroy', self.__destroy_cb)
 
-        self._update_size()
+        s_width, s_height = 800, 600
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                geometry = monitor.get_geometry()
+                s_width = geometry.width
+                s_height = geometry.height
+        self.resize(s_width, s_height)
 
     def show(self):
         self.present()
