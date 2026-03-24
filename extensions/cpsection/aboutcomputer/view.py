@@ -69,7 +69,7 @@ class AboutComputer(SectionView):
         return box
 
     def _setup_identity(self):
-        separator_identity = Gtk.HSeparator()
+        separator_identity = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(separator_identity, False, True, 0)
         separator_identity.show()
 
@@ -96,7 +96,7 @@ class AboutComputer(SectionView):
         vbox_identity.show()
 
     def _setup_software(self):
-        separator_software = Gtk.HSeparator()
+        separator_software = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(separator_software, False, True, 0)
         separator_software.show()
 
@@ -143,7 +143,7 @@ class AboutComputer(SectionView):
         box_software.show()
 
     def _setup_copyright(self):
-        separator_copyright = Gtk.HSeparator()
+        separator_copyright = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(separator_copyright, False, True, 0)
         separator_copyright.show()
 
@@ -192,7 +192,7 @@ class AboutComputer(SectionView):
             label_license.set_size_request(Gdk.Screen.width() / 2, -1)
             label_license.show()
 
-            separator = Gtk.HSeparator()
+            separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
             vbox_copyright.pack_start(separator, False, True, 0)
             separator.show()
             vbox_copyright.pack_start(label_license, False, True, 0)

@@ -46,7 +46,7 @@ class Frame(SectionView):
         self.set_spacing(style.DEFAULT_SPACING)
         self._group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
-        separator = Gtk.HSeparator()
+        separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self.pack_start(separator, False, True, 0)
 
         label = Gtk.Label(label=_('Activation Delay'))
@@ -62,7 +62,7 @@ class Frame(SectionView):
 
         self.pack_start(box, False, True, 0)
 
-        separator = Gtk.HSeparator()
+        separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self.pack_start(separator, False, True, 0)
 
         label = Gtk.Label(label=_('Activation Area'))

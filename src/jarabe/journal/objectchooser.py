@@ -80,7 +80,7 @@ class ObjectChooser(Gtk.Window):
         vbox.pack_start(title_box, False, True, 0)
         title_box.show()
 
-        separator = Gtk.HSeparator()
+        separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         vbox.pack_start(separator, False, True, 0)
         separator.show()
 

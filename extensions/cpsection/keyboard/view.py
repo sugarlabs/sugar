@@ -229,7 +229,7 @@ class Keyboard(SectionView):
 
     def _setup_kmodel(self):
         """Adds the controls for changing the keyboard model"""
-        separator_kmodel = Gtk.HSeparator()
+        separator_kmodel = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(separator_kmodel, False, True, 0)
         separator_kmodel.show_all()
 
@@ -290,7 +290,7 @@ class Keyboard(SectionView):
     def _setup_group_switch_option(self):
         """Adds the controls for changing the group switch option of keyboard
         """
-        separator_group_option = Gtk.HSeparator()
+        separator_group_option = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(separator_group_option, False, True, 0)
         separator_group_option.show_all()
 
@@ -358,7 +358,7 @@ class Keyboard(SectionView):
 
     def _setup_layouts(self):
         """Adds the controls for changing the keyboard layouts"""
-        separator_klayout = Gtk.HSeparator()
+        separator_klayout = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(separator_klayout, False, True, 0)
         separator_klayout.show_all()
 
