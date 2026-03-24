@@ -274,12 +274,11 @@ class AboutMe(SectionView):
             self._color_alert.props.msg = self.restart_msg
             self._color_alert.show()
 
-        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_in_panel.add(grid)
+        grid.set_halign(Gtk.Align.CENTER)
+        grid.set_valign(Gtk.Align.START)
         grid.show()
 
-        self.pack_start(center_in_panel, False, False, 0)
-        center_in_panel.show()
+        self.append(grid)
 
     def _setup_gender(self):
         self._saved_gender = load_gender()
@@ -299,12 +298,11 @@ class AboutMe(SectionView):
         grid.attach(self._gender_pickers, 0, 1, 1, 1)
         self._gender_pickers.show()
 
-        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_in_panel.add(grid)
+        grid.set_halign(Gtk.Align.CENTER)
+        grid.set_valign(Gtk.Align.START)
         grid.show()
 
-        self.pack_start(center_in_panel, False, False, 0)
-        center_in_panel.show()
+        self.append(grid)
 
     def _setup_age(self):
         self._saved_age = load_age()
@@ -314,8 +312,8 @@ class AboutMe(SectionView):
         grid.set_column_spacing(style.DEFAULT_SPACING)
 
         self._age_pickers = AgePicker(self._saved_gender)
-        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_in_panel.add(self._age_pickers)
+        self._age_pickers.set_halign(Gtk.Align.CENTER)
+        self._age_pickers.set_valign(Gtk.Align.START)
         self._age_pickers.show()
 
         label = self._age_pickers.get_label()
@@ -323,20 +321,17 @@ class AboutMe(SectionView):
         label_age = Gtk.Label(label=_(label))
         label_age.modify_fg(Gtk.StateType.NORMAL,
                             style.COLOR_SELECTION_GREY.get_gdk_color())
-        left_align = Gtk.Alignment.new(0, 0, 0, 0)
-        left_align.add(label_age)
+        label_age.set_halign(Gtk.Align.START)
+        label_age.set_valign(Gtk.Align.START)
         label_age.show()
-        grid.attach(left_align, 0, 0, 1, 1)
-        left_align.show()
+        grid.attach(label_age, 0, 0, 1, 1)
 
-        grid.attach(center_in_panel, 0, 1, 1, 1)
-        center_in_panel.show()
+        grid.attach(self._age_pickers, 0, 1, 1, 1)
 
-        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_in_panel.add(grid)
+        grid.set_halign(Gtk.Align.CENTER)
+        grid.set_valign(Gtk.Align.START)
         grid.show()
-        self.pack_start(center_in_panel, False, False, 0)
-        center_in_panel.show()
+        self.append(grid)
 
     def setup(self):
         pass
