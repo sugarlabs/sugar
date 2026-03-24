@@ -321,7 +321,7 @@ class Network(SectionView):
         scrolled.add_with_viewport(workspace)
         workspace.show()
 
-        separator_wireless = Gtk.HSeparator()
+        separator_wireless = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         workspace.pack_start(separator_wireless, False, True, 0)
         separator_wireless.show()
 
@@ -385,7 +385,7 @@ class Network(SectionView):
         workspace.pack_start(box_wireless, False, True, 0)
         box_wireless.show()
 
-        separator_mesh = Gtk.HSeparator()
+        separator_mesh = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         workspace.pack_start(separator_mesh, False, False, 0)
         separator_mesh.show()
 
@@ -453,7 +453,7 @@ class Network(SectionView):
         workspace.pack_start(box_mesh, False, True, 0)
         box_mesh.show()
 
-        separator_proxy = Gtk.HSeparator()
+        separator_proxy = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         workspace.pack_start(separator_proxy, False, False, 0)
         separator_proxy.show()
 

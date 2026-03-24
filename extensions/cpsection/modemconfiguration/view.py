@@ -117,7 +117,7 @@ class ModemConfiguration(SectionView):
         self.provider_combo = self._add_combo(provider_store, _('Provider:'))
         self.plan_combo = self._add_combo(plan_store, _('Plan:'))
 
-        separator = Gtk.HSeparator()
+        separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         main_box.pack_start(separator, True, False, 0)
         separator.show()
 

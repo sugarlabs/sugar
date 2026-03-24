@@ -157,7 +157,7 @@ class ControlPanel(Gtk.Window):
         self._vbox.reorder_child(toolbar, 0)
         self._toolbar = toolbar
         if not self._separator:
-            self._separator = Gtk.HSeparator()
+            self._separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
             self._vbox.pack_start(self._separator, False, False, 0)
             self._vbox.reorder_child(self._separator, 1)
             self._separator.show()
@@ -525,7 +525,7 @@ class _SectionIcon(Gtk.EventBox):
 
         Gtk.EventBox.__init__(self, **kwargs)
 
-        self._vbox = Gtk.VBox()
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._icon = Icon(icon_name=self._icon_name,
                           pixel_size=self._pixel_size,
                           xo_color=self._xo_color)
