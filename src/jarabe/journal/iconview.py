@@ -22,11 +22,11 @@ from gi.repository import Gtk
 from gi.repository import GLib
 
 from jarabe.journal.iconmodel import IconModel
-from sugar3.graphics.icon import Icon
+from sugar4.graphics.icon import Icon
 from jarabe.journal import model
-from sugar3.graphics.objectchooser import get_preview_pixbuf
-from sugar3.graphics import style
-from sugar3.activity.activity import PREVIEW_SIZE
+from sugar4.graphics.objectchooser import get_preview_pixbuf
+from sugar4.graphics import style
+from sugar4.activity.activity import PREVIEW_SIZE
 
 
 class PreviewRenderer(Gtk.CellRendererPixbuf):
@@ -275,7 +275,7 @@ class IconView(Gtk.Bin):
         alignment = Gtk.Alignment.new(0.5, 0.5, 0.1, 0.1)
         background_box.add(alignment)
 
-        box = Gtk.VBox()
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         alignment.add(box)
 
         icon = Icon(pixel_size=style.LARGE_ICON_SIZE,

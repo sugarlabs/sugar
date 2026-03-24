@@ -24,14 +24,14 @@ from gi.repository import GLib
 from gi.repository import Gtk
 import json
 
-from sugar3.graphics import style
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.icon import CanvasIcon, get_icon_file_name
-from sugar3.graphics.icon import Icon, CellRendererIcon
-from sugar3.graphics.alert import Alert, ConfirmationAlert
-from sugar3.util import format_size
-from sugar3.graphics.objectchooser import get_preview_pixbuf
-from sugar3.activity.activity import PREVIEW_SIZE
+from sugar4.graphics import style
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics.icon import CanvasIcon, get_icon_file_name
+from sugar4.graphics.icon import Icon, CellRendererIcon
+from sugar4.graphics.alert import Alert, ConfirmationAlert
+from sugar4.util import format_size
+from sugar4.graphics.objectchooser import get_preview_pixbuf
+from sugar4.activity.activity import PREVIEW_SIZE
 
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
@@ -40,11 +40,11 @@ from jarabe.journal import model
 from jarabe.journal import journalwindow
 
 
-class Separator(Gtk.VBox):
+class Separator(Gtk.Box):
 
     def __init__(self, orientation):
-        Gtk.VBox.__init__(
-            self, background_color=style.COLOR_PANEL_GREY.get_gdk_color())
+        Gtk.Box.__init__(
+            self, orientation=Gtk.Orientation.VERTICAL, background_color=style.COLOR_PANEL_GREY.get_gdk_color())
 
 
 class BuddyList(Gtk.Alignment):
@@ -53,7 +53,7 @@ class BuddyList(Gtk.Alignment):
         Gtk.Alignment.__init__(self)
         self.set(0, 0, 0, 0)
 
-        hbox = Gtk.HBox()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         for buddy in buddies:
             nick_, color = buddy
             icon = CanvasIcon(icon_name='computer-xo',
@@ -219,7 +219,7 @@ class BaseExpandedEntry(GObject.GObject):
         self._keep_icon = self._create_keep_icon()
         header.pack_start(self._keep_icon, False, False, style.DEFAULT_SPACING)
 
-        self._icon_box = Gtk.HBox()
+        self._icon_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         header.pack_start(self._icon_box, False, False, style.DEFAULT_SPACING)
 
         self._title = self._create_title()
@@ -250,7 +250,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         BaseExpandedEntry.__init__(self)
         self._journalactivity = journalactivity
         Gtk.EventBox.__init__(self)
-        self._vbox = Gtk.VBox()
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(self._vbox)
 
         self.in_focus = False
@@ -281,13 +281,13 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         body_box.modify_bg(Gtk.StateType.NORMAL,
                            style.COLOR_WHITE.get_gdk_color())
         self._vbox.pack_start(body_box, True, True, 0)
-        body = Gtk.HBox()
+        body = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         body_box.add(body)
 
-        first_column = Gtk.VBox()
+        first_column = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         body.pack_start(first_column, False, False, style.DEFAULT_SPACING)
 
-        second_column = Gtk.VBox()
+        second_column = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         body.pack_start(second_column, True, True, 0)
 
         # First body column
@@ -296,7 +296,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         style_context.add_class('journal-preview-box')
         first_column.pack_start(self._preview_box, False, True, 0)
 
-        self._technical_box = Gtk.VBox()
+        self._technical_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         first_column.pack_start(self._technical_box, False, False, 0)
 
         # Second body column
@@ -312,7 +312,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         second_column.pack_start(comments_box, True, True,
                                  style.DEFAULT_SPACING)
 
-        self._buddy_list = Gtk.VBox()
+        self._buddy_list = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         second_column.pack_start(self._buddy_list, True, False, 0)
         self.show_all()
 
@@ -400,7 +400,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         return box
 
     def _create_technical(self):
-        vbox = Gtk.VBox()
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         vbox.props.spacing = style.DEFAULT_SPACING
 
         if 'filesize' in self._metadata:
@@ -415,7 +415,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         ]
 
         for line in lines:
-            linebox = Gtk.HBox()
+            linebox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
             vbox.pack_start(linebox, False, False, 0)
 
             text = Gtk.Label()
@@ -439,7 +439,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
     def _create_buddy_list(self):
 
-        vbox = Gtk.VBox()
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         vbox.props.spacing = style.DEFAULT_SPACING
 
         text = Gtk.Label()
@@ -456,7 +456,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         return vbox
 
     def _create_scrollable(self, widget, label=None):
-        vbox = Gtk.VBox()
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         vbox.props.spacing = style.DEFAULT_SPACING
 
         if label is not None:

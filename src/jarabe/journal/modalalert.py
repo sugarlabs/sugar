@@ -17,9 +17,9 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gettext import gettext as _
 
-from sugar3.graphics.icon import Icon
-from sugar3.graphics import style
-from sugar3 import profile
+from sugar4.graphics.icon import Icon
+from sugar4.graphics import style
+from sugar4 import profile
 
 
 class ModalAlert(Gtk.Window):
@@ -40,7 +40,7 @@ class ModalAlert(Gtk.Window):
         self.set_modal(True)
 
         self._main_view = Gtk.EventBox()
-        self._vbox = Gtk.VBox()
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._vbox.set_spacing(style.DEFAULT_SPACING)
         self._vbox.set_border_width(style.GRID_CELL_SIZE * 2)
         self._main_view.modify_bg(Gtk.StateType.NORMAL,

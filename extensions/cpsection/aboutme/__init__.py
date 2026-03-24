@@ -16,7 +16,7 @@
 
 from gettext import gettext as _
 
-from sugar3 import profile
+from sugar4 import profile
 
 CLASS = 'AboutMe'
 ICON = 'module-about_me'

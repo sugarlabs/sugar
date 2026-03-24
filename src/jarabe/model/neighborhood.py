@@ -46,8 +46,8 @@ CONNECTION_PRESENCE_TYPE_OFFLINE = TelepathyGLib.ConnectionPresenceType.OFFLINE
 CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
 CONNECTION_STATUS_DISCONNECTED = TelepathyGLib.ConnectionStatus.DISCONNECTED
 
-from sugar3.graphics.xocolor import XoColor
-from sugar3.profile import get_profile
+from sugar4.graphics.xocolor import XoColor
+from sugar4.profile import get_profile
 
 from jarabe.model.buddy import BuddyModel, get_owner_instance
 from jarabe.model import bundleregistry

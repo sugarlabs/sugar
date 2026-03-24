@@ -20,7 +20,7 @@ import shutil
 import json
 import dbus
 
-from sugar3.bundle.bundle import Bundle, MalformedBundleException
+from sugar4.bundle.bundle import Bundle, MalformedBundleException
 
 from jarabe.journal import model
 

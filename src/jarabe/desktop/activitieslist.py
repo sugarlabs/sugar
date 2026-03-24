@@ -26,16 +26,16 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3 import profile
-from sugar3 import util
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon, CellRendererIcon
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.alert import Alert
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.scrollingdetector import ScrollingDetector
-from sugar3.graphics.palettewindow import TreeViewInvoker
-from sugar3.datastore import datastore
+from sugar4 import profile
+from sugar4 import util
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon, CellRendererIcon
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics.alert import Alert
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.scrollingdetector import ScrollingDetector
+from sugar4.graphics.palettewindow import TreeViewInvoker
+from sugar4.datastore import datastore
 
 from jarabe.model import bundleregistry
 from jarabe.model import desktop
@@ -476,7 +476,7 @@ class ClearMessageBox(Gtk.EventBox):
         self.add(alignment)
         alignment.show()
 
-        box = Gtk.VBox()
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         alignment.add(box)
         box.show()
 
@@ -507,7 +507,7 @@ class ClearMessageBox(Gtk.EventBox):
         button.show()
 
 
-class ActivitiesList(Gtk.VBox):
+class ActivitiesList(Gtk.Box):
     __gtype_name__ = 'SugarActivitiesList'
 
     __gsignals__ = {
@@ -517,7 +517,7 @@ class ActivitiesList(Gtk.VBox):
     def __init__(self):
         logging.debug('STARTUP: Loading the activities list')
 
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
         self._scrolled_window = Gtk.ScrolledWindow()
         self._scrolled_window.set_can_focus(False)

@@ -20,15 +20,15 @@ import math
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from sugar3 import profile
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuBox
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.xocolor import XoColor
+from sugar4 import profile
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.tray import TrayIcon
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.palettemenu import PaletteMenuBox
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar4.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import brightness
@@ -78,12 +78,12 @@ class DeviceView(TrayIcon):
         self._update_output_info(value)
 
 
-class BrightnessManagerWidget(Gtk.VBox):
+class BrightnessManagerWidget(Gtk.Box):
 
     TIMEOUT_DELAY = 10
 
     def __init__(self, text, icon_name):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self._progress_bar = None
         self._adjustment = None
 

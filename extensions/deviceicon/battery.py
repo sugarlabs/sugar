@@ -28,12 +28,12 @@ import time
 
 import logging
 
-from sugar3 import profile
-from sugar3.graphics import style
-from sugar3.graphics.icon import get_icon_state
-from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar4 import profile
+from sugar4.graphics import style
+from sugar4.graphics.icon import get_icon_state
+from sugar4.graphics.tray import TrayIcon
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.palettemenu import PaletteMenuBox
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model.session import get_session_manager
@@ -130,7 +130,7 @@ class BatteryPalette(Palette):
         self.set_content(self._progress_widget)
         self._progress_widget.show()
 
-        inner_box = Gtk.VBox()
+        inner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         inner_box.set_spacing(style.DEFAULT_PADDING)
         self._progress_widget.append_item(inner_box, vertical_padding=0)
         inner_box.show()

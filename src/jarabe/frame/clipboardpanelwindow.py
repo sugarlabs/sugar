@@ -34,10 +34,10 @@ class ClipboardPanelWindow(FrameWindow):
         self._frame = frame
 
         # Listening for new clipboard objects
-        # NOTE: we need to keep a reference to Gtk.Clipboard in order to keep
+        # NOTE: we need to keep a reference to Gdk.Clipboard in order to keep
         # listening to it.
-        self._clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-        self._clipboard.connect('owner-change', self._owner_change_cb)
+        self._clipboard = Gtk.Display.get_default().get_clipboard()
+        self._clipboard.connect('changed', self._owner_change_cb)
 
         self._clipboard_tray = ClipboardTray()
         self._clipboard_tray.show()
@@ -51,7 +51,7 @@ class ClipboardPanelWindow(FrameWindow):
         self.connect('drag-data-received',
                      self._clipboard_tray.drag_data_received_cb)
 
-    def _owner_change_cb(self, x_clipboard, event):
+    def _owner_change_cb(self, clipboard):
         logging.debug('owner_change_cb')
 
         if self._clipboard_tray.owns_clipboard():
@@ -59,41 +59,37 @@ class ClipboardPanelWindow(FrameWindow):
 
         cb_service = clipboard.get_instance()
 
-        result, targets = x_clipboard.wait_for_targets()
-        cb_selections = []
-        if not result:
+        content = clipboard.get_content()
+
+        if not content:
             return
 
-        target_is_uri = False
-        for target in targets:
-            if target not in ('TIMESTAMP', 'TARGETS',
-                              'MULTIPLE', 'SAVE_TARGETS'):
-                logging.debug('Asking for target %s.', target)
-                if target == 'text/uri-list':
-                    target_is_uri = True
+        formats = content.ref_formats()
 
-                selection = x_clipboard.wait_for_contents(target)
-                if not selection:
-                    logging.warning('no data for selection target %s.', target)
-                    continue
-                cb_selections.append(selection)
+        if formats.is_empty():
+            return
 
-        if target_is_uri:
-            uri = selection.get_uris()[0]
+        mime_types = formats.get_mime_types()
+        content_is_uri = False
+        for mime_type in mime_types:
+            if mime_type == 'text/uri-list':
+                content_is_uri = True
+                mt = mime_type
+
+        if content_is_uri:
+            uri = content.get_value()
             filename = uri[len('file://'):].strip()
             md5 = self._md5_for_file(filename)
             data_hash = hash(md5)
         else:
-            data_hash = hash(selection.get_data())
+            data_hash = hash(content.get_value())
 
-        if len(cb_selections) > 0:
-            key = cb_service.add_object(name="", data_hash=data_hash)
-            if key is None:
-                return
-            cb_service.set_object_percent(key, percent=0)
-            for selection in cb_selections:
-                self._add_selection(key, selection)
-            cb_service.set_object_percent(key, percent=100)
+        key = cb_service.add_object(name="", data_hash=data_hash)
+        if key is None:
+            return
+        cb_service.set_object_percent(key, percent=0)
+        self._add_content(key, content, mt)
+        cb_service.set_object_percent(key, percent=100)
 
     def _md5_for_file(self, file_name):
         '''Calculate md5 for file data
@@ -111,33 +107,28 @@ class ClipboardPanelWindow(FrameWindow):
         f.close()
         return md5.digest()
 
-    def _add_selection(self, key, selection):
-        if not selection.get_data():
-            logging.warning('no data for selection target %s.',
-                            selection.get_data_type())
+    def _add_content(self, key, content, mime_type):
+        result, value = content.get_value()
+        if not result:
+            logging.warning('no data for content %s.',
+                            mime_type)
             return
 
-        selection_type = str(selection.get_data_type())
-        logging.debug('adding type ' + selection_type + '.')
-
+        logging.debug('adding type ' + mime_type + '.')
         cb_service = clipboard.get_instance()
-        if selection_type == 'text/uri-list':
-            uris = selection.get_uris()
+        if mime_type == 'text/uri-list':
+            uri = content.get_value()
 
-            if len(uris) > 1:
-                raise NotImplementedError('Multiple uris in text/uri-list'
-                                          ' still not supported.')
-            uri = uris[0]
             scheme, netloc_, path_, parameters_, query_, fragment_ = \
                 urlparse(uri)
             on_disk = (scheme == 'file')
 
             cb_service.add_object_format(key,
-                                         selection_type,
+                                         mime_type,
                                          uri,
                                          on_disk)
         else:
             cb_service.add_object_format(key,
-                                         selection_type,
-                                         selection.get_data(),
+                                         mime_type,
+                                         content.get_value(),
                                          on_disk=False)

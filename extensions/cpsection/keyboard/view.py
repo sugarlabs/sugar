@@ -28,8 +28,8 @@ from gi.repository import Pango
 import logging
 from gettext import gettext as _
 
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.config import data_path
@@ -63,7 +63,7 @@ def _build_ISO_639_dictionary():
         logging.error('%s not found' % (ISO_DATA_FILE))
 
 
-class LayoutCombo(Gtk.HBox):
+class LayoutCombo(Gtk.Box):
     """
     Custom GTK widget with two comboboxes side by side, one for layout, and
     the other for variants for the selected layout.
@@ -214,7 +214,7 @@ class Keyboard(SectionView):
         self.pack_start(scrollwindow, True, True, 0)
         scrollwindow.show()
 
-        self._vbox = Gtk.VBox()
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         scrollwindow.add_with_viewport(self._vbox)
 
         self.__kmodel_sid = None
@@ -229,7 +229,7 @@ class Keyboard(SectionView):
 
     def _setup_kmodel(self):
         """Adds the controls for changing the keyboard model"""
-        separator_kmodel = Gtk.HSeparator()
+        separator_kmodel = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(separator_kmodel, False, True, 0)
         separator_kmodel.show_all()
 
@@ -238,7 +238,7 @@ class Keyboard(SectionView):
         self._vbox.pack_start(label_kmodel, False, True, 0)
         label_kmodel.show_all()
 
-        box_kmodel = Gtk.VBox()
+        box_kmodel = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box_kmodel.set_border_width(style.DEFAULT_SPACING * 2)
         box_kmodel.set_spacing(style.DEFAULT_SPACING)
 
@@ -290,7 +290,7 @@ class Keyboard(SectionView):
     def _setup_group_switch_option(self):
         """Adds the controls for changing the group switch option of keyboard
         """
-        separator_group_option = Gtk.HSeparator()
+        separator_group_option = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(separator_group_option, False, True, 0)
         separator_group_option.show_all()
 
@@ -299,7 +299,7 @@ class Keyboard(SectionView):
         self._vbox.pack_start(label_group_option, False, True, 0)
         label_group_option.show_all()
 
-        box_group_option = Gtk.VBox()
+        box_group_option = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box_group_option.set_border_width(style.DEFAULT_SPACING * 2)
         box_group_option.set_spacing(style.DEFAULT_SPACING)
 
@@ -358,7 +358,7 @@ class Keyboard(SectionView):
 
     def _setup_layouts(self):
         """Adds the controls for changing the keyboard layouts"""
-        separator_klayout = Gtk.HSeparator()
+        separator_klayout = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(separator_klayout, False, True, 0)
         separator_klayout.show_all()
 

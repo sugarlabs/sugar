@@ -23,7 +23,7 @@ from gi.repository import TelepathyGLib
 CONNECTION = TelepathyGLib.IFACE_CONNECTION
 CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
 
-from sugar3 import profile
+from sugar4 import profile
 
 from jarabe.util.telepathy import connection_watcher
 

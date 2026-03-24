@@ -23,8 +23,8 @@ from gettext import gettext as _
 from gi.repository import Gio
 from gi.repository import GLib
 
-from sugar3 import env
-from sugar3 import profile
+from sugar4 import env
+from sugar4 import profile
 from jarabe.journal import model
 
 from .backend_tools import Backend, PreConditionsError, PreConditionsChoose

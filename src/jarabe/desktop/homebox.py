@@ -25,13 +25,13 @@ from jarabe.util.normalize import normalize_string
 from jarabe.model import desktop
 
 
-class HomeBox(Gtk.VBox):
+class HomeBox(Gtk.Box):
     __gtype_name__ = 'SugarHomeBox'
 
     def __init__(self, toolbar):
         logging.debug('STARTUP: Loading the home view')
 
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
         self._favorites_views_indicies = []
         for i in range(desktop.get_number_of_views()):

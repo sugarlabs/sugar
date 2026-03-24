@@ -23,16 +23,16 @@ from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
 
-from sugar3 import env
-from sugar3 import profile
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuBox
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.icon import Icon
-from sugar3.graphics import style
-from sugar3.graphics.xocolor import XoColor
-from sugar3.activity.i18n import pgettext
+from sugar4 import env
+from sugar4 import profile
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.palettemenu import PaletteMenuBox
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar4.graphics.icon import Icon
+from sugar4.graphics import style
+from sugar4.graphics.xocolor import XoColor
+from sugar4.activity.i18n import pgettext
 
 from jarabe.model import shell
 from jarabe.view.viewsource import setup_view_source
@@ -233,7 +233,7 @@ class JournalPalette(BasePalette):
         box.append_item(separator)
         separator.show()
 
-        inner_box = Gtk.VBox()
+        inner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         inner_box.set_spacing(style.DEFAULT_PADDING)
         box.append_item(inner_box, vertical_padding=0)
         inner_box.show()
@@ -289,7 +289,7 @@ class VolumePalette(Palette):
         self.content_box.append_item(separator)
         separator.show()
 
-        free_space_box = Gtk.VBox()
+        free_space_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         free_space_box.set_spacing(style.DEFAULT_PADDING)
         self.content_box.append_item(free_space_box, vertical_padding=0)
         free_space_box.show()

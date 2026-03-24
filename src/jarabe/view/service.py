@@ -17,6 +17,7 @@
 """D-bus service providing access to the shell's functionality"""
 
 import dbus
+from dbus import service
 from gi.repository import Gtk
 
 from jarabe.model import shell
@@ -28,7 +29,7 @@ _DBUS_SHELL_IFACE = 'org.laptop.Shell'
 _DBUS_PATH = '/org/laptop/Shell'
 
 
-class UIService(dbus.service.Object):
+class UIService(service.Object):
     """Provides d-bus service to script the shell's operations
 
     Uses a shell_model object to observe events such as changes to:
@@ -49,12 +50,12 @@ class UIService(dbus.service.Object):
 
     def __init__(self):
         bus = dbus.SessionBus()
-        bus_name = dbus.service.BusName(_DBUS_SERVICE, bus=bus)
-        dbus.service.Object.__init__(self, bus_name, _DBUS_PATH)
+        bus_name = service.BusName(_DBUS_SERVICE, bus=bus)
+        service.Object.__init__(self, bus_name, _DBUS_PATH)
 
         self._shell_model = shell.get_model()
 
-    @dbus.service.method(_DBUS_SHELL_IFACE,
+    @service.method(_DBUS_SHELL_IFACE,
                          in_signature='s', out_signature='s')
     def GetBundlePath(self, bundle_id):
         bundle = bundleregistry.get_registry().get_bundle(bundle_id)
@@ -62,7 +63,7 @@ class UIService(dbus.service.Object):
             return bundle.get_path()
         return ''
 
-    @dbus.service.method(_DBUS_SHELL_IFACE,
+    @service.method(_DBUS_SHELL_IFACE,
                          in_signature='s', out_signature='b')
     def ActivateActivity(self, activity_id):
         """Switch to the window related to this activity_id and return a
@@ -77,12 +78,12 @@ class UIService(dbus.service.Object):
 
         return False
 
-    @dbus.service.method(_DBUS_SHELL_IFACE,
+    @service.method(_DBUS_SHELL_IFACE,
                          in_signature='ss', out_signature='')
     def NotifyLaunch(self, bundle_id, activity_id):
         shell.get_model().notify_launch(activity_id, bundle_id)
 
-    @dbus.service.method(_DBUS_SHELL_IFACE,
+    @service.method(_DBUS_SHELL_IFACE,
                          in_signature='s', out_signature='')
     def NotifyLaunchFailure(self, activity_id):
         shell.get_model().notify_launch_failed(activity_id)

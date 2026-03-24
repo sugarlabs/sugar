@@ -23,7 +23,7 @@ from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
 
-from sugar3.graphics import style
+from sugar4.graphics import style
 
 from jarabe.controlpanel.sectionview import SectionView
 
@@ -40,11 +40,11 @@ def _create_providers_list_store(items):
     return gtk_list
 
 
-class EntryWithLabel(Gtk.HBox):
+class EntryWithLabel(Gtk.Box):
     __gtype_name__ = 'SugarEntryWithLabel'
 
     def __init__(self, label_text):
-        Gtk.HBox.__init__(self, spacing=style.DEFAULT_SPACING)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
 
         self.label = Gtk.Label(label=label_text)
         self.label.modify_fg(Gtk.StateType.NORMAL,
@@ -85,7 +85,7 @@ class ModemConfiguration(SectionView):
         self.add(scrolled_win)
         scrolled_win.show()
 
-        main_box = Gtk.VBox(spacing=style.DEFAULT_SPACING)
+        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
         main_box.set_border_width(style.DEFAULT_SPACING)
         scrolled_win.add_with_viewport(main_box)
         main_box.show()
@@ -99,7 +99,7 @@ class ModemConfiguration(SectionView):
         main_box.pack_start(self._text, True, False, 0)
         self._text.show()
 
-        self._upper_box = Gtk.VBox(spacing=style.DEFAULT_SPACING)
+        self._upper_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
         self._upper_box.set_border_width(style.DEFAULT_SPACING)
         main_box.pack_start(self._upper_box, True, False, 0)
         self._upper_box.show()
@@ -117,7 +117,7 @@ class ModemConfiguration(SectionView):
         self.provider_combo = self._add_combo(provider_store, _('Provider:'))
         self.plan_combo = self._add_combo(plan_store, _('Plan:'))
 
-        separator = Gtk.HSeparator()
+        separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         main_box.pack_start(separator, True, False, 0)
         separator.show()
 
@@ -151,7 +151,7 @@ class ModemConfiguration(SectionView):
             self.provider_combo.connect("changed", self._provider_selected_cb)
             self.plan_combo.connect("changed", self._plan_selected_cb)
 
-        lower_box = Gtk.VBox(spacing=style.DEFAULT_SPACING)
+        lower_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
         lower_box.set_border_width(style.DEFAULT_SPACING)
         main_box.pack_start(lower_box, True, False, 0)
         lower_box.show()
@@ -208,7 +208,7 @@ class ModemConfiguration(SectionView):
         combo.pack_start(renderer_text, True)
         combo.add_attribute(renderer_text, "text", 0)
 
-        box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         box.pack_start(label, False, True, 0)
         label.show()
         box.pack_start(combo, False, True, 0)

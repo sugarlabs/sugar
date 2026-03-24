@@ -22,14 +22,14 @@ from gettext import gettext as _
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from sugar3 import profile
-from sugar3.graphics import style
-from sugar3.graphics.icon import get_icon_state, Icon
-from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuBox
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.xocolor import XoColor
+from sugar4 import profile
+from sugar4.graphics import style
+from sugar4.graphics.icon import get_icon_state, Icon
+from sugar4.graphics.tray import TrayIcon
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.palettemenu import PaletteMenuBox
+from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar4.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model.sound import sound
@@ -92,10 +92,10 @@ class DeviceView(TrayIcon):
         self._update_output_info()
 
 
-class AudioManagerWidget(Gtk.VBox):
+class AudioManagerWidget(Gtk.Box):
 
     def __init__(self, text, icon_name, device):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self._device = device
 
         self._ok_icon = Icon(icon_name='dialog-ok')

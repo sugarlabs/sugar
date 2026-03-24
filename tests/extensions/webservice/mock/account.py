@@ -20,7 +20,7 @@
 
 import os
 
-from sugar3.graphics.menuitem import MenuItem
+from sugar4.graphics.menuitem import MenuItem
 from jarabe.webservice import account
 
 ACCOUNT_NAME = 'mock'

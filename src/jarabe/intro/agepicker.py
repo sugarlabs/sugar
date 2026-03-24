@@ -27,9 +27,9 @@ import math
 
 from gettext import gettext as _
 
-from sugar3.graphics.icon import EventIcon
-from sugar3.graphics import style
-from sugar3.graphics.xocolor import XoColor
+from sugar4.graphics.icon import EventIcon
+from sugar4.graphics import style
+from sugar4.graphics.xocolor import XoColor
 
 from jarabe.intro.genderpicker import GENDERS
 

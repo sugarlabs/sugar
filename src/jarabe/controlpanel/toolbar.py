@@ -22,10 +22,10 @@ def _(msg):
     return gettext.dgettext('sugar', msg)
 
 
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics import iconentry
-from sugar3.graphics import style
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.toolbutton import ToolButton
+from sugar4.graphics import iconentry
+from sugar4.graphics import style
 
 
 class MainToolbar(Gtk.Toolbar):

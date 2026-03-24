@@ -20,7 +20,7 @@ from gettext import gettext as _
 
 from gi.repository import Gio
 
-from sugar3 import profile
+from sugar4 import profile
 
 _COLORS = {
     'red': {'dark': '#b20008', 'medium': '#e6000a', 'light': '#ffadce'},

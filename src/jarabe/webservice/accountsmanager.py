@@ -21,7 +21,7 @@ from importlib import import_module
 
 from gi.repository import Gtk
 
-from sugar3 import env
+from sugar4 import env
 
 from jarabe import config
 from jarabe.webservice.account import Account

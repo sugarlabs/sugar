@@ -22,8 +22,8 @@ from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import GdkPixbuf
 
-from sugar3.graphics import style
-from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar4.graphics import style
+from sugar4.graphics.radiotoolbutton import RadioToolButton
 from jarabe.controlpanel.sectionview import SectionView
 
 from gettext import gettext as _
@@ -78,7 +78,7 @@ class Background(SectionView):
 
         alpha = self._model.get_background_alpha_level()
 
-        alpha_box = Gtk.HBox()
+        alpha_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         alpha_buttons = []
         alpha_icons = [
             [1.0, 'network-wireless-000'],

@@ -24,9 +24,9 @@ from gi.repository import Gdk
 from gi.repository import Gio
 import dbus
 
-from sugar3.datastore import datastore
-from sugar3.graphics import style
-from sugar3 import env
+from sugar4.datastore import datastore
+from sugar4.graphics import style
+from sugar4 import env
 from jarabe.model import shell
 
 

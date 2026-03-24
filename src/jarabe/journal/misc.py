@@ -24,19 +24,19 @@ from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3.activity import activityfactory
-from sugar3.activity.activityhandle import ActivityHandle
-from sugar3.graphics.icon import get_icon_file_name
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.xocolor import colors
-from sugar3.graphics.alert import ConfirmationAlert
-from sugar3 import mime
-from sugar3.bundle.bundle import ZipExtractException, RegistrationException
-from sugar3.bundle.activitybundle import ActivityBundle, get_bundle_instance
-from sugar3.bundle.bundle import AlreadyInstalledException
-from sugar3.bundle.contentbundle import ContentBundle
-from sugar3 import util
-from sugar3 import profile
+from sugar4.activity import activityfactory
+from sugar4.activity.activityhandle import ActivityHandle
+from sugar4.graphics.icon import get_icon_file_name
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics.xocolor import colors
+from sugar4.graphics.alert import ConfirmationAlert
+from sugar4 import mime
+from sugar4.bundle.bundle import ZipExtractException, RegistrationException
+from sugar4.bundle.activitybundle import ActivityBundle, get_bundle_instance
+from sugar4.bundle.bundle import AlreadyInstalledException
+from sugar4.bundle.contentbundle import ContentBundle
+from sugar4 import util
+from sugar4 import profile
 
 from jarabe.view import launcher
 from jarabe.view import alerts

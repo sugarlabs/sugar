@@ -13,8 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sugar3.graphics import style
-from sugar3.graphics.icon import CanvasIcon
+from sugar4.graphics import style
+from sugar4.graphics.icon import CanvasIcon
 
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.util.normalize import normalize_string

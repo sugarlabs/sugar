@@ -19,7 +19,7 @@ import unittest
 import os
 
 from jarabe.model import bundleregistry
-from sugar3.bundle.helpers import bundle_from_archive
+from sugar4.bundle.helpers import bundle_from_archive
 
 tests_dir = os.getcwd()
 data_dir = os.path.join(tests_dir, "data")

@@ -21,7 +21,7 @@ from gettext import gettext as _
 from gi.repository import Gtk, Pango
 from gi.repository import Gdk
 
-from sugar3.graphics import style
+from sugar4.graphics import style
 
 from jarabe import config
 from jarabe.controlpanel.sectionview import SectionView
@@ -43,7 +43,7 @@ class AboutComputer(SectionView):
         self.pack_start(scrollwindow, True, True, 0)
         scrollwindow.show()
 
-        self._vbox = Gtk.VBox()
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         scrollwindow.add_with_viewport(self._vbox)
         self._vbox.show()
 
@@ -53,7 +53,7 @@ class AboutComputer(SectionView):
         self._setup_copyright()
 
     def create_information_box(self, label_text, value_text):
-        box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label = Gtk.Label(label=label_text)
         label.set_alignment(1, 0)
         label.modify_fg(Gtk.StateType.NORMAL,
@@ -69,7 +69,7 @@ class AboutComputer(SectionView):
         return box
 
     def _setup_identity(self):
-        separator_identity = Gtk.HSeparator()
+        separator_identity = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(separator_identity, False, True, 0)
         separator_identity.show()
 
@@ -77,7 +77,7 @@ class AboutComputer(SectionView):
         label_identity.set_alignment(0, 0)
         self._vbox.pack_start(label_identity, False, True, 0)
         label_identity.show()
-        vbox_identity = Gtk.VBox()
+        vbox_identity = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         vbox_identity.set_border_width(style.DEFAULT_SPACING * 2)
         vbox_identity.set_spacing(style.DEFAULT_SPACING)
 
@@ -96,7 +96,7 @@ class AboutComputer(SectionView):
         vbox_identity.show()
 
     def _setup_software(self):
-        separator_software = Gtk.HSeparator()
+        separator_software = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(separator_software, False, True, 0)
         separator_software.show()
 
@@ -104,7 +104,7 @@ class AboutComputer(SectionView):
         label_software.set_alignment(0, 0)
         self._vbox.pack_start(label_software, False, True, 0)
         label_software.show()
-        box_software = Gtk.VBox()
+        box_software = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box_software.set_border_width(style.DEFAULT_SPACING * 2)
         box_software.set_spacing(style.DEFAULT_SPACING)
 
@@ -143,7 +143,7 @@ class AboutComputer(SectionView):
         box_software.show()
 
     def _setup_copyright(self):
-        separator_copyright = Gtk.HSeparator()
+        separator_copyright = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self._vbox.pack_start(separator_copyright, False, True, 0)
         separator_copyright.show()
 
@@ -151,7 +151,7 @@ class AboutComputer(SectionView):
         label_copyright.set_alignment(0, 0)
         self._vbox.pack_start(label_copyright, False, True, 0)
         label_copyright.show()
-        vbox_copyright = Gtk.VBox()
+        vbox_copyright = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         vbox_copyright.set_border_width(style.DEFAULT_SPACING * 2)
         vbox_copyright.set_spacing(style.DEFAULT_SPACING)
 
@@ -192,7 +192,7 @@ class AboutComputer(SectionView):
             label_license.set_size_request(Gdk.Screen.width() / 2, -1)
             label_license.show()
 
-            separator = Gtk.HSeparator()
+            separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
             vbox_copyright.pack_start(separator, False, True, 0)
             separator.show()
             vbox_copyright.pack_start(label_license, False, True, 0)

@@ -37,7 +37,7 @@ from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gio
 
-from sugar3.bundle.bundleversion import NormalizedVersion, InvalidVersionError
+from sugar4.bundle.bundleversion import NormalizedVersion, InvalidVersionError
 
 from jarabe.util import httprange
 from jarabe.model import bundleregistry

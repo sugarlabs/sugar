@@ -28,16 +28,16 @@ from gi.repository import GLib
 from gi.repository import GObject
 import dbus
 
-from sugar3.graphics.icon import get_icon_state
-from sugar3.graphics import style
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.icon import Icon
-from sugar3.graphics import xocolor
-from sugar3 import profile
+from sugar4.graphics.icon import get_icon_state
+from sugar4.graphics import style
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar4.graphics.toolbutton import ToolButton
+from sugar4.graphics.tray import TrayIcon
+from sugar4.graphics.icon import Icon
+from sugar4.graphics import xocolor
+from sugar4 import profile
 
 from jarabe.model import network
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
@@ -93,7 +93,7 @@ class WirelessPalette(Palette):
         self._ip_address_label.props.xalign = 0.0
         self._ip_address_label.show()
 
-        self._info = Gtk.VBox()
+        self._info = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         self._disconnect_item = PaletteMenuItem(_('Disconnect'))
         icon = Icon(pixel_size=style.SMALL_ICON_SIZE,
@@ -178,7 +178,7 @@ class WiredPalette(Palette):
 
         self._ip_address_label = Gtk.Label()
 
-        self._info = Gtk.VBox()
+        self._info = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         def _padded(child, xalign=0, yalign=0.5):
             padder = Gtk.Alignment.new(xalign=xalign, yalign=yalign,
@@ -227,7 +227,7 @@ class GsmPalette(Palette):
         self._current_state = None
         self._failed_connection = False
 
-        self.info_box = Gtk.VBox()
+        self.info_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         self._toggle_state_item = PaletteMenuItem('')
         self._toggle_state_item.connect('activate', self.__toggle_state_cb)
@@ -243,7 +243,7 @@ class GsmPalette(Palette):
         self.error_description_label.set_line_wrap(True)
         self.info_box.pack_start(self.error_description_label, True, True, 0)
 
-        self.connection_info_box = Gtk.HBox()
+        self.connection_info_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         icon = Icon(icon_name='data-upload',
                     pixel_size=style.SMALL_ICON_SIZE)
         self.connection_info_box.pack_start(icon, True, True, 0)
