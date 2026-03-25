@@ -44,7 +44,7 @@ class EntryWithLabel(Gtk.Box):
     __gtype_name__ = 'SugarEntryWithLabel'
 
     def __init__(self, label_text):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
 
         self.label = Gtk.Label(label=label_text)
         self.label.modify_fg(Gtk.StateType.NORMAL,

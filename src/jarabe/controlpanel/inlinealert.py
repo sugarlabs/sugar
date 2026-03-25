@@ -55,7 +55,7 @@ class InlineAlert(Gtk.Box):
         self._msg_label.modify_fg(Gtk.StateType.NORMAL,
                                   style.COLOR_SELECTION_GREY.get_gdk_color())
 
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.HORIZONTAL, **kwargs)
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL, **kwargs)
 
         self.set_spacing(style.DEFAULT_SPACING)
         self.modify_bg(Gtk.StateType.NORMAL,

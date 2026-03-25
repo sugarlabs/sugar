@@ -40,7 +40,7 @@ class SectionView(Gtk.Box):
     _APPLY_TIMEOUT = 1000
 
     def __init__(self):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self._is_valid = True
         self._is_cancellable = True
         self._is_deferrable = True

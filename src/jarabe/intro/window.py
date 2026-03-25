@@ -94,7 +94,7 @@ class _Page(Gtk.Box):
     }
 
     def __init__(self):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.valid = False
 
     def set_valid(self, valid):
@@ -258,7 +258,7 @@ class _IntroBox(Gtk.Box):
     PAGE_LAST = len(PAGES) - 1
 
     def __init__(self, start_on_age_page):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.set_border_width(style.zoom(30))
 
         self._page = 0

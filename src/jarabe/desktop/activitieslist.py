@@ -467,7 +467,7 @@ class CellRendererActivityIcon(CellRendererIcon):
 class ClearMessageBox(Gtk.EventBox):
 
     def __init__(self, message, button_callback):
-        Gtk.EventBox.__init__(self)
+        super().__init__()
 
         self.modify_bg(Gtk.StateType.NORMAL,
                        style.COLOR_WHITE.get_gdk_color())
@@ -517,7 +517,7 @@ class ActivitiesList(Gtk.Box):
     def __init__(self):
         logging.debug('STARTUP: Loading the activities list')
 
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
 
         self._scrolled_window = Gtk.ScrolledWindow()
         self._scrolled_window.set_can_focus(False)

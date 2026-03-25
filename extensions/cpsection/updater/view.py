@@ -219,7 +219,7 @@ class ProgressPane(Gtk.Box):
     install."""
 
     def __init__(self):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.set_spacing(style.DEFAULT_PADDING)
         self.set_border_width(style.DEFAULT_SPACING * 2)
 
@@ -254,7 +254,7 @@ class ProgressPane(Gtk.Box):
 class UpdateBox(Gtk.Box):
 
     def __init__(self, updates):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
 
         self.set_spacing(style.DEFAULT_PADDING)
 

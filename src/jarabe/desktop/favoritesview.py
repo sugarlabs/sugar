@@ -77,7 +77,7 @@ class FavoritesBox(Gtk.Box):
     __gtype_name__ = 'SugarFavoritesBox'
 
     def __init__(self, favorite_view):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
 
         self.favorite_view = favorite_view
         self._view = FavoritesView(self)

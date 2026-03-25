@@ -31,7 +31,7 @@ class HomeBox(Gtk.Box):
     def __init__(self, toolbar):
         logging.debug('STARTUP: Loading the home view')
 
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
 
         self._favorites_views_indicies = []
         for i in range(desktop.get_number_of_views()):
