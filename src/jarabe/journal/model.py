@@ -691,7 +691,7 @@ def delete(object_id):
                                   'for file=%s', old_file, filename)
         try:
             os.rmdir(metadata_path)
-        except:
+        except OSError:
             # if can't remove is because there are other metadata
             pass
         deleted.send(None, object_id=object_id)
