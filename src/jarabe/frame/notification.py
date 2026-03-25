@@ -44,7 +44,7 @@ class NotificationBox(Gtk.Box):
     ELLIPSIS_AND_BREAKS = 6
 
     def __init__(self, name):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self._name = name
 
         self._notifications_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -252,7 +252,7 @@ class NotificationIcon(Gtk.EventBox):
         self._icon = NotificationPulsingIcon()
         self._icon.props.pixel_size = style.STANDARD_ICON_SIZE
 
-        Gtk.EventBox.__init__(self, **kwargs)
+        super().__init__(**kwargs)
         self.props.visible_window = False
 
         self._icon.props.pulse_color = \

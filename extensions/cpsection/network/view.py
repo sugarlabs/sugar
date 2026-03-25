@@ -130,7 +130,7 @@ class SettingBox(Gtk.Box):
     """
 
     def __init__(self, name, size_group=None):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label = Gtk.Label(name)
         label.modify_fg(Gtk.StateType.NORMAL,
                         style.COLOR_SELECTION_GREY.get_gdk_color())
@@ -152,7 +152,7 @@ class ComboSettingBox(Gtk.Box):
 
     def __init__(self, name, setting, setting_key,
                  option_sets, size_group=None):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
 
         setting_box = SettingBox(name, size_group)
         self.pack_start(setting_box, False, False, 0)
@@ -201,7 +201,7 @@ class OptionalSettingsBox(Gtk.Box):
     """
 
     def __init__(self, name, setting, setting_key, contents_box):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=style.DEFAULT_SPACING)
 
         check_button = Gtk.CheckButton()
         check_button.props.label = name

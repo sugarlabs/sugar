@@ -56,7 +56,7 @@ def get_background_alpha_level():
 class HomeBackgroundBox(Gtk.Box):
 
     def __init__(self):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self._background_pixbuf = None
         self._update_background_image()
         self.connect('draw', self.__draw_cb)

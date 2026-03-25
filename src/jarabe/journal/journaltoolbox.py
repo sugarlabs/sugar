@@ -885,7 +885,7 @@ class BatchCopyButton(ToolButton):
 class MultiSelectEntriesInfoWidget(Gtk.Box):
 
     def __init__(self):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
 
         self._selected_entries = 0
         self._total = 0
@@ -918,7 +918,7 @@ class FilterToolItem(Gtk.Box):
 
     def __init__(self, default_icon, default_label, palette_content=None):
         self._palette_invoker = ToolInvoker()
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self._label = default_label
 
         self.set_size_request(style.GRID_CELL_SIZE, -1)
@@ -1090,7 +1090,7 @@ class AddNewBar(Gtk.Box):
     activate = GObject.Signal('activate', arg_types=[str])
 
     def __init__(self, placeholder=None):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.HORIZONTAL)
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL)
 
         self._button = EventIcon(icon_name='list-add')
         self._button.connect('button-release-event',

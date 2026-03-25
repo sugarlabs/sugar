@@ -83,7 +83,7 @@ class BrightnessManagerWidget(Gtk.Box):
     TIMEOUT_DELAY = 10
 
     def __init__(self, text, icon_name):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self._progress_bar = None
         self._adjustment = None
 

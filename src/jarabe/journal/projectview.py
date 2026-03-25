@@ -42,7 +42,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
     }
 
     def __init__(self, **kwargs):
-        Gtk.EventBox.__init__(self)
+        super().__init__(**kwargs)
         BaseExpandedEntry.__init__(self)
         self.project_metadata = None
         self._service = None

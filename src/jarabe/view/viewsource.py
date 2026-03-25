@@ -824,4 +824,4 @@ class ImageBox(Gtk.EventBox):
     __gtype_name__ = 'SugarViewSourceImageBox'
 
     def __init__(self):
-        Gtk.EventBox.__init__(self)
+        super().__init__()

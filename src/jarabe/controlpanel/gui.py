@@ -523,7 +523,7 @@ class _SectionIcon(Gtk.EventBox):
         self._xo_color = None
         self._title = 'No Title'
 
-        Gtk.EventBox.__init__(self, **kwargs)
+        super().__init__(**kwargs)
 
         self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._icon = Icon(icon_name=self._icon_name,
