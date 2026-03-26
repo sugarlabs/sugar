@@ -85,7 +85,7 @@ On Fedora, use [dnf builddep](http://dnf-plugins-core.readthedocs.io/en/latest/b
     done
     sudo dnf install python{2,3}-six python3-empy
 
-Autogen, configure, make, and install modules for Python 2;
+
 
     for module in sugar{-toolkit,-toolkit-gtk3}; do
         cd $module
@@ -107,9 +107,9 @@ Autogen, configure, make, and install modules for Python 3;
 
 On Debian or Ubuntu, try `python3 -c 'import sugar3'` if fails move the `sugar3` directory from `/usr/local/lib/python3.6/site-packages/` to `/usr/local/lib/python3.6/dist-packages/`.
 
-On Fedora, add `/usr/local/lib/python2.7/site-packages/` to `sys.path` for any Python 2 programs, especially `/usr/local/bin/sugar`;
+gar`;
 
-    export PYTHONPATH=/usr/local/lib/python2.7/site-packages
+    
     export GI_TYPELIB_PATH=/usr/local/lib/girepository-1.0
     export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 

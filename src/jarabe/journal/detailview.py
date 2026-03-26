@@ -45,7 +45,7 @@ class DetailView(Gtk.Box):
                          self.__back_bar_release_event_cb)
         self.pack_start(back_bar, False, True, 0)
 
-        self.show_all()
+        self
 
     def _fav_icon_activated_cb(self, fav_icon):
         keep = not self._expanded_entry.get_keep()
@@ -61,7 +61,7 @@ class DetailView(Gtk.Box):
             self._expanded_entry = ExpandedEntry(self._journalactivity)
             self.pack_start(self._expanded_entry, True, True, 0)
         self._expanded_entry.set_metadata(self._metadata)
-        self.show_all()
+        self
 
     def refresh(self):
         logging.debug('DetailView.refresh')
