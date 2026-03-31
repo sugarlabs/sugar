@@ -52,6 +52,15 @@ install`.
 See also [Setup a development
 environment](docs/development-environment.md).
 
+Example Usage
+--------------
+
+Run the application:
+
+python main.py
+
+This helps users quickly understand how to start using the project.
+
 Contributing
 ------------
 
