@@ -332,19 +332,23 @@ def _downgrade_alert_response_cb(alert, response_id, metadata):
 
 
 def is_activity_bundle(metadata):
+    """Return True if metadata represents an activity bundle."""
     mime_type = metadata.get('mime_type', '')
     return mime_type == ActivityBundle.MIME_TYPE
 
 
 def is_content_bundle(metadata):
+    """Return True if metadata represents a content bundle."""
     return metadata.get('mime_type', '') == ContentBundle.MIME_TYPE
 
 
 def is_journal_bundle(metadata):
+    """Return True if metadata represents a journal entry bundle."""
     return metadata.get('mime_type', '') == JournalEntryBundle.MIME_TYPE
 
 
 def is_bundle(metadata):
+    """Return True if metadata represents any supported bundle type."""
     return is_activity_bundle(metadata) or is_content_bundle(metadata) or \
         is_journal_bundle(metadata)
 
