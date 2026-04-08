@@ -12,10 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""Journal model layer for accessing datastore and external entries.
-Provides a unified interface over the sugar-datastore (D-Bus)
-and filesystem-backed entries on mounted devices.
-"""
+
 import logging
 import os
 import errno
