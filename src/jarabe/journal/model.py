@@ -12,7 +12,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+"""Journal model layer for accessing datastore and external entries.
+Provides a unified interface over the sugar-datastore (D-Bus)
+and filesystem-backed entries on mounted devices.
+"""
 import logging
 import os
 import errno
@@ -586,7 +589,9 @@ def _datastore_deleted_cb(object_id):
 
 
 def find(query_, page_size):
-    """Returns a ResultSet
+    """Return a ResultSet for the given query.
+    Depending on the mount point, this may query the datastore
+    or scan files on an external device.
     """
     query = query_.copy()
 
@@ -612,7 +617,9 @@ def _get_mount_point(path):
 
 
 def get(object_id):
-    """Returns the metadata for an object
+    """Return metadata for an object.
+    If object_id is a file path, metadata is read from the filesystem.
+    Otherwise, it is retrieved from the datastore.
     """
     if os.path.exists(object_id):
         stat = os.stat(object_id)
@@ -662,7 +669,9 @@ def get_unique_values(key):
 
 
 def delete(object_id):
-    """Removes an object from persistent storage
+    """Remove an object from storage.
+    Deletes from the datastore or removes a file and associated
+    metadata on external devices.
     """
     if not os.path.exists(object_id):
         _call_datastore('delete', object_id)
@@ -698,7 +707,9 @@ def delete(object_id):
 
 
 def copy(metadata, mount_point, ready_callback=None):
-    """Copies an object to another mount point
+    """Copy a journal entry to another mount point.
+    The entry is read and written using the appropriate backend
+    (datastore or filesystem).
     """
     metadata = get(metadata['uid'])
     if mount_point == '/' and metadata.get('icon-color') == '#000000,#ffffff':
@@ -717,7 +728,9 @@ def copy(metadata, mount_point, ready_callback=None):
 
 def write(metadata, file_path='', update_mtime=True, transfer_ownership=True,
           ready_callback=None):
-    """Creates or updates an entry for that id
+    """Create or update a journal entry.
+    Writes to the datastore or an external device depending on
+    the mount point. Completion is handled via callbacks.
     """
     def created_reply_handler(object_id):
         if ready_callback:
