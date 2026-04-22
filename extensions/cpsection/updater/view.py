@@ -58,7 +58,7 @@ class ActivityUpdater(SectionView):
         self.pack_start(self._top_label, False, True, 0)
         self._top_label.show()
 
-        separator = Gtk.HSeparator()
+        separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self.pack_start(separator, False, True, 0)
         separator.show()
 

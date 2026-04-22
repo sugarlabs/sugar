@@ -38,7 +38,7 @@ class Power(SectionView):
 
         self._automatic_pm_alert_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
 
-        separator_pm = Gtk.HSeparator()
+        separator_pm = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self.pack_start(separator_pm, False, True, 0)
         separator_pm.show()
 

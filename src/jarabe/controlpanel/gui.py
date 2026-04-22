@@ -197,6 +197,8 @@ class ControlPanel(Gtk.Window):
         if not self._separator:
             self._separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
             self._vbox.append(self._separator)
+            self._vbox.pack_start(self._separator, False, False, 0)
+            self._vbox.reorder_child(self._separator, 1)
             self._separator.show()
 
     def _setup_main(self):
