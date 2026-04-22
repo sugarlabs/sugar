@@ -52,17 +52,21 @@ class InlineAlert(Gtk.Box):
         self._msg_label.set_max_width_chars(150)
         self._msg_label.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
         self._msg_label.set_alignment(0, 0.5)
-        self._msg_label.modify_fg(Gtk.StateType.NORMAL,
-                                  style.COLOR_SELECTION_GREY.get_gdk_color())
+        self._msg_label.get_style_context().add_class('inlinealert-label')
 
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.HORIZONTAL, **kwargs)
 
         self.set_spacing(style.DEFAULT_SPACING)
-        self.modify_bg(Gtk.StateType.NORMAL,
-                       style.COLOR_WHITE.get_gdk_color())
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_data(b"""
+        .inlinealert-box { background-color: #FFFFFF; }
+        .inlinealert-label { color: #808080; }
+        """)
+        self.get_style_context().add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        self.get_style_context().add_class('inlinealert-box')
 
-        self.pack_start(self._icon, False, False, 0)
-        self.pack_start(self._msg_label, False, False, 0)
+        self.append(self._icon)
+        self.append(self._msg_label)
         self._msg_label.show()
         self._icon.show()
 

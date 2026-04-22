@@ -45,23 +45,24 @@ class BackupView(SectionView):
         # add the initial panel
         self.set_canvas(SelectBackupRestorePanel(self))
         self.grab_focus()
-        self.show_all()
+        self.show()
         self.manager = BackupManager()
 
     def set_canvas(self, canvas):
-        if len(self.get_children()) > 0:
-            self.remove(self.get_children()[0])
+        for child in self:
+            self.remove(child)
         if canvas:
-            self.add(canvas)
+            self.append(canvas)
 
     def undo(self):
-        if self.get_children()[0].__class__ == OperationPanel:
-            operation_panel = self.get_children()[0]
+        first_child = self.get_first_child()
+        if first_child and first_child.__class__ == OperationPanel:
+            operation_panel = first_child
             if operation_panel._operator is not None:
                 operation_panel._operator.cancel()
 
 
-class _BackupButton(Gtk.EventBox):
+class _BackupButton(Gtk.Box):
 
     __gproperties__ = {
         'icon-name': (str, None, None, None, GObject.ParamFlags.READWRITE),
@@ -75,23 +76,23 @@ class _BackupButton(Gtk.EventBox):
         self._xo_color = None
         self._title = 'No Title'
 
-        Gtk.EventBox.__init__(self, **kwargs)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL, **kwargs)
+        self.set_can_target(True)
+        self.set_focusable(True)
+        self.set_can_focus(True)
 
         self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._icon = Icon(icon_name=self._icon_name,
                           pixel_size=self._pixel_size,
                           xo_color=XoColor('#000000,#000000'))
-        self._vbox.pack_start(self._icon, expand=False, fill=False, padding=0)
+        self._vbox.append(self._icon)
 
         self._label = Gtk.Label(label=self._title)
-        self._vbox.pack_start(self._label, expand=False, fill=False, padding=0)
+        self._vbox.append(self._label)
 
         self._vbox.set_spacing(style.DEFAULT_SPACING)
-        self.set_visible_window(False)
-        self.set_app_paintable(True)
-        self.set_events(Gdk.EventMask.BUTTON_PRESS_MASK)
 
-        self.add(self._vbox)
+        self.append(self._vbox)
         self._vbox.show()
         self._label.show()
         self._icon.show()
@@ -126,33 +127,38 @@ class SelectBackupRestorePanel(Gtk.Box):
 
         self._view = view
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-
         self.backup_btn = _BackupButton(
             icon_name='backup-backup',
             title=_('Save the contents of your Journal'),
             pixel_size=style.GRID_CELL_SIZE)
-        self.backup_btn.connect('button-press-event',
-                                self.__backup_button_press_cb)
-        hbox.pack_start(self.backup_btn, False, False, style.DEFAULT_SPACING)
+        gesture_backup = Gtk.GestureClick()
+        gesture_backup.connect('released', self.__backup_button_released_cb)
+        self.backup_btn.add_controller(gesture_backup)
+        hbox.append(self.backup_btn)
+        self.backup_btn.set_margin_start(style.DEFAULT_SPACING)
+        self.backup_btn.set_margin_end(style.DEFAULT_SPACING)
 
         self.restore_btn = _BackupButton(
             icon_name='backup-restore',
             title=_('Restore the contents of your Journal'),
             pixel_size=style.GRID_CELL_SIZE)
-        self.restore_btn.connect('button-press-event',
-                                 self.__restore_button_press_cb)
-        hbox.pack_start(self.restore_btn, False, False, style.DEFAULT_SPACING)
+        gesture_restore = Gtk.GestureClick()
+        gesture_restore.connect('released', self.__restore_button_released_cb)
+        self.restore_btn.add_controller(gesture_restore)
+        hbox.append(self.restore_btn)
+        self.restore_btn.set_margin_start(style.DEFAULT_SPACING)
+        self.restore_btn.set_margin_end(style.DEFAULT_SPACING)
 
         hbox.set_valign(Gtk.Align.CENTER)
         hbox.set_halign(Gtk.Align.CENTER)
-        self.add(hbox)
-        self.show_all()
+        self.append(hbox)
+        self.show()
 
-    def __backup_button_press_cb(self, button, event):
+    def __backup_button_released_cb(self, gesture, n_press, x, y):
         operation_panel = OperationPanel(OPERATION_BACKUP, self._view)
         self._view.set_canvas(operation_panel)
 
-    def __restore_button_press_cb(self, button, event):
+    def __restore_button_released_cb(self, gesture, n_press, x, y):
         operation_panel = OperationPanel(OPERATION_RESTORE, self._view)
         self._view.set_canvas(operation_panel)
 
@@ -172,45 +178,55 @@ class OperationPanel(Gtk.Grid):
 
         _icon = Icon(icon_name='backup-%s' % operation,
                      pixel_size=style.XLARGE_ICON_SIZE)
-        self.add(_icon)
+        self.append(_icon)
         _icon.show()
 
         self._message_label = Gtk.Label()
         self._message_label.set_line_wrap(True)
         self._message_label.set_width_chars(40)
         self._message_label.set_single_line_mode(False)
-        align = Gtk.Alignment.new(0.5, 0.5, 0, 0)
-        align.set_padding(0, 0, style.GRID_CELL_SIZE * 2,
-                          style.GRID_CELL_SIZE * 2)
-        align.show()
-        align.add(self._message_label)
-        self.add(align)
+        msg_wrapper = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        msg_wrapper.set_halign(Gtk.Align.CENTER)
+        msg_wrapper.set_valign(Gtk.Align.CENTER)
+        msg_wrapper.set_margin_start(style.GRID_CELL_SIZE * 2)
+        msg_wrapper.set_margin_end(style.GRID_CELL_SIZE * 2)
+        msg_wrapper.show()
+        msg_wrapper.append(self._message_label)
+        self.append(msg_wrapper)
         self._message_label.show()
 
         self._options_combo = Gtk.ComboBox()
         cell = Gtk.CellRendererText()
         self._options_combo.pack_start(cell, True)
         self._options_combo.add_attribute(cell, 'text', 0)
-        self.add(self._options_combo)
+        self.append(self._options_combo)
 
         self._progress_bar = Gtk.ProgressBar()
-        self.add(self._progress_bar)
-        self._progress_bar.set_size_request(
-            Gdk.Screen.width() - style.GRID_CELL_SIZE * 6, -1)
+        self.append(self._progress_bar)
+        prog_width = 800 - style.GRID_CELL_SIZE * 6
+        display = Gdk.Display.get_default()
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                geometry = monitor.get_geometry()
+                prog_width = geometry.width - style.GRID_CELL_SIZE * 6
+        self._progress_bar.set_size_request(prog_width, -1)
 
         self._confirm_restore_chkbtn = Gtk.CheckButton()
-        align = Gtk.Alignment()
-        align.set_padding(0, 0, style.GRID_CELL_SIZE * 2,
-                          style.GRID_CELL_SIZE * 2)
-        align.show()
-        align.add(self._confirm_restore_chkbtn)
-        self.add(align)
+        chk_wrapper = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        chk_wrapper.set_margin_start(style.GRID_CELL_SIZE * 2)
+        chk_wrapper.set_margin_end(style.GRID_CELL_SIZE * 2)
+        chk_wrapper.show()
+        chk_wrapper.append(self._confirm_restore_chkbtn)
+        self.append(chk_wrapper)
 
-        btn_box = Gtk.ButtonBox()
+        btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        btn_box.set_halign(Gtk.Align.CENTER)
         btn_box.show()
-        self._continue_btn = Gtk.Button(_('Continue'))
-        btn_box.add(self._continue_btn)
-        self.add(btn_box)
+        self._continue_btn = Gtk.Button(label=_('Continue'))
+        btn_box.append(self._continue_btn)
+        self.append(btn_box)
         self._continue_btn_handler_id = 0
 
         self.show()

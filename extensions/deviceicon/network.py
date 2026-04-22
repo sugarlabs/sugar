@@ -107,18 +107,25 @@ class WirelessPalette(Palette):
         self._info.pack_start(separator, True, True, 0)
 
         def _padded(child, xalign=0, yalign=0.5):
-            padder = Gtk.Alignment.new(xalign=xalign, yalign=yalign,
-                                       xscale=1, yscale=0.33)
-            padder.set_padding(style.DEFAULT_SPACING,
-                               style.DEFAULT_SPACING,
-                               style.DEFAULT_SPACING,
-                               style.DEFAULT_SPACING)
-            padder.add(child)
+            padder = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            if xalign == 0:
+                padder.set_halign(Gtk.Align.START)
+            elif xalign == 1:
+                padder.set_halign(Gtk.Align.END)
+            else:
+                padder.set_halign(Gtk.Align.CENTER)
+            padder.set_valign(Gtk.Align.CENTER)
+            padder.set_hexpand(True)
+            padder.set_margin_start(style.DEFAULT_SPACING)
+            padder.set_margin_end(style.DEFAULT_SPACING)
+            padder.set_margin_top(style.DEFAULT_SPACING)
+            padder.set_margin_bottom(style.DEFAULT_SPACING)
+            padder.append(child)
             return padder
 
         self._info.pack_start(_padded(self._channel_label), True, True, 0)
         self._info.pack_start(_padded(self._ip_address_label), True, True, 0)
-        self._info.show_all()
+        self._info.show()
 
     def set_connecting(self):
         self.props.secondary_text = _('Connecting...')
@@ -181,18 +188,25 @@ class WiredPalette(Palette):
         self._info = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         def _padded(child, xalign=0, yalign=0.5):
-            padder = Gtk.Alignment.new(xalign=xalign, yalign=yalign,
-                                       xscale=1, yscale=0.33)
-            padder.set_padding(style.DEFAULT_SPACING,
-                               style.DEFAULT_SPACING,
-                               style.DEFAULT_SPACING,
-                               style.DEFAULT_SPACING)
-            padder.add(child)
+            padder = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            if xalign == 0:
+                padder.set_halign(Gtk.Align.START)
+            elif xalign == 1:
+                padder.set_halign(Gtk.Align.END)
+            else:
+                padder.set_halign(Gtk.Align.CENTER)
+            padder.set_valign(Gtk.Align.CENTER)
+            padder.set_hexpand(True)
+            padder.set_margin_start(style.DEFAULT_SPACING)
+            padder.set_margin_end(style.DEFAULT_SPACING)
+            padder.set_margin_top(style.DEFAULT_SPACING)
+            padder.set_margin_bottom(style.DEFAULT_SPACING)
+            padder.append(child)
             return padder
 
         self._info.pack_start(_padded(self._speed_label), True, True, 0)
         self._info.pack_start(_padded(self._ip_address_label), True, True, 0)
-        self._info.show_all()
+        self._info.show()
 
         self.set_content(self._info)
         self.props.secondary_text = _('Connected')

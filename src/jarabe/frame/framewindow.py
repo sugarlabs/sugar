@@ -19,7 +19,7 @@ from gi.repository import Gdk
 from sugar4.graphics import style
 
 
-class FrameContainer(Gtk.Bin):
+class FrameContainer(Gtk.Box):
     """A container class for frame panel rendering. Hosts a child 'box' where
     frame elements can be added. Excludes grid-sized squares at each end
     of the frame panel, and a space alongside the inside of the screen where
@@ -28,14 +28,14 @@ class FrameContainer(Gtk.Bin):
     __gtype_name__ = 'SugarFrameContainer'
 
     def __init__(self, position):
-        Gtk.Bin.__init__(self)
+        Gtk.Box.__init__(self)
         self._position = position
 
         if self.is_vertical():
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         else:
             box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.add(box)
+        self.append(box)
         box.show()
 
     def is_vertical(self):
@@ -64,7 +64,8 @@ class FrameContainer(Gtk.Bin):
         cr.rectangle(x, y, width, height)
         cr.fill()
 
-        Gtk.Bin.do_draw(self, cr)
+        # Gtk.Bin.do_draw removed in GTK4 - snapshot should be used for custom drawing
+        pass
         return False
 
     def do_size_request(self, req):
@@ -123,23 +124,35 @@ class FrameWindow(Gtk.Window):
         self.connect('leave-notify-event', self._leave_notify_cb)
 
         self._container = FrameContainer(position)
-        self.add(self._container)
+        self.set_child(self._container)
         self._container.show()
         self._update_size()
 
         screen = Gdk.Screen.get_default()
         screen.connect('size-changed', self._size_changed_cb)
 
-    def append(self, child, expand=True, fill=True):
-        self._container.get_child().pack_start(child, expand=expand, fill=fill,
-                                               padding=0)
+    def append_child(self, child, expand=True, fill=True):
+        self._container.get_first_child().append(child)
+        if expand:
+            child.set_hexpand(True)
+            child.set_vexpand(True)
 
     def _update_size(self):
+        s_width, s_height = 800, 600
+        display = Gdk.Display.get_default()
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                if monitor:
+                    geom = monitor.get_geometry()
+                    s_width, s_height = geom.width, geom.height
+
         if self._position == Gtk.PositionType.TOP \
                 or self._position == Gtk.PositionType.BOTTOM:
-            self.resize(Gdk.Screen.width(), self.size)
+            self.set_default_size(s_width, self.size)
         else:
-            self.resize(self.size, Gdk.Screen.height())
+            self.set_default_size(self.size, s_height)
 
     def _realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DOCK)

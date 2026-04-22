@@ -68,7 +68,9 @@ class WebServicesConfig(SectionView):
             label.show()
             grid.attach(label, 0, 1, 1, 1)
 
-            alignment = Gtk.Alignment.new(0.5, 0.5, 0.1, 0.1)
+            alignment = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            alignment.set_halign(Gtk.Align.CENTER)
+            alignment.set_valign(Gtk.Align.CENTER)
             alignment.add(grid)
             grid.show()
 
@@ -81,7 +83,14 @@ class WebServicesConfig(SectionView):
         grid.set_border_width(style.DEFAULT_SPACING * 2)
         grid.set_column_homogeneous(True)
 
-        width = Gdk.Screen.width() - 2 * style.GRID_CELL_SIZE
+        width = 800 - 2 * style.GRID_CELL_SIZE
+        display = Gdk.Display.get_default()
+        if display:
+            monitors = display.get_monitors()
+            if monitors.get_n_items() > 0:
+                monitor = monitors.get_item(0)
+                geometry = monitor.get_geometry()
+                width = geometry.width - 2 * style.GRID_CELL_SIZE
         nx = int(width / (style.GRID_CELL_SIZE + style.DEFAULT_SPACING * 4))
 
         self._service_config_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -112,7 +121,9 @@ class WebServicesConfig(SectionView):
                 x = 0
                 y += 1
 
-        alignment = Gtk.Alignment.new(0.5, 0, 0, 0)
+        alignment = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        alignment.set_halign(Gtk.Align.CENTER)
+        alignment.set_valign(Gtk.Align.START)
         alignment.add(grid)
         grid.show()
 
@@ -132,7 +143,7 @@ class WebServicesConfig(SectionView):
         workspace.show()
 
         workspace.add(self._service_config_box)
-        workspace.show_all()
+        workspace.show()
         vbox.show()
 
     def undo(self):

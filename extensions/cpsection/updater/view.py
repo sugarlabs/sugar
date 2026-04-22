@@ -235,8 +235,9 @@ class ProgressPane(Gtk.Box):
         self.pack_start(self._label, True, True, 0)
         self._label.show()
 
-        alignment_box = Gtk.Alignment.new(xalign=0.5, yalign=0.5,
-                                          xscale=0, yscale=0)
+        alignment_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        alignment_box.set_halign(Gtk.Align.CENTER)
+        alignment_box.set_valign(Gtk.Align.CENTER)
         self.pack_start(alignment_box, True, True, 0)
         alignment_box.show()
 
