@@ -49,7 +49,6 @@ class BuddyMenu(Palette):
         Palette.__init__(self, None, primary_text=nick, icon=buddy_icon)
         self.menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.set_content(self.menu_box)
-        self.menu_box.show_all()
         self._invite_menu = None
         self._active_activity_changed_hid = None
         # Fixme: we need to make the widget accessible through the Palette API
