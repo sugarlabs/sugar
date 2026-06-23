@@ -2,7 +2,9 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import json
 import logging
+import os
 import threading
 
 from jarabe.model.aodcredentials import AODCredentialStore
@@ -341,23 +343,26 @@ class AODService:
         try:
             with self._lock:
                 provider = self._job_providers.get(job.job_id)
-            result = generate_activity(
-                job.spec,
-                output_root=job.output_root or None,
-                provider=provider,
-                provider_name=job.provider_name,
-                use_rag=job.use_rag,
-                progress_cb=lambda stage, fraction, message, metadata=None:
-                    self._pipeline_progress(
-                        job,
-                        stage,
-                        fraction,
-                        message,
-                        metadata,
-                    ),
-                pace=True,
-                package_bundle=False,
-            )
+            if job.parent_revision_id:
+                result = self._run_refinement_job(job, provider)
+            else:
+                result = generate_activity(
+                    job.spec,
+                    output_root=job.output_root or None,
+                    provider=provider,
+                    provider_name=job.provider_name,
+                    use_rag=job.use_rag,
+                    progress_cb=lambda stage, fraction, message, metadata=None:
+                        self._pipeline_progress(
+                            job,
+                            stage,
+                            fraction,
+                            message,
+                            metadata,
+                        ),
+                    pace=True,
+                    package_bundle=False,
+                )
         except JobCancelled:
             self._mark_cancelled(job)
             return
@@ -392,6 +397,84 @@ class AODService:
 
         status = _status_for_pipeline_stage(stage)
         self._set_progress(job, status, stage, fraction, message, metadata)
+
+    def _run_refinement_job(self, job, provider):
+        """Run a refinement using SEARCH/REPLACE + full-regen fallback.
+
+        For LLM providers, tries cheap SEARCH/REPLACE blocks before
+        falling back to full regen.  For local-template, falls back
+        to the standard generation pipeline.
+        """
+        if job.provider_name in ('local', 'local-template') and \
+                provider is None:
+            return generate_activity(
+                job.spec,
+                output_root=job.output_root or None,
+                provider=None,
+                provider_name='local-template',
+                use_rag=job.use_rag,
+                progress_cb=lambda stage, fraction, message, metadata=None:
+                    self._pipeline_progress(
+                        job, stage, fraction, message, metadata),
+                pace=True,
+                package_bundle=False,
+            )
+
+        from jarabe.model.aodpipeline import refine_activity
+        from jarabe.model.aodpipeline import PipelineError
+
+        session = self._session_store.load(job.session_id)
+        if session is None:
+            raise PipelineError(
+                'Could not find the session for refinement.'
+            )
+
+        parent_revision = None
+        for rev in session.revisions:
+            if rev.revision_id == job.parent_revision_id:
+                parent_revision = rev
+                break
+        if parent_revision is None:
+            raise PipelineError(
+                'Could not find the parent revision for refinement.'
+            )
+
+        summary = parent_revision.result_summary or {}
+        project_path = summary.get('project_path', '')
+        if not project_path:
+            raise PipelineError(
+                'Parent revision has no project path.'
+            )
+
+        source_path = os.path.join(project_path, 'activity.py')
+        try:
+            with open(source_path, encoding='utf-8') as f:
+                current_source = f.read()
+        except OSError:
+            raise PipelineError(
+                'Could not read the current activity.py for refinement.'
+            )
+
+        plan_path = os.path.join(project_path, 'aod_plan.json')
+        try:
+            with open(plan_path, encoding='utf-8') as f:
+                current_plan = json.load(f)
+        except (OSError, ValueError):
+            current_plan = {}
+
+        return refine_activity(
+            job.spec,
+            current_source,
+            current_plan,
+            job.output_root or None,
+            provider=provider,
+            provider_name=job.provider_name,
+            progress_cb=lambda stage, fraction, message, metadata=None:
+                self._pipeline_progress(
+                    job, stage, fraction, message, metadata),
+            pace=True,
+            package_bundle=False,
+        )
 
     def _set_progress(self, job, status, stage, progress, message,
                       metadata=None):

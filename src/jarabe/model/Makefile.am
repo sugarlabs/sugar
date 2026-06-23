@@ -13,6 +13,7 @@ sugar_PYTHON =			\
 	aodprompts.py		\
 	aodqueue.py		\
 	aodrag.py		\
+	aodrefine.py		\
 	aodsessions.py		\
 	aodservice.py		\
 	aodspec.py		\
