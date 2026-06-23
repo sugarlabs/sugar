@@ -2804,6 +2804,10 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         box.pack_start(subtitle, False, False, 0)
         subtitle.show()
 
+        refinement_card = self._create_sidebar_refinement_card()
+        box.pack_start(refinement_card, False, False, 0)
+        refinement_card.show()
+
         guided = Gtk.EventBox()
         guided.get_style_context().add_class('create-ai-learning-card')
         box.pack_start(guided, False, False, 0)
@@ -6524,7 +6528,6 @@ if clipboard.wait_is_text_available():
         flow = plan.get('classroom_flow') or plan.get('learner_steps') or []
         flow_text = '\n'.join('- %s' % step for step in flow[:5])
         plan_context = self._compact_plan_for_refinement(plan)
-        source_context = self._source_context_for_refinement(result)
         prompt = (
             'Refine the existing generated Sugar activity. Preserve working '
             'behavior unless the new request changes it.\n\n'
@@ -6535,7 +6538,6 @@ if clipboard.wait_is_text_available():
             '- Summary: %(summary)s\n'
             '- Classroom flow:\n%(flow)s\n\n'
             'Current plan JSON excerpt:\n%(plan_context)s\n\n'
-            'Current activity.py excerpt:\n%(source_context)s\n\n'
             'Refinement request:\n%(refinement)s'
         ) % {
             'original': base_spec.prompt,
@@ -6544,7 +6546,6 @@ if clipboard.wait_is_text_available():
             'summary': plan.get('summary', ''),
             'flow': flow_text or '- Keep the activity usable for learners.',
             'plan_context': plan_context,
-            'source_context': source_context,
             'refinement': refinement,
         }
         prompt = self._limit_refinement_prompt(prompt)

@@ -56,9 +56,29 @@ class LLMProvider:
                       timeout=_PROVIDER_PLAN_TIMEOUT):
         raise NotImplementedError
 
+    def generate_text(self, system_prompt, user_prompt,
+                      timeout=_PROVIDER_CODEGEN_TIMEOUT,
+                      stream_callback=None):
+        """Return raw model text without any extraction or parsing.
+
+        Used by the refinement pipeline for SEARCH/REPLACE blocks,
+        where the response is NOT a complete activity.py and must not
+        be run through extract_activity_source().
+        """
+        raise NotImplementedError(
+            '%s does not support raw text generation.' % self.label
+        )
+
     def generate_activity_source(self, system_prompt, user_prompt,
-                                 timeout=_PROVIDER_CODEGEN_TIMEOUT):
-        """Return a complete generated activity.py source string."""
+                                 timeout=_PROVIDER_CODEGEN_TIMEOUT,
+                                 stream_callback=None):
+        """Return a complete generated activity.py source string.
+
+        stream_callback, if provided, is called with the growing partial
+        text as the provider emits tokens. Providers that do not support
+        streaming may ignore it; the final returned source is always the
+        complete activity.py.
+        """
         return extract_activity_source(
             self.generate_plan(system_prompt, user_prompt, timeout=timeout)
         )
@@ -106,8 +126,24 @@ class GeminiProvider(LLMProvider):
                       timeout=_PROVIDER_PLAN_TIMEOUT):
         return self._generate_json(system_prompt, user_prompt, timeout)
 
+    def generate_text(self, system_prompt, user_prompt,
+                      timeout=_PROVIDER_CODEGEN_TIMEOUT,
+                      stream_callback=None):
+        text = self._generate_content(
+            system_prompt, user_prompt, timeout,
+            max_output_tokens=_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS,
+            response_json=False,
+        )
+        if stream_callback is not None:
+            try:
+                stream_callback(text)
+            except Exception:
+                pass
+        return text
+
     def generate_activity_source(self, system_prompt, user_prompt,
-                                 timeout=_PROVIDER_CODEGEN_TIMEOUT):
+                                 timeout=_PROVIDER_CODEGEN_TIMEOUT,
+                                 stream_callback=None):
         text = self._generate_content(
             system_prompt,
             user_prompt,
@@ -115,6 +151,11 @@ class GeminiProvider(LLMProvider):
             max_output_tokens=_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS,
             response_json=False,
         )
+        if stream_callback is not None:
+            try:
+                stream_callback(text)
+            except Exception:
+                pass
         return extract_activity_source_from_response(text)
 
     def _generate_json(self, system_prompt, user_prompt, timeout,
@@ -212,14 +253,26 @@ class OpenAIProvider(LLMProvider):
                       timeout=_PROVIDER_PLAN_TIMEOUT):
         return self._generate_json(system_prompt, user_prompt, timeout)
 
+    def generate_text(self, system_prompt, user_prompt,
+                      timeout=_PROVIDER_CODEGEN_TIMEOUT,
+                      stream_callback=None):
+        if stream_callback is not None:
+            return self._stream_text(
+                system_prompt, user_prompt, timeout,
+                max_tokens=_CODEGEN_MAX_TOKENS,
+                stream_callback=stream_callback,
+            )
+        return self._generate_text(
+            system_prompt, user_prompt, timeout,
+            max_tokens=_CODEGEN_MAX_TOKENS, json_response=False,
+        )
+
     def generate_activity_source(self, system_prompt, user_prompt,
-                                 timeout=_PROVIDER_CODEGEN_TIMEOUT):
-        text = self._generate_text(
-            system_prompt,
-            user_prompt,
-            timeout,
-            max_tokens=_CODEGEN_MAX_TOKENS,
-            json_response=False,
+                                 timeout=_PROVIDER_CODEGEN_TIMEOUT,
+                                 stream_callback=None):
+        text = self.generate_text(
+            system_prompt, user_prompt, timeout,
+            stream_callback=stream_callback,
         )
         return extract_activity_source_from_response(text)
 
@@ -234,6 +287,77 @@ class OpenAIProvider(LLMProvider):
                 json_response=True,
             )
         )
+
+    def _stream_text(self, system_prompt, user_prompt, timeout,
+                     max_tokens, stream_callback):
+        """Stream a chat-completion response token-by-token via SSE.
+
+        Returns the full accumulated text once the stream ends; on the
+        way, calls stream_callback(running_text) for each delta chunk so
+        callers can surface a live preview. Provider errors raise
+        ProviderError just like the non-streaming path.
+        """
+        payload = {
+            'model': self.model,
+            'messages': [
+                {'role': 'system', 'content': system_prompt},
+                {'role': 'user', 'content': user_prompt},
+            ],
+            'temperature': self._generation_temperature(),
+            'stream': True,
+        }
+        if max_tokens is not None:
+            payload['max_tokens'] = max_tokens
+        payload.update(
+            self._extra_generation_params(max_tokens, json_response=False)
+        )
+        request = urllib.request.Request(
+            self._endpoint,
+            data=json.dumps(payload).encode('utf-8'),
+            headers=self._request_headers(),
+            method='POST',
+        )
+        parts = []
+        try:
+            with urllib.request.urlopen(
+                    request, timeout=timeout) as response:
+                for raw_line in response:
+                    line = raw_line.decode(
+                        'utf-8', errors='replace').rstrip('\r\n')
+                    if not line or not line.startswith('data:'):
+                        continue
+                    data = line[5:].strip()
+                    if data == '[DONE]':
+                        break
+                    try:
+                        event = json.loads(data)
+                    except json.JSONDecodeError:
+                        continue
+                    try:
+                        delta = event['choices'][0].get('delta') or {}
+                    except (KeyError, IndexError, TypeError):
+                        continue
+                    content = delta.get('content')
+                    if not isinstance(content, str) or not content:
+                        continue
+                    parts.append(content)
+                    try:
+                        stream_callback(''.join(parts))
+                    except Exception:
+                        # Streaming is a UX nicety; a failing UI callback
+                        # must not abort generation.
+                        pass
+        except urllib.error.HTTPError as error:
+            detail = error.read().decode('utf-8', errors='replace')[:500]
+            raise ProviderError(
+                '%s stream failed with HTTP %d: %s'
+                % (self._request_label(), error.code, detail)
+            )
+        except (OSError, ValueError) as error:
+            raise ProviderError(
+                '%s stream failed: %s' % (self._request_label(), error)
+            )
+        return ''.join(parts)
 
     def _generate_text(self, system_prompt, user_prompt, timeout,
                        max_tokens=None, json_response=True):
@@ -470,14 +594,27 @@ class FreeModelProvider(LLMProvider):
                       timeout=_PROVIDER_PLAN_TIMEOUT):
         return self._generate_json(system_prompt, user_prompt, timeout)
 
-    def generate_activity_source(self, system_prompt, user_prompt,
-                                 timeout=_PROVIDER_CODEGEN_TIMEOUT):
+    def generate_text(self, system_prompt, user_prompt,
+                      timeout=_PROVIDER_CODEGEN_TIMEOUT,
+                      stream_callback=None):
         text = self._generate_responses_text(
-            system_prompt,
-            user_prompt,
-            timeout,
+            system_prompt, user_prompt, timeout,
             max_output_tokens=_FREEMODEL_CODEGEN_MAX_OUTPUT_TOKENS,
             reasoning_effort=self._codegen_reasoning_effort,
+        )
+        if stream_callback is not None:
+            try:
+                stream_callback(text)
+            except Exception:
+                pass
+        return text
+
+    def generate_activity_source(self, system_prompt, user_prompt,
+                                 timeout=_PROVIDER_CODEGEN_TIMEOUT,
+                                 stream_callback=None):
+        text = self.generate_text(
+            system_prompt, user_prompt, timeout,
+            stream_callback=stream_callback,
         )
         return extract_activity_source_from_response(text)
 
@@ -547,13 +684,26 @@ class ClaudeProvider(LLMProvider):
             max_tokens=1600,
         )
 
-    def generate_activity_source(self, system_prompt, user_prompt,
-                                 timeout=_PROVIDER_CODEGEN_TIMEOUT):
+    def generate_text(self, system_prompt, user_prompt,
+                      timeout=_PROVIDER_CODEGEN_TIMEOUT,
+                      stream_callback=None):
         text = self._generate_text(
-            system_prompt,
-            user_prompt,
-            timeout,
+            system_prompt, user_prompt, timeout,
             max_tokens=_CODEGEN_MAX_TOKENS,
+        )
+        if stream_callback is not None:
+            try:
+                stream_callback(text)
+            except Exception:
+                pass
+        return text
+
+    def generate_activity_source(self, system_prompt, user_prompt,
+                                 timeout=_PROVIDER_CODEGEN_TIMEOUT,
+                                 stream_callback=None):
+        text = self.generate_text(
+            system_prompt, user_prompt, timeout,
+            stream_callback=stream_callback,
         )
         return extract_activity_source_from_response(text)
 
@@ -622,13 +772,26 @@ class OllamaProvider(LLMProvider):
                       timeout=_PROVIDER_PLAN_TIMEOUT):
         return self._generate_json(system_prompt, user_prompt, timeout)
 
-    def generate_activity_source(self, system_prompt, user_prompt,
-                                 timeout=_PROVIDER_CODEGEN_TIMEOUT):
+    def generate_text(self, system_prompt, user_prompt,
+                      timeout=_PROVIDER_CODEGEN_TIMEOUT,
+                      stream_callback=None):
         text = self._generate_text(
-            system_prompt,
-            user_prompt,
-            timeout,
+            system_prompt, user_prompt, timeout,
             num_predict=_CODEGEN_MAX_TOKENS,
+        )
+        if stream_callback is not None:
+            try:
+                stream_callback(text)
+            except Exception:
+                pass
+        return text
+
+    def generate_activity_source(self, system_prompt, user_prompt,
+                                 timeout=_PROVIDER_CODEGEN_TIMEOUT,
+                                 stream_callback=None):
+        text = self.generate_text(
+            system_prompt, user_prompt, timeout,
+            stream_callback=stream_callback,
         )
         return extract_activity_source_from_response(text)
 

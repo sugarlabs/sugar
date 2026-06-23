@@ -549,10 +549,14 @@ def normalize_plan(spec, plan):
             'code_source',
             'codegen_provider',
             'codegen_model',
-            'codegen_fallback_reason'):
+            'codegen_fallback_reason',
+            'refine_method'):
         value = plan.get(field)
         if isinstance(value, str) and value:
             normalized[field] = value
+
+    if plan.get('bundle_id'):
+        normalized['bundle_id'] = plan['bundle_id']
 
     attempts = plan.get('codegen_attempts')
     if isinstance(attempts, int):

@@ -10,7 +10,6 @@ from sugar3 import env
 
 from jarabe.model.aodcodegen import build_codegen_system_prompt
 from jarabe.model.aodcodegen import build_codegen_user_prompt
-from jarabe.model.aodcodegen import extract_activity_source_from_response
 from jarabe.model.aodgenerator import build_plan
 from jarabe.model.aodgenerator import create_prototype_activity
 from jarabe.model.aodgenerator import enrich_plan
@@ -476,17 +475,25 @@ def refine_activity(spec, current_source, current_plan, output_root,
     progress.report('generating', 0.30,
                     'Asking the model for targeted edits')
 
+    generate_text = getattr(selected_provider, 'generate_text', None)
+    if not callable(generate_text):
+        generate_text = None
+
     patched_source = None
     refine_method = 'search_replace'
     try:
-        response = generate_source(
-            build_refine_system_prompt(),
-            build_refine_user_prompt(
-                current_source,
-                refinement_request,
-                plan_context=plan_context,
-            ),
-        )
+        if generate_text is not None:
+            response = generate_text(
+                build_refine_system_prompt(),
+                build_refine_user_prompt(
+                    current_source,
+                    refinement_request,
+                    plan_context=plan_context,
+                ),
+            )
+        else:
+            response = None
+            refine_method = 'full_regen'
     except (ProviderError, ValueError) as error:
         progress.report(
             'generating', 0.35,
