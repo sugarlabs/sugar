@@ -65,10 +65,30 @@ class _CodegenProvider(_FakeProvider):
         self.codegen_calls = 0
 
     def generate_activity_source(self, system_prompt, user_prompt,
-                                 timeout=90):
+                                 timeout=90, stream_callback=None):
         self.codegen_calls += 1
         if 'complete Python source for activity.py' not in system_prompt:
             raise AssertionError('Missing code generation instructions')
+        return self.source
+
+
+class _StreamingCodegenProvider(_FakeProvider):
+    """Provider that emits the source as several streamed chunks."""
+
+    def __init__(self, source, chunk_size=200):
+        self.source = source
+        self.chunk_size = chunk_size
+        self.codegen_calls = 0
+        self.observed_partials = []
+
+    def generate_activity_source(self, system_prompt, user_prompt,
+                                 timeout=90, stream_callback=None):
+        self.codegen_calls += 1
+        accumulated = ''
+        for index in range(0, len(self.source), self.chunk_size):
+            accumulated += self.source[index:index + self.chunk_size]
+            if stream_callback is not None:
+                stream_callback(accumulated)
         return self.source
 
 
@@ -262,6 +282,31 @@ class TestAodPipeline(unittest.TestCase):
         self.assertIn('Provider could not generate valid activity code',
                       str(raised.exception))
         self.assertIn('codegen offline for test', str(raised.exception))
+
+    def test_provider_codegen_streams_partial_source_to_progress_cb(self):
+        source = _valid_activity_source(self.spec)
+        provider = _StreamingCodegenProvider(source, chunk_size=400)
+        drafts = []
+
+        def progress_cb(stage, fraction, message, metadata=None):
+            if isinstance(metadata, dict) and \
+                    metadata.get('codegen_streaming'):
+                drafts.append(metadata.get('draft_activity_source', ''))
+
+        generate_activity(
+            self.spec,
+            self.output_root,
+            provider=provider,
+            progress_cb=progress_cb,
+        )
+
+        # At least one streamed draft should reach the progress callback,
+        # and the latest streamed text should be a prefix of the final
+        # accepted source (so the UI shows real partial code).
+        self.assertGreaterEqual(len(drafts), 1)
+        for draft in drafts:
+            self.assertTrue(source.startswith(draft))
+        self.assertTrue(len(drafts[-1]) > 0)
 
     def test_template_fallback_recovers_when_codegen_fails(self):
         result = generate_activity(

@@ -10,6 +10,7 @@ sugar_PYTHON =			\
 	aodlicenses.py		\
 	aodllm.py		\
 	aodpipeline.py		\
+	aodpreview.py		\
 	aodprompts.py		\
 	aodqueue.py		\
 	aodrag.py		\

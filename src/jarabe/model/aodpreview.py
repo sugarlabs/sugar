@@ -1,0 +1,304 @@
+# Copyright (C) 2026 Sugar Labs
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""Live preview of generated Sugar activities.
+
+Instead of showing a static mockup, this module imports the generated
+activity.py, instantiates GeneratedActivity with a minimal stub base
+class, and captures the real GTK canvas + toolbar widgets for embedding
+in the AOD preview area.
+
+The stub provides just enough of the sugar3.activity.Activity API for
+generated code to run without D-Bus, the Sugar shell, or the Journal.
+"""
+
+import logging
+import os
+import re
+
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
+from gi.repository import Pango
+
+
+class _PreviewMetadata:
+    """Minimal stand-in for Sugar's metadata object.
+
+    The real metadata is a SugarMetadata GObject that emits 'updated'
+    signals.  Generated activity widgets (ActivityToolbarButton,
+    TitleEntry) call metadata.connect('updated', cb) and read
+    metadata['title'] and metadata.get('icon-color').  We provide a
+    dict subclass with a no-op connect() so the widgets construct
+    without crashing.
+    """
+
+    def __init__(self, title):
+        self._data = {
+            'title': title or 'Preview',
+            'icon-color': '',
+            'description': '',
+            'tags': '',
+        }
+
+    def __getitem__(self, key):
+        return self._data.get(key, '')
+
+    def __setitem__(self, key, value):
+        self._data[key] = value
+
+    def __contains__(self, key):
+        return key in self._data
+
+    def get(self, key, fallback=None):
+        return self._data.get(key, fallback)
+
+    def keys(self):
+        return self._data.keys()
+
+    def connect(self, signal, callback):
+        return 0
+
+    def disconnect(self, handler_id):
+        pass
+
+
+class PreviewActivity(Gtk.Window):
+    """Minimal stub of sugar3.activity.Activity for preview rendering.
+
+    Generated activities call activity.Activity.__init__(self, handle)
+    and then self.set_canvas(), self.set_toolbar_box(), self.show_all().
+    This stub captures the canvas and toolbar widgets so they can be
+    reparented into the AOD preview area.
+
+    The stub provides:
+    - metadata: _PreviewMetadata for ActivityToolbarButton/StopButton
+    - set_canvas/set_toolbar_box: capture widgets instead of using them
+    - show_all/show: no-op (the preview area handles visibility)
+    - add_stop_button/close: no-op
+    - connect: fake signal registration for 'shared', 'joined', 'closing'
+    - get_bundle_path: returns the project directory for icon loading
+    """
+
+    __gsignals__ = {
+        'shared': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'joined': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'closing': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+    }
+
+    def __init__(self, handle=None, bundle_path=''):
+        Gtk.Window.__init__(self)
+        self._handle = handle
+        self._bundle_path = bundle_path
+        self._canvas = None
+        self._toolbar_box = None
+        self._stop_buttons = []
+        self.metadata = _PreviewMetadata('Preview')
+        self._stop_callback = None
+        self.max_participants = 1
+        self.shared_activity = None
+        self._title = self.metadata['title']
+
+    def set_canvas(self, canvas):
+        self._canvas = canvas
+
+    def get_canvas(self):
+        return self._canvas
+
+    def set_toolbar_box(self, toolbar_box):
+        self._toolbar_box = toolbar_box
+
+    def get_toolbar_box(self):
+        return self._toolbar_box
+
+    def show_all(self):
+        pass
+
+    def show(self):
+        pass
+
+    def add_stop_button(self, button):
+        self._stop_buttons.append(button)
+
+    def close(self):
+        if self._stop_callback is not None:
+            self._stop_callback()
+        self.emit('closing')
+
+    def set_stop_callback(self, callback):
+        self._stop_callback = callback
+
+    def get_bundle_path(self):
+        return self._bundle_path
+
+    def get_bundle_id(self):
+        return _read_bundle_id(self._bundle_path)
+
+    def get_id(self):
+        return 'aod-preview'
+
+    def save(self):
+        pass
+
+    def share(self):
+        pass
+
+    def get_shared_activity(self):
+        return self.shared_activity
+
+    def set_title(self, title):
+        self._title = title
+        self.metadata['title'] = title
+
+    def get_title(self):
+        return self._title
+
+
+def render_activity_preview(project_path, activity_name=''):
+    """Import and instantiate a generated activity for preview.
+
+    Reads activity.py from project_path, replaces the sugar3 Activity
+    base class with PreviewActivity, execs the modified source, and
+    returns a PreviewActivity instance with the real canvas and toolbar
+    widgets ready for embedding.
+
+    Returns (preview_activity, canvas_widget, toolbar_widget) or
+    (None, error_message, None) if instantiation fails.
+    """
+    source_path = os.path.join(project_path, 'activity.py')
+    if not os.path.isfile(source_path):
+        return None, 'activity.py not found in %s' % project_path, None
+
+    try:
+        with open(source_path, encoding='utf-8') as f:
+            source = f.read()
+    except OSError as error:
+        return None, 'Could not read activity.py: %s' % error, None
+
+    patched_source = _patch_source(source)
+
+    bundle_path = project_path
+    _install_bundle_path_helper(bundle_path)
+
+    preview = PreviewActivity(bundle_path=bundle_path)
+    preview.metadata = _PreviewMetadata(activity_name or 'Preview')
+
+    namespace = {
+        '__name__': 'aod_preview_module',
+        '__file__': source_path,
+        'PreviewActivity': PreviewActivity,
+        '_preview_instance': preview,
+    }
+
+    try:
+        exec(compile(patched_source, source_path, 'exec'), namespace)
+    except SyntaxError as error:
+        return None, 'Syntax error in activity.py line %s: %s' % (
+            error.lineno, error.msg), None
+    except Exception as error:
+        logging.exception('Preview instantiation failed')
+        return None, 'Could not load activity: %s' % error, None
+
+    activity_class = namespace.get('GeneratedActivity')
+    if activity_class is None:
+        return None, 'GeneratedActivity class not found in source', None
+
+    try:
+        instance = activity_class(handle=None)
+    except Exception as error:
+        logging.exception('Preview __init__ failed')
+        return None, 'Activity initialization failed: %s' % error, None
+
+    if not isinstance(instance, PreviewActivity):
+        return None, 'Activity did not inherit from PreviewActivity', None
+
+    canvas = instance.get_canvas()
+    toolbar = instance.get_toolbar_box()
+
+    if canvas is None:
+        return None, 'Activity did not call set_canvas()', None
+
+    return instance, canvas, toolbar
+
+
+def _patch_source(source):
+    """Replace activity.Activity with PreviewActivity in source code.
+
+    The generated source does:
+        from sugar3.activity import activity
+        class GeneratedActivity(activity.Activity):
+            def __init__(self, handle):
+                activity.Activity.__init__(self, handle)
+
+    We replace the base class references so the generated class inherits
+    from PreviewActivity instead of the real Activity, which requires
+    D-Bus and the Sugar shell.
+    """
+    patched = source
+
+    patched = patched.replace(
+        'activity.Activity.__init__',
+        'PreviewActivity.__init__',
+    )
+
+    patched = re.sub(
+        r'class\s+GeneratedActivity\s*\(\s*activity\.Activity\s*\)\s*:',
+        'class GeneratedActivity(PreviewActivity):',
+        patched,
+    )
+
+    return patched
+
+
+_bundle_path_override = ['']
+
+
+def _install_bundle_path_helper(bundle_path):
+    """Make sugar3.activity.activity.get_bundle_path() return the project dir.
+
+    ActivityToolbarButton calls get_bundle_path() to load the activity
+    icon.  We temporarily monkey-patch it to return the generated
+    project directory so the icon loads without a real bundle.
+    """
+    _bundle_path_override[0] = bundle_path
+
+    try:
+        from sugar3.activity import activity as sugar_activity
+        if not hasattr(sugar_activity, '_original_get_bundle_path'):
+            sugar_activity._original_get_bundle_path = \
+                sugar_activity.get_bundle_path
+        sugar_activity.get_bundle_path = _get_bundle_path
+    except ImportError:
+        pass
+
+
+def _get_bundle_path():
+    return _bundle_path_override[0] or '.'
+
+
+def _read_bundle_id(bundle_path):
+    info_path = os.path.join(bundle_path or '', 'activity', 'activity.info')
+    try:
+        with open(info_path, encoding='utf-8') as info_file:
+            for line in info_file:
+                line = line.strip()
+                if line.startswith('bundle_id'):
+                    unused_key, value = line.split('=', 1)
+                    return value.strip()
+    except (OSError, ValueError):
+        pass
+    return os.environ.get('SUGAR_BUNDLE_ID', 'org.sugarlabs.aod.preview')
+
+
+def _restore_bundle_path():
+    try:
+        from sugar3.activity import activity as sugar_activity
+        if hasattr(sugar_activity, '_original_get_bundle_path'):
+            sugar_activity.get_bundle_path = \
+                sugar_activity._original_get_bundle_path
+    except ImportError:
+        pass

@@ -4711,6 +4711,9 @@ if clipboard.wait_is_text_available():
         return False
 
     def _render_generated_activity_preview(self, result):
+        if self._render_live_generated_activity_preview(result):
+            return
+
         self._clear_activity_preview()
         plan = result.plan if isinstance(result.plan, dict) else {}
         template = plan.get('template', 'utility')
@@ -4763,6 +4766,62 @@ if clipboard.wait_is_text_available():
             footer.pack_start(pill, False, False, 0)
 
         card.show_all()
+
+    def _render_live_generated_activity_preview(self, result):
+        project_path = getattr(result, 'project_path', '')
+        if not project_path:
+            return False
+
+        try:
+            from jarabe.model.aodpreview import render_activity_preview
+            preview, canvas, toolbar = render_activity_preview(
+                project_path,
+                getattr(result.spec, 'name', '') or _('Generated Activity'),
+            )
+        except Exception:
+            logging.exception('Could not render live generated activity')
+            return False
+
+        if preview is None or not isinstance(canvas, Gtk.Widget):
+            logging.warning(
+                'Live generated activity preview unavailable: %s', canvas)
+            return False
+
+        self._clear_activity_preview()
+
+        shell = Gtk.EventBox()
+        shell.get_style_context().add_class('create-ai-generated-preview')
+        shell.set_hexpand(True)
+        shell.set_vexpand(True)
+        shell.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+        shell.connect('button-press-event',
+                      self.__preview_target_button_press_event_cb,
+                      _('activity canvas'))
+
+        box = Gtk.VBox(spacing=style.zoom(6))
+        box.set_border_width(style.zoom(4))
+        box.set_hexpand(True)
+        box.set_vexpand(True)
+        shell.add(box)
+
+        if isinstance(toolbar, Gtk.Widget):
+            self._detach_preview_widget(toolbar)
+            toolbar.set_hexpand(True)
+            box.pack_start(toolbar, False, False, 0)
+
+        self._detach_preview_widget(canvas)
+        canvas.set_hexpand(True)
+        canvas.set_vexpand(True)
+        box.pack_start(canvas, True, True, 0)
+
+        self._preview_content_box.pack_start(shell, True, True, 0)
+        shell.show_all()
+        return True
+
+    def _detach_preview_widget(self, widget):
+        parent = widget.get_parent()
+        if parent is not None:
+            parent.remove(widget)
 
     def _create_generated_preview_body(self, result, template):
         plan = result.plan if isinstance(result.plan, dict) else {}
