@@ -25,10 +25,16 @@ import logging
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
+from gi.repository import Gdk
 
 from sugar3.graphics import style
 from sugar3.graphics import iconentry
 from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.icon import Icon
 
 from jarabe.desktop import favoritesview
 from jarabe.model import desktop
@@ -44,6 +50,7 @@ class ViewToolbar(Gtk.Toolbar):
                           ([str])),
         'view-changed': (GObject.SignalFlags.RUN_FIRST, None,
                          ([object])),
+        'create-ai-activity': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self):
@@ -98,6 +105,24 @@ class ViewToolbar(Gtk.Toolbar):
         self._list_view_toggle_id = self._list_button.connect(
             'toggled', self.__view_button_toggled_cb, self._list_view_index)
         self.insert(self._list_button, -1)
+
+        self._create_button = ToolButton()
+        create_icon = Icon(icon_name='list-add',
+                           pixel_size=style.STANDARD_ICON_SIZE,
+                           stroke_color=style.COLOR_BLACK.get_svg(),
+                           fill_color=style.COLOR_WHITE.get_svg())
+        self._create_button.set_icon_widget(create_icon)
+        create_icon.show()
+        self._create_button.props.tooltip = _('Create activity with AI')
+        self._create_button.set_palette(self._create_ai_palette())
+        self._create_button.connect('clicked',
+                                    self.__create_button_clicked_cb)
+        # Keep click behavior available and also force immediate hover popup.
+        self._create_button.palette_invoker.props.toggle_palette = True
+        self._create_button.get_child().connect(
+            'enter-notify-event', self.__create_button_enter_notify_cb)
+        self.insert(self._create_button, -1)
+        self._create_button.show()
 
         self._add_separator()
 
@@ -200,6 +225,42 @@ class ViewToolbar(Gtk.Toolbar):
         self._list_view_toggle_id = self._list_button.connect(
             'toggled', self.__view_button_toggled_cb, self._list_view_index)
         self._list_button.show()
+
+    def _create_ai_palette(self):
+        palette = Palette(None)
+        menu_box = PaletteMenuBox()
+        menu_item = PaletteMenuItem(_('Create activity with AI'),
+                                    icon_name='list-add')
+        menu_item.set_size_request(style.GRID_CELL_SIZE * 3,
+                                   style.GRID_CELL_SIZE - style.DEFAULT_PADDING)
+        if menu_item.icon is not None:
+            menu_item.icon.props.pixel_size = style.STANDARD_ICON_SIZE
+        menu_item.connect('activate', self.__create_activity_with_ai_cb)
+        menu_box.append_item(menu_item)
+        menu_item.show()
+        palette.set_content(menu_box)
+        menu_box.show()
+        # Remove the default header gutter so this palette shows one compact row.
+        palette._primary_event_box.hide()
+        palette._separator.hide()
+        palette.action_bar.hide()
+        palette._secondary_box.set_child_packing(
+            palette._content, True, True, 0, Gtk.PackType.START)
+        return palette
+
+    def __create_activity_with_ai_cb(self, menu_item):
+        self.emit('create-ai-activity')
+
+    def __create_button_clicked_cb(self, button):
+        if button.palette is not None:
+            button.palette.popdown(immediate=True)
+        self.emit('create-ai-activity')
+
+    def __create_button_enter_notify_cb(self, widget, event):
+        if event.mode == Gdk.CrossingMode.NORMAL and \
+                self._create_button.palette is not None:
+            self._create_button.palette.popup(immediate=True)
+        return False
 
 
 class FavoritesButton(RadioToolButton):

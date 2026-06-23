@@ -188,6 +188,9 @@ class HomeWindow(Gtk.Window):
             self._alt_timeout_sid = GLib.timeout_add(100,
                                                      self.__alt_timeout_cb)
 
+        if self._home_box.is_create_ai_panel_visible():
+            return False
+
         if not self._toolbar.search_entry.props.has_focus:
             self._toolbar.search_entry.grab_focus()
 

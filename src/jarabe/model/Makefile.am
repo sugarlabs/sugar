@@ -3,6 +3,21 @@ sugardir = $(pythondir)/jarabe/model
 sugar_PYTHON =			\
 	adhoc.py		\
 	__init__.py		\
+	aodcodegen.py		\
+	aodcredentials.py	\
+	aodgenerator.py		\
+	aodjobs.py		\
+	aodlicenses.py		\
+	aodllm.py		\
+	aodpipeline.py		\
+	aodprompts.py		\
+	aodqueue.py		\
+	aodrag.py		\
+	aodsessions.py		\
+	aodservice.py		\
+	aodspec.py		\
+	aodtemplates.py		\
+	aodvalidator.py		\
 	buddy.py		\
 	bundleregistry.py	\
 	brightness.py		\
