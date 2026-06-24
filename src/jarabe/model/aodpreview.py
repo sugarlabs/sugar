@@ -365,8 +365,10 @@ def _patch_source(source):
     )
 
     # Replace direct Activity.__init__ calls (without module prefix).
+    # Use a letter lookbehind so we do not double-replace
+    # PreviewActivity.__init__ (which already contains 'Activity').
     patched = re.sub(
-        r'(?<!\.)Activity\.__init__\s*\(\s*self',
+        r'(?<![a-zA-Z])Activity\.__init__\s*\(\s*self',
         'PreviewActivity.__init__(self',
         patched,
     )

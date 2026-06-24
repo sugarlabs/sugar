@@ -532,7 +532,7 @@ class OpenAICompatibleProvider(OpenAIProvider):
             'key_env': 'OPENROUTER_API_KEY',
             'model_env': 'AOD_OPENROUTER_MODEL',
             'endpoint_env': 'AOD_OPENROUTER_ENDPOINT',
-            'default_model': 'moonshotai/kimi-k2.6',
+            'default_model': 'google/gemini-3.5-flash',
             'default_endpoint': (
                 'https://openrouter.ai/api/v1/chat/completions'
             ),
@@ -1309,7 +1309,7 @@ def _provider_model(name):
     model_env = {
         'gemini': ('AOD_GEMINI_MODEL', 'gemini-2.5-flash'),
         'openai': ('AOD_OPENAI_MODEL', 'gpt-4.1-mini'),
-        'openrouter': ('AOD_OPENROUTER_MODEL', 'moonshotai/kimi-k2.6'),
+        'openrouter': ('AOD_OPENROUTER_MODEL', 'google/gemini-3.5-flash'),
         'deepseek': ('AOD_DEEPSEEK_MODEL', 'deepseek-chat'),
         'qwen': ('AOD_QWEN_MODEL', 'qwen-turbo'),
         'moonshot': ('AOD_MOONSHOT_MODEL', 'moonshot-v1-8k'),

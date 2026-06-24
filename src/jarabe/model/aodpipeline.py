@@ -275,9 +275,9 @@ class _PipelineProgress:
         if not self._pace:
             return
 
-        end_time = time.time() + 0.45
+        end_time = time.time() + 0.15
         while time.time() < end_time:
-            time.sleep(0.09)
+            time.sleep(0.05)
             _progress(self._callback, stage, fraction, message)
 
     def report_immediate(self, stage, fraction, message, metadata=None):

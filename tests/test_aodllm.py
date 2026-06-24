@@ -246,7 +246,7 @@ class TestAodLLMProviders(unittest.TestCase):
         self.assertEqual('qwen-max', provider.model)
         self.assertEqual('qwen-key', provider._api_key)
 
-    def test_create_openrouter_provider_uses_kimi_defaults(self):
+    def test_create_openrouter_provider_uses_gemini_flash_defaults(self):
         provider = create_provider(
             'openrouter',
             api_key='openrouter-key',
@@ -256,13 +256,13 @@ class TestAodLLMProviders(unittest.TestCase):
         self.assertEqual('openrouter', provider.name)
         self.assertEqual('OpenRouter', provider.label)
         self.assertEqual('openrouter-key', provider._api_key)
-        self.assertEqual('moonshotai/kimi-k2.6', provider.model)
+        self.assertEqual('google/gemini-3.5-flash', provider.model)
         self.assertEqual(
             'https://openrouter.ai/api/v1/chat/completions',
             provider._endpoint,
         )
 
-    def test_openrouter_request_uses_kimi_model_and_headers(self):
+    def test_openrouter_request_uses_default_model_and_headers(self):
         provider = create_provider(
             'openrouter',
             api_key='openrouter-key',
@@ -289,7 +289,7 @@ class TestAodLLMProviders(unittest.TestCase):
             'https://openrouter.ai/api/v1/chat/completions',
             request.full_url,
         )
-        self.assertEqual('moonshotai/kimi-k2.6', payload['model'])
+        self.assertEqual('google/gemini-3.5-flash', payload['model'])
         self.assertEqual('Sugar Activity on Demand',
                          request.get_header('X-title'))
 
@@ -437,10 +437,9 @@ class TestAodLLMProviders(unittest.TestCase):
         self.assertIn('GeneratedActivity', source)
         self.assertNotIn('```', source)
         self.assertNotIn('response_format', payload)
-        # Kimi K2.6 is a default-on reasoning model on OpenRouter, so
-        # codegen is given a larger completion budget plus bounded
-        # reasoning effort so chain-of-thought cannot starve activity.py.
-        self.assertEqual(32000, payload['max_tokens'])
+        # The default OpenRouter model uses the fast codegen budget plus
+        # minimal reasoning to avoid long thinking delays before activity.py.
+        self.assertEqual(9000, payload['max_tokens'])
         self.assertEqual({'effort': 'minimal'}, payload['reasoning'])
 
     def test_openrouter_plan_call_is_not_affected_by_reasoning_budget(self):
@@ -474,6 +473,7 @@ class TestAodLLMProviders(unittest.TestCase):
         provider = create_provider(
             'openrouter',
             api_key='openrouter-key',
+            model='moonshotai/kimi-k2.6',
         )
         response = mock.Mock()
         response.__enter__ = mock.Mock(return_value=response)
