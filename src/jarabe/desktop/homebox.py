@@ -626,6 +626,15 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         prompt_header.pack_end(char_label, False, False, 0)
         char_label.show()
 
+        prompt_scroll = Gtk.ScrolledWindow()
+        prompt_scroll.set_policy(Gtk.PolicyType.NEVER,
+                                 Gtk.PolicyType.AUTOMATIC)
+        prompt_scroll.set_min_content_height(style.zoom(86))
+        prompt_scroll.set_max_content_height(style.zoom(86))
+        prompt_scroll.set_propagate_natural_height(False)
+        prompt_inner.pack_start(prompt_scroll, False, False, 0)
+        prompt_scroll.show()
+
         text = Gtk.TextView()
         self._prompt_text = text
         text.set_can_focus(True)
@@ -642,7 +651,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
                      self.__prompt_button_press_event_cb)
         text.connect('key-press-event', self.__prompt_key_press_event_cb)
         text.set_size_request(-1, style.zoom(86))
-        prompt_inner.pack_start(text, True, True, 0)
+        prompt_scroll.add(text)
         text.show()
         self._set_prompt_placeholder()
 
@@ -4516,7 +4525,26 @@ class _CreateAIActivityPanel(Gtk.EventBox):
                     return text
         return ''
 
-    def _read_external_clipboard_with_helper(self, display_name, xauthority):
+    def _read_external_prompt_clipboard_text(self):
+        display_names = []
+        requested = os.environ.get('SUGAR_AOD_CLIPBOARD_DISPLAY', '')
+        if requested:
+            display_names.append(requested)
+        for display_name in (':1', ':0'):
+            if display_name not in display_names and \
+                    display_name != os.environ.get('DISPLAY'):
+                display_names.append(display_name)
+
+        for display_name in display_names:
+            for xauthority in self._get_external_xauthority_paths():
+                text = self._read_external_clipboard_with_helper(
+                    display_name, xauthority, clean=False)
+                if text:
+                    return text
+        return ''
+
+    def _read_external_clipboard_with_helper(self, display_name, xauthority,
+                                             clean=True):
         script = '''
 import sys
 
@@ -4557,8 +4585,10 @@ if clipboard.wait_is_text_available():
             )
             return ''
 
-        return self._clean_pasted_api_key(
-            output.decode('utf-8', 'replace'))
+        text = output.decode('utf-8', 'replace')
+        if clean:
+            return self._clean_pasted_api_key(text)
+        return text
 
     def _get_external_xauthority_paths(self):
         paths = []
@@ -6485,7 +6515,39 @@ if clipboard.wait_is_text_available():
 
     def __prompt_key_press_event_cb(self, text_view, event):
         self._clear_prompt_placeholder()
+        modifiers = Gtk.accelerator_get_default_mod_mask()
+        state = event.state & modifiers
+        ctrl = state & Gdk.ModifierType.CONTROL_MASK
+        shift = state & Gdk.ModifierType.SHIFT_MASK
+        if ctrl and event.keyval in (Gdk.KEY_v, Gdk.KEY_V):
+            return self._paste_prompt_from_clipboard()
+        if shift and event.keyval == Gdk.KEY_Insert:
+            return self._paste_prompt_from_clipboard()
         return False
+
+    def _paste_prompt_from_clipboard(self):
+        if self._prompt_text is None:
+            return False
+
+        self._clear_prompt_placeholder()
+        self._prompt_text.grab_focus()
+        Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).request_text(
+            self.__prompt_clipboard_text_received_cb)
+        return True
+
+    def __prompt_clipboard_text_received_cb(self, clipboard, text):
+        if not text:
+            text = self._read_external_prompt_clipboard_text()
+        if not text:
+            if self._prompt_status_label is not None:
+                self._prompt_status_label.set_text(_('Clipboard empty'))
+            return
+
+        text_buffer = self._prompt_text.get_buffer()
+        insert_iter = text_buffer.get_iter_at_mark(text_buffer.get_insert())
+        text_buffer.insert(insert_iter, text)
+        if self._prompt_status_label is not None:
+            self._prompt_status_label.set_text(_('Ready'))
 
     def __prompt_focus_in_event_cb(self, text_view, event):
         self._clear_prompt_placeholder()

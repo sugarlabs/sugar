@@ -246,7 +246,7 @@ class TestAodLLMProviders(unittest.TestCase):
         self.assertEqual('qwen-max', provider.model)
         self.assertEqual('qwen-key', provider._api_key)
 
-    def test_create_openrouter_provider_uses_sonnet_defaults(self):
+    def test_create_openrouter_provider_uses_gemini_flash_defaults(self):
         provider = create_provider(
             'openrouter',
             api_key='openrouter-key',
@@ -256,7 +256,7 @@ class TestAodLLMProviders(unittest.TestCase):
         self.assertEqual('openrouter', provider.name)
         self.assertEqual('OpenRouter', provider.label)
         self.assertEqual('openrouter-key', provider._api_key)
-        self.assertEqual('anthropic/claude-sonnet-4.6', provider.model)
+        self.assertEqual('google/gemini-3.5-flash', provider.model)
         self.assertEqual(
             'https://openrouter.ai/api/v1/chat/completions',
             provider._endpoint,
@@ -289,7 +289,7 @@ class TestAodLLMProviders(unittest.TestCase):
             'https://openrouter.ai/api/v1/chat/completions',
             request.full_url,
         )
-        self.assertEqual('anthropic/claude-sonnet-4.6', payload['model'])
+        self.assertEqual('google/gemini-3.5-flash', payload['model'])
         self.assertEqual('Sugar Activity on Demand',
                          request.get_header('X-title'))
 

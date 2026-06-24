@@ -532,7 +532,7 @@ class OpenAICompatibleProvider(OpenAIProvider):
             'key_env': 'OPENROUTER_API_KEY',
             'model_env': 'AOD_OPENROUTER_MODEL',
             'endpoint_env': 'AOD_OPENROUTER_ENDPOINT',
-            'default_model': 'anthropic/claude-sonnet-4.6',
+            'default_model': 'google/gemini-3.5-flash',
             'default_endpoint': (
                 'https://openrouter.ai/api/v1/chat/completions'
             ),
@@ -1077,7 +1077,7 @@ def _chat_finish_reason_error(label, finish_reason, message):
     return (
         '%s returned no activity text (finish_reason=%s). Try rerunning or '
         'switching to a text/code model such as '
-        'anthropic/claude-sonnet-4.6.'
+        'google/gemini-3.5-flash.'
         % (label, reason)
     )
 
@@ -1312,7 +1312,7 @@ def _provider_model(name):
         'openai': ('AOD_OPENAI_MODEL', 'gpt-4.1-mini'),
         'openrouter': (
             'AOD_OPENROUTER_MODEL',
-            'anthropic/claude-sonnet-4.6',
+            'google/gemini-3.5-flash',
         ),
         'deepseek': ('AOD_DEEPSEEK_MODEL', 'deepseek-chat'),
         'qwen': ('AOD_QWEN_MODEL', 'qwen-turbo'),
