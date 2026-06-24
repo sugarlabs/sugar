@@ -17,11 +17,21 @@ class ProviderError(Exception):
     pass
 
 
-_CODEGEN_MAX_TOKENS = 16000
+def _env_int(name, default):
+    try:
+        return int(os.environ.get(name, str(default)))
+    except ValueError:
+        return default
+
+
+_CODEGEN_MAX_TOKENS = _env_int('AOD_CODEGEN_MAX_TOKENS', 16000)
 _FREEMODEL_CODEGEN_MAX_OUTPUT_TOKENS = 16000
-_PROVIDER_PLAN_TIMEOUT = 120
-_PROVIDER_CODEGEN_TIMEOUT = 360
-_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS = 20000
+_PROVIDER_PLAN_TIMEOUT = _env_int('AOD_PROVIDER_PLAN_TIMEOUT', 120)
+_PROVIDER_CODEGEN_TIMEOUT = _env_int('AOD_PROVIDER_CODEGEN_TIMEOUT', 180)
+_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS = _env_int(
+    'AOD_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS',
+    9000,
+)
 
 # Kimi K2.x on OpenRouter is a reasoning model with reasoning enabled by
 # default (reasoning.default_enabled=true, mandatory=false).  Reasoning
@@ -32,19 +42,13 @@ _GEMINI_CODEGEN_MAX_OUTPUT_TOKENS = 20000
 # larger completion budget so bounded reasoning plus a complete Sugar
 # activity.py both fit.  See OpenAICompatibleProvider._is_reasoning_codegen.
 _OPENROUTER_REASONING_CODEGEN_MAX_TOKENS = 32000
-_OPENROUTER_REASONING_CODEGEN_EFFORT = 'low'
+_OPENROUTER_FAST_CODEGEN_MAX_TOKENS = 9000
+_OPENROUTER_REASONING_CODEGEN_EFFORT = 'minimal'
 # Special effort values that map to disabling reasoning entirely.  These are
 # only safe for non-mandatory reasoning models; mandatory reasoning models
 # reject disable, so if we can't tell, we fall back to a minimal effort.
 _REASONING_DISABLE_VALUES = ('none', 'false', 'off', 'disabled')
 _REASONING_SAFE_MINIMAL_EFFORT = 'minimal'
-
-
-def _env_int(name, default):
-    try:
-        return int(os.environ.get(name, str(default)))
-    except ValueError:
-        return default
 
 
 class LLMProvider:
@@ -129,33 +133,33 @@ class GeminiProvider(LLMProvider):
     def generate_text(self, system_prompt, user_prompt,
                       timeout=_PROVIDER_CODEGEN_TIMEOUT,
                       stream_callback=None):
-        text = self._generate_content(
+        if stream_callback is not None:
+            return self._stream_content(
+                system_prompt, user_prompt, timeout,
+                max_output_tokens=_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS,
+                stream_callback=stream_callback,
+            )
+        return self._generate_content(
             system_prompt, user_prompt, timeout,
             max_output_tokens=_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS,
             response_json=False,
         )
-        if stream_callback is not None:
-            try:
-                stream_callback(text)
-            except Exception:
-                pass
-        return text
 
     def generate_activity_source(self, system_prompt, user_prompt,
                                  timeout=_PROVIDER_CODEGEN_TIMEOUT,
                                  stream_callback=None):
-        text = self._generate_content(
-            system_prompt,
-            user_prompt,
-            timeout,
-            max_output_tokens=_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS,
-            response_json=False,
-        )
         if stream_callback is not None:
-            try:
-                stream_callback(text)
-            except Exception:
-                pass
+            text = self._stream_content(
+                system_prompt, user_prompt, timeout,
+                max_output_tokens=_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS,
+                stream_callback=stream_callback,
+            )
+        else:
+            text = self._generate_content(
+                system_prompt, user_prompt, timeout,
+                max_output_tokens=_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS,
+                response_json=False,
+            )
         return extract_activity_source_from_response(text)
 
     def _generate_json(self, system_prompt, user_prompt, timeout,
@@ -229,6 +233,95 @@ class GeminiProvider(LLMProvider):
                 'Gemini response did not contain a result.'
             )
         return text
+
+    def _stream_content(self, system_prompt, user_prompt, timeout,
+                        max_output_tokens=None, stream_callback=None):
+        """Call Gemini's streaming endpoint and feed tokens to stream_callback.
+
+        Uses :streamGenerateContent?alt=sse instead of :generateContent
+        so tokens arrive as they're generated rather than all at once.
+        """
+        model = urllib.parse.quote(self.model, safe='')
+        key = urllib.parse.quote(self._api_key, safe='')
+        url = '%s/%s:streamGenerateContent?alt=sse&key=%s' % (
+            self._endpoint.rstrip('/'),
+            model,
+            key,
+        )
+        generation_config = {
+            'temperature': 0.3,
+        }
+        if max_output_tokens is not None:
+            generation_config['maxOutputTokens'] = max_output_tokens
+        payload = {
+            'systemInstruction': {
+                'parts': [{'text': system_prompt}],
+            },
+            'contents': [{
+                'role': 'user',
+                'parts': [{'text': user_prompt}],
+            }],
+            'generationConfig': generation_config,
+            'safetySettings': self._SAFETY_SETTINGS,
+        }
+        request = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode('utf-8'),
+            headers={'Content-Type': 'application/json'},
+            method='POST',
+        )
+        accumulated = ''
+        try:
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                buf = ''
+                while True:
+                    chunk = response.read(4096)
+                    if not chunk:
+                        break
+                    buf += chunk.decode('utf-8', errors='replace')
+                    while '\n' in buf:
+                        line, buf = buf.split('\n', 1)
+                        line = line.rstrip('\r')
+                        if not line or not line.startswith('data:'):
+                            continue
+                        data = line[5:].strip()
+                        if data == '[DONE]':
+                            break
+                        try:
+                            event = json.loads(data)
+                        except (json.JSONDecodeError, ValueError):
+                            continue
+                        try:
+                            candidate = event['candidates'][0]
+                            parts = candidate['content']['parts']
+                            # Gemini sends the full accumulated text in each
+                            # chunk, not just the delta — use it directly.
+                            text = ''.join(
+                                part.get('text', '') for part in parts
+                            )
+                        except (KeyError, IndexError):
+                            continue
+                        if not text:
+                            continue
+                        accumulated = text
+                        if stream_callback is not None:
+                            try:
+                                stream_callback(accumulated)
+                            except Exception:
+                                pass
+                    else:
+                        continue
+                    break
+        except urllib.error.HTTPError as error:
+            detail = error.read().decode('utf-8', errors='replace')[:500]
+            raise ProviderError(
+                'Gemini streaming request failed with HTTP %d: %s'
+                % (error.code, detail)
+            )
+        except (OSError, ValueError) as error:
+            raise ProviderError('Gemini streaming request failed: %s' % error)
+
+        return accumulated
 
 
 class OpenAIProvider(LLMProvider):
@@ -520,6 +613,27 @@ class OpenAICompatibleProvider(OpenAIProvider):
 
     def _extra_generation_params(self, max_tokens, json_response):
         params = {}
+        # For codegen (non-JSON) calls on OpenRouter, set minimal reasoning.
+        # OpenRouter defaults to "medium" thinking for many models including
+        # gemini-3.5-flash, which adds a long delay before the first useful
+        # activity.py token. Minimal reasoning favors fast, visible codegen.
+        if not json_response and self._provider_name == 'openrouter':
+            effort = os.environ.get(
+                'AOD_OPENROUTER_CODEGEN_REASONING_EFFORT',
+                _OPENROUTER_REASONING_CODEGEN_EFFORT,
+            )
+            if effort:
+                effort = effort.strip()
+                if effort.lower() in _REASONING_DISABLE_VALUES:
+                    effort = _REASONING_SAFE_MINIMAL_EFFORT
+                params['reasoning'] = {'effort': effort}
+            if not self._is_reasoning_codegen(json_response):
+                params['max_tokens'] = _env_int(
+                    'AOD_OPENROUTER_FAST_CODEGEN_MAX_TOKENS',
+                    _OPENROUTER_FAST_CODEGEN_MAX_TOKENS,
+                )
+                return params
+
         # The activity-codegen call uses json_response=False with a
         # bounded max_tokens.  Plan calls (json_response=True) leave
         # max_tokens uncapped, so reasoning has room and we do not need
@@ -534,21 +648,6 @@ class OpenAICompatibleProvider(OpenAIProvider):
                      _OPENROUTER_REASONING_CODEGEN_MAX_TOKENS),
         )
         params['max_tokens'] = budget
-
-        effort = os.environ.get(
-            'AOD_OPENROUTER_CODEGEN_REASONING_EFFORT',
-            _OPENROUTER_REASONING_CODEGEN_EFFORT,
-        )
-        if effort:
-            effort = effort.strip()
-            if effort.lower() in _REASONING_DISABLE_VALUES:
-                # Disabling reasoning is only valid for non-mandatory
-                # models; we don't fetch the catalog at runtime, so when
-                # the user asks to disable we degrade to the smallest
-                # accepted effort rather than risk an API rejection on a
-                # mandatory-reasoning model.
-                effort = _REASONING_SAFE_MINIMAL_EFFORT
-            params['reasoning'] = {'effort': effort}
         return params
 
     def _is_reasoning_codegen(self, json_response):

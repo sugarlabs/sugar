@@ -523,7 +523,7 @@ class AODService:
 
         message = AODMessage.create(
             ROLE_ASSISTANT,
-            ('Generated and validated "%(name)s" with %(provider)s. '
+            ('Generated "%(name)s" with %(provider)s. '
              'This revision is ready to preview, refine, export, or '
              'install.') % {
                  'name': summary.get('activity_name', job.spec.name),

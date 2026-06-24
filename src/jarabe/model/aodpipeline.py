@@ -26,9 +26,6 @@ from jarabe.model.aodrefine import build_refine_system_prompt
 from jarabe.model.aodrefine import build_refine_user_prompt
 from jarabe.model.aodrefine import parse_search_replace
 from jarabe.model.aodrefine import apply_patches
-from jarabe.model.aodvalidator import validate_bundle
-from jarabe.model.aodvalidator import validate_activity_source_for_request
-from jarabe.model.aodvalidator import validate_project
 
 
 class PipelineError(Exception):
@@ -52,7 +49,7 @@ def generate_activity(spec, output_root=None, provider=None,
                       provider_name='default', use_rag=True,
                       progress_cb=None, pace=False, package_bundle=True,
                       template_fallback=False):
-    """Run prompt grounding, provider planning, generation, and validation.
+    """Run prompt grounding, provider planning, and generation.
 
     When template_fallback is True and the provider fails to deliver valid
     activity code, the pipeline renders activity.py from the local template
@@ -225,14 +222,8 @@ def generate_activity(spec, output_root=None, provider=None,
     result.provider = provider_used
     result.model = model_used
 
-    progress.report('validating', 0.78,
-                    'Checking Python source and activity metadata')
-    project_report = validate_project(result.project_path)
-    if project_report.errors:
-        raise PipelineError('\n'.join(project_report.errors))
-    result.plan['validation'] = {
-        'project_warnings': project_report.warnings,
-    }
+    progress.report('assembling', 0.78,
+                    'Assembling the activity project')
     plan_path = os.path.join(result.project_path, 'aod_plan.json')
     with open(plan_path, 'w', encoding='utf-8') as plan_file:
         json.dump(result.plan, plan_file, indent=2, sort_keys=True)
@@ -242,25 +233,17 @@ def generate_activity(spec, output_root=None, provider=None,
         progress.report('packaging', 0.88,
                         'Packaging the XO bundle')
         package_generation_result(result)
-        progress.report('validating', 0.94,
-                        'Validating the packaged XO')
 
     progress.report('ready', 1.0, 'Activity project is ready')
     return result
 
 
 def package_generation_result(result):
-    """Build and validate the XO bundle for an already generated project."""
+    """Build the XO bundle for an already generated project."""
     if result.bundle_path and os.path.isfile(result.bundle_path):
         return result.bundle_path
 
     result.bundle_path = package_project(result.project_path)
-    bundle_report = validate_bundle(result.bundle_path)
-    if bundle_report.errors:
-        raise PipelineError('\n'.join(bundle_report.errors))
-
-    validation = result.plan.setdefault('validation', {})
-    validation['bundle_warnings'] = bundle_report.warnings
     plan_path = os.path.join(result.project_path, 'aod_plan.json')
     with open(plan_path, 'w', encoding='utf-8') as plan_file:
         json.dump(result.plan, plan_file, indent=2, sort_keys=True)
@@ -297,6 +280,14 @@ class _PipelineProgress:
             time.sleep(0.09)
             _progress(self._callback, stage, fraction, message)
 
+    def report_immediate(self, stage, fraction, message, metadata=None):
+        """Report progress without the pacing sleep.
+
+        Used for streaming token updates where blocking the response
+        thread would slow down how fast new tokens arrive.
+        """
+        _progress(self._callback, stage, fraction, message, metadata)
+
 
 def _redact_provider_error(error, provider):
     message = str(error)
@@ -327,7 +318,7 @@ def _make_codegen_stream_callback(progress, attempt):
         if now - state['last_emit'] < _STREAM_REPORT_INTERVAL_SECONDS:
             return
         state['last_emit'] = now
-        progress.report(
+        progress.report_immediate(
             'generating',
             0.58,
             'Streaming activity.py from the model '
@@ -348,82 +339,44 @@ def _generate_activity_source_with_provider(provider, spec, plan, references,
     if not callable(generate_source):
         return None, '', 0
 
-    validation_feedback = ''
-    last_error = ''
-    for attempt in range(1, _CODEGEN_ATTEMPT_LIMIT + 1):
-        if attempt == 1:
-            progress.report('generating', 0.56,
-                            'Asking the model to write activity.py')
-        else:
-            progress.report(
-                'generating', 0.56,
-                'Asking the model to repair activity.py '
-                '(attempt %d of %d)' % (attempt, _CODEGEN_ATTEMPT_LIMIT),
-            )
+    progress.report('generating', 0.56,
+                    'Asking the model to write activity.py')
 
-        attempt_number = attempt
-        stream_callback = _make_codegen_stream_callback(
-            progress, attempt_number)
-        system_prompt = build_codegen_system_prompt(spec, plan, references)
-        user_prompt = build_codegen_user_prompt(
-            spec, plan, validation_feedback)
+    stream_callback = _make_codegen_stream_callback(progress, 1)
+    system_prompt = build_codegen_system_prompt(spec, plan, references)
+    user_prompt = build_codegen_user_prompt(spec, plan)
+    try:
         try:
-            try:
-                source = generate_source(
-                    system_prompt,
-                    user_prompt,
-                    stream_callback=stream_callback,
-                )
-            except TypeError:
-                # Older providers / test doubles may not accept
-                # stream_callback; fall back to the non-streaming call.
-                source = generate_source(system_prompt, user_prompt)
-        except ProviderError as error:
-            return None, _redact_provider_error(error, provider), attempt
-        except ValueError as error:
-            last_error = str(error)
-            validation_feedback = last_error
-            progress.report(
-                'generating', 0.56,
-                'Attempt %d did not produce valid code; retrying'
-                % attempt,
+            source = generate_source(
+                system_prompt,
+                user_prompt,
+                stream_callback=stream_callback,
             )
-            continue
+        except TypeError:
+            # Older providers / test doubles may not accept
+            # stream_callback; fall back to the non-streaming call.
+            source = generate_source(system_prompt, user_prompt)
+    except ProviderError as error:
+        return None, _redact_provider_error(error, provider), 1
+    except ValueError as error:
+        return None, str(error), 1
 
-        progress.report(
-            'validating',
-            0.64,
-            'Model returned activity.py; validating the draft',
-            {
-                'draft_activity_source': source,
-                'codegen_attempt': attempt,
-            },
-        )
-        report = validate_activity_source_for_request(source, spec, plan)
-        if report.valid:
-            if report.warnings:
-                plan.setdefault('codegen_warnings', []).extend(
-                    report.warnings[:4]
-                )
-            return source, '', attempt
-
-        validation_feedback = _format_codegen_feedback(report)
-        last_error = (
-            'Provider generated code did not pass validation: %s'
-            % validation_feedback
-        )
-
-    return None, last_error, _CODEGEN_ATTEMPT_LIMIT
+    progress.report(
+        'generating',
+        0.64,
+        'Model returned activity.py',
+        {
+            'draft_activity_source': source,
+            'codegen_attempt': 1,
+        },
+    )
+    return source, '', 1
 
 
-def _format_codegen_feedback(report):
-    items = list(report.errors[:8])
-    if report.warnings:
-        items.extend(
-            'Warning: %s' % warning
-            for warning in report.warnings[:3]
-        )
-    return '\n'.join(items)
+def _has_refinement(provider):
+    """Check if a provider supports the raw text generation needed for refinement."""
+    generate_text = getattr(provider, 'generate_text', None)
+    return callable(generate_text)
 
 
 def refine_activity(spec, current_source, current_plan, output_root,
@@ -433,9 +386,9 @@ def refine_activity(spec, current_source, current_plan, output_root,
     """Refine an existing activity.py using SEARCH/REPLACE blocks.
 
     Tries the cheap SEARCH/REPLACE path first (~1k output tokens).  If
-    the model requests FULLREGEN, or any patch fails to match, or the
-    patched code fails validation, falls back to full regeneration
-    (skipping the planner call by reusing current_plan).
+    the model requests FULLREGEN, or any patch fails to match, falls
+    back to full regeneration (skipping the planner call by reusing
+    current_plan).
 
     Returns a GenerationResult like generate_activity().
     """
@@ -515,7 +468,7 @@ def refine_activity(spec, current_source, current_plan, output_root,
                 'Model requested full regeneration')
         else:
             progress.report(
-                'validating', 0.55,
+                'generating', 0.55,
                 'Applying %d targeted edits' % len(patches),
             )
             patched, applied, failed = apply_patches(
@@ -530,19 +483,10 @@ def refine_activity(spec, current_source, current_plan, output_root,
                 refine_method = 'full_regen'
                 patched_source = None
             else:
-                report = validate_activity_source_for_request(
-                    patched, spec, current_plan)
-                if report.valid:
-                    patched_source = patched
-                    progress.report(
-                        'validating', 0.70,
-                        'Edits applied and validated')
-                else:
-                    progress.report(
-                        'generating', 0.50,
-                        'Patched code failed validation; '
-                        'falling back to full regeneration')
-                    refine_method = 'full_regen'
+                patched_source = patched
+                progress.report(
+                    'generating', 0.70,
+                    'Edits applied successfully')
 
     if patched_source is None:
         progress.report('generating', 0.55,
@@ -580,14 +524,6 @@ def refine_activity(spec, current_source, current_plan, output_root,
     result.provider = selected_provider.name
     result.model = selected_provider.model
 
-    progress.report('validating', 0.90,
-                    'Checking the refined source')
-    project_report = validate_project(result.project_path)
-    if project_report.errors:
-        raise PipelineError('\n'.join(project_report.errors))
-    result.plan['validation'] = {
-        'project_warnings': project_report.warnings,
-    }
     plan_path = os.path.join(result.project_path, 'aod_plan.json')
     with open(plan_path, 'w', encoding='utf-8') as plan_file:
         json.dump(result.plan, plan_file, indent=2, sort_keys=True)

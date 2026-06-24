@@ -441,7 +441,7 @@ class TestAodLLMProviders(unittest.TestCase):
         # codegen is given a larger completion budget plus bounded
         # reasoning effort so chain-of-thought cannot starve activity.py.
         self.assertEqual(32000, payload['max_tokens'])
-        self.assertEqual({'effort': 'low'}, payload['reasoning'])
+        self.assertEqual({'effort': 'minimal'}, payload['reasoning'])
 
     def test_openrouter_plan_call_is_not_affected_by_reasoning_budget(self):
         provider = create_provider(
@@ -507,8 +507,9 @@ class TestAodLLMProviders(unittest.TestCase):
         self.assertEqual({'effort': 'minimal'}, payload['reasoning'])
 
     def test_openrouter_codegen_reasoning_only_for_kimi_models(self):
-        # A non-Kimi OpenRouter model keeps the standard codegen budget
-        # and sends no reasoning-effort parameter.
+        # A non-Kimi OpenRouter model keeps a tighter codegen budget
+        # and gets minimal reasoning effort to reduce thinking overhead
+        # (OpenRouter defaults to "medium" for many models).
         provider = create_provider(
             'openrouter',
             api_key='openrouter-key',
@@ -534,8 +535,8 @@ class TestAodLLMProviders(unittest.TestCase):
                 opener.call_args[0][0].data.decode('utf-8')
             )
 
-        self.assertEqual(16000, payload['max_tokens'])
-        self.assertNotIn('reasoning', payload)
+        self.assertEqual(9000, payload['max_tokens'])
+        self.assertEqual({'effort': 'minimal'}, payload['reasoning'])
 
     def test_create_moonshot_provider_from_environment(self):
         env = {

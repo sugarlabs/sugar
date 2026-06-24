@@ -16,6 +16,7 @@ generated code to run without D-Bus, the Sugar shell, or the Journal.
 import logging
 import os
 import re
+import tempfile
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -102,6 +103,7 @@ class PreviewActivity(Gtk.Window):
         self.max_participants = 1
         self.shared_activity = None
         self._title = self.metadata['title']
+        self._activity_root = ''
 
     def set_canvas(self, canvas):
         self._canvas = canvas
@@ -157,6 +159,45 @@ class PreviewActivity(Gtk.Window):
     def get_title(self):
         return self._title
 
+    def get_activity_root(self):
+        if not self._activity_root:
+            self._activity_root = tempfile.mkdtemp(
+                prefix='aod-preview-root-')
+            for subdir in ('data', 'instance', 'tmp'):
+                os.makedirs(
+                    os.path.join(self._activity_root, subdir),
+                    exist_ok=True,
+                )
+        return self._activity_root
+
+    def get_documents_path(self):
+        return tempfile.gettempdir()
+
+    def write_file(self, file_path):
+        pass
+
+    def read_file(self, file_path):
+        pass
+
+    def copy(self):
+        pass
+
+    def get_xo_color(self):
+        try:
+            from sugar3.graphics.xocolor import XoColor
+            return XoColor()
+        except Exception:
+            return None
+
+    def busy(self):
+        pass
+
+    def unbusy(self):
+        pass
+
+    def get_preferred_size(self):
+        return 1200, 900
+
 
 def render_activity_preview(project_path, activity_name=''):
     """Import and instantiate a generated activity for preview.
@@ -184,6 +225,29 @@ def render_activity_preview(project_path, activity_name=''):
     bundle_path = project_path
     _install_bundle_path_helper(bundle_path)
 
+    result = _try_exec_preview(patched_source, source_path,
+                               bundle_path, activity_name)
+    if result[0] is not None:
+        return result
+
+    first_error = result[1]
+    logging.warning('First preview attempt failed: %s', first_error)
+
+    # Second attempt: add import-error resilience and stub missing
+    # modules that some LLM-generated code references.
+    hardened_source = _harden_imports(patched_source)
+    result = _try_exec_preview(hardened_source, source_path,
+                               bundle_path, activity_name)
+    if result[0] is not None:
+        return result
+
+    logging.warning('Hardened preview also failed: %s', result[1])
+    return None, first_error, None
+
+
+def _try_exec_preview(patched_source, source_path, bundle_path,
+                      activity_name):
+    """Try to exec the patched source and return a preview tuple."""
     preview = PreviewActivity(bundle_path=bundle_path)
     preview.metadata = _PreviewMetadata(activity_name or 'Preview')
 
@@ -200,7 +264,7 @@ def render_activity_preview(project_path, activity_name=''):
         return None, 'Syntax error in activity.py line %s: %s' % (
             error.lineno, error.msg), None
     except Exception as error:
-        logging.exception('Preview instantiation failed')
+        logging.exception('Preview exec failed')
         return None, 'Could not load activity: %s' % error, None
 
     activity_class = namespace.get('GeneratedActivity')
@@ -211,7 +275,7 @@ def render_activity_preview(project_path, activity_name=''):
         instance = activity_class(handle=None)
     except Exception as error:
         logging.exception('Preview __init__ failed')
-        return None, 'Activity initialization failed: %s' % error, None
+        return None, 'Activity __init__ failed: %s' % error, None
 
     if not isinstance(instance, PreviewActivity):
         return None, 'Activity did not inherit from PreviewActivity', None
@@ -223,6 +287,40 @@ def render_activity_preview(project_path, activity_name=''):
         return None, 'Activity did not call set_canvas()', None
 
     return instance, canvas, toolbar
+
+
+def _harden_imports(source):
+    """Wrap problematic imports so preview survives missing modules.
+
+    LLM-generated code sometimes imports sugar3 sub-modules that exist
+    at runtime but fail during in-process exec (e.g. sugar3.datastore,
+    sugar3.presence).  We wrap known-problematic import lines in
+    try/except so the rest of the activity can still render.
+    """
+    fragile_modules = (
+        'sugar3.datastore',
+        'sugar3.presence',
+        'sugar3.network',
+        'sugar3.profile',
+        'sugar3.mime',
+        'telepathy',
+        'dbus',
+    )
+    lines = source.split('\n')
+    patched_lines = []
+    for line in lines:
+        stripped = line.lstrip()
+        if stripped.startswith(('import ', 'from ')):
+            if any(module in stripped for module in fragile_modules):
+                indent = line[:len(line) - len(stripped)]
+                patched_lines.append('%stry:' % indent)
+                patched_lines.append('    %s' % line)
+                patched_lines.append('%sexcept (ImportError, Exception):'
+                                     % indent)
+                patched_lines.append('%s    pass' % indent)
+                continue
+        patched_lines.append(line)
+    return '\n'.join(patched_lines)
 
 
 def _patch_source(source):
@@ -237,17 +335,39 @@ def _patch_source(source):
     We replace the base class references so the generated class inherits
     from PreviewActivity instead of the real Activity, which requires
     D-Bus and the Sugar shell.
+
+    LLM-generated code may use super().__init__(handle) or
+    super(GeneratedActivity, self).__init__(handle) instead of the
+    explicit activity.Activity.__init__ form. The class declaration
+    patch handles those automatically because super() resolves via MRO
+    to PreviewActivity once the class inherits from it.
     """
     patched = source
 
+    # Explicit old-style super call.
     patched = patched.replace(
         'activity.Activity.__init__',
         'PreviewActivity.__init__',
     )
 
+    # Class declaration: replace base class.
     patched = re.sub(
         r'class\s+GeneratedActivity\s*\(\s*activity\.Activity\s*\)\s*:',
         'class GeneratedActivity(PreviewActivity):',
+        patched,
+    )
+
+    # Some models use Activity directly without the module prefix.
+    patched = re.sub(
+        r'class\s+GeneratedActivity\s*\(\s*Activity\s*\)\s*:',
+        'class GeneratedActivity(PreviewActivity):',
+        patched,
+    )
+
+    # Replace direct Activity.__init__ calls (without module prefix).
+    patched = re.sub(
+        r'(?<!\.)Activity\.__init__\s*\(\s*self',
+        'PreviewActivity.__init__(self',
         patched,
     )
 
