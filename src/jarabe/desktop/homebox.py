@@ -379,6 +379,10 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._sidebar_refine_entry = None
         self._sidebar_refine_status_label = None
         self._prompt_is_placeholder = False
+        self._preview_is_fullscreen = False
+        self._preview_fullscreen_button = None
+        self._studio_left_panel = None
+        self._studio_right_panel = None
         self._generation_result = None
         self._generation_job_id = None
         self._generation_job_callback = \
@@ -1032,12 +1036,12 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         studio.pack_start(body, True, True, 0)
         body.show()
 
-        body.pack_start(self._create_studio_left_panel(),
-                        False, False, 0)
+        self._studio_left_panel = self._create_studio_left_panel()
+        body.pack_start(self._studio_left_panel, False, False, 0)
         body.pack_start(self._create_studio_preview_panel(),
                         True, True, 0)
-        body.pack_start(self._create_learning_sidebar(),
-                        False, False, 0)
+        self._studio_right_panel = self._create_learning_sidebar()
+        body.pack_start(self._studio_right_panel, False, False, 0)
 
         footer = Gtk.HBox(spacing=style.zoom(8))
         footer.get_style_context().add_class('create-ai-studio-footer')
@@ -1100,6 +1104,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._chat_scroll = Gtk.ScrolledWindow()
         self._chat_scroll.set_policy(Gtk.PolicyType.NEVER,
                                      Gtk.PolicyType.AUTOMATIC)
+        self._chat_scroll.set_max_content_height(style.zoom(420))
+        self._chat_scroll.set_propagate_natural_height(True)
         self._chat_scroll.get_style_context().add_class(
             'create-ai-chat-scroll')
         box.pack_start(self._chat_scroll, True, True, 0)
@@ -1231,6 +1237,10 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         top.pack_start(title, True, True, 0)
         title.show()
 
+        self._preview_fullscreen_button = self._create_plain_button(
+            _('⛶ Fullscreen'), self.__preview_fullscreen_toggle_cb)
+        top.pack_end(self._preview_fullscreen_button, False, False, 0)
+
         top.pack_end(self._create_plain_button(
             _('Review and install'), self.__review_and_install_cb),
             False, False, 0)
@@ -1271,7 +1281,14 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._studio_mode_stack.show()
 
         preview_page = Gtk.VBox(spacing=style.zoom(9))
-        preview_page.pack_start(self._create_preview_frame(), True, True, 0)
+        preview_scroll = Gtk.ScrolledWindow()
+        preview_scroll.set_policy(Gtk.PolicyType.NEVER,
+                                  Gtk.PolicyType.AUTOMATIC)
+        preview_scroll.set_propagate_natural_height(True)
+        preview_scroll.set_max_content_height(style.zoom(680))
+        preview_scroll.add(self._create_preview_frame())
+        preview_page.pack_start(preview_scroll, True, True, 0)
+        preview_scroll.show()
         preview_page.pack_start(self._create_live_edit_panel(), False, False,
                                 0)
         self._studio_mode_stack.add_named(preview_page, 'preview')
@@ -2800,9 +2817,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         box.pack_start(subtitle, False, False, 0)
         subtitle.show()
 
-        refinement_card = self._create_sidebar_refinement_card()
-        box.pack_start(refinement_card, False, False, 0)
-        refinement_card.show()
+
+
 
         guided = Gtk.EventBox()
         guided.get_style_context().add_class('create-ai-learning-card')
@@ -4710,57 +4726,35 @@ if clipboard.wait_is_text_available():
             return
 
         self._clear_activity_preview()
-        plan = result.plan if isinstance(result.plan, dict) else {}
-        template = plan.get('template', 'utility')
 
-        card = Gtk.EventBox()
-        card.get_style_context().add_class('create-ai-generated-preview')
-        card.set_hexpand(True)
-        card.set_vexpand(True)
-        card.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
-        card.connect('button-press-event',
-                     self.__preview_target_button_press_event_cb,
-                     _('activity canvas'))
-        self._preview_content_box.pack_start(card, True, True, 0)
+        error_box = Gtk.VBox(spacing=style.zoom(12))
+        error_box.set_halign(Gtk.Align.CENTER)
+        error_box.set_valign(Gtk.Align.CENTER)
+        error_box.set_border_width(style.zoom(30))
 
-        box = Gtk.VBox(spacing=style.zoom(10))
-        box.set_border_width(style.zoom(14))
-        card.add(box)
+        error_icon = Gtk.Label('⚠')
+        error_icon.set_markup(
+            '<span size="xx-large">⚠</span>')
+        error_box.pack_start(error_icon, False, False, 0)
 
-        header = Gtk.HBox(spacing=style.zoom(8))
-        box.pack_start(header, False, False, 0)
+        error_title = Gtk.Label(
+            _('Preview could not render this activity'))
+        error_title.get_style_context().add_class(
+            'create-ai-generated-title')
+        error_box.pack_start(error_title, False, False, 0)
 
-        title = Gtk.Label(result.spec.name)
-        title.get_style_context().add_class('create-ai-generated-title')
-        title.set_xalign(0)
-        title.set_ellipsize(Pango.EllipsizeMode.END)
-        header.pack_start(title, True, True, 0)
+        error_note = Gtk.Label(
+            _('The generated code has an issue that prevents live '
+              'preview. Switch to the Review tab to see the code, '
+              'or type a refinement to fix it.'))
+        error_note.get_style_context().add_class('create-ai-meta-note')
+        error_note.set_line_wrap(True)
+        error_note.set_max_width_chars(60)
+        error_note.set_justify(Gtk.Justification.CENTER)
+        error_box.pack_start(error_note, False, False, 0)
 
-        badge = Gtk.Label(template.capitalize())
-        badge.get_style_context().add_class('create-ai-generated-badge')
-        header.pack_end(badge, False, False, 0)
-
-        summary = Gtk.Label(
-            plan.get('summary') or plan.get('learner_goal') or
-            result.spec.prompt)
-        summary.get_style_context().add_class('create-ai-generated-summary')
-        summary.set_xalign(0)
-        summary.set_line_wrap(True)
-        summary.set_max_width_chars(120)
-        box.pack_start(summary, False, False, 0)
-
-        body = self._create_generated_preview_body(result, template)
-        box.pack_start(body, True, True, 0)
-
-        footer = Gtk.HBox(spacing=style.zoom(6))
-        box.pack_start(footer, False, False, 0)
-        for label in [_('Journal ready'), _('Project ready'),
-                      _('XO on install/export')]:
-            pill = Gtk.Label(label)
-            pill.get_style_context().add_class('create-ai-generated-pill')
-            footer.pack_start(pill, False, False, 0)
-
-        card.show_all()
+        self._preview_content_box.pack_start(error_box, True, True, 0)
+        error_box.show_all()
 
     def _render_live_generated_activity_preview(self, result):
         project_path = getattr(result, 'project_path', '')
@@ -6875,7 +6869,6 @@ if clipboard.wait_is_text_available():
                 draft_source
             if not self._review_draft_was_shown:
                 self._review_draft_was_shown = True
-                self._select_studio_tab('review')
         self._set_review_file(self._current_review_file)
 
     def _update_provider_call_status(self, stage, fraction, message):
@@ -7040,6 +7033,25 @@ if clipboard.wait_is_text_available():
 
     def __review_and_install_cb(self, button):
         self._select_studio_tab('review')
+
+    def __preview_fullscreen_toggle_cb(self, button):
+        self._preview_is_fullscreen = not self._preview_is_fullscreen
+        if self._preview_is_fullscreen:
+            if self._studio_left_panel is not None:
+                self._studio_left_panel.hide()
+            if self._studio_right_panel is not None:
+                self._studio_right_panel.hide()
+            if self._preview_fullscreen_button is not None:
+                self._preview_fullscreen_button.set_label(
+                    _('⛶ Exit Fullscreen'))
+        else:
+            if self._studio_left_panel is not None:
+                self._studio_left_panel.show()
+            if self._studio_right_panel is not None:
+                self._studio_right_panel.show()
+            if self._preview_fullscreen_button is not None:
+                self._preview_fullscreen_button.set_label(
+                    _('⛶ Fullscreen'))
 
     def _ensure_generation_bundle(self):
         if self._generation_result is None:

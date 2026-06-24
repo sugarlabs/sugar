@@ -246,7 +246,7 @@ class TestAodLLMProviders(unittest.TestCase):
         self.assertEqual('qwen-max', provider.model)
         self.assertEqual('qwen-key', provider._api_key)
 
-    def test_create_openrouter_provider_uses_gemini_flash_defaults(self):
+    def test_create_openrouter_provider_uses_sonnet_defaults(self):
         provider = create_provider(
             'openrouter',
             api_key='openrouter-key',
@@ -256,7 +256,7 @@ class TestAodLLMProviders(unittest.TestCase):
         self.assertEqual('openrouter', provider.name)
         self.assertEqual('OpenRouter', provider.label)
         self.assertEqual('openrouter-key', provider._api_key)
-        self.assertEqual('google/gemini-3.5-flash', provider.model)
+        self.assertEqual('anthropic/claude-sonnet-4.6', provider.model)
         self.assertEqual(
             'https://openrouter.ai/api/v1/chat/completions',
             provider._endpoint,
@@ -289,7 +289,7 @@ class TestAodLLMProviders(unittest.TestCase):
             'https://openrouter.ai/api/v1/chat/completions',
             request.full_url,
         )
-        self.assertEqual('google/gemini-3.5-flash', payload['model'])
+        self.assertEqual('anthropic/claude-sonnet-4.6', payload['model'])
         self.assertEqual('Sugar Activity on Demand',
                          request.get_header('X-title'))
 
@@ -439,7 +439,7 @@ class TestAodLLMProviders(unittest.TestCase):
         self.assertNotIn('response_format', payload)
         # The default OpenRouter model uses the fast codegen budget plus
         # minimal reasoning to avoid long thinking delays before activity.py.
-        self.assertEqual(9000, payload['max_tokens'])
+        self.assertEqual(16384, payload['max_tokens'])
         self.assertEqual({'effort': 'minimal'}, payload['reasoning'])
 
     def test_openrouter_plan_call_is_not_affected_by_reasoning_budget(self):
@@ -535,7 +535,7 @@ class TestAodLLMProviders(unittest.TestCase):
                 opener.call_args[0][0].data.decode('utf-8')
             )
 
-        self.assertEqual(9000, payload['max_tokens'])
+        self.assertEqual(16384, payload['max_tokens'])
         self.assertEqual({'effort': 'minimal'}, payload['reasoning'])
 
     def test_create_moonshot_provider_from_environment(self):
@@ -673,7 +673,7 @@ class TestAodLLMProviders(unittest.TestCase):
             )
 
         self.assertIn('GeneratedActivity', source)
-        self.assertEqual(16000, payload['max_tokens'])
+        self.assertEqual(16384, payload['max_tokens'])
         self.assertEqual(1.0, payload['temperature'])
 
     def test_claude_codegen_uses_larger_token_budget(self):
@@ -706,7 +706,7 @@ class TestAodLLMProviders(unittest.TestCase):
             )
 
         self.assertIn('GeneratedActivity', source)
-        self.assertEqual(16000, payload['max_tokens'])
+        self.assertEqual(16384, payload['max_tokens'])
 
 
 def _simple_activity_source():

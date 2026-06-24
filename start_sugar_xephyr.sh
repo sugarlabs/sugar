@@ -1,5 +1,5 @@
 #!/bin/bash
-# Launch Sugar inside a nested Xephyr window for safe testing.
+# Launch Sugar inside a fullscreen nested Xephyr display for safe testing.
 
 set -e
 
@@ -13,10 +13,10 @@ X_DISPLAY=":${DISPLAY_NUM}"
 SUGAR_TEST_HOME="/tmp/sugar_test_home_$$"
 LOG_FILE="/tmp/sugar_xephyr_$$.log"
 
-echo "Starting Xephyr on display ${X_DISPLAY}..."
-Xephyr ${X_DISPLAY} -screen 1200x900 -ac -br -noreset > "${LOG_FILE}.xephyr" 2>&1 &
+echo "Starting fullscreen Xephyr on display ${X_DISPLAY}..."
+setsid Xephyr "${X_DISPLAY}" -fullscreen -ac -br -noreset \
+    > "${LOG_FILE}.xephyr" 2>&1 &
 XEPHYR_PID=$!
-disown ${XEPHYR_PID}
 sleep 2
 
 SUGAR_DATA_DIR="/usr/share/sugar/data"
@@ -60,14 +60,14 @@ export PYTHONPATH="/home/ashutoshx7/sugar/src:${PYTHONPATH}"
 
 echo "Starting Sugar on ${X_DISPLAY}..."
 echo "Logs: ${LOG_FILE}"
-dbus-launch --exit-with-session python3 -m jarabe.main > "${LOG_FILE}" 2>&1 &
+setsid dbus-launch --exit-with-session python3 -m jarabe.main \
+    > "${LOG_FILE}" 2>&1 &
 SUGAR_PID=$!
-disown ${SUGAR_PID}
 
 echo "Xephyr PID: ${XEPHYR_PID}"
 echo "Sugar PID: ${SUGAR_PID}"
 echo ""
-echo "Sugar is running in Xephyr on display ${X_DISPLAY}"
+echo "Sugar is running fullscreen in Xephyr on display ${X_DISPLAY}"
 echo "To stop, run: kill ${XEPHYR_PID} ${SUGAR_PID}"
 echo ""
 

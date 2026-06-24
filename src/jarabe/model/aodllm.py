@@ -24,10 +24,10 @@ def _env_int(name, default):
         return default
 
 
-_CODEGEN_MAX_TOKENS = _env_int('AOD_CODEGEN_MAX_TOKENS', 16000)
+_CODEGEN_MAX_TOKENS = _env_int('AOD_CODEGEN_MAX_TOKENS', 16384)
 _FREEMODEL_CODEGEN_MAX_OUTPUT_TOKENS = 16000
 _PROVIDER_PLAN_TIMEOUT = _env_int('AOD_PROVIDER_PLAN_TIMEOUT', 120)
-_PROVIDER_CODEGEN_TIMEOUT = _env_int('AOD_PROVIDER_CODEGEN_TIMEOUT', 180)
+_PROVIDER_CODEGEN_TIMEOUT = _env_int('AOD_PROVIDER_CODEGEN_TIMEOUT', 300)
 _GEMINI_CODEGEN_MAX_OUTPUT_TOKENS = _env_int(
     'AOD_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS',
     9000,
@@ -42,7 +42,7 @@ _GEMINI_CODEGEN_MAX_OUTPUT_TOKENS = _env_int(
 # larger completion budget so bounded reasoning plus a complete Sugar
 # activity.py both fit.  See OpenAICompatibleProvider._is_reasoning_codegen.
 _OPENROUTER_REASONING_CODEGEN_MAX_TOKENS = 32000
-_OPENROUTER_FAST_CODEGEN_MAX_TOKENS = 9000
+_OPENROUTER_FAST_CODEGEN_MAX_TOKENS = 16384
 _OPENROUTER_REASONING_CODEGEN_EFFORT = 'minimal'
 # Special effort values that map to disabling reasoning entirely.  These are
 # only safe for non-mandatory reasoning models; mandatory reasoning models
@@ -532,7 +532,7 @@ class OpenAICompatibleProvider(OpenAIProvider):
             'key_env': 'OPENROUTER_API_KEY',
             'model_env': 'AOD_OPENROUTER_MODEL',
             'endpoint_env': 'AOD_OPENROUTER_ENDPOINT',
-            'default_model': 'google/gemini-3.5-flash',
+            'default_model': 'anthropic/claude-sonnet-4.6',
             'default_endpoint': (
                 'https://openrouter.ai/api/v1/chat/completions'
             ),
@@ -614,9 +614,9 @@ class OpenAICompatibleProvider(OpenAIProvider):
     def _extra_generation_params(self, max_tokens, json_response):
         params = {}
         # For codegen (non-JSON) calls on OpenRouter, set minimal reasoning.
-        # OpenRouter defaults to "medium" thinking for many models including
-        # gemini-3.5-flash, which adds a long delay before the first useful
-        # activity.py token. Minimal reasoning favors fast, visible codegen.
+        # OpenRouter defaults to extra thinking for many models, which adds
+        # a long delay before the first useful activity.py token. Minimal
+        # reasoning favors fast, visible codegen.
         if not json_response and self._provider_name == 'openrouter':
             effort = os.environ.get(
                 'AOD_OPENROUTER_CODEGEN_REASONING_EFFORT',
@@ -1076,7 +1076,8 @@ def _chat_finish_reason_error(label, finish_reason, message):
         )
     return (
         '%s returned no activity text (finish_reason=%s). Try rerunning or '
-        'switching to a text/code model such as moonshotai/kimi-k2.6.'
+        'switching to a text/code model such as '
+        'anthropic/claude-sonnet-4.6.'
         % (label, reason)
     )
 
@@ -1309,7 +1310,10 @@ def _provider_model(name):
     model_env = {
         'gemini': ('AOD_GEMINI_MODEL', 'gemini-2.5-flash'),
         'openai': ('AOD_OPENAI_MODEL', 'gpt-4.1-mini'),
-        'openrouter': ('AOD_OPENROUTER_MODEL', 'google/gemini-3.5-flash'),
+        'openrouter': (
+            'AOD_OPENROUTER_MODEL',
+            'anthropic/claude-sonnet-4.6',
+        ),
         'deepseek': ('AOD_DEEPSEEK_MODEL', 'deepseek-chat'),
         'qwen': ('AOD_QWEN_MODEL', 'qwen-turbo'),
         'moonshot': ('AOD_MOONSHOT_MODEL', 'moonshot-v1-8k'),

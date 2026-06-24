@@ -68,6 +68,35 @@ class _PreviewMetadata:
         pass
 
 
+class _NoOpProxy:
+    """A proxy that absorbs all attribute access, calls, and iteration.
+
+    Used by PreviewActivity.__getattr__ so that generated code like
+    ``self.log_text_view.get_buffer()`` doesn't crash when
+    ``log_text_view`` hasn't been created yet.
+    """
+
+    def __getattr__(self, name):
+        return _NoOpProxy()
+
+    def __call__(self, *args, **kwargs):
+        return _NoOpProxy()
+
+    def __iter__(self):
+        return iter([])
+
+    def __len__(self):
+        return 0
+
+    def __bool__(self):
+        return False
+
+    def __str__(self):
+        return ''
+
+    def __repr__(self):
+        return '<NoOp>'
+
 class PreviewActivity(Gtk.Window):
     """Minimal stub of sugar3.activity.Activity for preview rendering.
 
@@ -104,6 +133,15 @@ class PreviewActivity(Gtk.Window):
         self.shared_activity = None
         self._title = self.metadata['title']
         self._activity_root = ''
+
+    def __getattr__(self, name):
+        # Generated activities sometimes call self.some_method() or
+        # access self.some_widget before it is created in __init__.
+        # Return a safe no-op proxy that absorbs all attribute access
+        # and calls instead of crashing with AttributeError.
+        if name.startswith('_'):
+            raise AttributeError(name)
+        return _NoOpProxy()
 
     def set_canvas(self, canvas):
         self._canvas = canvas
