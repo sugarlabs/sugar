@@ -1,4 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
+﻿# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ from gi.repository import GLib
 from sugar4.graphics.icon import Icon
 from sugar4.graphics import style
 from sugar4.graphics.icon import CanvasIcon
-
 
 _INTERVAL = 100
 _STEP = math.pi / 10  # must be a fraction of pi, for clean caching
@@ -95,9 +94,8 @@ class PulsingIcon(Icon):
         self._pulsing = False
 
         Icon.__init__(self, **kwargs)
-
-        self._palette = None
         self.connect('destroy', self.__destroy_cb)
+        self._palette = None
 
     def set_pulse_color(self, pulse_color):
         self._pulse_color = pulse_color
@@ -168,10 +166,10 @@ class PulsingIcon(Icon):
 
     palette = property(_get_palette, _set_palette)
 
-    def __destroy_cb(self, icon):
+    def __destroy_cb(self, widget):
         self._pulser.stop()
         if self._palette is not None:
-            self._palette.destroy()
+            self._palette.unparent()
 
 
 class EventPulsingIcon(CanvasIcon):
@@ -185,10 +183,9 @@ class EventPulsingIcon(CanvasIcon):
         self._pulsing = False
 
         CanvasIcon.__init__(self, **kwargs)
-
         self.connect('destroy', self.__destroy_cb)
 
-    def __destroy_cb(self, box):
+    def __destroy_cb(self, widget):
         self._pulser.stop()
 
     def set_pulse_color(self, pulse_color):
