@@ -1,4 +1,4 @@
-# Copyright (C) 2007, Red Hat, Inc.
+﻿# Copyright (C) 2007, Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ def create_profile(user_profile):
 
     logging.debug("Generating user keypair")
 
-    cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % (keypath, )
+    cmd = "ssh-keygen -q -t rsa -f %s -C '' -N ''" % (keypath, )
     (s, o) = subprocess.getstatusoutput(cmd)
     if s != 0:
         logging.error('Could not generate key pair: %d %s', s, o)
@@ -94,7 +94,7 @@ class _Page(Gtk.Box):
     }
 
     def __init__(self):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self.valid = False
 
     def set_valid(self, valid):
@@ -115,26 +115,26 @@ class _NamePage(_Page):
         _Page.__init__(self)
         self._intro = intro
 
-        alignment = Gtk.Alignment.new(0.5, 0.5, 0, 0)
-        self.pack_start(alignment, expand=True, fill=True, padding=0)
-
         grid = Gtk.Grid()
         grid.set_column_spacing(style.DEFAULT_SPACING)
-        alignment.add(grid)
+        grid.set_row_spacing(style.DEFAULT_SPACING)
+        grid.set_halign(Gtk.Align.CENTER)
+        grid.set_valign(Gtk.Align.CENTER)
+        grid.set_hexpand(True)
+        grid.set_vexpand(True)
+        self.append(grid)
+        grid.set_visible(True)
 
         label = Gtk.Label(label=_('Name:'))
         grid.attach(label, 0, 0, 1, 1)
-        label.show()
+        label.set_visible(True)
 
         self._entry = Gtk.Entry()
         self._entry.connect('notify::text', self._text_changed_cb)
         self._entry.set_size_request(style.zoom(300), -1)
         self._entry.set_max_length(45)
         grid.attach(self._entry, 0, 1, 1, 1)
-        self._entry.show()
-
-        grid.show()
-        alignment.show()
+        self._entry.set_visible(True)
 
     def _text_changed_cb(self, entry, pspec):
         valid = len(entry.props.text.strip()) > 0
@@ -155,23 +155,23 @@ class _ColorPage(_Page):
     def __init__(self):
         _Page.__init__(self)
 
-        alignment = Gtk.Alignment.new(0.5, 0.5, 0, 0)
-        self.pack_start(alignment, expand=True, fill=True, padding=0)
-
         grid = Gtk.Grid()
         grid.set_column_spacing(style.DEFAULT_SPACING)
-        alignment.add(grid)
+        grid.set_row_spacing(style.DEFAULT_SPACING)
+        grid.set_halign(Gtk.Align.CENTER)
+        grid.set_valign(Gtk.Align.CENTER)
+        grid.set_hexpand(True)
+        grid.set_vexpand(True)
+        self.append(grid)
+        grid.set_visible(True)
 
         label = Gtk.Label(label=_('Click to change color:'))
         grid.attach(label, 0, 0, 1, 1)
-        label.show()
+        label.set_visible(True)
 
         self._cp = colorpicker.ColorPicker()
         grid.attach(self._cp, 0, 1, 1, 1)
-        self._cp.show()
-
-        grid.show()
-        alignment.show()
+        self._cp.set_visible(True)
 
         self._color = self._cp.get_color()
         self.set_valid(True)
@@ -185,23 +185,23 @@ class _GenderPage(_Page):
     def __init__(self):
         _Page.__init__(self)
 
-        alignment = Gtk.Alignment.new(0.5, 0.5, 0, 0)
-        self.pack_start(alignment, expand=True, fill=True, padding=0)
-
         grid = Gtk.Grid()
         grid.set_column_spacing(style.DEFAULT_SPACING)
-        alignment.add(grid)
+        grid.set_row_spacing(style.DEFAULT_SPACING)
+        grid.set_halign(Gtk.Align.CENTER)
+        grid.set_valign(Gtk.Align.CENTER)
+        grid.set_hexpand(True)
+        grid.set_vexpand(True)
+        self.append(grid)
+        grid.set_visible(True)
 
         label = Gtk.Label(label=_('Select gender:'))
         grid.attach(label, 0, 0, 1, 1)
-        label.show()
+        label.set_visible(True)
 
         self._gp = genderpicker.GenderPicker()
         grid.attach(self._gp, 0, 1, 1, 1)
-        self._gp.show()
-
-        grid.show()
-        alignment.show()
+        self._gp.set_visible(True)
 
         self._gender = self._gp.get_gender()
         self.set_valid(True)
@@ -218,24 +218,24 @@ class _AgePage(_Page):
     def __init__(self, gender):
         _Page.__init__(self)
 
-        alignment = Gtk.Alignment.new(0.5, 0.5, 0, 0)
-        self.pack_start(alignment, expand=True, fill=True, padding=0)
-
         grid = Gtk.Grid()
         grid.set_column_spacing(style.DEFAULT_SPACING)
-        alignment.add(grid)
+        grid.set_row_spacing(style.DEFAULT_SPACING)
+        grid.set_halign(Gtk.Align.CENTER)
+        grid.set_valign(Gtk.Align.CENTER)
+        grid.set_hexpand(True)
+        grid.set_vexpand(True)
+        self.append(grid)
+        grid.set_visible(True)
 
         self._ap = agepicker.AgePicker(gender, self)
 
         label = Gtk.Label(label=_(self._ap.get_label()))
         grid.attach(label, 0, 0, 1, 1)
-        label.show()
+        label.set_visible(True)
 
         grid.attach(self._ap, 0, 1, 1, 1)
-        self._ap.show()
-
-        grid.show()
-        alignment.show()
+        self._ap.set_visible(True)
 
         self._age = self._ap.get_age()
 
@@ -258,14 +258,27 @@ class _IntroBox(Gtk.Box):
     PAGE_LAST = len(PAGES) - 1
 
     def __init__(self, start_on_age_page):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
-        self.set_border_width(style.zoom(30))
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
+        
+        self.set_hexpand(True)
+        self.set_vexpand(True)
+        self.set_spacing(style.DEFAULT_SPACING)
+        
+        self.set_margin_start(style.zoom(30))
+        self.set_margin_end(style.zoom(30))
+        self.set_margin_top(style.zoom(30))
+        self.set_margin_bottom(style.zoom(30))
 
         self._page = 0
         self._name_page = _NamePage(self)
         self._color_page = _ColorPage()
         self._gender_page = _GenderPage()
         self._age_page = _AgePage(None)
+        
+        for page in (self._name_page, self._color_page,
+                     self._gender_page, self._age_page):
+            page.connect('notify::valid', self._page_valid_changed_cb)
+            
         self._current_page = None
         self._next_button = None
 
@@ -297,8 +310,8 @@ class _IntroBox(Gtk.Box):
         self._setup_page()
 
     def _setup_page(self):
-        for child in self.get_children():
-            self.remove(child)
+        while self.get_first_child() is not None:
+            self.remove(self.get_first_child())
 
         def _setup_name_page(self):
             self._current_page = self._name_page
@@ -326,49 +339,64 @@ class _IntroBox(Gtk.Box):
         ]
 
         setup_methods[self._page](self)
-        self.pack_start(self._current_page, True, True, 0)
-        self._current_page.show()
+        self._current_page.set_hexpand(True)
+        self._current_page.set_vexpand(True)
+        self.append(self._current_page)
+        self._current_page.set_visible(True)
 
-        button_box = Gtk.HButtonBox()
+        button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         if self._page == self.PAGE_FIRST:
-            button_box.set_layout(Gtk.ButtonBoxStyle.END)
+            button_box.set_halign(Gtk.Align.END)
         else:
-            button_box.set_layout(Gtk.ButtonBoxStyle.EDGE)
-            back_button = Gtk.Button(_('Back'))
-            image = Icon(icon_name='go-left')
-            back_button.set_image(image)
+            button_box.set_halign(Gtk.Align.FILL)
+            back_button = Gtk.Button()
+            back_button.add_css_class('intro-nav-button')
+            box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
+            box.append(Icon(icon_name='go-left'))
+            box.append(Gtk.Label(label=_('Back')))
+            back_button.set_child(box)
             back_button.connect('clicked', self._back_activated_cb)
-            button_box.pack_start(back_button, True, True, 0)
-            back_button.show()
+            back_button.set_hexpand(True)
+            back_button.set_halign(Gtk.Align.START)
+            back_button.set_margin_start(style.zoom(15))
+            back_button.set_margin_bottom(style.zoom(15))
+            button_box.append(back_button)
+            back_button.set_visible(True)
 
         self._next_button = Gtk.Button()
-        image = Icon(icon_name='go-right')
-        self._next_button.set_image(image)
-
+        self._next_button.add_css_class('intro-nav-button')
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
+        self._next_label = Gtk.Label(label=_('Next'))
+        box.append(self._next_label)
+        box.append(Icon(icon_name='go-right'))
+        self._next_button.set_child(box)
+        
         if self._page == self.PAGE_LAST:
-            self._next_button.set_label(_('Done'))
+            self._next_label.set_text(_('Done'))
             self._next_button.connect('clicked', self._done_activated_cb)
         else:
-            self._next_button.set_label(_('Next'))
+            self._next_label.set_text(_('Next'))
             self._next_button.connect('clicked', self._next_activated_cb)
-
+        
         self._current_page.activate()
 
         self._update_next_button()
-        button_box.pack_start(self._next_button, True, True, 0)
-        self._next_button.show()
+        self._next_button.set_hexpand(True)
+        self._next_button.set_halign(Gtk.Align.END)
+        self._next_button.set_margin_end(style.zoom(15))
+        self._next_button.set_margin_bottom(style.zoom(15))
+        button_box.append(self._next_button)
+        self._next_button.set_visible(True)
 
-        self._current_page.connect('notify::valid',
-                                   self._page_valid_changed_cb)
-
-        self.pack_start(button_box, False, True, 0)
-        button_box.show()
+        self.append(button_box)
+        button_box.set_visible(True)
 
         if not self.PAGES[self._page]:
             next(self)
 
     def _update_next_button(self):
-        self._next_button.set_sensitive(self._current_page.props.valid)
+        if self._next_button is not None:
+            self._next_button.set_sensitive(self._current_page.props.valid)
 
     def _page_valid_changed_cb(self, page, pspec):
         self._update_next_button()
@@ -416,7 +444,7 @@ class UserProfile():
         self.age = 0
 
 
-class IntroWindow(Gtk.Window):
+class IntroWindow(Gtk.Box):
     __gtype_name__ = 'SugarIntroWindow'
 
     __gsignals__ = {
@@ -424,20 +452,24 @@ class IntroWindow(Gtk.Window):
     }
 
     def __init__(self, start_on_age_page=False):
-        Gtk.Window.__init__(self)
+        super().__init__()
 
-        self.props.decorated = False
-        self.maximize()
+        self.set_hexpand(True)
+        self.set_vexpand(True)
+        self.add_css_class('intro-window')
 
         self._intro_box = _IntroBox(start_on_age_page)
         self._intro_box.connect('done', self._done_cb)
 
-        self.add(self._intro_box)
-        self._intro_box.show()
-        self.connect('key-press-event', self.__key_press_cb)
+        self.append(self._intro_box)
+        self._intro_box.set_visible(True)
+        
+        key_controller = Gtk.EventControllerKey()
+        key_controller.connect('key-pressed', self.__key_press_cb)
+        self.add_controller(key_controller)
 
     def _done_cb(self, box, user_profile):
-        self.hide()
+        self.set_visible(False)
         GLib.idle_add(self._create_profile_cb, user_profile)
 
     def _create_profile_cb(self, user_profile):
@@ -446,22 +478,23 @@ class IntroWindow(Gtk.Window):
 
         return False
 
-    def __key_press_cb(self, widget, event):
-        if Gdk.keyval_name(event.keyval) == 'Return':
+    def __key_press_cb(self, controller, keyval, keycode, state):
+        if Gdk.keyval_name(keyval) == 'Return':
             next(self._intro_box)
             return True
-        if Gdk.keyval_name(event.keyval) == 'Escape':
+        if Gdk.keyval_name(keyval) == 'Escape':
             self._intro_box.back()
             return True
         return False
 
-
-if hasattr(IntroWindow, 'set_css_name'):
-    IntroWindow.set_css_name('introwindow')
-
+IntroWindow.set_css_name('introwindow')
 
 if __name__ == '__main__':
+    win = Gtk.Window()
     w = IntroWindow()
-    w.show()
-    w.connect('destroy', Gtk.main_quit)
-    Gtk.main()
+    win.set_child(w)
+    win.set_visible(True)
+    
+    loop = GLib.MainLoop()
+    win.connect('close-request', lambda w: loop.quit())
+    loop.run()
