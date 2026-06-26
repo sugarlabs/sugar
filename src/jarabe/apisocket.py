@@ -1,4 +1,4 @@
-# Copyright (C) 2013, Daniel Narvaez
+﻿# Copyright (C) 2013, Daniel Narvaez
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ class ActivityAPI(API):
         self._client.send_result(request, [color_string.split(",")])
 
     def close(self, request):
-        self._activity.get_window().close(GLib.get_current_time())
+        self._activity.get_window().close()
 
         self._client.send_result(request, [])
 
@@ -90,9 +90,9 @@ class ActivityAPI(API):
         self._client.send_notification("activity.stop")
 
     def show_object_chooser(self, request):
-        chooser = ObjectChooser(self._activity)
+        chooser = ObjectChooser(self._activity.get_window())
         chooser.connect('response', self._chooser_response_cb, request)
-        chooser.show()
+        chooser.set_visible(True)
 
     def _chooser_response_cb(self, chooser, response_id, request):
         if response_id == Gtk.ResponseType.ACCEPT:
@@ -101,7 +101,7 @@ class ActivityAPI(API):
         else:
             self._client.send_result(request, [None])
 
-        chooser.destroy()
+        chooser.close()
 
 
 class DatastoreAPI(API):

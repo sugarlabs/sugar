@@ -1,4 +1,4 @@
-# Copyright (C) 2006, Red Hat, Inc.
+﻿# Copyright (C) 2006, Red Hat, Inc.
 # Copyright (C) 2009, One Laptop Per Child Association Inc
 #
 # This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,8 @@
 
 from sugar4 import logger
 
-logger.cleanup()
-logger.start('shell')
+#logger.cleanup()
+#logger.start('shell')
 
 import logging
 
@@ -34,28 +34,29 @@ os.environ['LIBOVERLAY_SCROLLBAR'] = '0'
 
 import gettext
 from jarabe import config
-# NOTE: This needs to happen early because some modules register
-# translatable strings in the module scope.
+# must happen early; some modules register translatable strings at import time
 gettext.bindtextdomain('sugar', config.locale_path)
-gettext.bindtextdomain('sugar-toolkit-gtk3', config.locale_path)
+gettext.bindtextdomain('sugar-toolkit-gtk4', config.locale_path)
 gettext.textdomain('sugar')
 
-# publish sugar version in the environment
 os.environ['SUGAR_VERSION'] = config.version
 
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
-# define the versions of used libraries that are required
 import gi
 gi.require_version('Gtk', '4.0')
-gi.require_version('Gst', '1.0')
-gi.require_version('SugarExt', '2.0')
+try:
+    gi.require_version('Gst', '1.0')
+    from gi.repository import Gst
+    HAS_GST = True
+except ValueError:
+    HAS_GST = False
+    logging.warning("Gst 1.0 not available. Running without GStreamer.")
 
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
-from gi.repository import Gst
 
 from sugar4 import env
 
@@ -81,7 +82,6 @@ from jarabe.view.service import UIService
 from jarabe import apisocket
 from jarabe import testrunner
 from jarabe.model import brightness
-
 
 _mutter_process = None
 _window_manager_started = False
@@ -129,8 +129,7 @@ def setup_file_transfer_cb():
 def _complete_desktop_startup():
     launcher.setup()
 
-    GLib.idle_add(setup_frame_cb)
-    GLib.idle_add(setup_keyhandler_cb)
+    setup_frame_cb()
     GLib.idle_add(setup_gesturehandler_cb)
     GLib.idle_add(setup_journal_cb)
     GLib.idle_add(setup_notification_service_cb)
@@ -144,7 +143,7 @@ def _complete_desktop_startup():
 
 def __window_manager_failed_cb(fd, condition):
     logging.error('window manager did fail, restarting')
-    GLib.source_remove(_weston_sid)
+    GLib.source_remove(_mutter_sid)
     GLib.timeout_add(1000, _restart_window_manager)
     return False
 
@@ -152,8 +151,6 @@ def __window_manager_failed_cb(fd, condition):
 def _restart_window_manager():
     global _mutter_process, _mutter_sid
 
-    #_mutter_process = subprocess.Popen(
-    #    ['mutter', '--wayland'],
     _mutter_process = subprocess.Popen(
         ['dbus-run-session', 'mutter', '--wayland'],
         stdout=subprocess.PIPE)
@@ -167,16 +164,6 @@ def _start_window_manager():
 
     _cursor_theme_settings = Gio.Settings.new('org.gnome.desktop.interface')
     _cursor_theme = _cursor_theme_settings.get_string('cursor-theme')
-    _cursor_theme_settings.set_string('cursor-theme', 'sugar')
-
-    #_restart_window_manager()
-    global _mutter_process, _mutter_sid
-
-    _mutter_process = subprocess.Popen(
-        ['mutter', '--wayland'],
-        stdout=subprocess.PIPE)
-    _mutter_sid = GLib.io_add_watch(_mutter_process.stdout, GLib.IO_HUP,
-                                    __window_manager_failed_cb)
 
     global _starting_desktop
     if _starting_desktop:
@@ -184,24 +171,64 @@ def _start_window_manager():
 
 
 def _stop_window_manager():
-    _cursor_theme_settings.set_string('cursor-theme', _cursor_theme)
-    _mutter_process.terminate()
+    if _mutter_process:
+        _mutter_process.terminate()
 
 
-def _begin_desktop_startup(shell):
-    logging.warning("Running begin desktop")
+def _zoom_level_changed_cb(signal=None, sender=None, **kwargs):
+    shell_model = sender
+    new_level = kwargs.get('new_level')
+    if new_level == shell_model.ZOOM_ACTIVITY:
+        active_activity = shell_model.get_active_activity()
+        if active_activity and active_activity.is_journal():
+            shell_model._stack.set_visible_child_name("journal")
+        else:
+            shell_model._stack.set_visible_child_name("activity")
+    else:
+        shell_model._stack.set_visible_child_name("home")
+
+
+def _active_activity_changed_cb(shell_model, activity):
+    if shell_model.zoom_level == shell_model.ZOOM_ACTIVITY:
+        if activity and activity.is_journal():
+            shell_model._stack.set_visible_child_name("journal")
+        else:
+            shell_model._stack.set_visible_child_name("activity")
+
+
+def _begin_desktop_startup():
+    from jarabe.model import shell as shell_model
     global _starting_desktop
     _starting_desktop = True
 
-
     UIService()
 
+    shell_instance = shell_model.get_model()
+    _setup_main_window(shell_instance)
+
     home_window = homewindow.get_instance()
-    shell.add_window(home_window)
-    home_window.show()
+
+    setup_keyhandler_cb()
+
+    shell_instance._stack.add_named(home_window, "home")
+    shell_instance._stack.add_named(shell_instance.compositor, "activity")
+    shell_instance._stack.set_visible_child_name("home")
+
+    os.environ["WAYLAND_DISPLAY"] = "wayland-sugar"
+    if "DISPLAY" in os.environ:
+        del os.environ["DISPLAY"]
+
+    shell_instance.zoom_level_changed.connect(_zoom_level_changed_cb)
+    shell_instance.connect('active-activity-changed', _active_activity_changed_cb)
 
     session_manager = get_session_manager()
     session_manager.start()
+
+    _complete_desktop_startup()
+
+    # Clear the startup 'wait' cursor now that the desktop is ready.
+    # busy() was called in HomeWindow.__init__; unbusy() matches it.
+    GLib.idle_add(home_window.unbusy)
 
 
 def __intro_window_done_cb(window):
@@ -214,13 +241,12 @@ def __intro_window_done_cb(window):
 
 def cleanup_temporary_files():
     try:
-        # Remove temporary files. See http://bugs.sugarlabs.org/ticket/1876
+        # see http://bugs.sugarlabs.org/ticket/1876
         data_dir = os.path.join(env.get_profile_path(), 'data')
         shutil.rmtree(data_dir, ignore_errors=True)
         os.makedirs(data_dir)
     except OSError as e:
-        # temporary files cleanup is not critical; it should not prevent
-        # sugar from starting if (for example) the disk is full or read-only.
+        # non-fatal: full or read-only disk should not block startup
         print('temporary files cleanup failed: %s' % e)
 
 
@@ -236,8 +262,8 @@ def setup_fonts():
     face = settings.get_string('default-face')
     size = settings.get_double('default-size')
 
-    settings = Gio.Settings.new('org.gnome.desktop.interface')
-    settings.set_string("font-name", "%s %f" % (face, size))
+    gtk_settings = Gtk.Settings.get_default()
+    gtk_settings.set_property('gtk-font-name', '%s %f' % (face, size))
 
 
 def setup_proxy():
@@ -279,23 +305,54 @@ def setup_proxy():
 
 
 def setup_theme():
-    settings = Gio.Settings.new('org.gnome.desktop.interface')
+    from gi.repository import Gdk
+    gtk_settings = Gtk.Settings.get_default()
     sugar_theme = 'sugar-72'
     if 'SUGAR_SCALING' in os.environ:
         if os.environ['SUGAR_SCALING'] == '100':
             sugar_theme = 'sugar-100'
-    settings.set_string('gtk-theme', sugar_theme)
-    settings.set_string('icon-theme', 'sugar')
-    settings.set_int('cursor-blink-timeout', 3)
-    #settings.set_property('gtk-button-images', True)
+    gtk_settings.set_property('gtk-theme-name', sugar_theme)
+    gtk_settings.set_property('gtk-icon-theme-name', 'sugar')
+    gtk_settings.set_property('gtk-cursor-blink-timeout', 3)
+    gtk_settings.set_property('gtk-overlay-scrolling', False)
+
+    icons_path = os.path.join(config.data_path, 'icons')
+    Gtk.IconTheme.get_for_display(
+        Gdk.Display.get_default()).add_search_path(icons_path)
+
+    css_path = os.path.join(config.data_path, 'sugar.css')
+    if os.path.exists(css_path):
+        provider = Gtk.CssProvider()
+        provider.load_from_path(css_path)
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+
+def _setup_main_window(shell_instance):
+    if not shell_instance._main_window:
+        shell_instance._main_window = Gtk.ApplicationWindow(application=shell_instance)
+        shell_instance._main_window.set_title("Sugar")
+        
+        shell_instance._overlay = Gtk.Overlay()
+        shell_instance._overlay.set_child(shell_instance._stack)
+        
+        shell_instance._main_window.set_child(shell_instance._overlay)
+        if os.environ.get('SUGAR_WINDOWED', '0') == '1':
+            shell_instance._main_window.set_default_size(1024, 768)
+        else:
+            shell_instance._main_window.fullscreen()
+        shell_instance._main_window.present()
 
 
 def _start_intro(shell, start_on_age_page=False):
-    window = IntroWindow(start_on_age_page=start_on_age_page)
+    _setup_main_window(shell)
+    intro_box = IntroWindow(start_on_age_page=start_on_age_page)
 
-    shell.add_window(window)
-    window.connect('done', __intro_window_done_cb)
-    window.show()
+    shell._stack.add_named(intro_box, "intro")
+    shell._stack.set_visible_child_name("intro")
+    intro_box.connect('done', __intro_window_done_cb)
 
 
 def _check_profile():
@@ -316,7 +373,12 @@ def _check_group_label():
 
 def main(shell):
     logging.warning("Running main")
-    Gst.init(sys.argv)
+    
+    import signal
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+    if HAS_GST:
+        Gst.init(sys.argv)
 
     cleanup_temporary_files()
 
@@ -327,9 +389,14 @@ def main(shell):
     setup_theme()
     setup_proxy()
 
-    # this must be added early, so that it executes and unfreezes the screen
-    # even when we initially get blocked on the intro screen
+    # must run early so the screen unfreezes even if blocked on intro
     GLib.idle_add(unfreeze_screen_cb)
+
+    GLib.idle_add(setup_cursortracker_cb)
+    sound.restore()
+    brightness.get_instance()
+
+    sys.path.append(config.ext_path)
 
     if not _check_profile():
         _start_intro(shell)
@@ -337,21 +404,6 @@ def main(shell):
         _start_intro(shell, start_on_age_page=True)
     else:
         _begin_desktop_startup()
-
-    GLib.idle_add(setup_cursortracker_cb)
-    sound.restore()
-    #keyboard.setup()
-    brightness.get_instance()
-
-    sys.path.append(config.ext_path)
-
-    try:
-        Gtk.main()
-    except KeyboardInterrupt:
-        print('Ctrl+C pressed, exiting...')
-
-    _stop_window_manager()
-
 
 shell = shell.get_model()
 shell.connect('activate', main)

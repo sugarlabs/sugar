@@ -32,12 +32,8 @@ if test -z "$SUGAR_ACTIVITIES_HIDDEN"; then
     export SUGAR_ACTIVITIES_HIDDEN="$sugardatadir/activities.hidden"
 fi
 
-export GTK2_RC_FILES="@prefix@/share/sugar/data/sugar-$SUGAR_SCALING.gtkrc"
-
-if ! test -f "$GTK2_RC_FILES"; then
-    echo "sugar: ERROR: Gtk theme for scaling $SUGAR_SCALING not available in path $GTK2_RC_FILES"
-    exit 1
-fi
+export GDK_BACKEND="wayland,x11"
+export GTK_THEME="Sugar"
 
 # Set default language
 export LANG="${LANG:-en_US.utf8}"
