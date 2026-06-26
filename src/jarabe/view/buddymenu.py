@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -21,10 +21,11 @@ from gettext import gettext as _
 from gi.repository import Gtk
 from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import GObject
 import dbus
 
 from sugar4.graphics.palette import Palette
-from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItem, PaletteMenuBox
 from sugar4.graphics.icon import Icon
 from sugar4.graphics.alert import TimeoutAlert
 from sugar4.graphics import style
@@ -47,41 +48,48 @@ class BuddyMenu(Palette):
                           pixel_size=style.STANDARD_ICON_SIZE)
         nick = buddy.get_nick()
         Palette.__init__(self, None, primary_text=nick, icon=buddy_icon)
-        self.menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.menu_box = PaletteMenuBox()
         self.set_content(self.menu_box)
-        self.menu_box.show_all()
+        self.menu_box.set_visible(True)
         self._invite_menu = None
         self._active_activity_changed_hid = None
-        # Fixme: we need to make the widget accessible through the Palette API
-        self._widget.connect('destroy', self.__destroy_cb)
 
-        self._buddy.connect('notify::nick', self.__buddy_notify_nick_cb)
+        self._notify_nick_hid = self._buddy.connect('notify::nick', self.__buddy_notify_nick_cb)
 
         if buddy.is_owner():
             self._add_my_items()
         else:
             self._add_buddy_items()
 
-    def __destroy_cb(self, menu):
+    def do_dispose(self):
         if self._active_activity_changed_hid is not None:
             home_model = shell.get_model()
             home_model.disconnect(self._active_activity_changed_hid)
-        self._buddy.disconnect_by_func(self.__buddy_notify_nick_cb)
+            self._active_activity_changed_hid = None
+        if getattr(self, '_notify_nick_hid', None) is not None:
+            if GObject.signal_handler_is_connected(self._buddy, self._notify_nick_hid):
+                self._buddy.disconnect(self._notify_nick_hid)
+            self._notify_nick_hid = None
+        GObject.GObject.do_dispose(self)
 
     def _add_buddy_items(self):
         menu_item = None
         if friends.get_model().has_buddy(self._buddy):
             menu_item = PaletteMenuItem(_('Remove friend'), 'list-remove')
-            menu_item.connect('activate', self._remove_friend_cb)
+            menu_item.connect('item-activated', self._remove_friend_cb)
         else:
             menu_item = PaletteMenuItem(_('Make friend'), 'list-add')
-            menu_item.connect('activate', self._make_friend_cb)
+            menu_item.connect('item-activated', self._make_friend_cb)
 
-        self.menu_box.pack_start(menu_item, True, True, 0)
+        menu_item.set_hexpand(True)
+        self.menu_box.append_item(menu_item)
+        menu_item.set_visible(True)
 
         self._invite_menu = PaletteMenuItem('')
-        self._invite_menu.connect('activate', self._invite_friend_cb)
-        self.menu_box.pack_start(self._invite_menu, True, True, 0)
+        self._invite_menu.connect('item-activated', self._invite_friend_cb)
+        self._invite_menu.set_hexpand(True)
+        self.menu_box.append_item(self._invite_menu)
+        self._invite_menu.set_visible(True)
 
         home_model = shell.get_model()
         self._active_activity_changed_hid = home_model.connect(
@@ -107,25 +115,30 @@ class BuddyMenu(Palette):
 
         if show_shutdown:
             item = PaletteMenuItem(_('Shutdown'), 'system-shutdown')
-            item.connect('activate', self.__shutdown_activate_cb)
-            self.menu_box.pack_start(item, True, True, 0)
+            item.connect('item-activated', self.__shutdown_activate_cb)
+            item.set_hexpand(True)
+            self.menu_box.append_item(item)
+            item.set_visible(True)
 
         if show_restart:
             item = PaletteMenuItem(_('Restart'), 'system-restart')
-            item.connect('activate', self.__reboot_activate_cb)
-            self.menu_box.pack_start(item, True, True, 0)
-            item.show()
+            item.connect('item-activated', self.__reboot_activate_cb)
+            item.set_hexpand(True)
+            self.menu_box.append_item(item)
+            item.set_visible(True)
 
         if show_logout:
             item = PaletteMenuItem(_('Logout'), 'system-logout')
-            item.connect('activate', self.__logout_activate_cb)
-            self.menu_box.pack_start(item, True, True, 0)
-            item.show()
+            item.connect('item-activated', self.__logout_activate_cb)
+            item.set_hexpand(True)
+            self.menu_box.append_item(item)
+            item.set_visible(True)
 
         item = PaletteMenuItem(_('My Settings'), 'preferences-system')
-        item.connect('activate', self.__controlpanel_activate_cb)
-        self.menu_box.pack_start(item, True, True, 0)
-        item.show()
+        item.connect('item-activated', self.__controlpanel_activate_cb)
+        item.set_hexpand(True)
+        self.menu_box.append_item(item)
+        item.set_visible(True)
 
     def _quit(self, action):
         jarabe.desktop.homewindow.get_instance().busy()
@@ -140,11 +153,11 @@ class BuddyMenu(Palette):
         alert.connect('response', self.__quit_accept_cb)
 
         jarabe.desktop.homewindow.get_instance().add_alert(alert)
-        alert.show()
+        alert.set_visible(True)
 
     def __quit_accept_cb(self, alert, response_id):
         jarabe.desktop.homewindow.get_instance().remove_alert(alert)
-        if response_id is Gtk.ResponseType.CANCEL:
+        if response_id == Gtk.ResponseType.CANCEL:
             get_session_manager().cancel_shutdown()
         else:
             jarabe.desktop.homewindow.get_instance().busy()
@@ -167,7 +180,7 @@ class BuddyMenu(Palette):
 
         # show the control panel
         panel = ControlPanel()
-        panel.show()
+        panel.set_visible(True)
 
     def _update_invite_menu(self, activity):
         buddy_activity = self._buddy.props.current_activity
@@ -176,7 +189,7 @@ class BuddyMenu(Palette):
         else:
             buddy_activity_id = None
 
-        self._invite_menu.hide()
+        self._invite_menu.set_visible(False)
         if activity is None or \
            activity.is_journal() or \
            activity.get_activity_id() == buddy_activity_id:
@@ -191,9 +204,9 @@ class BuddyMenu(Palette):
                         pixel_size=style.SMALL_ICON_SIZE)
             icon.props.xo_color = activity.get_icon_color()
             self._invite_menu.set_image(icon)
-            icon.show()
+            icon.set_visible(True)
 
-            self._invite_menu.show()
+            self._invite_menu.set_visible(True)
 
     def _cur_activity_changed_cb(self, home_model, activity_model):
         self._update_invite_menu(activity_model)
@@ -224,4 +237,4 @@ class BuddyMenu(Palette):
                 else:
                     raise
         else:
-            logging.error('Invite failed, activity service not ')
+            logging.error('Invite failed, activity service not found')

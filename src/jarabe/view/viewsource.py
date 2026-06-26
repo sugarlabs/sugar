@@ -1,4 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
+﻿# Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2011 Walter Bender
 # Copyright (C) 2014-15 Ignacio Rodriguez
@@ -23,13 +23,17 @@ import logging
 from gettext import gettext as _
 
 import gi
-gi.require_version('GtkSource', '4')
+try:
+    gi.require_version('GtkSource', '5')
+    from gi.repository import GtkSource
+except (ValueError, ImportError):
+    GtkSource = None
+
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Pango
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GtkSource
 from gi.repository import GdkPixbuf
 import dbus
 from gi.repository import Gio
@@ -123,8 +127,7 @@ def setup_view_source(activity):
                 'org.freedesktop.DBus.Python.NotImplementedError']
             if e.get_dbus_name() not in expected_exceptions:
                 logging.exception('Exception occurred in HandleViewSource():')
-        except Exception:
-            logging.exception('Exception occurred in HandleViewSource():')
+
 
     window_id = activity.get_bundle_id()
     if window_id is None:
@@ -149,8 +152,7 @@ def setup_view_source(activity):
                 'org.freedesktop.DBus.Python.NotImplementedError']
             if e.get_dbus_name() not in expected_exceptions:
                 logging.exception('Exception occurred in GetDocumentPath():')
-        except Exception:
-            logging.exception('Exception occurred in GetDocumentPath():')
+
 
     if bundle_path is None and document_path is None:
         _logger.debug('Activity without bundle_path nor document_path')
@@ -165,7 +167,7 @@ def setup_view_source(activity):
                              sugar_toolkit_path, activity.get_title())
     activity.push_shell_window(view_source)
     view_source.connect('hide', activity.pop_shell_window)
-    view_source.show()
+    view_source.set_visible(True)
 
 
 class ViewSource(Gtk.Window):
@@ -173,43 +175,63 @@ class ViewSource(Gtk.Window):
 
     def __init__(self, window_id, bundle_path, document_path,
                  sugar_toolkit_path, title):
-        Gtk.Window.__init__(self)
+        super().__init__()
+
 
         _logger.debug('ViewSource paths: %r %r %r', bundle_path,
                       document_path, sugar_toolkit_path)
 
         self.set_modal(True)
         self.set_decorated(False)
-        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
-        self.set_border_width(style.LINE_WIDTH)
-        self.set_has_resize_grip(False)
 
-        width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 2
-        height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
-        self.set_size_request(width, height)
+        # Set transient parent for Wayland XDG-dialog positioning
+        from jarabe.model import shell as _shell
+        shell_model = _shell.get_model()
+        if shell_model and shell_model._main_window:
+            self.set_transient_for(shell_model._main_window)
+
+        display = Gdk.Display.get_default()
+        width = 1024 - style.GRID_CELL_SIZE * 2
+        height = 768 - style.GRID_CELL_SIZE * 2
+        if display:
+            monitors = display.get_monitors()
+            if monitors and monitors.get_n_items() > 0:
+                geo = monitors.get_item(0).get_geometry()
+                width = geo.width - style.GRID_CELL_SIZE * 2
+                height = geo.height - style.GRID_CELL_SIZE * 2
+
+        self.set_default_size(width, height)
 
         self._parent_window_id = window_id
         self._sugar_toolkit_path = sugar_toolkit_path
-        self._gdk_window = self.get_root_window()
 
         self.connect('realize', self.__realize_cb)
-        self.connect('destroy', self.__destroy_cb, document_path)
-        self.connect('key-press-event', self.__key_press_event_cb)
+        self._document_path = document_path
+        
+        key_controller = Gtk.EventControllerKey()
+        key_controller.connect('key-pressed', self.__key_press_event_cb)
+        self.add_controller(key_controller)
 
         self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(self._vbox)
-        self._vbox.show()
+        self._vbox.set_margin_start(style.LINE_WIDTH)
+        self._vbox.set_margin_end(style.LINE_WIDTH)
+        self._vbox.set_margin_top(style.LINE_WIDTH)
+        self._vbox.set_margin_bottom(style.LINE_WIDTH)
+        self.set_child(self._vbox)
+        self._vbox.set_visible(True)
 
         toolbar = Toolbar(title, bundle_path, document_path,
                           sugar_toolkit_path)
-        self._vbox.pack_start(toolbar, False, True, 0)
+        self._vbox.append(toolbar)
         toolbar.connect('stop-clicked', self.__stop_clicked_cb)
         toolbar.connect('source-selected', self.__source_selected_cb)
-        toolbar.show()
+        toolbar.set_visible(True)
 
-        pane = Gtk.HPaned()
-        self._vbox.pack_start(pane, True, True, 0)
-        pane.show()
+        pane = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
+        pane.set_vexpand(True)
+        pane.set_hexpand(True)
+        self._vbox.append(pane)
+        pane.set_visible(True)
 
         self._selected_bundle_file = None
         self._selected_sugar_file = None
@@ -233,14 +255,14 @@ class ViewSource(Gtk.Window):
 
         # Split the tree pane into two vertical panes, one of which
         # will be hidden
-        tree_panes = Gtk.VPaned()
-        tree_panes.show()
+        tree_panes = Gtk.Paned(orientation=Gtk.Orientation.VERTICAL)
+        tree_panes.set_visible(True)
 
         self._bundle_source_viewer = FileViewer(bundle_path, file_name)
         self._bundle_source_viewer.connect('file-selected',
                                            self.__file_selected_cb)
-        tree_panes.add1(self._bundle_source_viewer)
-        self._bundle_source_viewer.show()
+        tree_panes.set_start_child(self._bundle_source_viewer)
+        self._bundle_source_viewer.set_visible(True)
 
         self._sugar_source_viewer = None
 
@@ -259,23 +281,25 @@ class ViewSource(Gtk.Window):
             self._sugar_source_viewer.connect('file-selected',
                                               self.__file_selected_cb)
 
-            tree_panes.add2(self._sugar_source_viewer)
-            self._sugar_source_viewer.hide()
+            tree_panes.set_end_child(self._sugar_source_viewer)
+            self._sugar_source_viewer.set_visible(False)
 
-        pane.add1(tree_panes)
+        pane.set_start_child(tree_panes)
 
         self._source_display = SourceDisplay()
-        pane.add2(self._source_display)
-        self._source_display.show()
+        pane.set_end_child(self._source_display)
+        self._source_display.set_visible(True)
         self._source_display.file_path = self._selected_bundle_file
 
         if document_path is not None:
             self._select_source(document_path)
 
     def add_alert(self, alert):
-        self._vbox.pack_start(alert, False, False, 0)
-        self._vbox.reorder_child(alert, 1)
-        alert.show()
+        if hasattr(self._vbox, 'prepend'):
+            self._vbox.prepend(alert)
+        else:
+            self._vbox.insert_child_after(alert, None)
+        alert.set_visible(True)
 
     def remove_alert(self, alert):
         self._vbox.remove(alert)
@@ -288,17 +312,13 @@ class ViewSource(Gtk.Window):
         return Pango.PIXELS(metrics.get_approximate_char_width()) * char_count
 
     def __realize_cb(self, widget):
-        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-        window = self.get_window()
-        window.set_accept_focus(True)
-
-        attributes = Gdk.WindowAttr()
-        attributes.window_type = Gdk.WindowType.FOREIGN
-        parent = Gdk.Window.new(None, attributes, None)
-        window.set_transient_for(parent)
+        from jarabe.model import shell as _shell
+        _shell.get_model().push_modal()
 
     def __stop_clicked_cb(self, widget):
-        self.destroy()
+        from jarabe.model import shell as _shell
+        _shell.get_model().pop_modal()
+        self.close()
 
     def __source_selected_cb(self, widget, path):
         self._select_source(path)
@@ -307,38 +327,45 @@ class ViewSource(Gtk.Window):
         if os.path.isfile(path):
             _logger.debug('_select_source called with file: %r', path)
             self._source_display.file_path = path
-            self._bundle_source_viewer.hide()
+            self._bundle_source_viewer.set_visible(False)
 
             if self._sugar_source_viewer is not None:
-                self._sugar_source_viewer.hide()
+                self._sugar_source_viewer.set_visible(False)
 
         elif path == self._sugar_toolkit_path:
             _logger.debug('_select_source called with sugar toolkit path: %r',
                           path)
             self._sugar_source_viewer.set_path(path)
             self._source_display.file_path = self._selected_sugar_file
-            self._sugar_source_viewer.show()
-            self._bundle_source_viewer.hide()
+            self._sugar_source_viewer.set_visible(True)
+            self._bundle_source_viewer.set_visible(False)
         else:
             _logger.debug('_select_source called with path: %r', path)
             self._bundle_source_viewer.set_path(path)
             self._source_display.file_path = self._selected_bundle_file
-            self._bundle_source_viewer.show()
+            self._bundle_source_viewer.set_visible(True)
 
             if self._sugar_source_viewer is not None:
-                self._sugar_source_viewer.hide()
+                self._sugar_source_viewer.set_visible(False)
 
-    def __destroy_cb(self, window, document_path):
-        if document_path is not None and os.path.exists(document_path):
-            os.unlink(document_path)
+    def do_dispose(self):
+        if getattr(self, '_document_path', None) and os.path.exists(self._document_path):
+            try:
+                os.unlink(self._document_path)
+            except OSError:
+                pass
 
-        self._gdk_window.set_cursor(Gdk.Cursor(Gdk.CursorType.LEFT_PTR))
-        Gdk.flush()
+        surface = self.get_surface()
+        if surface:
+            surface.set_cursor(Gdk.Cursor.new_from_name('default'))
+        GObject.GObject.do_dispose(self)
 
-    def __key_press_event_cb(self, window, event):
-        keyname = Gdk.keyval_name(event.keyval)
+    def __key_press_event_cb(self, controller, keyval, keycode, state):
+        keyname = Gdk.keyval_name(keyval)
         if keyname == 'Escape':
-            self.destroy()
+            self.close()
+            return True
+        return False
 
     def __file_selected_cb(self, file_viewer, file_path):
         if file_path is not None and os.path.isfile(file_path):
@@ -356,7 +383,7 @@ class DocumentButton(RadioToolButton):
 
     def __init__(self, file_name, document_path, activity_name, title,
                  bundle=False):
-        RadioToolButton.__init__(self)
+        super().__init__()
 
         self._document_path = document_path
         self._title = title
@@ -371,11 +398,11 @@ class DocumentButton(RadioToolButton):
                     pixel_size=style.STANDARD_ICON_SIZE,
                     xo_color=XoColor(self._color))
         self.set_icon_widget(icon)
-        icon.show()
+        icon.set_visible(True)
 
         box = PaletteMenuBox()
         self.props.palette.set_content(box)
-        box.show()
+        box.set_visible(True)
 
         if bundle:
             menu_item = PaletteMenuItem(_('Duplicate'), 'edit-duplicate',
@@ -387,7 +414,7 @@ class DocumentButton(RadioToolButton):
             menu_item.connect('activate', self.__keep_in_journal_cb)
 
         box.append_item(menu_item)
-        menu_item.show()
+        menu_item.set_visible(True)
 
     def __show_duplicate_alert(self, menu_item):
         alert = ConfirmationAlert()
@@ -395,10 +422,10 @@ class DocumentButton(RadioToolButton):
             self._activity_name
         alert.props.msg = _('This may take a few minutes')
         alert.connect('response', self.__duplicate_alert_response_cb)
-        self.get_toplevel().add_alert(alert)
+        self.get_root().add_alert(alert)
 
     def __duplicate_alert_response_cb(self, alert, response_id):
-        self.get_toplevel().remove_alert(alert)
+        self.get_root().remove_alert(alert)
 
         if response_id == Gtk.ResponseType.OK:
             self.__set_busy_cursor(True)
@@ -409,20 +436,22 @@ class DocumentButton(RadioToolButton):
             new_alert = Alert()
             new_alert.props.title = _("Duplicating activity...")
 
-            self.get_toplevel().add_alert(new_alert)
+            self.get_root().add_alert(new_alert)
             GLib.idle_add(internal_callback, new_alert)
 
     def __set_busy_cursor(self, busy):
         cursor = None
 
         if busy:
-            cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
+            cursor = Gdk.Cursor.new_from_name('wait')
         else:
-            cursor = Gdk.Cursor(Gdk.CursorType.LEFT_PTR)
+            cursor = Gdk.Cursor.new_from_name('default')
 
-        gdk_window = self.get_root_window()
-        gdk_window.set_cursor(cursor)
-        Gdk.flush()
+        root = self.get_root()
+        if root:
+            surface = root.get_surface()
+            if surface:
+                surface.set_cursor(cursor)
 
     def __copy_to_home_cb(self, menu_item, copy_alert=None):
         """Make a local copy of the activity bundle in user_activities_path"""
@@ -444,20 +473,20 @@ class DocumentButton(RadioToolButton):
                     customizebundle.generate_bundle(nick, new_basename)
 
                     if copy_alert:
-                        self.get_toplevel().remove_alert(copy_alert)
+                        self.get_root().remove_alert(copy_alert)
 
                     alert = NotifyAlert(10)
                     alert.props.title = _('Duplicated')
                     alert.props.msg = _('The activity has been duplicated')
                     alert.connect('response', self.__alert_response_cb)
-                    self.get_toplevel().add_alert(alert)
+                    self.get_root().add_alert(alert)
                 finally:
                     self.__set_busy_cursor(False)
 
             GLib.idle_add(async_copy_activity_tree)
         else:
             if copy_alert:
-                self.get_toplevel().remove_alert(copy_alert)
+                self.get_root().remove_alert(copy_alert)
 
             self.__set_busy_cursor(False)
 
@@ -467,10 +496,10 @@ class DocumentButton(RadioToolButton):
                                 ' the activity again')
 
             alert.connect('response', self.__alert_response_cb)
-            self.get_toplevel().add_alert(alert)
+            self.get_root().add_alert(alert)
 
     def __alert_response_cb(self, alert, response_id):
-        self.get_toplevel().remove_alert(alert)
+        self.get_root().remove_alert(alert)
 
     def __keep_in_journal_cb(self, menu_item):
         mime_type = mime.get_from_file_name(self._document_path)
@@ -500,7 +529,7 @@ class DocumentButton(RadioToolButton):
         self._jobject.destroy()
 
 
-class Toolbar(Gtk.Toolbar):
+class Toolbar(Gtk.Box):
     __gtype_name__ = 'SugarViewSourceToolbar'
 
     __gsignals__ = {
@@ -510,7 +539,7 @@ class Toolbar(Gtk.Toolbar):
     }
 
     def __init__(self, title, bundle_path, document_path, sugar_toolkit_path):
-        Gtk.Toolbar.__init__(self)
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL)
 
         document_button = None
         self.bundle_path = bundle_path
@@ -527,8 +556,8 @@ class Toolbar(Gtk.Toolbar):
                                              activity_name, title)
             document_button.connect('toggled', self.__button_toggled_cb,
                                     document_path)
-            self.insert(document_button, -1)
-            document_button.show()
+            self.append(document_button)
+            document_button.set_visible(True)
             self._add_separator()
 
         if bundle_path is not None and os.path.exists(bundle_path):
@@ -539,14 +568,14 @@ class Toolbar(Gtk.Toolbar):
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
                         stroke_color=style.COLOR_WHITE.get_svg())
             activity_button.set_icon_widget(icon)
-            icon.show()
+            icon.set_visible(True)
             if document_button is not None:
-                activity_button.props.group = document_button
+                activity_button.set_group(document_button)
             activity_button.props.tooltip = _('Activity Bundle Source')
             activity_button.connect('toggled', self.__button_toggled_cb,
                                     bundle_path)
-            self.insert(activity_button, -1)
-            activity_button.show()
+            self.append(activity_button)
+            activity_button.set_visible(True)
             self._add_separator()
 
         if sugar_toolkit_path is not None:
@@ -556,16 +585,16 @@ class Toolbar(Gtk.Toolbar):
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
                         stroke_color=style.COLOR_WHITE.get_svg())
             sugar_button.set_icon_widget(icon)
-            icon.show()
+            icon.set_visible(True)
             if document_button is not None:
-                sugar_button.props.group = document_button
+                sugar_button.set_group(document_button)
             else:
-                sugar_button.props.group = activity_button
+                sugar_button.set_group(activity_button)
             sugar_button.props.tooltip = _('Sugar Toolkit Source')
             sugar_button.connect('toggled', self.__button_toggled_cb,
                                  sugar_toolkit_path)
-            self.insert(sugar_button, -1)
-            sugar_button.show()
+            self.append(sugar_button)
+            sugar_button.set_visible(True)
             self._add_separator()
 
         self.activity_title_text = _('View source: %s') % title
@@ -573,7 +602,8 @@ class Toolbar(Gtk.Toolbar):
         self.label = Gtk.Label()
         self.label.set_markup('<b>%s</b>' % self.activity_title_text)
         self.label.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
-        self.label.set_alignment(0, 0.5)
+        self.label.set_halign(Gtk.Align.START)
+        self.label.set_valign(Gtk.Align.CENTER)
         self._add_widget(self.label, expand=True)
 
         self._add_separator(False)
@@ -581,28 +611,23 @@ class Toolbar(Gtk.Toolbar):
         stop = ToolButton(icon_name='dialog-cancel')
         stop.set_tooltip(_('Close'))
         stop.connect('clicked', self.__stop_clicked_cb)
-        self.insert(stop, -1)
-        stop.show()
+        self.append(stop)
+        stop.set_visible(True)
 
     def _add_separator(self, expand=False):
-        separator = Gtk.SeparatorToolItem()
-        separator.props.draw = False
+        spacer = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         if expand:
-            separator.set_expand(True)
+            spacer.set_hexpand(True)
         else:
-            separator.set_size_request(style.DEFAULT_SPACING, -1)
-        self.insert(separator, -1)
-        separator.show()
+            spacer.set_size_request(style.DEFAULT_SPACING, -1)
+        self.append(spacer)
+        spacer.set_visible(True)
 
     def _add_widget(self, widget, expand=False):
-        tool_item = Gtk.ToolItem()
-        tool_item.set_expand(expand)
-
-        tool_item.add(widget)
-        widget.show()
-
-        self.insert(tool_item, -1)
-        tool_item.show()
+        if expand:
+            widget.set_hexpand(True)
+        self.append(widget)
+        widget.set_visible(True)
 
     def __stop_clicked_cb(self, button):
         self.emit('stop-clicked')
@@ -626,10 +651,9 @@ class FileViewer(Gtk.ScrolledWindow):
     }
 
     def __init__(self, path, initial_filename):
-        Gtk.ScrolledWindow.__init__(self)
+        super().__init__()
 
-        self.props.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC
-        self.props.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC
+        self.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.set_size_request(style.GRID_CELL_SIZE * 3, -1)
 
         self._path = None
@@ -637,8 +661,8 @@ class FileViewer(Gtk.ScrolledWindow):
 
         self._tree_view = Gtk.TreeView()
         self._tree_view.connect('cursor-changed', self.__cursor_changed_cb)
-        self.add(self._tree_view)
-        self._tree_view.show()
+        self.set_child(self._tree_view)
+        self._tree_view.set_visible(True)
 
         self._tree_view.props.headers_visible = False
         selection = self._tree_view.get_selection()
@@ -706,24 +730,14 @@ class SourceDisplay(Gtk.ScrolledWindow):
     __gtype_name__ = 'SugarSourceDisplay'
 
     def __init__(self):
-        Gtk.ScrolledWindow.__init__(self)
+        super().__init__()
 
-        self.props.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC
-        self.props.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC
+        self.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
 
         self._file_path = None
 
     def _replace(self, child):
-        self._remove_children()
-        self.add(child)
-
-    def _replace_with_viewport(self, child):
-        self._remove_children()
-        self.add_with_viewport(child)
-
-    def _remove_children(self):
-        for child in self.get_children():
-            self.remove(child)
+        self.set_child(child)
 
     def _set_file_path(self, file_path):
         self._file_path = file_path
@@ -745,17 +759,23 @@ class SourceDisplay(Gtk.ScrolledWindow):
                 self._show_image_viewer(icon='application-x-generic')
 
     def _show_text_viewer(self):
+        if GtkSource is None:
+            return False
+
         source_buffer = GtkSource.Buffer()
         source_buffer.set_highlight_syntax(True)
 
         source_view = GtkSource.View(buffer=source_buffer)
         source_view.set_editable(False)
-        source_view.set_cursor_visible(True)
         source_view.set_show_line_numbers(True)
         source_view.set_show_right_margin(True)
         source_view.set_right_margin_position(80)
-        source_view.modify_font(_SOURCE_FONT)
-        # source_view.set_highlight_current_line(True) #FIXME: Ugly color
+        source_view.add_css_class('view-source-text')
+
+        provider = Gtk.CssProvider()
+        css = b".view-source-text { font-family: monospace; font-size: %dpt; }" % style.FONT_SIZE
+        provider.load_from_data(css)
+        Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
         mime_type = mime.get_for_file(self._file_path)
 
@@ -781,7 +801,7 @@ class SourceDisplay(Gtk.ScrolledWindow):
         except UnicodeDecodeError:
             return False
 
-        source_view.show()
+        source_view.set_visible(True)
         self._replace(source_view)
 
         return True
@@ -795,33 +815,43 @@ class SourceDisplay(Gtk.ScrolledWindow):
         media_box = ImageBox()
 
         if image:
-            image = Gtk.Image()
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file(self._file_path)
-            image.set_from_pixbuf(pixbuf)
-            media_box.add(image)
+            image_widget = Gtk.Image.new_from_file(self._file_path)
+            media_box.append(image_widget)
+            image_widget.set_visible(True)
 
         if icon:
-            h = Gdk.Screen.width() / 3
-            icon = Icon(icon_name=icon, pixel_size=h)
-            media_box.add(icon)
+            h = 1024 / 3 # approximate size
+            icon_widget = Icon(icon_name=icon, pixel_size=h)
+            media_box.append(icon_widget)
+            icon_widget.set_visible(True)
 
-        media_box.show_all()
-        self._replace_with_viewport(media_box)
+        media_box.set_visible(True)
+        self._replace(media_box)
 
     def _show_no_file(self):
         nofile_label = Gtk.Label()
         nofile_label.set_text(_("Please select a file in the left panel."))
 
-        nofile_box = Gtk.EventBox()
-        nofile_box.modify_bg(Gtk.StateType.NORMAL, Gdk.color_parse('white'))
+        nofile_box = Gtk.Box()
+        nofile_box.add_css_class('nofile-box')
 
-        nofile_box.add(nofile_label)
-        nofile_box.show_all()
-        self._replace_with_viewport(nofile_box)
+        provider = Gtk.CssProvider()
+        css = b".nofile-box { background-color: %s; }" % style.COLOR_WHITE.get_html().encode('utf-8')
+        provider.load_from_data(css)
+        Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+        nofile_box.append(nofile_label)
+        nofile_label.set_visible(True)
+        nofile_box.set_visible(True)
+        self._replace(nofile_box)
 
 
-class ImageBox(Gtk.EventBox):
+class ImageBox(Gtk.Box):
     __gtype_name__ = 'SugarViewSourceImageBox'
 
     def __init__(self):
-        Gtk.EventBox.__init__(self)
+        super().__init__()
+        self.set_halign(Gtk.Align.CENTER)
+        self.set_valign(Gtk.Align.CENTER)
+        
+        self.add_css_class('image-box')
