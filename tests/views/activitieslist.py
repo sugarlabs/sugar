@@ -1,4 +1,4 @@
-# Copyright (C) 2013, Daniel Narvaez
+﻿# Copyright (C) 2013, Daniel Narvaez
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,12 +15,13 @@
 
 import os
 
+import gi
+gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
 from jarabe.desktop.activitieslist import ActivityListPalette
-
 
 tests_dir = os.getcwd()
 base_dir = os.path.dirname(tests_dir)
@@ -49,11 +50,11 @@ class MockActivityInfo:
     def is_user_activity(self):
         return True
 
-
 os.environ["SUGAR_MIME_DEFAULTS"] = \
     os.path.join(base_dir, "data", "mime.defaults")
 
 palette = ActivityListPalette(MockActivityInfo())
 palette.popup()
 
-Gtk.main()
+import GLib
+GLib.MainLoop().run()

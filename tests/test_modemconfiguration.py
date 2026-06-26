@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+﻿# -*- encoding: utf-8 -*-
 # Copyright (C) 2013, Miguel González
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
 import unittest
 from xml.etree.cElementTree import ElementTree
 
-from mock import patch
+from unittest.mock import patch
 
 from cpsection.modemconfiguration.model import CountryCodeParser, \
     ServiceProvidersParser, ServiceProviders, PROVIDERS_PATH
@@ -31,9 +31,8 @@ class CountryCodeParserTest(unittest.TestCase):
         self.assertEqual(CountryCodeParser().get('es'), 'Spain')
         self.assertEqual(CountryCodeParser().get('zw'), 'Zimbabwe')
 
-    def test_raise_if_not_found(self):
-        with self.assertRaises(KeyError):
-            CountryCodeParser().get('xx')
+    def test_fallback_if_not_found(self):
+        self.assertEqual(CountryCodeParser().get('xx'), 'xx')
 
 
 class ServiceProvidersParserTest(unittest.TestCase):
