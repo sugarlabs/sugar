@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2011, One Laptop per Child
+﻿# Copyright (C) 2007-2011, One Laptop per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,12 +30,12 @@ import dbus
 from gi.repository import Gio
 from gi.repository import GLib
 
+import gi
+gi.require_version('SugarExt', '2.0')
 from gi.repository import SugarExt
-
 from sugar4 import dispatch
 from sugar4 import mime
 from sugar4 import util
-
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
@@ -222,8 +222,8 @@ class DatastoreResultSet(BaseResultSet):
         BaseResultSet.__init__(self, query, page_size)
 
     def find(self, query):
-        entries, total_count = _get_datastore().find(query, PROPERTIES,
-                                                     byte_arrays=True)
+        entries, total_count = _call_datastore('find', query, PROPERTIES,
+                                               byte_arrays=True)
 
         for entry in entries:
             entry['mountpoint'] = '/'
@@ -233,7 +233,7 @@ class DatastoreResultSet(BaseResultSet):
     def find_ids(self, query):
         copy = query.copy()
         copy.pop('mountpoints', '/')
-        return _get_datastore().find_ids(copy)
+        return _call_datastore('find_ids', copy)
 
 
 class InplaceResultSet(BaseResultSet):
@@ -503,7 +503,6 @@ def _get_file_metadata_from_json(path, fetch_preview):
     metadata = None
     mount_point = _get_mount_point(path)
     subdir = ''
-    # check if the file is a subdirectory
     if mount_point != dir_path:
         subdir = os.path.relpath(dir_path, mount_point)
 
@@ -556,6 +555,23 @@ def _get_datastore():
     return _datastore
 
 
+def _call_datastore(method, *args, **kwargs):
+    try:
+        return getattr(_get_datastore(), method)(*args, **kwargs)
+    except dbus.DBusException as e:
+        if e.get_dbus_name() in ['org.freedesktop.DBus.Error.ServiceUnknown',
+                                 'org.freedesktop.DBus.Error.NoReply',
+                                 'org.freedesktop.DBus.Error.Disconnected']:
+            logging.warning('Datastore connection failed, retrying once.')
+            global _datastore
+            _datastore = None
+            try:
+                return getattr(_get_datastore(), method)(*args, **kwargs)
+            except Exception:
+                raise e
+        raise
+
+
 def _datastore_created_cb(object_id):
     created.send(None, object_id=object_id)
 
@@ -602,7 +618,7 @@ def get(object_id):
         metadata = _get_file_metadata(object_id, stat)
         metadata['mountpoint'] = _get_mount_point(object_id)
     else:
-        metadata = _get_datastore().get_properties(object_id, byte_arrays=True)
+        metadata = _call_datastore('get_properties', object_id, byte_arrays=True)
         metadata['mountpoint'] = '/'
     return metadata
 
@@ -614,7 +630,7 @@ def get_file(object_id):
         logging.debug('get_file asked for file with path %r', object_id)
         return object_id
     logging.debug('get_file asked for entry with id %r', object_id)
-    file_path = _get_datastore().get_filename(object_id)
+    file_path = _call_datastore('get_filename', object_id)
     if file_path:
         return util.TempFilePath(file_path)
     return None
@@ -627,7 +643,7 @@ def get_file_size(object_id):
     if os.path.exists(object_id):
         return os.stat(object_id).st_size
 
-    file_path = _get_datastore().get_filename(object_id)
+    file_path = _call_datastore('get_filename', object_id)
     if file_path:
         size = os.stat(file_path).st_size
         os.remove(file_path)
@@ -640,14 +656,14 @@ def get_unique_values(key):
     """Returns a list with the different values a property has taken
     """
     empty_dict = dbus.Dictionary({}, signature='ss')
-    return _get_datastore().get_uniquevaluesfor(key, empty_dict)
+    return _call_datastore('get_uniquevaluesfor', key, empty_dict)
 
 
 def delete(object_id):
     """Removes an object from persistent storage
     """
     if not os.path.exists(object_id):
-        _get_datastore().delete(object_id)
+        _call_datastore('delete', object_id)
     else:
         os.unlink(object_id)
         dir_path = os.path.dirname(object_id)
@@ -655,7 +671,6 @@ def delete(object_id):
 
         mount_point = _get_mount_point(object_id)
         subdir = ''
-        # check if the file is a subdirectory
         if mount_point != dir_path:
             subdir = os.path.relpath(dir_path, mount_point)
 
@@ -720,18 +735,18 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True,
 
     if metadata.get('mountpoint', '/') == '/':
         if metadata.get('uid', ''):
-            _get_datastore().update(metadata['uid'],
-                                    dbus.Dictionary(metadata),
-                                    file_path,
-                                    transfer_ownership,
-                                    reply_handler=updated_reply_handler,
-                                    error_handler=error_handler)
+            _call_datastore('update', metadata['uid'],
+                            dbus.Dictionary(metadata),
+                            file_path,
+                            transfer_ownership,
+                            reply_handler=updated_reply_handler,
+                            error_handler=error_handler)
         else:
-            _get_datastore().create(dbus.Dictionary(metadata),
-                                    file_path,
-                                    transfer_ownership,
-                                    reply_handler=created_reply_handler,
-                                    error_handler=error_handler)
+            _call_datastore('create', dbus.Dictionary(metadata),
+                            file_path,
+                            transfer_ownership,
+                            reply_handler=created_reply_handler,
+                            error_handler=error_handler)
     else:
         _write_entry_on_external_device(
             metadata, file_path, ready_callback=ready_callback)
@@ -826,7 +841,6 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
 
     metadata_dir_path = os.path.join(metadata['mountpoint'],
                                      JOURNAL_METADATA_DIR)
-    # check if the file is in a subdirectory in Documents or device
     if original_dir_name.startswith(metadata['mountpoint']) and \
             original_dir_name != metadata['mountpoint']:
         subdir = os.path.relpath(original_dir_name, metadata['mountpoint'])
@@ -922,7 +936,6 @@ def is_editable(metadata):
     if metadata.get('mountpoint', '/') == '/':
         return True
     return os.access(metadata['mountpoint'], os.W_OK)
-
 
 _documents_path = None
 
