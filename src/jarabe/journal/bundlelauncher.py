@@ -1,4 +1,4 @@
-# Copyright (C) 2014, Sugarlabs (Manuel Quinones)
+﻿# Copyright (C) 2014, Sugarlabs (Manuel Quinones)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import logging
 
-from sugar4.activity import activityfactory
+from jarabe.util import activityfactory
 from sugar4.activity.activityhandle import ActivityHandle
 from sugar4.datastore import datastore
 
@@ -45,7 +45,7 @@ def get_bundle(bundle_id=None, object_id=None):
     bundle = bundleregistry.get_registry().get_bundle(bundle_id)
     if bundle is None:
         logging.warning('Activity with the bundle_id %s was not found',
-                        mime_type)
+                        bundle_id)
         return None
     return bundle
 
