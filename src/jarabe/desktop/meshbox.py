@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009-2010 One Laptop per Child
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
@@ -46,7 +46,6 @@ from jarabe.model.olpcmesh import OlpcMeshManager
 from jarabe.model.adhoc import get_adhoc_manager_instance
 from jarabe.journal import misc
 
-
 _FILTERED_ALPHA = 0.33
 
 
@@ -83,18 +82,18 @@ class _ActivityIcon(CanvasIcon):
             icon = Icon(
                 pixel_size=style.SMALL_ICON_SIZE, icon_name='activity-start')
             item.set_image(icon)
-            item.connect('activate', self.__palette_item_clicked_cb)
+            item.connect('item-activated', self.__palette_item_clicked_cb)
             menu_box.append_item(item)
         elif not private and is_joinable:
             item = PaletteMenuItem(_('Join'))
             icon = Icon(
                 pixel_size=style.SMALL_ICON_SIZE, icon_name='activity-start')
             item.set_image(icon)
-            item.connect('activate', self.__palette_item_clicked_cb)
+            item.connect('item-activated', self.__palette_item_clicked_cb)
             menu_box.append_item(item)
 
+        menu_box.set_visible(True)
         palette.set_content(menu_box)
-        menu_box.show_all()
 
         self.connect_to_palette_pop_events(palette)
         return palette
@@ -117,7 +116,6 @@ class ActivityView(SnowflakeLayout):
         self._icons = {}
 
         self._icon = self._create_icon()
-        self._icon.show()
         self.add_icon(self._icon, center=True)
 
         self._icon.palette_invoker.cache_palette = False
@@ -147,13 +145,11 @@ class ActivityView(SnowflakeLayout):
         icon = BuddyIcon(buddy, style.STANDARD_ICON_SIZE)
         self._icons[buddy.props.key] = icon
         self.add_icon(icon)
-        icon.show()
 
     def __buddy_removed_cb(self, activity, buddy):
         icon = self._icons[buddy.props.key]
         del self._icons[buddy.props.key]
         self.remove(icon)
-        icon.destroy()
 
     def set_filter(self, query):
         text_to_check = self._model.bundle.get_name().lower() + \
@@ -180,7 +176,7 @@ class DeviceObserver(GObject.GObject):
     }
 
     def __init__(self, device):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._bus = dbus.SystemBus()
         self.device = device
 
@@ -369,7 +365,7 @@ class MeshBox(ViewContainer):
         owner_icon = BuddyIcon(get_owner_instance(),
                                style.STANDARD_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, owner_icon)
-        self.set_can_focus(False)
+        self.set_focusable(False)
 
         self.wireless_networks = {}
         self._adhoc_manager = None
@@ -384,8 +380,7 @@ class MeshBox(ViewContainer):
         self._query = ''
 
         toolbar.connect('query-changed', self._toolbar_query_changed_cb)
-        toolbar.search_entry.connect('icon-press',
-                                     self.__clear_icon_pressed_cb)
+
 
         for buddy_model in self._model.get_buddies():
             self._add_buddy(buddy_model)
@@ -423,7 +418,6 @@ class MeshBox(ViewContainer):
             return
         icon = BuddyIcon(buddy_model)
         self.add(icon)
-        icon.show()
 
         if hasattr(icon, 'set_filter'):
             icon.set_filter(self._query)
@@ -448,7 +442,6 @@ class MeshBox(ViewContainer):
     def _add_activity(self, activity_model):
         icon = ActivityView(activity_model)
         self.add(icon)
-        icon.show()
 
         if hasattr(icon, 'set_filter'):
             icon.set_filter(self._query)
@@ -471,7 +464,6 @@ class MeshBox(ViewContainer):
             icon = WirelessNetworkView(ap)
             self.wireless_networks[hash_value] = icon
             self.add(icon)
-            icon.show()
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
 
@@ -565,13 +557,11 @@ class MeshBox(ViewContainer):
     def _add_adhoc_network_icon(self, channel):
         icon = SugarAdhocView(channel)
         self.add(icon)
-        icon.show()
         self._adhoc_networks.append(icon)
 
     def _add_olpc_mesh_icon(self, mesh_mgr, channel):
         icon = OlpcMeshView(mesh_mgr, channel)
         self.add(icon)
-        icon.show()
         self._mesh.append(icon)
 
     def enable_olpc_mesh(self, mesh_device):
@@ -616,5 +606,5 @@ class MeshBox(ViewContainer):
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
 
-    def __clear_icon_pressed_cb(self, entry, icon_pos, event):
+    def __clear_icon_pressed_cb(self, entry, icon_pos):
         self.grab_focus()

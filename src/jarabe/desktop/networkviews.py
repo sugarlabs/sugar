@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009-2010 One Laptop per Child
 #
@@ -42,7 +42,6 @@ from jarabe.model.network import IP4Config
 from jarabe.model.network import WirelessSecurity
 from jarabe.model.adhoc import get_adhoc_manager_instance
 
-
 _AP_ICON_NAME = 'network-wireless'
 _OLPC_MESH_ICON_NAME = 'network-mesh'
 
@@ -52,7 +51,14 @@ _FILTERED_ALPHA = 0.33
 class WirelessNetworkView(EventPulsingIcon):
 
     def __init__(self, initial_ap):
-        EventPulsingIcon.__init__(self, pixel_size=style.STANDARD_ICON_SIZE,
+        if initial_ap.mode == network.NM_802_11_MODE_ADHOC and \
+                network.is_sugar_adhoc_network(initial_ap.ssid):
+            icon_name = 'network-adhoc-1' # Default channel
+        else:
+            icon_name = get_icon_state(_AP_ICON_NAME, initial_ap.strength)
+
+        EventPulsingIcon.__init__(self, icon_name=icon_name,
+                                  pixel_size=style.STANDARD_ICON_SIZE,
                                   cache=True)
         self._bus = dbus.SystemBus()
         self._access_points = {initial_ap.model.object_path: initial_ap}
@@ -126,27 +132,24 @@ class WirelessNetworkView(EventPulsingIcon):
 
         self.menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        self._connect_item = PaletteMenuItem(_('Connect'))
-        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='dialog-ok')
-        self._connect_item.set_image(icon)
-        self._connect_item.connect('activate', self.__connect_activate_cb)
-        self.menu_box.add(self._connect_item)
+        self._connect_item = PaletteMenuItem(_('Connect'), 'dialog-ok')
+        self._connect_item.connect('item-activated', self.__connect_activate_cb)
+        self.menu_box.append(self._connect_item)
+        self._connect_item.set_visible(True)
 
-        self._disconnect_item = PaletteMenuItem(_('Disconnect'))
-        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='media-eject')
-        self._disconnect_item.set_image(icon)
+        self._disconnect_item = PaletteMenuItem(_('Disconnect'), 'media-eject')
         self._disconnect_item.connect(
-            'activate', self.__disconnect_activate_cb)
-        self.menu_box.add(self._disconnect_item)
+            'item-activated', self.__disconnect_activate_cb)
+        self.menu_box.append(self._disconnect_item)
+        self._disconnect_item.set_visible(True)
 
-        self._forget_item = PaletteMenuItem(_('Forget'))
-        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='list-remove')
-        self._forget_item.set_image(icon)
-        self._forget_item.connect('activate', self.__forget_activate_cb)
-        self.menu_box.add(self._forget_item)
+        self._forget_item = PaletteMenuItem(_('Forget'), 'list-remove')
+        self._forget_item.connect('item-activated', self.__forget_activate_cb)
+        self.menu_box.append(self._forget_item)
+        self._forget_item.set_visible(True)
 
         p.set_content(self.menu_box)
-        self.menu_box.show_all()
+        self.menu_box.set_visible(True)
 
         self.connect_to_palette_pop_events(p)
 
@@ -270,21 +273,21 @@ class WirelessNetworkView(EventPulsingIcon):
            state == network.NM_DEVICE_STATE_NEED_AUTH or \
            state == network.NM_DEVICE_STATE_IP_CONFIG:
             if self._disconnect_item:
-                self._disconnect_item.show()
-            self._connect_item.hide()
+                self._disconnect_item.set_visible(True)
+            self._connect_item.set_visible(False)
             self._palette.props.secondary_text = _('Connecting...')
             self.props.pulsing = True
         elif state == network.NM_DEVICE_STATE_ACTIVATED:
             network.set_connected()
             if self._disconnect_item:
-                self._disconnect_item.show()
-            self._connect_item.hide()
+                self._disconnect_item.set_visible(True)
+            self._connect_item.set_visible(False)
             self._palette.props.secondary_text = _('Connected')
             self.props.pulsing = False
         else:
             if self._disconnect_item:
-                self._disconnect_item.hide()
-            self._connect_item.show()
+                self._disconnect_item.set_visible(False)
+            self._connect_item.set_visible(True)
             self._palette.props.secondary_text = None
             self.props.pulsing = False
 
@@ -292,9 +295,9 @@ class WirelessNetworkView(EventPulsingIcon):
         self.props.base_color = self._color
         if self._filtered:
             self.props.pulsing = False
-            self.props.alpha = _FILTERED_ALPHA
+            self.set_opacity(_FILTERED_ALPHA)
         else:
-            self.props.alpha = 1.0
+            self.set_opacity(1.0)
 
     def __disconnect_activate_cb(self, item):
         ap_paths = list(self._access_points.keys())
@@ -529,22 +532,19 @@ class SugarAdhocView(EventPulsingIcon):
 
         self.menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        self._connect_item = PaletteMenuItem(_('Connect'))
-        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='dialog-ok')
-        self._connect_item.set_image(icon)
-        self._connect_item.connect('activate', self.__connect_activate_cb)
-        self.menu_box.add(self._connect_item)
+        self._connect_item = PaletteMenuItem(_('Connect'), 'dialog-ok')
+        self._connect_item.connect('item-activated', self.__connect_activate_cb)
+        self.menu_box.append(self._connect_item)
+        self._connect_item.set_visible(True)
 
-        self._disconnect_item = PaletteMenuItem(_('Disconnect'))
-        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='media-eject')
-        self._disconnect_item.set_image(icon)
+        self._disconnect_item = PaletteMenuItem(_('Disconnect'), 'media-eject')
         self._disconnect_item.connect(
-            'activate', self.__disconnect_activate_cb)
-        self.menu_box.add(self._disconnect_item)
+            'item-activated', self.__disconnect_activate_cb)
+        self.menu_box.append(self._disconnect_item)
+        self._disconnect_item.set_visible(False)
 
         palette_.set_content(self.menu_box)
-        self.menu_box.show_all()
-        self._disconnect_item.hide()
+        self.menu_box.set_visible(True)
 
         self.connect_to_palette_pop_events(palette_)
 
@@ -575,20 +575,20 @@ class SugarAdhocView(EventPulsingIcon):
         if (state >= network.NM_DEVICE_STATE_PREPARE) and \
            (state <= network.NM_DEVICE_STATE_IP_CONFIG):
             if self._disconnect_item:
-                self._disconnect_item.show()
-            self._connect_item.hide()
+                self._disconnect_item.set_visible(True)
+            self._connect_item.set_visible(False)
             self._palette.props.secondary_text = _('Connecting...')
             self.props.pulsing = True
         elif state == network.NM_DEVICE_STATE_ACTIVATED:
             if self._disconnect_item:
-                self._disconnect_item.show()
-            self._connect_item.hide()
+                self._disconnect_item.set_visible(True)
+            self._connect_item.set_visible(False)
             self._palette.props.secondary_text = _('Connected')
             self.props.pulsing = False
         else:
             if self._disconnect_item:
-                self._disconnect_item.hide()
-            self._connect_item.show()
+                self._disconnect_item.set_visible(False)
+            self._connect_item.set_visible(True)
             self._palette.props.secondary_text = None
             self.props.pulsing = False
         self._update_color()
@@ -597,9 +597,9 @@ class SugarAdhocView(EventPulsingIcon):
         self.props.base_color = self._state_color
         if self._filtered:
             self.props.pulsing = False
-            self.alpha = _FILTERED_ALPHA
+            self.set_opacity(_FILTERED_ALPHA)
         else:
-            self.alpha = 1.0
+            self.set_opacity(1.0)
 
     def __members_changed_cb(self, adhoc_manager, channel, has_members):
         if channel == self._channel:
@@ -673,14 +673,13 @@ class OlpcMeshView(EventPulsingIcon):
 
         self.menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        self._connect_item = PaletteMenuItem(_('Connect'))
-        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='dialog-ok')
-        self._connect_item.set_image(icon)
-        self._connect_item.connect('activate', self.__connect_activate_cb)
-        self.menu_box.add(self._connect_item)
+        self._connect_item = PaletteMenuItem(_('Connect'), 'dialog-ok')
+        self._connect_item.connect('item-activated', self.__connect_activate_cb)
+        self.menu_box.append(self._connect_item)
+        self._connect_item.set_visible(True)
 
         _palette.set_content(self.menu_box)
-        self.menu_box.show_all()
+        self.menu_box.set_visible(True)
 
         return _palette
 
@@ -720,29 +719,29 @@ class OlpcMeshView(EventPulsingIcon):
                      network.NM_DEVICE_STATE_NEED_AUTH,
                      network.NM_DEVICE_STATE_IP_CONFIG]:
             if self._disconnect_item:
-                self._disconnect_item.show()
-            self._connect_item.hide()
+                self._disconnect_item.set_visible(True)
+            self._connect_item.set_visible(False)
             self._palette.props.secondary_text = _('Connecting...')
             self.props.pulsing = True
         elif state == network.NM_DEVICE_STATE_ACTIVATED:
             if self._disconnect_item:
-                self._disconnect_item.show()
-            self._connect_item.hide()
+                self._disconnect_item.set_visible(True)
+            self._connect_item.set_visible(False)
             self._palette.props.secondary_text = _('Connected')
             self.props.pulsing = False
         else:
             if self._disconnect_item:
-                self._disconnect_item.hide()
-            self._connect_item.show()
+                self._disconnect_item.set_visible(False)
+            self._connect_item.set_visible(True)
             self._palette.props.secondary_text = None
             self.props.pulsing = False
 
     def _update_color(self):
         self.props.base_color = profile.get_color()
         if self._filtered:
-            self.alpha = _FILTERED_ALPHA
+            self.set_opacity(_FILTERED_ALPHA)
         else:
-            self.alpha = 1.0
+            self.set_opacity(1.0)
 
     def __connect_activate_cb(self, icon):
         self._connect()

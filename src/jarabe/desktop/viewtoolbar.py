@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009-2012 One Laptop per Child
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
@@ -30,13 +30,17 @@ from sugar4.graphics import style
 from sugar4.graphics import iconentry
 from sugar4.graphics.radiotoolbutton import RadioToolButton
 
+
+
 from jarabe.desktop import favoritesview
 from jarabe.model import desktop
 
 _AUTOSEARCH_TIMEOUT = 1000
 
+# Gtk.Box + regular buttons would require toolkit changes too.
 
-class ViewToolbar(Gtk.Toolbar):
+
+class ViewToolbar(Gtk.Box):
     __gtype_name__ = 'SugarViewToolbar'
 
     __gsignals__ = {
@@ -47,7 +51,8 @@ class ViewToolbar(Gtk.Toolbar):
     }
 
     def __init__(self):
-        Gtk.Toolbar.__init__(self)
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL)
+        self.add_css_class('sugar-toolbar')
 
         self._favorites_views_indicies = []
         for i in range(desktop.get_number_of_views()):
@@ -63,10 +68,6 @@ class ViewToolbar(Gtk.Toolbar):
 
         self._add_separator()
 
-        tool_item = Gtk.ToolItem()
-        self.insert(tool_item, -1)
-        tool_item.show()
-
         self.search_entry = iconentry.IconEntry()
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
                                              'entry-search')
@@ -75,8 +76,9 @@ class ViewToolbar(Gtk.Toolbar):
         self.search_entry.set_width_chars(25)
         self.search_entry.connect('activate', self._entry_activated_cb)
         self.search_entry.connect('changed', self._entry_changed_cb)
-        tool_item.add(self.search_entry)
-        self.search_entry.show()
+        
+        self.append(self.search_entry)
+        self.search_entry.set_visible(True)
 
         self._add_separator(expand=True)
 
@@ -84,20 +86,23 @@ class ViewToolbar(Gtk.Toolbar):
         self._favorites_buttons = []
         for i in range(desktop.get_number_of_views()):
             self._add_favorites_button(i)
-        toolitem = Gtk.ToolItem()
-        toolitem.add(self._button_box)
-        self.insert(toolitem, -1)
-        self._button_box.show()
-        toolitem.show()
 
         self._list_button = RadioToolButton(icon_name='view-list')
-        self._list_button.props.group = self._favorites_buttons[0]
+        self._list_button.set_group(self._favorites_buttons[0])
         self._list_button.props.tooltip = _('List view')
         self._list_button.props.accelerator = \
             _('<Ctrl>%d' % (len(self._favorites_views_indicies) + 1))
         self._list_view_toggle_id = self._list_button.connect(
             'toggled', self.__view_button_toggled_cb, self._list_view_index)
-        self.insert(self._list_button, -1)
+        self._button_box.append(self._list_button)
+
+        if self._favorites_buttons:
+            self._favorites_buttons[0].set_active(True)
+
+        toolitem = Gtk.Box()
+        toolitem.append(self._button_box)
+        toolitem.set_visible(True)
+        self.append(toolitem)
 
         self._add_separator()
 
@@ -108,19 +113,19 @@ class ViewToolbar(Gtk.Toolbar):
                                            self.__view_button_toggled_cb,
                                            self._favorites_views_indicies[i])
         if i > 0:
-            self._favorites_buttons[i].props.group = self._favorites_buttons[0]
-        self._button_box.add(self._favorites_buttons[i])
-        self._favorites_buttons[i].show()
+            self._favorites_buttons[i].set_group(self._favorites_buttons[0])
+        self._button_box.append(self._favorites_buttons[i])
+        self._favorites_buttons[i].set_visible(True)
 
     def show_view_buttons(self):
         for i in range(desktop.get_number_of_views()):
-            self._favorites_buttons[i].show()
-        self._list_button.show()
+            self._favorites_buttons[i].set_visible(True)
+        self._list_button.set_visible(True)
 
     def hide_view_buttons(self):
         for i in range(desktop.get_number_of_views()):
-            self._favorites_buttons[i].hide()
-        self._list_button.hide()
+            self._favorites_buttons[i].set_visible(False)
+        self._list_button.set_visible(False)
 
     def clear_query(self):
         self.search_entry.props.text = ''
@@ -130,15 +135,14 @@ class ViewToolbar(Gtk.Toolbar):
         self.search_entry.set_placeholder_text(text)
 
     def _add_separator(self, expand=False):
-        separator = Gtk.SeparatorToolItem()
-        separator.props.draw = False
+        separator = Gtk.Box()
+        separator.set_visible(True)
         if expand:
-            separator.set_expand(True)
+            separator.set_hexpand(True)
         else:
             separator.set_size_request(style.GRID_CELL_SIZE,
                                        style.GRID_CELL_SIZE)
-        self.insert(separator, -1)
-        separator.show()
+        self.append(separator)
 
     def _entry_activated_cb(self, entry):
         if self._autosearch_timer:
@@ -153,7 +157,7 @@ class ViewToolbar(Gtk.Toolbar):
 
     def _entry_changed_cb(self, entry):
         if not entry.props.text:
-            entry.activate()
+            entry.emit('activate')
             return
 
         if self._autosearch_timer:
@@ -164,7 +168,7 @@ class ViewToolbar(Gtk.Toolbar):
     def _autosearch_timer_cb(self):
         logging.debug('_autosearch_timer_cb')
         self._autosearch_timer = None
-        self.search_entry.activate()
+        self.search_entry.emit('activate')
         return False
 
     def __view_button_toggled_cb(self, button, view):
@@ -180,7 +184,7 @@ class ViewToolbar(Gtk.Toolbar):
                 n = len(self._favorites_views_indicies)
                 self._favorites_views_indicies.append(n)
                 self._add_favorites_button(n)
-                self._favorites_buttons[n].show()
+                self._favorites_buttons[n].set_visible(True)
         elif number_of_views < len(self._favorites_views_indicies):
             for i in range(len(self._favorites_views_indicies) -
                            number_of_views):
@@ -188,10 +192,10 @@ class ViewToolbar(Gtk.Toolbar):
                 logging.debug('removing FavoritesButton %d' % (n))
                 button = self._favorites_buttons[n]
                 self._favorites_buttons.remove(button)
-                button.destroy()
+                self._button_box.remove(button)
                 self._favorites_views_indicies.remove(
                     self._favorites_views_indicies[n])
-        self._button_box.show()
+        self._button_box.set_visible(True)
 
         self._list_view_index = number_of_views
         self._list_button.props.accelerator = \
@@ -199,35 +203,42 @@ class ViewToolbar(Gtk.Toolbar):
         self._list_button.disconnect(self._list_view_toggle_id)
         self._list_view_toggle_id = self._list_button.connect(
             'toggled', self.__view_button_toggled_cb, self._list_view_index)
-        self._list_button.show()
+        self._list_button.set_visible(True)
 
 
 class FavoritesButton(RadioToolButton):
     __gtype_name__ = 'SugarFavoritesButton'
 
     def __init__(self, favorite_view):
-        RadioToolButton.__init__(self)
+        super().__init__()
 
         self.props.tooltip = desktop.get_view_labels()[favorite_view]
         self.props.accelerator = _('<Ctrl>%d' % (favorite_view + 1))
-        self.props.group = None
+        self.set_group(None)
         self.props.icon_name = desktop.get_view_icons()[favorite_view]
 
         favorites_settings = favoritesview.get_settings(favorite_view)
         self._layout = favorites_settings.layout
 
-        # someday, this will be a Gtk.Table()
         layouts_grid = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        layout_item = None
+        prev_layout_item = None
         for layoutid, layoutclass in sorted(favoritesview.LAYOUT_MAP.items()):
             layout_item = RadioToolButton(icon_name=layoutclass.icon_name,
-                                          group=layout_item, active=False)
+                                          active=False)
+            if prev_layout_item:
+                layout_item.set_group(prev_layout_item)
+            else:
+                layout_item.set_group(None)
+            prev_layout_item = layout_item
             if layoutid == self._layout:
                 layout_item.set_active(True)
-            layouts_grid.pack_start(layout_item, True, False, 0)
+            layout_item.set_visible(True)
+            layout_item.set_hexpand(True)
+            layout_item.set_halign(Gtk.Align.CENTER)
+            layouts_grid.append(layout_item)
             layout_item.connect('toggled', self.__layout_activate_cb,
                                 layoutid, favorite_view)
-        layouts_grid.show_all()
+        layouts_grid.set_visible(True)
         self.props.palette.set_content(layouts_grid)
 
     def __layout_activate_cb(self, menu_item, layout, favorite_view):
