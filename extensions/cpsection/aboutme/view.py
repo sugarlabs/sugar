@@ -1,4 +1,4 @@
-# Copyright (C) 2008, OLPC
+﻿# Copyright (C) 2008, OLPC
 # Copyright (C) 2010-14, Sugar Labs
 # Copyright (C) 2010-14, Walter Bender
 # Copyright (C) 2014, Ignacio Rodriguez
@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
@@ -30,7 +29,6 @@ from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 from jarabe.intro.agepicker import AgePicker, save_age, load_age
 from jarabe.intro.genderpicker import GenderPicker, save_gender, load_gender
-
 
 _STROKE_COLOR = 0
 _FILL_COLOR = 1
@@ -110,7 +108,6 @@ def _previous_index(current_index):
 def _get_current_index(color):
     return colors.index([color.stroke, color.fill])
 
-
 _PREVIOUS_FILL_COLOR = 0
 _NEXT_FILL_COLOR = 1
 _CURRENT_COLOR = 2
@@ -169,7 +166,10 @@ class AboutMe(SectionView):
         self._gender = ''
         self._age = None
 
-        self.set_border_width(style.DEFAULT_SPACING * 2)
+        self.set_margin_top(style.DEFAULT_SPACING * 2)
+        self.set_margin_bottom(style.DEFAULT_SPACING * 2)
+        self.set_margin_start(style.DEFAULT_SPACING * 2)
+        self.set_margin_end(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
 
         self._color = XoColor(self._model.get_color())
@@ -204,27 +204,21 @@ class AboutMe(SectionView):
         self._nick_entry = Gtk.Entry()
         self._nick_entry.set_width_chars(25)
         grid.attach(self._nick_entry, 0, 0, 1, 1)
-        self._nick_entry.show()
 
         alert_grid = Gtk.Grid()
         self._nick_alert = InlineAlert()
         alert_grid.attach(self._nick_alert, 0, 0, 1, 1)
         if 'nick' in self.restart_alerts:
             self._nick_alert.props.msg = self.restart_msg
-            self._nick_alert.show()
+            self._nick_alert.set_visible(True)
+        else:
+            self._nick_alert.set_visible(False)
 
-        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_in_panel.add(grid)
-        grid.show()
+        grid.set_halign(Gtk.Align.CENTER)
+        alert_grid.set_halign(Gtk.Align.CENTER)
 
-        center_alert = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_alert.add(alert_grid)
-        alert_grid.show()
-
-        self.pack_start(center_in_panel, False, False, 0)
-        self.pack_start(center_alert, False, False, 0)
-        center_in_panel.show()
-        center_alert.show()
+        self.append(grid)
+        self.append(alert_grid)
 
     def _setup_color(self):
         grid = Gtk.Grid()
@@ -242,46 +236,38 @@ class AboutMe(SectionView):
         }
 
         label_color = Gtk.Label(label=_('Click to change your color:'))
-        label_color.modify_fg(Gtk.StateType.NORMAL,
-                              style.COLOR_SELECTION_GREY.get_gdk_color())
+        style.apply_css_to_widget(label_color, "* { color: %s; }" % style.COLOR_SELECTION_GREY.get_html())
         grid.attach(label_color, 0, 0, 3, 1)
-        label_color.show()
 
         current = 0
         for picker_index in sorted(self._pickers.keys()):
             if picker_index == _CURRENT_COLOR:
-                left_separator = Gtk.SeparatorToolItem()
+                left_separator = Gtk.Separator(orientation=Gtk.Orientation.VERTICAL)
                 grid.attach(left_separator, current, 1, 1, 1)
-                left_separator.show()
                 current += 1
 
             picker = self._pickers[picker_index]
-            picker.show()
             grid.attach(picker, current, 1, 1, 1)
             current += 1
 
             if picker_index == _CURRENT_COLOR:
-                right_separator = Gtk.SeparatorToolItem()
-                right_separator.show()
+                right_separator = Gtk.Separator(orientation=Gtk.Orientation.VERTICAL)
                 grid.attach(right_separator, current, 1, 1, 1)
                 current += 1
 
         label_color_error = Gtk.Label()
         grid.attach(label_color_error, 0, 2, 3, 1)
-        label_color_error.show()
 
         self._color_alert = InlineAlert()
         grid.attach(self._color_alert, 0, 3, 3, 1)
         if 'color' in self.restart_alerts:
             self._color_alert.props.msg = self.restart_msg
-            self._color_alert.show()
+            self._color_alert.set_visible(True)
+        else:
+            self._color_alert.set_visible(False)
 
-        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_in_panel.add(grid)
-        grid.show()
-
-        self.pack_start(center_in_panel, False, False, 0)
-        center_in_panel.show()
+        grid.set_halign(Gtk.Align.CENTER)
+        self.append(grid)
 
     def _setup_gender(self):
         self._saved_gender = load_gender()
@@ -293,20 +279,13 @@ class AboutMe(SectionView):
         grid.set_column_spacing(style.DEFAULT_SPACING)
 
         label_gender = Gtk.Label(label=_('Select gender:'))
-        label_gender.modify_fg(Gtk.StateType.NORMAL,
-                               style.COLOR_SELECTION_GREY.get_gdk_color())
+        style.apply_css_to_widget(label_gender, "* { color: %s; }" % style.COLOR_SELECTION_GREY.get_html())
         grid.attach(label_gender, 0, 0, 1, 1)
-        label_gender.show()
 
         grid.attach(self._gender_pickers, 0, 1, 1, 1)
-        self._gender_pickers.show()
 
-        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_in_panel.add(grid)
-        grid.show()
-
-        self.pack_start(center_in_panel, False, False, 0)
-        center_in_panel.show()
+        grid.set_halign(Gtk.Align.CENTER)
+        self.append(grid)
 
     def _setup_age(self):
         self._saved_age = load_age()
@@ -316,37 +295,26 @@ class AboutMe(SectionView):
         grid.set_column_spacing(style.DEFAULT_SPACING)
 
         self._age_pickers = AgePicker(self._saved_gender)
-        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_in_panel.add(self._age_pickers)
-        self._age_pickers.show()
-
+        
         label = self._age_pickers.get_label()
-
         label_age = Gtk.Label(label=_(label))
-        label_age.modify_fg(Gtk.StateType.NORMAL,
-                            style.COLOR_SELECTION_GREY.get_gdk_color())
-        left_align = Gtk.Alignment.new(0, 0, 0, 0)
-        left_align.add(label_age)
-        label_age.show()
-        grid.attach(left_align, 0, 0, 1, 1)
-        left_align.show()
+        style.apply_css_to_widget(label_age, "* { color: %s; }" % style.COLOR_SELECTION_GREY.get_html())
+        label_age.set_halign(Gtk.Align.START)
+        grid.attach(label_age, 0, 0, 1, 1)
 
-        grid.attach(center_in_panel, 0, 1, 1, 1)
-        center_in_panel.show()
+        self._age_pickers.set_halign(Gtk.Align.CENTER)
+        grid.attach(self._age_pickers, 0, 1, 1, 1)
 
-        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_in_panel.add(grid)
-        grid.show()
-        self.pack_start(center_in_panel, False, False, 0)
-        center_in_panel.show()
+        grid.set_halign(Gtk.Align.CENTER)
+        self.append(grid)
 
     def setup(self):
         pass
 
     def undo(self):
         self._model.undo()
-        self._nick_alert.hide()
-        self._color_alert.hide()
+        self._nick_alert.set_visible(False)
+        self._color_alert.set_visible(False)
 
         # Undo gender or age changes
         save_gender(self._saved_gender)
@@ -374,29 +342,31 @@ class AboutMe(SectionView):
         self._nick_sid = 0
 
         if widget.get_text() == self._model.get_nick():
-            self.restart_alerts.remove('nick')
+            if 'nick' in self.restart_alerts:
+                self.restart_alerts.remove('nick')
             if not self.restart_alerts:
                 self.needs_restart = False
-            self._nick_alert.hide()
+            self._nick_alert.set_visible(False)
             return False
         try:
             self._model.set_nick(widget.get_text())
         except ValueError as detail:
             self._nick_alert.props.msg = detail
             self._nick_valid = False
-            self._nick_alert.show()
+            self._nick_alert.set_visible(True)
         else:
             self._nick_valid = True
             if widget.get_text() == self._original_nick:
-                self.restart_alerts.remove('nick')
+                if 'nick' in self.restart_alerts:
+                    self.restart_alerts.remove('nick')
                 if not self.restart_alerts:
                     self.needs_restart = False
-                self._nick_alert.hide()
+                self._nick_alert.set_visible(False)
             else:
                 self._nick_alert.props.msg = self.restart_msg
                 self.needs_restart = True
                 self.restart_alerts.add('nick')
-                self._nick_alert.show()
+                self._nick_alert.set_visible(True)
         self._validate()
         return False
 
@@ -408,7 +378,7 @@ class AboutMe(SectionView):
         self.restart_alerts.add('color')
 
         self._validate()
-        self._color_alert.show()
+        self._color_alert.set_visible(True)
 
         self._update_pickers(color)
         return False

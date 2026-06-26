@@ -1,4 +1,4 @@
-# Copyright (C) 2008, OLPC
+﻿# Copyright (C) 2008, OLPC
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,10 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from gettext import gettext as _
 
 from sugar4 import profile
+
 
 CLASS = 'AboutMe'
 ICON = 'module-about_me'
