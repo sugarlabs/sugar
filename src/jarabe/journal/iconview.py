@@ -1,4 +1,4 @@
-# Copyright (C) 2013, Gonzalo Odiard
+﻿# Copyright (C) 2013, Gonzalo Odiard
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ from gettext import gettext as _
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import GLib
+from gi.repository import Gdk
 
 from jarabe.journal.iconmodel import IconModel
 from sugar4.graphics.icon import Icon
@@ -29,69 +30,103 @@ from sugar4.graphics import style
 from sugar4.activity.activity import PREVIEW_SIZE
 
 
-class PreviewRenderer(Gtk.CellRendererPixbuf):
-
-    def __init__(self, **kwds):
-        Gtk.CellRendererPixbuf.__init__(self, **kwds)
-        self._preview_data = None
-
-    def set_preview_data(self, data):
-        self._preview_data = data
-
-    def do_render(self, cr, widget, background_area, cell_area, flags):
-        self.props.pixbuf = get_preview_pixbuf(self._preview_data)
-        Gtk.CellRendererPixbuf.do_render(self, cr, widget, background_area,
-                                         cell_area, flags)
-
-    def do_get_size(self, widget, cell_area):
-        x_offset, y_offset, width, height = Gtk.CellRendererPixbuf.do_get_size(
-            self, widget, cell_area)
-        width = PREVIEW_SIZE[0]
-        height = PREVIEW_SIZE[1]
-        return (x_offset, y_offset, width, height)
+def _set_css_bg(widget, color):
+    widget.remove_css_class('iconview-bg-white')
+    if color == style.COLOR_WHITE:
+        widget.add_css_class('iconview-bg-white')
 
 
-class PreviewIconView(Gtk.IconView):
+class PreviewFlowBox(Gtk.FlowBox):
+    __gtype_name__ = 'PreviewFlowBox'
+    
+    __gsignals__ = {
+        'item-activated': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+    }
 
     def __init__(self, title_col, preview_col):
-        Gtk.IconView.__init__(self)
+        super().__init__()
 
         self._preview_col = preview_col
         self._title_col = title_col
 
-        self.set_spacing(3)
+        self.set_selection_mode(Gtk.SelectionMode.SINGLE)
+        self.set_valign(Gtk.Align.START)
+        self.set_max_children_per_line(10)
+        self.set_column_spacing(6)
+        self.set_row_spacing(6)
+        self.set_homogeneous(True)
+        
+        self.connect('child-activated', self._on_child_activated)
 
-        _preview_renderer = PreviewRenderer()
-        _preview_renderer.set_alignment(0.5, 0.5)
-        self.pack_start(_preview_renderer, False)
-        self.set_cell_data_func(_preview_renderer,
-                                self._preview_data_func, None)
+    def get_model(self):
+        return getattr(self, '_model', None)
 
-        _title_renderer = Gtk.CellRendererText()
-        _title_renderer.set_alignment(0.5, 0.5)
-        self.pack_start(_title_renderer, True)
-        self.set_cell_data_func(_title_renderer,
-                                self._title_data_func, None)
+    def set_model(self, model):
+        self._model = model
+        while self.get_first_child():
+            self.remove(self.get_first_child())
 
-    def _preview_data_func(self, view, cell, store, i, data):
-        preview_data = store.get_value(i, self._preview_col)
-        cell.set_preview_data(preview_data)
+        if model is None:
+            return
 
-    def _title_data_func(self, view, cell, store, i, data):
-        title = store.get_value(i, self._title_col)
-        cell.props.markup = title
+        iter_ = model.get_iter_first()
+        while iter_ is not None:
+            self._add_item(model, iter_)
+            iter_ = model.iter_next(iter_)
+
+    def _add_item(self, model, iter_):
+        uid = model.get_value(iter_, IconModel.COLUMN_UID)
+        title = model.get_value(iter_, self._title_col)
+        preview_data = model.get_value(iter_, self._preview_col)
+
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        box.set_spacing(3)
+
+        pixbuf = get_preview_pixbuf(preview_data)
+        if pixbuf:
+            picture = Gtk.Picture.new_for_paintable(Gdk.Texture.new_for_pixbuf(pixbuf))
+        else:
+            picture = Gtk.Picture()
+
+        picture.set_size_request(PREVIEW_SIZE[0], PREVIEW_SIZE[1])
+        picture.set_valign(Gtk.Align.CENTER)
+        picture.set_halign(Gtk.Align.CENTER)
+        box.append(picture)
+
+        label = Gtk.Label()
+        label.set_markup(title)
+        label.set_halign(Gtk.Align.CENTER)
+        box.append(label)
+
+        path = model.get_path(iter_)
+
+        child = Gtk.FlowBoxChild()
+        child.set_child(box)
+        child._model_path = path
+
+        self.append(child)
+
+    def _on_child_activated(self, flowbox, child):
+        self.emit('item-activated', child._model_path)
+
+    def get_path_at_pos(self, x, y):
+        child = self.get_child_at_pos(int(x), int(y))
+        if child:
+            return child._model_path
+        return None
 
 
-class IconView(Gtk.Bin):
+class IconView(Gtk.Box):
     __gtype_name__ = 'JournalBaseIconView'
 
     __gsignals__ = {
-        'clear-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'clear-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
         'entry-activated': (GObject.SignalFlags.RUN_FIRST,
-                            None, ([str])),
+                            None, (str,)),
     }
 
     def __init__(self, toolbar):
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self._query = {}
         self._model = None
         self._progress_bar = None
@@ -99,27 +134,22 @@ class IconView(Gtk.Bin):
         self._scroll_position = 0.
         self._toolbar = toolbar
 
-        Gtk.Bin.__init__(self)
-
         self.connect('map', self.__map_cb)
         self.connect('unrealize', self.__unrealize_cb)
-        self.connect('destroy', self.__destroy_cb)
 
         self._scrolled_window = Gtk.ScrolledWindow()
         self._scrolled_window.set_policy(Gtk.PolicyType.NEVER,
                                          Gtk.PolicyType.AUTOMATIC)
-        self.add(self._scrolled_window)
-        self._scrolled_window.show()
+        self._scrolled_window.set_vexpand(True)
+        self.append(self._scrolled_window)
+        self._scrolled_window.set_visible(True)
 
-        self.icon_view = PreviewIconView(IconModel.COLUMN_TITLE,
+        self.icon_view = PreviewFlowBox(IconModel.COLUMN_TITLE,
                                          IconModel.COLUMN_PREVIEW)
         self.icon_view.connect('item-activated', self.__item_activated_cb)
 
-        self.icon_view.connect('button-release-event',
-                               self.__button_release_event_cb)
-
-        self._scrolled_window.add(self.icon_view)
-        self.icon_view.show()
+        self._scrolled_window.set_child(self.icon_view)
+        self.icon_view.set_visible(True)
 
         # Auto-update stuff
         self._fully_obscured = True
@@ -130,21 +160,11 @@ class IconView(Gtk.Bin):
         model.updated.connect(self.__model_updated_cb)
         model.deleted.connect(self.__model_deleted_cb)
 
-    def __button_release_event_cb(self, icon_view, event):
-        path = icon_view.get_path_at_pos(int(event.x), int(event.y))
-        if path is None:
-            return False
-        uid = icon_view.get_model()[path][IconModel.COLUMN_UID]
-        self.emit('entry-activated', uid)
-        return False
+
 
     def __item_activated_cb(self, icon_view, path):
-        uid = icon_view.get_model()[path][IconModel.COLUMN_UID]
+        uid = self._model[path][IconModel.COLUMN_UID]
         self.emit('entry-activated', uid)
-
-    def _thumb_data_func(self, view, cell, store, i, data):
-        preview_data = store.get_value(i, IconModel.COLUMN_PREVIEW)
-        cell.props.pixbuf = get_preview_pixbuf(preview_data)
 
     def __model_created_cb(self, sender, signal, object_id):
         if self._is_new_item_visible(object_id):
@@ -164,11 +184,7 @@ class IconView(Gtk.Bin):
             return not object_id.startswith('/')
         return object_id.startswith(self._query['mountpoints'][0])
 
-    def do_size_allocate(self, allocation):
-        self.set_allocation(allocation)
-        self.get_child().size_allocate(allocation)
-
-    def __destroy_cb(self, widget):
+    def do_unroot(self):
         if self._model is not None:
             self._model.stop()
 
@@ -193,15 +209,15 @@ class IconView(Gtk.Bin):
     def __model_ready_cb(self, tree_model):
         self._stop_progress_bar()
 
-        self._scroll_position = self.icon_view.props.vadjustment.props.value
+        self._scroll_position = self._scrolled_window.get_vadjustment().props.value
         logging.debug('IconView.__model_ready_cb %r', self._scroll_position)
 
         # Cannot set it up earlier because will try to access the model
         # and it needs to be ready.
         self.icon_view.set_model(self._model)
 
-        self.icon_view.props.vadjustment.props.value = self._scroll_position
-        self.icon_view.props.vadjustment.value_changed()
+        self._scrolled_window.get_vadjustment().props.value = self._scroll_position
+        # vadjustment.value_changed is gone or automatic, no need to call it
 
         if len(tree_model) == 0:
             documents_path = model.get_documents_path()
@@ -222,11 +238,10 @@ class IconView(Gtk.Bin):
 
     def __map_cb(self, widget):
         logging.debug('IconView.__map_cb %r', self._scroll_position)
-        self.icon_view.props.vadjustment.props.value = self._scroll_position
-        self.icon_view.props.vadjustment.value_changed()
+        self._scrolled_window.get_vadjustment().props.value = self._scroll_position
 
     def __unrealize_cb(self, widget):
-        self._scroll_position = self.icon_view.props.vadjustment.props.value
+        self._scroll_position = self._scrolled_window.get_vadjustment().props.value
         logging.debug('IconView.__map_cb %r', self._scroll_position)
 
     def _is_query_empty(self):
@@ -245,74 +260,103 @@ class IconView(Gtk.Bin):
             self._last_progress_bar_pulse = time.time()
 
     def _start_progress_bar(self):
-        alignment = Gtk.Alignment.new(xalign=0.5, yalign=0.5,
-                                      xscale=0.5, yscale=0)
-        self.remove(self.get_child())
-        self.add(alignment)
-        alignment.show()
+        alignment = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        alignment.set_halign(Gtk.Align.CENTER)
+        alignment.set_valign(Gtk.Align.CENTER)
+        
+        while self.get_first_child():
+            self.remove(self.get_first_child())
+            
+        self.append(alignment)
+        alignment.set_visible(True)
 
         self._progress_bar = Gtk.ProgressBar()
         self._progress_bar.props.pulse_step = 0.01
         self._last_progress_bar_pulse = time.time()
-        alignment.add(self._progress_bar)
-        self._progress_bar.show()
+        alignment.append(self._progress_bar)
+        self._progress_bar.set_visible(True)
 
     def _stop_progress_bar(self):
         if self._progress_bar is None:
             return
-        self.remove(self.get_child())
-        self.add(self._scrolled_window)
+        while self.get_first_child():
+            self.remove(self.get_first_child())
+        self.append(self._scrolled_window)
         self._progress_bar = None
 
     def _show_message(self, message, show_clear_query=False):
-        self.remove(self.get_child())
+        while self.get_first_child():
+            self.remove(self.get_first_child())
 
-        background_box = Gtk.EventBox()
-        background_box.modify_bg(Gtk.StateType.NORMAL,
-                                 style.COLOR_WHITE.get_gdk_color())
-        self.add(background_box)
+        background_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        background_box.set_hexpand(True)
+        background_box.set_vexpand(True)
+        _set_css_bg(background_box, style.COLOR_WHITE)
+        self.append(background_box)
 
-        alignment = Gtk.Alignment.new(0.5, 0.5, 0.1, 0.1)
-        background_box.add(alignment)
+        alignment = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        alignment.set_halign(Gtk.Align.CENTER)
+        alignment.set_valign(Gtk.Align.CENTER)
+        alignment.set_hexpand(True)
+        alignment.set_vexpand(True)
+        background_box.append(alignment)
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        alignment.add(box)
+        alignment.append(box)
 
         icon = Icon(pixel_size=style.LARGE_ICON_SIZE,
                     icon_name='activity-journal',
                     stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
                     fill_color=style.COLOR_TRANSPARENT.get_svg())
-        box.pack_start(icon, expand=True, fill=False, padding=0)
+        icon.set_hexpand(True)
+        icon.set_vexpand(True)
+        box.append(icon)
 
         label = Gtk.Label()
         color = style.COLOR_BUTTON_GREY.get_html()
         label.set_markup('<span weight="bold" color="%s">%s</span>' % (
             color, GLib.markup_escape_text(message)))
-        box.pack_start(label, expand=True, fill=False, padding=0)
+        label.set_hexpand(True)
+        label.set_vexpand(True)
+        box.append(label)
 
         if show_clear_query:
-            button_box = Gtk.HButtonBox()
-            button_box.set_layout(Gtk.ButtonBoxStyle.CENTER)
-            box.pack_start(button_box, False, True, 0)
-            button_box.show()
+            button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+            button_box.set_halign(Gtk.Align.CENTER)
+            button_box.set_margin_top(style.DEFAULT_SPACING)
+            box.append(button_box)
+            button_box.set_visible(True)
 
             button = Gtk.Button(label=_('Clear search'))
             button.connect('clicked', self.__clear_button_clicked_cb)
-            button.props.image = Icon(icon_name='dialog-cancel',
-                                      pixel_size=style.SMALL_ICON_SIZE)
-            button_box.pack_start(button, expand=True, fill=False, padding=0)
+            
+            icon_img = Icon(icon_name='dialog-cancel',
+                            pixel_size=style.SMALL_ICON_SIZE)
+            
+            box_img = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+            box_img.append(icon_img)
+            lbl = Gtk.Label(label=_('Clear search'))
+            box_img.append(lbl)
+            button.set_child(box_img)
 
-        background_box.show_all()
+            button_box.append(button)
+
+        background_box.set_visible(True)
+        alignment.set_visible(True)
+        box.set_visible(True)
+        icon.set_visible(True)
+        label.set_visible(True)
 
     def __clear_button_clicked_cb(self, button):
         self.emit('clear-clicked')
 
     def _clear_message(self):
-        if self.get_child() == self._scrolled_window:
+        if self.get_first_child() == self._scrolled_window:
             return
-        self.remove(self.get_child())
-        self.add(self._scrolled_window)
-        self._scrolled_window.show()
+        while self.get_first_child():
+            self.remove(self.get_first_child())
+        self.append(self._scrolled_window)
+        self._scrolled_window.set_visible(True)
 
     def _set_dirty(self):
         if self._fully_obscured:

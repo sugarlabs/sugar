@@ -1,4 +1,4 @@
-# Copyright (C) 2007, One Laptop Per Child
+﻿# Copyright (C) 2007, One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ from gettext import gettext as _
 
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 from sugar4.graphics import style
 from sugar4.graphics.icon import Icon
@@ -26,11 +27,20 @@ from jarabe.journal.expandedentry import ExpandedEntry
 from jarabe.journal import model
 
 
+def _set_css_bg(widget, color):
+    widget.remove_css_class('detailview-bg-panel')
+    widget.remove_css_class('detailview-bg-selection')
+    if color == style.COLOR_PANEL_GREY:
+        widget.add_css_class('detailview-bg-panel')
+    elif color == style.COLOR_SELECTION_GREY:
+        widget.add_css_class('detailview-bg-selection')
+
+
 class DetailView(Gtk.Box):
     __gtype_name__ = 'DetailView'
 
     __gsignals__ = {
-        'go-back-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'go-back-clicked': (GObject.SignalFlags.RUN_FIRST, None, ()),
     }
 
     def __init__(self, journalactivity, **kwargs):
@@ -38,30 +48,30 @@ class DetailView(Gtk.Box):
         self._metadata = None
         self._expanded_entry = None
 
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
 
         back_bar = BackBar()
-        back_bar.connect('button-release-event',
-                         self.__back_bar_release_event_cb)
-        self.pack_start(back_bar, False, True, 0)
-
-        self.show_all()
+        click = Gtk.GestureClick()
+        click.connect('released', self.__back_bar_release_event_cb)
+        back_bar.add_controller(click)
+        self.append(back_bar)
+        back_bar.set_visible(True)
 
     def _fav_icon_activated_cb(self, fav_icon):
         keep = not self._expanded_entry.get_keep()
         self._expanded_entry.set_keep(keep)
         fav_icon.props.keep = keep
 
-    def __back_bar_release_event_cb(self, back_bar, event):
+    def __back_bar_release_event_cb(self, gesture, n_press, x, y):
         self.emit('go-back-clicked')
-        return False
 
     def _update_view(self):
         if self._expanded_entry is None:
             self._expanded_entry = ExpandedEntry(self._journalactivity)
-            self.pack_start(self._expanded_entry, True, True, 0)
+            self._expanded_entry.set_vexpand(True)
+            self.append(self._expanded_entry)
         self._expanded_entry.set_metadata(self._metadata)
-        self.show_all()
+        self._expanded_entry.set_visible(True)
 
     def refresh(self):
         logging.debug('DetailView.refresh')
@@ -79,40 +89,36 @@ class DetailView(Gtk.Box):
         type=object, getter=get_metadata, setter=set_metadata)
 
 
-class BackBar(Gtk.EventBox):
+class BackBar(Gtk.Box):
 
     def __init__(self):
-        Gtk.EventBox.__init__(self)
-        self.modify_bg(Gtk.StateType.NORMAL,
-                       style.COLOR_PANEL_GREY.get_gdk_color())
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_PADDING)
-        hbox.set_border_width(style.DEFAULT_PADDING)
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_PADDING)
+        _set_css_bg(self, style.COLOR_PANEL_GREY)
+        self.set_margin_start(style.DEFAULT_PADDING)
+        self.set_margin_end(style.DEFAULT_PADDING)
+        self.set_margin_top(style.DEFAULT_PADDING)
+        self.set_margin_bottom(style.DEFAULT_PADDING)
+
         icon = Icon(icon_name='go-previous', pixel_size=style.SMALL_ICON_SIZE,
                     fill_color=style.COLOR_TOOLBAR_GREY.get_svg())
-        hbox.pack_start(icon, False, False, 0)
+        self.append(icon)
+        icon.set_visible(True)
 
         label = Gtk.Label()
         label.set_text(_('Back'))
-        halign = Gtk.Alignment.new(0, 0.5, 0, 1)
-        halign.add(label)
-        hbox.pack_start(halign, True, True, 0)
-        hbox.show()
-        self.add(hbox)
+        label.set_halign(Gtk.Align.START)
+        label.set_valign(Gtk.Align.CENTER)
+        label.set_hexpand(True)
+        self.append(label)
+        label.set_visible(True)
 
-        if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
-            # Reverse hbox children.
-            for child in hbox.get_children():
-                hbox.reorder_child(child, 0)
+        motion = Gtk.EventControllerMotion()
+        motion.connect('enter', self.__enter_notify_event_cb)
+        motion.connect('leave', self.__leave_notify_event_cb)
+        self.add_controller(motion)
 
-        self.connect('enter-notify-event', self.__enter_notify_event_cb)
-        self.connect('leave-notify-event', self.__leave_notify_event_cb)
+    def __enter_notify_event_cb(self, controller, x, y):
+        _set_css_bg(self, style.COLOR_SELECTION_GREY)
 
-    def __enter_notify_event_cb(self, box, event):
-        box.modify_bg(Gtk.StateType.NORMAL,
-                      style.COLOR_SELECTION_GREY.get_gdk_color())
-        return False
-
-    def __leave_notify_event_cb(self, box, event):
-        box.modify_bg(Gtk.StateType.NORMAL,
-                      style.COLOR_PANEL_GREY.get_gdk_color())
-        return False
+    def __leave_notify_event_cb(self, controller):
+        _set_css_bg(self, style.COLOR_PANEL_GREY)
