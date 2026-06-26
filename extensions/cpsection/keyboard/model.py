@@ -1,4 +1,4 @@
-# Copyright (C) 2013 Sugar Labs
+﻿# Copyright (C) 2013 Sugar Labs
 # Copyright (C) 2009 OLPC
 # Author: Sayamindu Dasgupta <sayamindu@laptop.org>
 #
@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import gi
+gi.require_version('Xkl', '1.0')
 from gi.repository import Xkl
 from gi.repository import Gio
 
