@@ -1,4 +1,4 @@
-# Copyright (C) 2013, Walter Bender - Raul Gutierrez Segales
+﻿# Copyright (C) 2013, Walter Bender - Raul Gutierrez Segales
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 
 class WebService():
     def get_icon_name(self):
-        raise "Not implemented"
+        raise NotImplementedError("Not implemented")
 
     def config_service_cb(self, widget, event, container):
-        raise "Not implemented"
+        raise NotImplementedError("Not implemented")

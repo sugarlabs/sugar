@@ -1,4 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
+﻿# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,9 +40,7 @@ class ReadError(Exception):
 
 
 def using_powerd():
-    # directory exists if powerd running, and it's recent
-    # enough to be controllable.
-    return os.access(POWERD_FLAG_DIR, os.W_OK)
+    return False
 
 
 def get_automatic_pm():
@@ -75,15 +73,21 @@ def set_automatic_pm(enabled):
         return
 
     # ohmd
-    bus = dbus.SystemBus()
-    proxy = bus.get_object(OHM_SERVICE_NAME, OHM_SERVICE_PATH)
-    keystore = dbus.Interface(proxy, OHM_SERVICE_IFACE)
+    try:
+        bus = dbus.SystemBus()
+        proxy = bus.get_object(OHM_SERVICE_NAME, OHM_SERVICE_PATH)
+        keystore = dbus.Interface(proxy, OHM_SERVICE_IFACE)
+
+        if enabled == 'on' or enabled == 1:
+            keystore.SetKey('suspend.automatic_pm', 1)
+        elif enabled == 'off' or enabled == 0:
+            keystore.SetKey('suspend.automatic_pm', 0)
+    except dbus.exceptions.DBusException:
+        _logger.warning('Could not connect to %s. Falling back to GSettings.' % OHM_SERVICE_NAME)
 
     if enabled == 'on' or enabled == 1:
-        keystore.SetKey('suspend.automatic_pm', 1)
         enabled = True
     elif enabled == 'off' or enabled == 0:
-        keystore.SetKey('suspend.automatic_pm', 0)
         enabled = False
     else:
         raise ValueError(_('Error in automatic pm argument, use on/off.'))

@@ -1,4 +1,4 @@
-# Copyright (C) 2008, OLPC
+﻿# Copyright (C) 2008, OLPC
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from gi.repository import Gtk
 from gi.repository import GLib
 from gettext import gettext as _
@@ -21,7 +20,6 @@ from gettext import gettext as _
 from sugar4.graphics import style
 
 from jarabe.controlpanel.sectionview import SectionView
-
 
 _never = _('never')
 _instantaneous = _('instantaneous')
@@ -42,99 +40,98 @@ class Frame(SectionView):
         self._trigger_size_change_handler = None
         self.restart_alerts = alerts
 
-        self.set_border_width(style.DEFAULT_SPACING * 2)
+        self.set_margin_top(style.DEFAULT_SPACING * 2)
+        self.set_margin_bottom(style.DEFAULT_SPACING * 2)
+        self.set_margin_start(style.DEFAULT_SPACING * 2)
+        self.set_margin_end(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
-        self._group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
+        self._group = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
 
         separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
-        self.pack_start(separator, False, True, 0)
+        self.append(separator)
 
         label = Gtk.Label(label=_('Activation Delay'))
-        label.set_alignment(0, 0)
-        self.pack_start(label, False, True, 0)
+        label.set_halign(Gtk.Align.START)
+        self.append(label)
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        box.set_border_width(style.DEFAULT_SPACING * 2)
+        box.set_margin_top(style.DEFAULT_SPACING * 2)
+        box.set_margin_bottom(style.DEFAULT_SPACING * 2)
+        box.set_margin_start(style.DEFAULT_SPACING * 2)
+        box.set_margin_end(style.DEFAULT_SPACING * 2)
         box.set_spacing(style.DEFAULT_SPACING)
 
-        box.pack_start(self._setup_corner(), False, True, 0)
-        box.pack_start(self._setup_edge(), False, True, 0)
+        box.append(self._setup_corner())
+        box.append(self._setup_edge())
 
-        self.pack_start(box, False, True, 0)
+        self.append(box)
 
         separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
-        self.pack_start(separator, False, True, 0)
+        self.append(separator)
 
         label = Gtk.Label(label=_('Activation Area'))
-        label.set_alignment(0, 0)
-        self.pack_start(label, False, True, 0)
+        label.set_halign(Gtk.Align.START)
+        self.append(label)
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        box.set_border_width(style.DEFAULT_SPACING * 2)
+        box.set_margin_top(style.DEFAULT_SPACING * 2)
+        box.set_margin_bottom(style.DEFAULT_SPACING * 2)
+        box.set_margin_start(style.DEFAULT_SPACING * 2)
+        box.set_margin_end(style.DEFAULT_SPACING * 2)
         box.set_spacing(style.DEFAULT_SPACING)
 
-        box.pack_start(self._setup_trigger(), False, True, 0)
+        box.append(self._setup_trigger())
 
-        self.pack_start(box, False, True, 0)
-        self.show_all()
+        self.append(box)
 
         self.setup()
 
     def _setup_corner(self):
         box_delay = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label_delay = Gtk.Label(label=_('Corner'))
-        label_delay.set_alignment(1, 0.75)
-        label_delay.modify_fg(Gtk.StateType.NORMAL,
-                              style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_delay.pack_start(label_delay, False, True, 0)
+        label_delay.set_halign(Gtk.Align.END)
+        box_delay.append(label_delay)
         self._group.add_widget(label_delay)
 
         adj = Gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY,
-                             step_incr=100, page_incr=100, page_size=0)
-        self._corner_delay_slider = Gtk.HScale()
-        self._corner_delay_slider.set_adjustment(adj)
+                             step_increment=100, page_increment=100, page_size=0)
+        self._corner_delay_slider = Gtk.Scale(orientation=Gtk.Orientation.HORIZONTAL, adjustment=adj)
         self._corner_delay_slider.set_digits(0)
-        self._corner_delay_slider.connect('format-value',
-                                          self.__corner_delay_format_cb)
-        box_delay.pack_start(self._corner_delay_slider, True, True, 0)
+        self._corner_delay_slider.set_hexpand(True)
+        self._corner_delay_slider.set_format_value_func(self.__corner_delay_format_cb)
+        box_delay.append(self._corner_delay_slider)
         return box_delay
 
     def _setup_edge(self):
         box_delay = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label_delay = Gtk.Label(label=_('Edge'))
-        label_delay.set_alignment(1, 0.75)
-        label_delay.modify_fg(Gtk.StateType.NORMAL,
-                              style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_delay.pack_start(label_delay, False, True, 0)
+        label_delay.set_halign(Gtk.Align.END)
+        box_delay.append(label_delay)
         self._group.add_widget(label_delay)
 
         adj = Gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY,
-                             step_incr=100, page_incr=100, page_size=0)
-        self._edge_delay_slider = Gtk.HScale()
-        self._edge_delay_slider.set_adjustment(adj)
+                             step_increment=100, page_increment=100, page_size=0)
+        self._edge_delay_slider = Gtk.Scale(orientation=Gtk.Orientation.HORIZONTAL, adjustment=adj)
         self._edge_delay_slider.set_digits(0)
-        self._edge_delay_slider.connect('format-value',
-                                        self.__edge_delay_format_cb)
-        box_delay.pack_start(self._edge_delay_slider, True, True, 0)
+        self._edge_delay_slider.set_hexpand(True)
+        self._edge_delay_slider.set_format_value_func(self.__edge_delay_format_cb)
+        box_delay.append(self._edge_delay_slider)
         return box_delay
 
     def _setup_trigger(self):
         box_trigger = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         label_trigger = Gtk.Label(label=_('Size'))
-        label_trigger.set_alignment(1, 0.75)
-        label_trigger.modify_fg(Gtk.StateType.NORMAL,
-                                style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_trigger.pack_start(label_trigger, False, True, 0)
+        label_trigger.set_halign(Gtk.Align.END)
+        box_trigger.append(label_trigger)
         self._group.add_widget(label_trigger)
 
         adj = Gtk.Adjustment(value=1, lower=1, upper=style.GRID_CELL_SIZE,
-                             step_incr=1, page_incr=1, page_size=0)
-        self._trigger_size_slider = Gtk.HScale()
-        self._trigger_size_slider.set_adjustment(adj)
+                             step_increment=1, page_increment=1, page_size=0)
+        self._trigger_size_slider = Gtk.Scale(orientation=Gtk.Orientation.HORIZONTAL, adjustment=adj)
         self._trigger_size_slider.set_digits(0)
-        self._trigger_size_slider.connect('format-value',
-                                          self.__trigger_size_format_cb)
-        box_trigger.pack_start(self._trigger_size_slider, True, True, 0)
+        self._trigger_size_slider.set_hexpand(True)
+        self._trigger_size_slider.set_format_value_func(self.__trigger_size_format_cb)
+        box_trigger.append(self._trigger_size_slider)
         return box_trigger
 
     def setup(self):
@@ -208,7 +205,7 @@ class Frame(SectionView):
     def __trigger_size_timeout_cb(self, scale):
         self._trigger_size_sid = 0
         if scale.get_value() == self._model.get_trigger_size():
-            return
+            return False
         self._model.set_trigger_size(scale.get_value())
 
         return False
@@ -240,4 +237,4 @@ class Frame(SectionView):
             self.__edge_delay_timeout_cb(self._edge_delay_slider)
         if self._trigger_size_sid:
             GLib.source_remove(self._trigger_size_sid)
-            self.__trigger_size_timeout_cb(self._trigger_size_sid)
+            self.__trigger_size_timeout_cb(self._trigger_size_slider)
