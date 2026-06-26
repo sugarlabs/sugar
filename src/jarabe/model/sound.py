@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2008 Red Hat, Inc.
+﻿# Copyright (C) 2006-2008 Red Hat, Inc.
 # Copyright (C) 2014 Emil Dudev
 #
 # This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,15 @@
 
 from gi.repository import Gio
 from gi.repository import GLib
-
+import gi
+gi.require_version('SugarExt', '2.0')
 from gi.repository import SugarExt
-from sugar4 import dispatch
 
+from sugar4 import dispatch
+import logging
 
 _PLAYBACK = 0
 _CAPTURE = 1
-
 
 _SAVE_TIMEOUT = 500
 
@@ -90,7 +91,6 @@ class CaptureSound(object):
     def set_muted(self, new_state):
         self._volume.set_mute(new_state)
         self.muted_changed.send(None)
-
 
 sound = PlaybackSound()
 capture_sound = CaptureSound()

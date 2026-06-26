@@ -1,4 +1,4 @@
-# Copyright (C) 2009-2013 Sugar Labs
+﻿# Copyright (C) 2009-2013 Sugar Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 
 """Activity information microformat parser.
 
@@ -78,7 +77,7 @@ class _UpdateChecker(GObject.GObject):
     _CHUNK_SIZE = 10240
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._bundle = None
 
     def check(self, bundle):

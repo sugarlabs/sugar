@@ -1,4 +1,4 @@
-# Copyright (C) 2009-2013, Sugar Labs
+﻿# Copyright (C) 2009-2013, Sugar Labs
 # Copyright (C) 2009, Tomeu Vizoso
 #
 # This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 
 import os
 import logging
@@ -66,7 +65,7 @@ class Updater(GObject.GObject):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         settings = Gio.Settings.new(_UPDATE_KEYS_PATH)
         backend = settings.get_string(_UPDATE_BACKEND_KEY)

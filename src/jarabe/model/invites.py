@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,6 @@ from jarabe.model import telepathyclient
 from jarabe.model import bundleregistry
 from jarabe.model import neighborhood
 from jarabe.journal import misc
-
 
 CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
     'org.laptop.Telepathy.ActivityProperties'
@@ -79,7 +78,17 @@ class BaseInvite(object):
         logging.debug('BaseInvite._name_owner_changed_cb %r %r %r', name,
                       new_owner, old_owner)
         if name == self._handler and new_owner and not old_owner:
+            handler = getattr(self, '_name_owner_changed_handler', None)
+            if handler is not None:
+                handler.remove()
+                self._name_owner_changed_handler = None
             self._call_handle_with()
+
+    def cleanup(self):
+        handler = getattr(self, '_name_owner_changed_handler', None)
+        if handler is not None:
+            handler.remove()
+            self._name_owner_changed_handler = None
 
 
 class ActivityInvite(BaseInvite):
@@ -115,10 +124,11 @@ class ActivityInvite(BaseInvite):
             return
 
         bus = dbus.SessionBus()
-        bus.add_signal_receiver(self._name_owner_changed_cb,
-                                'NameOwnerChanged',
-                                'org.freedesktop.DBus',
-                                arg0=self._handler)
+        self._name_owner_changed_handler = bus.add_signal_receiver(
+            self._name_owner_changed_cb,
+            'NameOwnerChanged',
+            'org.freedesktop.DBus',
+            arg0=self._handler)
 
         model = neighborhood.get_model()
         activity_id = model.get_activity_by_room(self._handle).activity_id
@@ -144,10 +154,11 @@ class PrivateInvite(BaseInvite):
         bundle = registry.get_bundle(bundle_id)
 
         bus = dbus.SessionBus()
-        bus.add_signal_receiver(self._name_owner_changed_cb,
-                                'NameOwnerChanged',
-                                'org.freedesktop.DBus',
-                                arg0=self._handler)
+        self._name_owner_changed_handler = bus.add_signal_receiver(
+            self._name_owner_changed_cb,
+            'NameOwnerChanged',
+            'org.freedesktop.DBus',
+            arg0=self._handler)
         misc.launch(bundle, color=self.get_color(), invited=True,
                     uri=self._private_channel)
 
@@ -161,7 +172,7 @@ class Invites(GObject.GObject):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._dispatch_operations = {}
 
@@ -287,6 +298,7 @@ class Invites(GObject.GObject):
         self.emit('invite-added', invite)
 
     def remove_invite(self, invite):
+        invite.cleanup()
         del self._dispatch_operations[invite.dispatch_operation_path]
         self.emit('invite-removed', invite)
 

@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 Aleksey Lim
 #
 # This program is free software: you can redistribute it and/or modify
@@ -72,7 +72,7 @@ class BundleRegistry(GObject.GObject):
 
     def __init__(self):
         logging.debug('STARTUP: Loading the bundle registry')
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._mime_defaults = self._load_mime_defaults()
 
@@ -109,8 +109,8 @@ class BundleRegistry(GObject.GObject):
 
         try:
             self._load_favorites()
-        except Exception:
-            logging.exception('Error while loading favorite_activities.')
+        except (ValueError, IOError, KeyError) as e:
+            logging.exception('Error while loading favorite_activities: %s', e)
 
         self._hidden_activities = []
         self._load_hidden_activities()
@@ -129,8 +129,8 @@ class BundleRegistry(GObject.GObject):
                 self._favorite_bundles.append({})
         try:
             self._load_favorites()
-        except Exception:
-            logging.exception('Error while loading favorite_activities.')
+        except (ValueError, IOError, KeyError) as e:
+            logging.exception('Error while loading favorite_activities: %s', e)
 
     def __file_monitor_changed_cb(self, monitor, one_file, other_file,
                                   event_type):
@@ -211,6 +211,8 @@ class BundleRegistry(GObject.GObject):
 
     def _load_hidden_activities(self):
         path = os.environ.get('SUGAR_ACTIVITIES_HIDDEN', None)
+        if not path:
+            return
         try:
             with open(path) as file:
                 for line in file.readlines():
@@ -269,19 +271,18 @@ class BundleRegistry(GObject.GObject):
                 bundle_dir = os.path.join(path, f)
                 if os.path.isdir(bundle_dir):
                     bundles[bundle_dir] = os.stat(bundle_dir).st_mtime
-            except Exception:
+            except OSError as e:
                 logging.exception('Error while processing installed activity'
-                                  ' bundle %s:', bundle_dir)
+                                  ' bundle %s: %s', bundle_dir, e)
 
         bundle_dirs = list(bundles.keys())
         bundle_dirs.sort(key=lambda x: bundles[x])
         for folder in bundle_dirs:
             try:
                 self.add_bundle(folder, emit_signals=False)
-            except:
-                # pylint: disable=W0702
+            except Exception as e:
                 logging.exception('Error while processing installed activity'
-                                  ' bundle %s:', folder)
+                                  ' bundle %s: %s', folder, e)
 
     def add_bundle(self, bundle_path, set_favorite=False, emit_signals=True,
                    force_downgrade=False):
@@ -490,7 +491,7 @@ class BundleRegistry(GObject.GObject):
         self.install_async(bundle, self._sync_install_cb, result,
                            force_downgrade)
         while result[0] is None:
-            Gtk.main_iteration()
+            GLib.MainContext.default().iteration(may_block=True)
 
         if isinstance(result[0], Exception):
             raise result[0]
@@ -676,9 +677,9 @@ class _InstallQueue(object):
             if act.is_user_activity():
                 try:
                     act.uninstall()
-                except:
+                except Exception as e:
                     logging.exception('Uninstall failed, still trying to '
-                                      'install newer bundle')
+                                      'install newer bundle: %s', e)
             else:
                 logging.warning('Unable to uninstall system activity, '
                                 'installing upgraded version in user '

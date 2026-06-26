@@ -1,4 +1,4 @@
-# Copyright (C) 2006, Red Hat, Inc.
+﻿# Copyright (C) 2006, Red Hat, Inc.
 # Copyright (C) 2009, One Laptop Per Child Association Inc
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,51 +17,50 @@
 import logging
 
 import gi
-gi.require_version('Xkl', '1.0')
+from gi.repository import Gdk
 from gi.repository import Gio
-from gi.repository import GdkX11
-from gi.repository import Xkl
+from gi.repository import GLib
 
 
 def setup():
     settings = Gio.Settings.new('org.sugarlabs.peripherals.keyboard')
     have_config = False
-
     try:
-        display = GdkX11.x11_get_default_xdisplay()
-        if display is not None:
-            engine = Xkl.Engine.get_instance(display)
-        else:
-            logging.debug('setup_keyboard_cb: Could not get default display.')
-            return
-
-        configrec = Xkl.ConfigRec()
-        configrec.get_from_server(engine)
 
         layouts = settings.get_strv('layouts')
         layouts_list = []
         variants_list = []
         if layouts:
             for layout in layouts:
-                layouts_list.append(layout.split('(')[0])
-                variants_list.append(layout.split('(')[1][:-1])
+                if '(' in layout and layout.endswith(')'):
+                    layouts_list.append(layout.split('(')[0])
+                    variants_list.append(layout.split('(')[1][:-1])
+                else:
+                    layouts_list.append(layout)
+                    variants_list.append('')
 
-            if layouts_list and variants_list:
+            if layouts_list:
                 have_config = True
-                configrec.set_layouts(layouts_list)
-                configrec.set_variants(variants_list)
 
         model = settings.get_string('model')
         if model:
             have_config = True
-            configrec.set_model(model)
 
         options = settings.get_strv('options')
         if options:
             have_config = True
-            configrec.set_options(options)
 
         if have_config:
-            configrec.activate(engine)
-    except Exception:
-        logging.exception('Error during keyboard configuration')
+            bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
+            proxy = Gio.DBusProxy.new_sync(bus, Gio.DBusProxyFlags.NONE, None,
+                                           'org.freedesktop.locale1',
+                                           '/org/freedesktop/locale1',
+                                           'org.freedesktop.locale1', None)
+            layouts_str = ",".join(layouts_list)
+            variants_str = ",".join(variants_list)
+            options_str = ",".join(options) if options else ""
+            proxy.call_sync('SetX11Keyboard',
+                            GLib.Variant('(ssssb)', (layouts_str, model if model else "", variants_str, options_str, True)),
+                            Gio.DBusCallFlags.NONE, -1, None)
+    except (GLib.Error, ValueError, IndexError) as e:
+        logging.exception('Error during keyboard configuration: %s', e)

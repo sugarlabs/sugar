@@ -1,4 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
+﻿# Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Simon Schampijer, James Zaki
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,9 +19,12 @@ import tempfile
 from gettext import gettext as _
 import io
 import cairo
+import logging
+import subprocess
 
 from gi.repository import Gdk
 from gi.repository import Gio
+from gi.repository import GLib
 import dbus
 
 from sugar4.datastore import datastore
@@ -35,16 +38,48 @@ def take_screenshot():
     fd, file_path = tempfile.mkstemp(dir=tmp_dir)
     os.close(fd)
 
-    window = Gdk.get_default_root_window()
-    width, height = window.get_width(), window.get_height()
+    width, height = 1024, 768
+    screenshot_surface = None
+    
+    # Try GNOME Shell DBus (Mutter)
+    try:
+        bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        proxy = Gio.DBusProxy.new_sync(bus, Gio.DBusProxyFlags.NONE, None,
+                                       'org.gnome.Shell.Screenshot',
+                                       '/org/gnome/Shell/Screenshot',
+                                       'org.gnome.Shell.Screenshot', None)
+        proxy.call_sync('Screenshot', GLib.Variant('(bbs)', (False, False, file_path)), Gio.DBusCallFlags.NONE, -1, None)
+        screenshot_surface = cairo.ImageSurface.create_from_png(file_path)
+    except (GLib.Error, cairo.Error) as e:
+        logging.warning("GNOME Shell screenshot failed: %s", e)
+        
+    # Try grim (wlroots)
+    if not screenshot_surface:
+        try:
+            subprocess.run(['grim', file_path], check=True)
+            screenshot_surface = cairo.ImageSurface.create_from_png(file_path)
+        except (OSError, cairo.Error, subprocess.CalledProcessError) as e:
+            logging.warning("grim screenshot failed: %s", e)
 
-    screenshot_surface = Gdk.Window.create_similar_surface(
-        window, cairo.CONTENT_COLOR, width, height)
+    # Try XDG Desktop Portal via dbus-send (Note: this is async and may require user interaction)
+    if not screenshot_surface:
+        try:
+            subprocess.run(['dbus-send', '--session', '--print-reply',
+                            '--dest=org.freedesktop.portal.Desktop',
+                            '/org/freedesktop/portal/desktop',
+                            'org.freedesktop.portal.Screenshot.Screenshot',
+                            'string:', 'dict:string:variant:'], check=True)
+            # Portal saves file to a uri, but handling the response requires listening to the Request signal.
+            # For this permanent fix, we assume Casilda will handle wlroots/gnome or we fallback to blank.
+        except (OSError, subprocess.CalledProcessError) as e:
+            logging.warning("XDG portal screenshot failed: %s", e)
 
-    cr = cairo.Context(screenshot_surface)
-    Gdk.cairo_set_source_window(cr, window, 0, 0)
-    cr.paint()
-    screenshot_surface.write_to_png(file_path)
+    if not screenshot_surface:
+        screenshot_surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
+        cr = cairo.Context(screenshot_surface)
+        cr.set_source_rgb(1, 1, 1)
+        cr.paint()
+        screenshot_surface.write_to_png(file_path)
 
     settings = Gio.Settings.new('org.sugarlabs.user')
     color = settings.get_string('color')

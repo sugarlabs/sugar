@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ from sugar4.graphics.xocolor import XoColor
 
 from jarabe.model.buddy import BuddyModel
 from jarabe.model import neighborhood
-
 
 _model = None
 
@@ -105,7 +104,7 @@ class Friends(GObject.GObject):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._friends = {}
         self._path = os.path.join(env.get_profile_path(), 'friends')
