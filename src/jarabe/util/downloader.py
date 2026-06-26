@@ -1,4 +1,4 @@
-# Copyright (C) 2009-2013, Sugar Labs
+﻿# Copyright (C) 2009-2013, Sugar Labs
 # Copyright (C) 2009, Tomeu Vizoso
 #
 # This program is free software: you can redistribute it and/or modify
@@ -41,10 +41,10 @@ def get_soup_session():
     global _session
     if _session is None:
         _session = Soup.Session()
-        _session.set_timeout(60)
-        _session.set_idle_timeout(60)
-        _session.set_user_agent("Sugar/%s" % config.version)
-        _session.set_proxy_resolver(Gio.ProxyResolver.get_default())
+        _session.props.timeout = 60
+        _session.props.idle_timeout = 60
+        _session.props.user_agent = "Sugar/%s" % config.version
+        _session.props.proxy_resolver = Gio.ProxyResolver.get_default()
     return _session
 
 
@@ -62,7 +62,7 @@ class Downloader(GObject.GObject):
     }
 
     def __init__(self, url, session=None, request_headers=None):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._uri = GLib.Uri.parse(url, GLib.UriFlags.NONE)
         self._session = session or get_soup_session()
         self._pending_buffers = []
@@ -74,16 +74,17 @@ class Downloader(GObject.GObject):
         self._output_stream = None
         self._message = None
         self._request_headers = request_headers
+        self._cancellable = Gio.Cancellable()
+        self._read_finished = False
+        self._accumulated_data = bytearray()
+        self._is_chunked = False
 
     def _setup_message(self, method="GET"):
-        self._message = Soup.Message.new(method=method, uri=self._uri)
-        self._message.connect('got-body-data', self._got_body_data_cb)
-        self._message.connect('got-headers', self._headers_cb, None)
+        self._message = Soup.Message.new(method, self._uri.to_string())
         if self._request_headers is not None:
             for header_key in list(self._request_headers.keys()):
                 self._message.get_request_headers().append(
                     header_key, self._request_headers[header_key])
-
 
     def download_to_temp(self):
         """
@@ -106,8 +107,9 @@ class Downloader(GObject.GObject):
         signal. Upon completion, a successful download is indicated by a
         reuslt of None in the complete signal parameters.
         """
+        self._is_chunked = True
         self._setup_message()
-        self._session.send_async(self._message, 0, None, self._message_cb, None)
+        self._session.send_async(self._message, GLib.PRIORITY_DEFAULT, self._cancellable, self._message_cb, None)
 
     def download(self, start=None, end=None):
         """
@@ -117,10 +119,11 @@ class Downloader(GObject.GObject):
         The start and end parameters can optionally be set to perform a
         partial read of the remote data.
         """
+        self._is_chunked = False
         self._setup_message()
         if start is not None:
             self._message.get_request_headers().set_range(start, end)
-        self._session.send_async(self._message, 0, None, self._message_cb, None)
+        self._session.send_async(self._message, GLib.PRIORITY_DEFAULT, self._cancellable, self._message_cb, None)
 
     def get_size(self):
         """
@@ -128,52 +131,101 @@ class Downloader(GObject.GObject):
         The size is returned in the result parameter of the 'complete' signal.
         """
         self._setup_message("HEAD")
-        self._session.send_async(self._message, 0, None, self._message_cb, None)
+        self._session.send_async(self._message, GLib.PRIORITY_DEFAULT, self._cancellable, self._message_cb, None)
 
-    def _message_cb(self, session, message, user_data):
-        self._status_code = message.get_status()
-        self._check_if_finished()
+    def _message_cb(self, session, res, user_data):
+        try:
+            stream = session.send_finish(res)
+            self._status_code = self._message.get_status()
+            if soup_status_is_successful(self._status_code):
+                self._total_size = self._message.get_response_headers().get_content_length()
 
-    def cancel(self):
-        self._cancelling = True
-        self._session.cancel_message(self._message, SOUP_STATUS_CANCELLED)
+            if self._message.get_method() == "HEAD":
+                self._read_finished = True
+                self._check_if_finished()
+            else:
+                self._read_next_chunk(stream)
+        except Exception:
+            self._status_code = self._message.get_status()
+            if self._status_code == 0:
+                self._status_code = SOUP_STATUS_CANCELLED
+            self._read_finished = True
+            self._check_if_finished()
 
-    def _headers_cb(self, message, user_data):
-        if soup_status_is_successful(message.get_status()):
-            self._total_size = message.get_response_headers().get_content_length()
+    def _read_next_chunk(self, stream):
+        if self._cancelling or not soup_status_is_successful(self._status_code):
+            self._read_finished = True
+            self._check_if_finished()
+            return
+        stream.read_bytes_async(8192, GLib.PRIORITY_DEFAULT, self._cancellable, self._read_cb, stream)
 
-    def _got_body_data_cb(self, message, chunk_size):
-        if self._cancelling or \
-                not soup_status_is_successful(message.get_status()):
+    def _read_cb(self, stream, res, user_data):
+        if self._cancelling:
+            self._read_finished = True
+            self._check_if_finished()
             return
 
-        data = Gio.InputStream.read_bytes(chunk_size, None)
+        try:
+            data = stream.read_bytes_finish(res)
+        except Exception:
+            self._status_code = SOUP_STATUS_CANCELLED
+            self._read_finished = True
+            self._check_if_finished()
+            return
+
+        if data is None or data.get_size() == 0:
+            self._read_finished = True
+            self._check_if_finished()
+            return
+
         self.emit('got-chunk', data)
+
+        if not self._is_chunked and not self._output_stream:
+            self._accumulated_data.extend(data.get_data())
+
         if self._output_stream:
             self._pending_buffers.append(data)
             self._write_next_buffer()
+        else:
+            self._downloaded_size += data.get_size()
+            if self._total_size > 0:
+                progress = self._downloaded_size / float(self._total_size)
+                self.emit('progress', progress)
+
+        self._read_next_chunk(stream)
+
+    def cancel(self):
+        self._cancelling = True
+        self._cancellable.cancel()
 
     def __write_async_cb(self, output_stream, result, user_data):
-        count = output_stream.write_bytes_finish(result)
-
-        self._downloaded_size += count
-        if self._total_size > 0:
-            progress = self._downloaded_size / float(self._total_size)
-            self.emit('progress', progress)
+        try:
+            count = output_stream.write_bytes_finish(result)
+            self._downloaded_size += count
+            if self._total_size > 0:
+                progress = self._downloaded_size / float(self._total_size)
+                self.emit('progress', progress)
+        except Exception:
+            self._status_code = SOUP_STATUS_CANCELLED
+            self.cancel()
 
         self._check_if_finished()
 
     def _complete(self):
         if self._output_stream:
-            self._output_stream.close(None)
+            try:
+                self._output_stream.close(None)
+            except Exception:
+                pass
+            self._output_stream = None
 
         result = None
         if soup_status_is_successful(self._status_code):
             if self._message.get_method() == "HEAD":
                 # this is a get_size request
                 result = self._total_size
-            else:
-                result = self._session.send_and_read(self._message, None)
+            elif not self._is_chunked and self._output_file is None:
+                result = GLib.Bytes.new(bytes(self._accumulated_data))
         else:
             result = IOError("HTTP error code %d" % self._status_code)
         self.emit('complete', result)
@@ -181,26 +233,26 @@ class Downloader(GObject.GObject):
     def _check_if_finished(self):
         # To finish (for both successful completion and cancellation), we
         # require two conditions to become true:
-        #  1. Soup message callback has been called
+        #  1. Soup message callback has been called and stream fully read
         #  2. Any pending output file write completes
         # Those conditions can become true in either order.
         if not self._output_stream:
-            self._complete()
+            if self._read_finished:
+                self._complete()
             return
 
         if self._cancelling or not self._pending_buffers:
-            if self._status_code is not None \
-                    and not self._output_stream.has_pending():
+            if self._read_finished and not self._output_stream.has_pending():
                 self._complete()
             return
 
         self._write_next_buffer()
 
     def _write_next_buffer(self):
-        if not self._output_stream.has_pending():
+        if self._output_stream and not self._output_stream.has_pending() and self._pending_buffers:
             data = self._pending_buffers.pop(0)
             self._output_stream.write_bytes_async(data, GLib.PRIORITY_LOW,
-                                                  None, self.__write_async_cb,
+                                                  self._cancellable, self.__write_async_cb,
                                                   None)
 
     def _get_temp_file_path(self, uri):

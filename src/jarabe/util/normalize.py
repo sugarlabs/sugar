@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 # Copyright (C) 2012 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
