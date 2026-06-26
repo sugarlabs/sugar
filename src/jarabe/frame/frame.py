@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,7 +35,6 @@ from jarabe.frame.clipboardpanelwindow import ClipboardPanelWindow
 from jarabe.frame.notification import NotificationIcon, NotificationWindow
 from jarabe.model import notifications
 
-
 TOP_RIGHT = 0
 TOP_LEFT = 1
 BOTTOM_RIGHT = 2
@@ -44,15 +43,55 @@ BOTTOM_LEFT = 3
 NOTIFICATION_DURATION = 5000
 
 
-class _Animation(animator.Animation):
+def _get_screen_size():
+    display = Gdk.Display.get_default()
+    if display:
+        monitors = display.get_monitors()
+        if monitors and monitors.get_n_items() > 0:
+            geometry = monitors.get_item(0).get_geometry()
+            return geometry.width, geometry.height
+    return 1024, 768
 
-    def __init__(self, frame, end):
-        start = frame.current_position
-        animator.Animation.__init__(self, start, end)
+
+class _Animation:
+    """Simple timer-based frame animation.
+
+    Uses GLib.timeout_add so it works regardless of whether the panel
+    widget is currently mapped/realized (unlike add_tick_callback which
+    requires the widget to be on screen first).
+    """
+
+    _DURATION_MS = 500  # matches GTK3 animator duration
+    _STEP_MS = 16       # ~60 fps
+
+    def __init__(self, frame, start, end):
         self._frame = frame
+        self.start = start
+        self.end = end
+        self._sid = 0
+        self._elapsed_ms = 0
 
-    def next_frame(self, current):
-        self._frame.move(current)
+    def start_anim(self):
+        self._elapsed_ms = 0
+        self._sid = GLib.timeout_add(self._STEP_MS, self._on_tick)
+
+    def stop(self):
+        if self._sid:
+            GLib.source_remove(self._sid)
+            self._sid = 0
+
+    def _on_tick(self):
+        self._elapsed_ms += self._STEP_MS
+        progress = min(self._elapsed_ms / self._DURATION_MS, 1.0)
+        current = self.start + (self.end - self.start) * progress
+        self._frame.move_panels(current)
+
+        if progress >= 1.0:
+            self._sid = 0
+            # At position 0.0 the panels are off-screen via margin; no
+            # visibility change needed.
+            return False  # stop timer
+        return True  # continue
 
 
 class Frame(object):
@@ -74,15 +113,38 @@ class Frame(object):
 
         self._event_area = EventArea(self.settings)
         self._event_area.connect('enter', self._enter_corner_cb)
-        self._event_area.show()
 
         self._top_panel = self._create_top_panel()
         self._bottom_panel = self._create_bottom_panel()
         self._left_panel = self._create_left_panel()
         self._right_panel = self._create_right_panel()
 
-        screen = Gdk.Screen.get_default()
-        screen.connect('size-changed', self._size_changed_cb)
+        from jarabe.model import shell
+        shell_model = shell.get_model()
+        if hasattr(shell_model, '_overlay') and shell_model._overlay:
+            # Add event area hot corners
+            for box in self._event_area._boxes.values():
+                shell_model._overlay.add_overlay(box)
+                box.set_visible(True)
+                
+            # Add frame panels — they start hidden off-screen via negative margin
+            # set in FrameWindow.__init__.  We keep them visible so GTK4 can
+            # allocate / measure them at all times.
+            shell_model._overlay.add_overlay(self._top_panel)
+            shell_model._overlay.add_overlay(self._bottom_panel)
+            shell_model._overlay.add_overlay(self._left_panel)
+            shell_model._overlay.add_overlay(self._right_panel)
+
+
+
+        display = Gdk.Display.get_default()
+        if display:
+            self._monitors = display.get_monitors()
+            if self._monitors:
+                self._monitors.connect('items-changed', self._size_changed_cb)
+                for i in range(self._monitors.get_n_items()):
+                    monitor = self._monitors.get_item(i)
+                    monitor.connect('notify::geometry', self._monitor_geometry_changed_cb)
 
         self._notif_by_icon = {}
 
@@ -93,7 +155,12 @@ class Frame(object):
             self.__notification_cancelled_cb)
 
     def is_visible(self):
-        return self.current_position != 0.0
+        # Check if any panel is currently revealed
+        for panel in (self._top_panel, self._bottom_panel,
+                      self._left_panel, self._right_panel):
+            if panel and panel.get_reveal_child():
+                return True
+        return False
 
     visible = property(is_visible, None)
 
@@ -106,45 +173,41 @@ class Frame(object):
     def hide(self):
         if not self._wanted:
             return
-
         self._wanted = False
-
-        if self._animator:
-            self._animator.stop()
-
         palettegroup.popdown_all()
-        self._animator = animator.Animator(0.5, widget=self._top_panel)
-        self._animator.add(_Animation(self, 0.0))
-        self._animator.start()
+        for panel in (self._top_panel, self._bottom_panel,
+                      self._left_panel, self._right_panel):
+            if panel:
+                panel.set_reveal_child(False)
 
     def show(self):
         if self._wanted:
             return
-
         self._wanted = True
+        for panel in (self._top_panel, self._bottom_panel,
+                      self._left_panel, self._right_panel):
+            if panel:
+                panel.set_reveal_child(True)
 
-        if self._animator:
-            self._animator.stop()
+    def _hide_windows(self):
+        # No-op: Revealer handles hiding with slide animation.
+        pass
 
-        self._animator = animator.Animator(0.5, widget=self._top_panel)
-        self._animator.add(_Animation(self, 1.0))
-        self._animator.start()
-
-    def move(self, pos):
+    def move_panels(self, pos):
+        # Legacy method kept for compatibility; not used with Revealer approach.
         self.current_position = pos
-        self._update_position()
 
     def _create_top_panel(self):
         panel = self._create_panel(Gtk.PositionType.TOP)
 
         zoom_toolbar = ZoomToolbar()
         panel.append(zoom_toolbar, expand=False)
-        zoom_toolbar.show()
+        zoom_toolbar.set_visible(True)
         zoom_toolbar.connect('level-clicked', self._level_clicked_cb)
 
         activities_tray = ActivitiesTray()
         panel.append(activities_tray)
-        activities_tray.show()
+        activities_tray.set_visible(True)
 
         return panel
 
@@ -153,7 +216,7 @@ class Frame(object):
 
         devices_tray = DevicesTray()
         panel.append(devices_tray)
-        devices_tray.show()
+        devices_tray.set_visible(True)
 
         return panel
 
@@ -162,50 +225,39 @@ class Frame(object):
 
         tray = FriendsTray()
         panel.append(tray)
-        tray.show()
+        tray.set_visible(True)
 
         return panel
 
     def _create_left_panel(self):
         panel = ClipboardPanelWindow(self, Gtk.PositionType.LEFT)
-
         return panel
 
     def _create_panel(self, orientation):
         panel = FrameWindow(orientation)
-
         return panel
-
-    def _move_panel(self, panel, pos, x1, y1, x2, y2):
-        x = (x2 - x1) * pos + x1
-        y = (y2 - y1) * pos + y1
-
-        panel.move(int(x), int(y))
-
-        # FIXME we should hide and show as necessary to free memory
-        if not panel.props.visible:
-            panel.show()
 
     def _level_clicked_cb(self, zoom_toolbar):
         self.hide()
 
     def _update_position(self):
-        screen_h = Gdk.Screen.height()
-        screen_w = Gdk.Screen.width()
+        # With Revealer approach, animation is handled by the Revealer widget.
+        # This method is kept for compatibility (called on screen resize).
+        # Ensure panels reflect wanted state after a resize.
+        for panel in (self._top_panel, self._bottom_panel,
+                      self._left_panel, self._right_panel):
+            if panel is None:
+                continue
+            panel.set_reveal_child(self._wanted)
 
-        self._move_panel(self._top_panel, self.current_position,
-                         0, - self._top_panel.size, 0, 0)
-
-        self._move_panel(self._bottom_panel, self.current_position,
-                         0, screen_h, 0, screen_h - self._bottom_panel.size)
-
-        self._move_panel(self._left_panel, self.current_position,
-                         - self._left_panel.size, 0, 0, 0)
-
-        self._move_panel(self._right_panel, self.current_position,
-                         screen_w, 0, screen_w - self._right_panel.size, 0)
-
-    def _size_changed_cb(self, screen):
+    def _size_changed_cb(self, monitors, position, removed, added):
+        for i in range(added):
+            monitor = monitors.get_item(position + i)
+            if monitor:
+                monitor.connect('notify::geometry', self._monitor_geometry_changed_cb)
+        self._update_position()
+        
+    def _monitor_geometry_changed_cb(self, monitor, pspec):
         self._update_position()
 
     def _enter_corner_cb(self, event_area):
@@ -227,22 +279,27 @@ class Frame(object):
 
         window = NotificationWindow()
 
-        screen = Gdk.Screen.get_default()
         if corner == Gtk.CornerType.TOP_LEFT:
-            window.move(0, 0)
+            window.set_halign(Gtk.Align.START)
+            window.set_valign(Gtk.Align.START)
         elif corner == Gtk.CornerType.TOP_RIGHT:
-            window.move(screen.get_width() - style.GRID_CELL_SIZE, 0)
+            window.set_halign(Gtk.Align.END)
+            window.set_valign(Gtk.Align.START)
         elif corner == Gtk.CornerType.BOTTOM_LEFT:
-            window.move(0, screen.get_height() - style.GRID_CELL_SIZE)
+            window.set_halign(Gtk.Align.START)
+            window.set_valign(Gtk.Align.END)
         elif corner == Gtk.CornerType.BOTTOM_RIGHT:
-            window.move(screen.get_width() - style.GRID_CELL_SIZE,
-                        screen.get_height() - style.GRID_CELL_SIZE)
-        else:
-            raise ValueError('Inalid corner: %r' % corner)
+            window.set_halign(Gtk.Align.END)
+            window.set_valign(Gtk.Align.END)
 
-        window.add(icon)
-        icon.show()
-        window.show()
+        window.append(icon)
+        icon.set_visible(True)
+        window.set_visible(True)
+
+        from jarabe.model import shell
+        shell_model = shell.get_model()
+        if hasattr(shell_model, '_overlay') and shell_model._overlay:
+            shell_model._overlay.add_overlay(window)
 
         self._notif_by_icon[icon] = window
 
@@ -256,10 +313,15 @@ class Frame(object):
             return
 
         window = self._notif_by_icon[icon]
-        window.destroy()
+        parent = window.get_parent()
+        if parent:
+            if hasattr(parent, 'remove_overlay'):
+                parent.remove_overlay(window)
+            else:
+                parent.remove(window)
         del self._notif_by_icon[icon]
 
-    def __button_release_event_cb(self, icon, data=None):
+    def __button_release_event_cb(self, gesture, n_press, x, y, icon):
         self.remove_notification(icon)
         self.show()
 
@@ -267,7 +329,10 @@ class Frame(object):
         logging.debug('__notification_received_cb')
         icon = NotificationIcon()
         icon.show_badge()
-        icon.connect('button-release-event', self.__button_release_event_cb)
+        
+        click = Gtk.GestureClick.new()
+        click.connect('released', self.__button_release_event_cb, icon)
+        icon.add_controller(click)
 
         hints = kwargs['hints']
 
@@ -292,6 +357,5 @@ class Frame(object):
         self.add_notification(icon, Gtk.CornerType.TOP_LEFT, duration)
 
     def __notification_cancelled_cb(self, **kwargs):
-        # Do nothing for now. Our notification UI is so simple, there's no
         # point yet.
         pass
