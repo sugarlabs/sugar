@@ -1,4 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
+﻿# Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,6 @@ from jarabe.journal.misc import get_mount_color
 from jarabe.view.palettes import VolumePalette
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
-
 _icons = {}
 volume_monitor = None
 
@@ -45,7 +44,7 @@ class DeviceView(TrayIcon):
 
         self._mount = mount
         self._icon_name = get_mount_icon_name(mount,
-                                              Gtk.IconSize.LARGE_TOOLBAR)
+                                              Gtk.IconSize.LARGE)
         # TODO: retrieve the colors from the owner of the device
         color = get_mount_color(self._mount)
 
@@ -64,12 +63,9 @@ class DeviceView(TrayIcon):
                     pixel_size=style.SMALL_ICON_SIZE,
                     xo_color=color)
         menu_item.set_image(icon)
-        icon.show()
 
         menu_item.connect('activate', self.__show_contents_cb)
-        palette.content_box.pack_start(menu_item, True, True, 0)
-        palette.content_box.reorder_child(menu_item, 0)
-        menu_item.show()
+        palette.content_box.prepend(menu_item)
 
         return palette
 
@@ -113,7 +109,7 @@ def _mount(volume, tray):
     if volume.get_mount() is None and volume.can_mount():
         # TODO: pass None as mount_operation, or better, SugarMountOperation
         flags = 0
-        mount_operation = Gtk.MountOperation(parent=tray.get_toplevel())
+        mount_operation = Gtk.MountOperation(parent=tray.get_root())
         cancellable = None
         user_data = None
         volume.mount(flags, mount_operation, cancellable, _mount_cb, user_data)

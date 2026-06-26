@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007, Red Hat, Inc.
+﻿# Copyright (C) 2006-2007, Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@ from sugar4.graphics.palettemenu import PaletteMenuBox
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model.session import get_session_manager
-
 
 _ICON_NAME = 'battery'
 
@@ -87,10 +86,10 @@ class DeviceView(TrayIcon):
         current_level = self._model.props.level
         xo_color = self._color
         badge_name = None
-        self.show()
+        self.set_visible(True)
 
         if not self._model.props.present:
-            self.hide()
+            self.set_visible(False)
             status = _STATUS_NOT_PRESENT
 
         elif self._model.props.charging:
@@ -128,22 +127,22 @@ class BatteryPalette(Palette):
 
         self._progress_widget = PaletteMenuBox()
         self.set_content(self._progress_widget)
-        self._progress_widget.show()
 
         inner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         inner_box.set_spacing(style.DEFAULT_PADDING)
         self._progress_widget.append_item(inner_box, vertical_padding=0)
-        inner_box.show()
 
         self._progress_bar = Gtk.ProgressBar()
         self._progress_bar.set_size_request(
             style.zoom(style.GRID_CELL_SIZE * 4), -1)
-        inner_box.pack_start(self._progress_bar, True, True, 0)
-        self._progress_bar.show()
+        self._progress_bar.set_hexpand(True)
+        self._progress_bar.set_vexpand(True)
+        inner_box.append(self._progress_bar)
 
         self._status_label = Gtk.Label()
-        inner_box.pack_start(self._status_label, True, True, 0)
-        self._status_label.show()
+        self._status_label.set_hexpand(True)
+        self._status_label.set_vexpand(True)
+        inner_box.append(self._status_label)
 
     def set_info(self, percentage, seconds, status):
         self._level = percentage
