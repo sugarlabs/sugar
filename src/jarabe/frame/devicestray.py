@@ -1,4 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
+﻿# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,23 +31,24 @@ class DevicesTray(tray.HTray):
             if f.endswith('.py') and not f.startswith('__'):
                 module_name = f[:-3]
                 try:
-                    mod = importlib.import_module('deviceicon.' + module_name, globals())
+                    mod = importlib.import_module('deviceicon.' + module_name)
                     mod.setup(self)
-                except Exception:
-                    logging.exception('Exception while loading extension:')
+                except Exception as e:
+                    logging.error(f'Exception while loading extension {module_name}: {e}', exc_info=True)
 
     def add_device(self, view):
         index = 0
         relative_index = getattr(view, 'FRAME_POSITION_RELATIVE', -1)
+        
         for item in self.get_children():
-            current_relative_index = getattr(item, 'FRAME_POSITION_RELATIVE',
-                                             0)
+            current_relative_index = getattr(item, 'FRAME_POSITION_RELATIVE', 0)
             if current_relative_index >= relative_index:
                 index += 1
             else:
                 break
+            
         self.add_item(view, index=index)
-        view.show()
+        view.set_visible(True)
 
     def remove_device(self, view):
         self.remove_item(view)
