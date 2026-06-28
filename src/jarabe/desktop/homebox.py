@@ -1081,7 +1081,6 @@ class _CreateAIActivityPanel(Gtk.EventBox):
     def _create_studio_view(self):
         workspace = Gtk.EventBox()
         workspace.get_style_context().add_class('create-ai-studio-workspace')
-        workspace.set_size_request(style.zoom(1900), -1)
         workspace.set_margin_top(style.zoom(6))
 
         studio = Gtk.VBox(spacing=style.zoom(12))
@@ -2865,7 +2864,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
     def _create_learning_sidebar(self):
         panel = Gtk.EventBox()
         panel.get_style_context().add_class('create-ai-learning-sidebar')
-        panel.set_size_request(style.zoom(380), -1)
+        panel.set_size_request(style.zoom(260), -1)
 
         box = Gtk.VBox(spacing=style.zoom(9))
         box.set_border_width(style.zoom(11))
@@ -7254,10 +7253,11 @@ if clipboard.wait_is_text_available():
             self._selected_version = self._aod_active_revision_id
         self._refresh_version_history()
         self._append_chat_status(provider_status)
-        self._append_chat_message(
-            self._build_generation_chat_response(result, plan),
-            from_user=False,
-        )
+        chat_msgs = self._build_generation_chat_messages(result, plan)
+        for i, msg in enumerate(chat_msgs):
+            self._append_chat_message(
+                msg, from_user=False,
+                scroll=(i == len(chat_msgs) - 1))
         self._set_chat_entry_sensitive(True)
         self._append_sidebar_status(provider_status)
         self._append_sidebar_message(
@@ -7266,8 +7266,8 @@ if clipboard.wait_is_text_available():
         self._update_sidebar_challenges(result, plan)
         return False
 
-    def _build_generation_chat_response(self, result, plan):
-        """Build a conversational AI response describing what was generated."""
+    def _build_generation_chat_messages(self, result, plan):
+        """Return a list of short chat bubbles describing the generated activity."""
         spec = result.spec
         name = spec.name or _('the activity')
         summary = plan.get('summary', '')
@@ -7277,37 +7277,35 @@ if clipboard.wait_is_text_available():
         learner_steps = plan.get('learner_steps') or []
         features = plan.get('features') or []
 
-        # Opener
-        opener = _("I've built %(name)s for you!") % {'name': name}
+        msgs = []
 
-        # What kind of activity
+        # Bubble 1 — short opener with name + kind
         kind_parts = [p for p in (activity_kind, template) if p]
-        kind_line = ''
         if kind_parts:
-            kind_line = ' ' + _('It\'s a %s.') % ' / '.join(kind_parts)
+            msgs.append(
+                _("Done! I built %(name)s — %(kind)s.") % {
+                    'name': name,
+                    'kind': kind_parts[0],
+                })
+        else:
+            msgs.append(_("Done! %(name)s is ready.") % {'name': name})
 
-        # Summary sentence
-        summary_line = (' ' + summary) if summary else ''
+        # Bubble 2 — one-line summary or interaction model
+        detail = summary or (
+            _('Interaction: %s') % interaction if interaction else '')
+        if detail:
+            msgs.append(detail[:120])
 
-        # Interaction model
-        interaction_line = ''
-        if interaction:
-            interaction_line = ' ' + _('Interaction: %s.') % interaction
+        # Bubble 3 — first learner step or feature as a teaser
+        teaser = next(iter(learner_steps or features), '')
+        if teaser:
+            msgs.append('• %s' % str(teaser)[:100])
 
-        # First 2 learner steps or features
-        bullet_items = (learner_steps or features)[:2]
-        bullets = ''
-        if bullet_items:
-            bullets = '\n' + '\n'.join(
-                '• %s' % step for step in bullet_items)
+        # Final bubble — action prompt
+        msgs.append(_('Click anywhere in the preview to pick a target, '
+                       'then tell me what to change.'))
 
-        # Closer
-        closer = '\n\n' + _(
-            'Click any part of the preview to select it, then '
-            'describe your change. Or type a refinement below.')
-
-        return (opener + kind_line + summary_line
-                + interaction_line + bullets + closer)
+        return msgs
 
     def _update_sidebar_challenges(self, result, plan):
         """Replace the learning sidebar challenge cards with activity-specific ones."""
