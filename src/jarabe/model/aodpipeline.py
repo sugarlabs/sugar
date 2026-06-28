@@ -414,6 +414,10 @@ def _generate_activity_source_with_provider(provider, spec, plan, references,
             0.65,
             'Validation failed on attempt %d; retrying' % attempt,
         )
+        # Brief backoff before the next attempt so we don't hammer the
+        # provider immediately after a validation failure (1s, 2s, 4s…).
+        if attempt < _CODEGEN_ATTEMPT_LIMIT:
+            time.sleep(min(2.0 ** (attempt - 1), 4.0))
 
     return None, last_error, _CODEGEN_ATTEMPT_LIMIT
 

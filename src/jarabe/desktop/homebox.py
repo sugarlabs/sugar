@@ -339,6 +339,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._studio_prompt_labels = []
         self._preview_content_box = None
         self._live_preview_canvas = None
+        self._live_preview_activity = None
         self._preview_empty_title = None
         self._preview_empty_note = None
         self._preview_generation_spinner = None
@@ -1415,6 +1416,12 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         for child in self._preview_content_box.get_children():
             self._preview_content_box.remove(child)
         self._live_preview_canvas = None
+        if self._live_preview_activity is not None:
+            try:
+                self._live_preview_activity.cleanup()
+            except Exception:
+                pass
+            self._live_preview_activity = None
         self._preview_empty_title = None
         self._preview_empty_note = None
         self._preview_generation_spinner = None
@@ -4897,6 +4904,7 @@ if clipboard.wait_is_text_available():
         box.pack_start(canvas, True, True, 0)
 
         self._live_preview_canvas = canvas
+        self._live_preview_activity = preview
         self._preview_content_box.pack_start(shell, True, True, 0)
         shell.show_all()
         return True

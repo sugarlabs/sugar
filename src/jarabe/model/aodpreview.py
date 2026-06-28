@@ -16,6 +16,7 @@ generated code to run without D-Bus, the Sugar shell, or the Journal.
 import logging
 import os
 import re
+import shutil
 import tempfile
 
 import gi
@@ -210,6 +211,13 @@ class PreviewActivity(Gtk.Window):
 
     def get_documents_path(self):
         return tempfile.gettempdir()
+
+    def cleanup(self):
+        """Remove the temporary activity root directory if one was created."""
+        root = self._activity_root
+        if root and os.path.isdir(root):
+            shutil.rmtree(root, ignore_errors=True)
+        self._activity_root = ''
 
     def write_file(self, file_path):
         pass

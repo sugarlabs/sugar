@@ -5,12 +5,17 @@
 from dataclasses import dataclass
 import os
 import re
+import threading
 
 
 DEFAULT_ACTIVITY_ROOTS = (
     '/usr/share/sugar/activities',
     os.path.expanduser('~/Activities'),
 )
+
+_corpus_cache = None
+_corpus_lock = threading.Lock()
+_corpus_mtime = 0.0
 
 
 @dataclass(frozen=True)
@@ -22,8 +27,35 @@ class RagDocument:
 
 
 def build_corpus(activity_roots=None):
-    documents = list(_REFERENCE_DOCUMENTS)
+    """Build corpus of RAG documents from installed Sugar activities.
+
+    Result is cached at process level and invalidated when activity bundles
+    are added or removed. Pass activity_roots to force a rebuild with
+    different roots.
+    """
+    global _corpus_cache, _corpus_mtime
+
     roots = activity_roots or DEFAULT_ACTIVITY_ROOTS
+
+    # If custom roots provided, bypass cache
+    if activity_roots is not None:
+        return _build_corpus_uncached(roots)
+
+    # Check if we can use cached corpus
+    with _corpus_lock:
+        current_mtime = _get_roots_mtime(roots)
+        if _corpus_cache is not None and current_mtime == _corpus_mtime:
+            return _corpus_cache
+
+        # Cache miss or invalidated — rebuild
+        documents = _build_corpus_uncached(roots)
+        _corpus_cache = documents
+        _corpus_mtime = current_mtime
+        return documents
+
+
+def _build_corpus_uncached(roots):
+    documents = list(_REFERENCE_DOCUMENTS)
 
     for root in roots:
         if not os.path.isdir(root):
@@ -76,6 +108,23 @@ def build_corpus(activity_roots=None):
                 ))
 
     return documents
+
+
+def _get_roots_mtime(roots):
+    """Return max mtime of all activity bundle directories under roots."""
+    latest = 0.0
+    for root in roots:
+        if not os.path.isdir(root):
+            continue
+        try:
+            for bundle_name in os.listdir(root):
+                bundle_path = os.path.join(root, bundle_name)
+                if os.path.isdir(bundle_path):
+                    stat = os.stat(bundle_path)
+                    latest = max(latest, stat.st_mtime)
+        except OSError:
+            continue
+    return latest
 
 
 def search(query, limit=5, template='', corpus=None):
