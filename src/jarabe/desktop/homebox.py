@@ -323,10 +323,6 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._sidebar_visible = True
         self._sidebar_toggle_button = None
         self._sidebar_revealer = None
-        self._sidebar_anim_id = 0
-        self._sidebar_anim_from_w = 0
-        self._sidebar_anim_to_w = 0
-        self._sidebar_anim_start_us = 0
         self._template_hint = None
         self._planner_hint = None
         self._provider_combo = None
@@ -1107,7 +1103,16 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         body.pack_start(self._create_studio_preview_panel(),
                         True, True, 0)
         self._studio_right_panel = self._create_learning_sidebar()
-        body.pack_start(self._studio_right_panel, False, False, 0)
+        self._sidebar_revealer = Gtk.Revealer()
+        self._sidebar_revealer.set_transition_type(
+            Gtk.RevealerTransitionType.SLIDE_LEFT)
+        self._sidebar_revealer.set_transition_duration(260)
+        self._sidebar_revealer.add(self._studio_right_panel)
+        self._sidebar_revealer.set_reveal_child(True)
+        self._sidebar_revealer.show()
+        self._sidebar_revealer.connect(
+            'notify::child-revealed', self.__sidebar_reveal_done_cb)
+        body.pack_start(self._sidebar_revealer, False, False, 0)
 
         footer = Gtk.HBox(spacing=style.zoom(8))
         footer.get_style_context().add_class('create-ai-studio-footer')
@@ -7550,14 +7555,21 @@ if clipboard.wait_is_text_available():
         if self._preview_is_fullscreen:
             if self._studio_left_panel is not None:
                 self._studio_left_panel.hide()
-            self._sidebar_snap(False)
+            if self._sidebar_revealer is not None:
+                self._sidebar_revealer.set_transition_duration(0)
+                self._sidebar_revealer.set_reveal_child(False)
+                self._sidebar_revealer.set_transition_duration(260)
             if self._preview_fullscreen_button is not None:
                 self._preview_fullscreen_button.set_label(
                     _('⛶ Exit Fullscreen'))
         else:
             if self._studio_left_panel is not None:
                 self._studio_left_panel.show()
-            self._sidebar_snap(self._sidebar_visible)
+            if self._sidebar_revealer is not None:
+                self._sidebar_revealer.set_transition_duration(0)
+                self._sidebar_revealer.set_reveal_child(
+                    self._sidebar_visible)
+                self._sidebar_revealer.set_transition_duration(260)
             if self._preview_fullscreen_button is not None:
                 self._preview_fullscreen_button.set_label(
                     _('⛶ Fullscreen'))
@@ -7568,73 +7580,11 @@ if clipboard.wait_is_text_available():
         if self._sidebar_toggle_button is not None:
             self._sidebar_toggle_button.set_label(
                 _('◀ Sidebar') if self._sidebar_visible else _('▶ Sidebar'))
-        self._animate_sidebar(self._sidebar_visible)
+        if self._sidebar_revealer is not None:
+            self._sidebar_revealer.set_reveal_child(self._sidebar_visible)
 
-    def _sidebar_full_width(self):
-        return style.zoom(260)
-
-    def _sidebar_snap(self, visible):
-        """Instantly set sidebar to its final state (no animation)."""
-        if self._sidebar_anim_id:
-            GLib.source_remove(self._sidebar_anim_id)
-            self._sidebar_anim_id = 0
-        if self._studio_right_panel is None:
-            return
-        if visible:
-            self._studio_right_panel.set_size_request(
-                self._sidebar_full_width(), -1)
-            self._studio_right_panel.show()
-        else:
-            self._studio_right_panel.set_size_request(0, -1)
-            self._studio_right_panel.hide()
-
-    def _animate_sidebar(self, opening):
-        """Slide the sidebar open or closed with a smoothstep ease (250ms)."""
-        if self._sidebar_anim_id:
-            GLib.source_remove(self._sidebar_anim_id)
-            self._sidebar_anim_id = 0
-
-        full_w = self._sidebar_full_width()
-        panel = self._studio_right_panel
-        if panel is None:
-            return
-
-        req = panel.get_size_request()[0]
-        from_w = req if req >= 0 else (0 if opening else full_w)
-        to_w = full_w if opening else 0
-
-        if opening:
-            panel.set_size_request(from_w, -1)
-            panel.show()
-
-        self._sidebar_anim_from_w = from_w
-        self._sidebar_anim_to_w = to_w
-        self._sidebar_anim_start_us = GLib.get_monotonic_time()
-        self._sidebar_anim_id = GLib.timeout_add(
-            16, self._sidebar_anim_tick)
-
-    def _sidebar_anim_tick(self):
-        elapsed_ms = (GLib.get_monotonic_time()
-                      - self._sidebar_anim_start_us) / 1000.0
-        t = min(1.0, elapsed_ms / 250.0)
-        # smoothstep: gentle ease-in then ease-out
-        t = t * t * (3.0 - 2.0 * t)
-
-        w = int(round(self._sidebar_anim_from_w
-                      + (self._sidebar_anim_to_w
-                         - self._sidebar_anim_from_w) * t))
-
-        panel = self._studio_right_panel
-        if panel is not None:
-            panel.set_size_request(w, -1)
-
-        if t >= 1.0:
-            self._sidebar_anim_id = 0
-            if self._sidebar_anim_to_w == 0 and panel is not None:
-                panel.hide()
-            self._refresh_preview_layout()
-            return False
-        return True
+    def __sidebar_reveal_done_cb(self, revealer, _param):
+        self._refresh_preview_layout()
 
     def _refresh_preview_layout(self):
         GObject.idle_add(self.__do_refresh_preview_layout)
