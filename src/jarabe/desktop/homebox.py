@@ -581,32 +581,6 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         container.pack_start(template_hint, False, False, style.zoom(1))
         template_hint.show()
 
-        learner_row = Gtk.HBox(spacing=style.zoom(24))
-        learner_row.set_halign(Gtk.Align.CENTER)
-        container.pack_start(learner_row, False, False, style.zoom(4))
-        learner_row.show()
-
-        learner_row.pack_start(self._create_option_group(
-            _('Who learns'),
-            'age_band',
-            [
-                ('primary', _('Ages 6–9'), _('Early\nprimary')),
-                ('middle', _('Ages 10–13'), _('Upper primary /\nmiddle')),
-                ('senior', _('Ages 14+'), _('Secondary\n& higher')),
-                ('all', _('Any age'), _('Adapt to\nall learners')),
-            ],
-            'all', card_width=96), False, False, 0)
-
-        learner_row.pack_start(self._create_option_group(
-            _('How they work'),
-            'collab',
-            [
-                ('solo', _('Solo maker'), _('One learner\nbuilds & reflects')),
-                ('pair', _('Peer pair'), _('Two learners\ncollaborate')),
-                ('class', _('Whole class'), _('Teacher-led\nwith the group')),
-            ],
-            'solo', card_width=108), False, False, 0)
-
         planner_options = Gtk.HBox(spacing=style.zoom(14))
         planner_options.set_halign(Gtk.Align.CENTER)
         container.pack_start(planner_options, False, False, style.zoom(4))
@@ -882,28 +856,11 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         row.pack_start(remove_button, False, False, 0)
         remove_button.show()
 
-        # Advanced row: model + endpoint (shown only when provider needs it)
-        adv_row = Gtk.HBox(spacing=style.zoom(8))
-        adv_row.set_halign(Gtk.Align.CENTER)
-        selector.pack_start(adv_row, False, False, 0)
-
-        model_entry = Gtk.Entry()
-        self._provider_model_entry = model_entry
-        model_entry.set_placeholder_text(_('Model override (optional)'))
-        model_entry.set_size_request(style.zoom(240), style.zoom(40))
-        model_entry.get_style_context().add_class('create-ai-provider-entry')
-        adv_row.pack_start(model_entry, False, False, 0)
-        model_entry.show()
-
-        endpoint_entry = Gtk.Entry()
-        self._provider_endpoint_entry = endpoint_entry
-        endpoint_entry.set_placeholder_text(_('Endpoint URL (optional)'))
-        endpoint_entry.set_tooltip_text(
-            _('Provider API base URL, or Ollama /api/generate address.'))
-        endpoint_entry.set_size_request(style.zoom(300), style.zoom(40))
-        endpoint_entry.get_style_context().add_class('create-ai-provider-entry')
-        adv_row.pack_start(endpoint_entry, False, False, 0)
-        endpoint_entry.show()
+        # Keep model/endpoint widgets as non-visible stubs so the save
+        # callback can still read them without crashing.
+        self._provider_model_entry = Gtk.Entry()
+        self._provider_endpoint_entry = Gtk.Entry()
+        adv_row = None
 
         # model_switch_row (opencode-go specific)
         model_switch_row = Gtk.HBox(spacing=style.zoom(6))
@@ -933,7 +890,6 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         selector.pack_start(status, False, False, 0)
         status.show()
 
-        self._provider_adv_row = adv_row
         self._update_provider_controls()
         selector.show()
         return selector
@@ -4479,20 +4435,10 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         cloud_provider = provider_name in (
             'freemodel', 'openrouter', 'gemini', 'openai', 'deepseek',
             'qwen', 'moonshot', 'opencode', 'opencode-go', 'claude')
-        model_provider = cloud_provider or provider_name == 'ollama'
-        needs_adv = model_provider  # show advanced row for any provider with model/endpoint
 
         self._provider_key_entry.set_sensitive(cloud_provider)
         self._provider_paste_button.set_sensitive(cloud_provider)
-        self._provider_model_entry.set_sensitive(model_provider)
-        self._provider_endpoint_entry.set_sensitive(model_provider)
         self._provider_remove_button.set_sensitive(False)
-
-        if self._provider_adv_row is not None:
-            if needs_adv:
-                self._provider_adv_row.show()
-            else:
-                self._provider_adv_row.hide()
 
         if self._provider_model_switch_row is not None:
             if provider_name == 'opencode-go':
