@@ -376,6 +376,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._live_edit_on_button = None
         self._live_edit_off_button = None
         self._live_edit_enabled = True
+        self._live_edit_handler_ids = []
+        self._live_edit_highlighted = None
         self._chat_messages_box = None
         self._chat_entry = None
         self._chat_scroll = None
@@ -1411,6 +1413,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         return preview
 
     def _clear_activity_preview(self):
+        self._detach_live_edit_handlers()
         if self._preview_content_box is None:
             return
         for child in self._preview_content_box.get_children():
@@ -4039,6 +4042,10 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             button.create-ai-preview-change label {
                 color: %(studio_lavender_text)s;
             }
+            .live-edit-selected {
+                border: 2px solid rgba(255, 200, 0, 0.85);
+                border-radius: 3px;
+            }
             .create-ai-learning-sidebar {
                 border-radius: 12px;
                 border: 1px solid %(studio_edge)s;
@@ -4236,7 +4243,128 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             self._live_edit_status_label.set_text(
                 _('Target selected: %s') % target)
 
+    def _attach_live_edit_handlers_to_preview(self, canvas, toolbar):
+        """Walk the live preview widget tree and attach click-to-select handlers."""
+        self._detach_live_edit_handlers()
+        if isinstance(toolbar, Gtk.Widget):
+            self._walk_and_attach_live_edit(toolbar, in_toolbar=True)
+        if isinstance(canvas, Gtk.Widget):
+            self._walk_and_attach_live_edit(canvas, in_toolbar=False)
+
+    def _detach_live_edit_handlers(self):
+        if self._live_edit_highlighted is not None:
+            try:
+                self._live_edit_highlighted.get_style_context().remove_class(
+                    'live-edit-selected')
+            except Exception:
+                pass
+            self._live_edit_highlighted = None
+        for widget, handler_id in self._live_edit_handler_ids:
+            try:
+                widget.disconnect(handler_id)
+            except Exception:
+                pass
+        self._live_edit_handler_ids = []
+
+    def _walk_and_attach_live_edit(self, widget, in_toolbar=False, depth=0):
+        if depth > 12:
+            return
+        desc = self._describe_widget_for_live_edit(widget, in_toolbar)
+        if desc:
+            try:
+                widget.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+                hid = widget.connect(
+                    'button-press-event',
+                    self.__live_edit_widget_press_cb,
+                    desc,
+                )
+                self._live_edit_handler_ids.append((widget, hid))
+            except Exception:
+                pass
+        # Recurse into children
+        if isinstance(widget, Gtk.Toolbar):
+            for i in range(widget.get_n_items()):
+                item = widget.get_nth_item(i)
+                if item is not None:
+                    self._walk_and_attach_live_edit(item, True, depth + 1)
+        elif isinstance(widget, Gtk.ToolItem):
+            child = widget.get_child()
+            if child is not None:
+                self._walk_and_attach_live_edit(child, True, depth + 1)
+        elif isinstance(widget, Gtk.Notebook):
+            for i in range(widget.get_n_pages()):
+                page = widget.get_nth_page(i)
+                if page is not None:
+                    self._walk_and_attach_live_edit(page, False, depth + 1)
+        elif isinstance(widget, Gtk.Stack):
+            visible = widget.get_visible_child()
+            if visible is not None:
+                self._walk_and_attach_live_edit(visible, False, depth + 1)
+        elif hasattr(widget, 'get_children'):
+            for child in widget.get_children():
+                self._walk_and_attach_live_edit(child, in_toolbar, depth + 1)
+
+    def _describe_widget_for_live_edit(self, widget, in_toolbar):
+        """Return a human-readable target name for a widget, or None to skip."""
+        if isinstance(widget, Gtk.DrawingArea):
+            return _('drawing canvas')
+        if isinstance(widget, Gtk.ToolButton):
+            tip = (widget.get_tooltip_text() or '').strip()
+            lbl = (widget.get_label() or '').strip()
+            name = tip or lbl
+            return (_('toolbar: %s') % name) if name else _('toolbar button')
+        if isinstance(widget, Gtk.SpinButton):
+            return _('number input')
+        if isinstance(widget, Gtk.Button):
+            lbl = (widget.get_label() or '').strip()
+            tip = (widget.get_tooltip_text() or '').strip()
+            name = lbl or tip
+            if name:
+                return ((_('toolbar button: %s') % name)
+                        if in_toolbar
+                        else (_('button: %s') % name[:40]))
+            return _('toolbar button') if in_toolbar else _('button')
+        if isinstance(widget, Gtk.Entry):
+            ph = (widget.get_placeholder_text() or '').strip()
+            return (_('input: %s') % ph[:40]) if ph else _('text input')
+        if isinstance(widget, Gtk.TextView):
+            return _('text area')
+        if isinstance(widget, Gtk.Scale):
+            return _('slider')
+        if isinstance(widget, Gtk.Label):
+            text = (widget.get_text() or '').strip()
+            if text and not text.startswith('<') and len(text) > 2:
+                return _('label: %s') % text[:30]
+            return None
+        if isinstance(widget, (Gtk.Toolbar, Gtk.ToolbarBox)):
+            return _('activity toolbar')
+        if isinstance(widget, Gtk.Grid):
+            return _('grid')
+        return None
+
+    def __live_edit_widget_press_cb(self, widget, event, description):
+        if not self._live_edit_enabled:
+            return False
+        self._set_live_edit_target(description)
+        if self._live_edit_highlighted is not None:
+            try:
+                self._live_edit_highlighted.get_style_context().remove_class(
+                    'live-edit-selected')
+            except Exception:
+                pass
+        self._live_edit_highlighted = widget
+        try:
+            widget.get_style_context().add_class('live-edit-selected')
+        except Exception:
+            pass
+        return True  # stop propagation so outer shell doesn't overwrite target
+
     def __preview_target_button_press_event_cb(self, widget, event, target):
+        if self._live_edit_enabled:
+            self._set_live_edit_target(target)
+        return False
+
+
         if self._live_edit_enabled:
             self._set_live_edit_target(target)
         return False
@@ -4905,6 +5033,10 @@ if clipboard.wait_is_text_available():
 
         self._live_preview_canvas = canvas
         self._live_preview_activity = preview
+        self._attach_live_edit_handlers_to_preview(
+            canvas,
+            toolbar if isinstance(toolbar, Gtk.Widget) else None,
+        )
         self._preview_content_box.pack_start(shell, True, True, 0)
         shell.show_all()
         return True
