@@ -388,6 +388,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._sidebar_chat_scroll = None
         self._sidebar_refine_entry = None
         self._sidebar_refine_status_label = None
+        self._sidebar_challenge_box = None
+        self._sidebar_level_label = None
         self._prompt_is_placeholder = False
         self._preview_is_fullscreen = False
         self._preview_fullscreen_button = None
@@ -2933,21 +2935,23 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         tabs.pack_start(self._create_sidebar_tab(_('Annotations'), False),
                         True, True, 0)
 
-        level = Gtk.Label(_('Level 1 unlocked - 8 starter challenges'))
-        level.get_style_context().add_class('create-ai-meta-label')
-        level.set_xalign(0)
-        box.pack_start(level, False, False, 0)
-        level.show()
+        self._sidebar_level_label = Gtk.Label(
+            _('Level 1 unlocked - 8 starter challenges'))
+        self._sidebar_level_label.get_style_context().add_class(
+            'create-ai-meta-label')
+        self._sidebar_level_label.set_xalign(0)
+        box.pack_start(self._sidebar_level_label, False, False, 0)
+        self._sidebar_level_label.show()
 
         scroll = Gtk.ScrolledWindow()
         scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         box.pack_start(scroll, True, True, 0)
         scroll.show()
 
-        challenge_box = Gtk.VBox(spacing=style.zoom(8))
-        challenge_box.set_border_width(style.zoom(2))
-        scroll.add_with_viewport(challenge_box)
-        challenge_box.show()
+        self._sidebar_challenge_box = Gtk.VBox(spacing=style.zoom(8))
+        self._sidebar_challenge_box.set_border_width(style.zoom(2))
+        scroll.add_with_viewport(self._sidebar_challenge_box)
+        self._sidebar_challenge_box.show()
 
         challenges = [
             _('Rename the activity title in your own words.'),
@@ -2960,8 +2964,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             _('Export when the preview feels ready.'),
         ]
         for text in challenges:
-            challenge_box.pack_start(self._create_challenge_card(text),
-                                     False, False, 0)
+            self._sidebar_challenge_box.pack_start(
+                self._create_challenge_card(text), False, False, 0)
 
         panel.show()
         return panel
@@ -4271,6 +4275,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             return
         desc = self._describe_widget_for_live_edit(widget, in_toolbar)
         if desc:
+            # Leaf/interactive widget — attach handler and stop recursing
             try:
                 widget.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
                 hid = widget.connect(
@@ -4281,7 +4286,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
                 self._live_edit_handler_ids.append((widget, hid))
             except Exception:
                 pass
-        # Recurse into children
+            return  # Don't recurse into interactive widget's internal children
+        # Container widget — recurse into children
         if isinstance(widget, Gtk.Toolbar):
             for i in range(widget.get_n_items()):
                 item = widget.get_nth_item(i)
@@ -4301,7 +4307,11 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             if visible is not None:
                 self._walk_and_attach_live_edit(visible, False, depth + 1)
         elif hasattr(widget, 'get_children'):
-            for child in widget.get_children():
+            try:
+                children = widget.get_children()
+            except Exception:
+                return
+            for child in children:
                 self._walk_and_attach_live_edit(child, in_toolbar, depth + 1)
 
     def _describe_widget_for_live_edit(self, widget, in_toolbar):
@@ -5033,12 +5043,18 @@ if clipboard.wait_is_text_available():
 
         self._live_preview_canvas = canvas
         self._live_preview_activity = preview
-        self._attach_live_edit_handlers_to_preview(
-            canvas,
-            toolbar if isinstance(toolbar, Gtk.Widget) else None,
-        )
         self._preview_content_box.pack_start(shell, True, True, 0)
         shell.show_all()
+        GObject.idle_add(self._refresh_preview_layout)
+        # Attach live-edit handlers after the shell is shown so any failure
+        # here never blanks the preview.
+        try:
+            self._attach_live_edit_handlers_to_preview(
+                canvas,
+                toolbar if isinstance(toolbar, Gtk.Widget) else None,
+            )
+        except Exception:
+            logging.exception('Could not attach live edit handlers to preview')
         return True
 
     def _detach_preview_widget(self, widget):
@@ -7238,14 +7254,180 @@ if clipboard.wait_is_text_available():
             self._selected_version = self._aod_active_revision_id
         self._refresh_version_history()
         self._append_chat_status(provider_status)
-        self._append_chat_status(
-            _('Generated. Select a part or type a refinement.'))
+        self._append_chat_message(
+            self._build_generation_chat_response(result, plan),
+            from_user=False,
+        )
         self._set_chat_entry_sensitive(True)
         self._append_sidebar_status(provider_status)
         self._append_sidebar_message(
             _('Generated. Type another prompt here to refine '
               'this activity.'))
+        self._update_sidebar_challenges(result, plan)
         return False
+
+    def _build_generation_chat_response(self, result, plan):
+        """Build a conversational AI response describing what was generated."""
+        spec = result.spec
+        name = spec.name or _('the activity')
+        summary = plan.get('summary', '')
+        activity_kind = plan.get('activity_kind', '')
+        interaction = plan.get('interaction_model', '')
+        template = plan.get('template', '')
+        learner_steps = plan.get('learner_steps') or []
+        features = plan.get('features') or []
+
+        # Opener
+        opener = _("I've built %(name)s for you!") % {'name': name}
+
+        # What kind of activity
+        kind_parts = [p for p in (activity_kind, template) if p]
+        kind_line = ''
+        if kind_parts:
+            kind_line = ' ' + _('It\'s a %s.') % ' / '.join(kind_parts)
+
+        # Summary sentence
+        summary_line = (' ' + summary) if summary else ''
+
+        # Interaction model
+        interaction_line = ''
+        if interaction:
+            interaction_line = ' ' + _('Interaction: %s.') % interaction
+
+        # First 2 learner steps or features
+        bullet_items = (learner_steps or features)[:2]
+        bullets = ''
+        if bullet_items:
+            bullets = '\n' + '\n'.join(
+                '• %s' % step for step in bullet_items)
+
+        # Closer
+        closer = '\n\n' + _(
+            'Click any part of the preview to select it, then '
+            'describe your change. Or type a refinement below.')
+
+        return (opener + kind_line + summary_line
+                + interaction_line + bullets + closer)
+
+    def _update_sidebar_challenges(self, result, plan):
+        """Replace the learning sidebar challenge cards with activity-specific ones."""
+        if self._sidebar_challenge_box is None:
+            return
+
+        for child in self._sidebar_challenge_box.get_children():
+            self._sidebar_challenge_box.remove(child)
+
+        challenges = self._build_activity_challenges(result, plan)
+
+        for text in challenges:
+            card = self._create_challenge_card(text)
+            self._sidebar_challenge_box.pack_start(card, False, False, 0)
+            card.show_all()
+
+        if self._sidebar_level_label is not None:
+            count = len(challenges)
+            self._sidebar_level_label.set_text(
+                _('Level 1 unlocked - %(count)d challenges') % {
+                    'count': count})
+
+    def _build_activity_challenges(self, result, plan):
+        """Return a list of activity-specific challenge strings from the plan."""
+        template = plan.get('template', '').lower()
+        activity_kind = plan.get('activity_kind', '').lower()
+        interaction = plan.get('interaction_model', '').lower()
+        features = [str(f).lower() for f in (plan.get('features') or [])]
+        learner_steps = [str(s) for s in (plan.get('learner_steps') or [])]
+        spec = result.spec
+        name = spec.name or _('the activity')
+
+        challenges = []
+
+        # 1 — always: rename the title to something personal
+        challenges.append(
+            _('Rename the activity title to reflect your own topic.'))
+
+        # 2 — learner steps → suggest modifying one of them
+        if learner_steps:
+            step_hint = learner_steps[0]
+            challenges.append(
+                _('Find the code that handles: "%(step)s" and add a hint '
+                  'message for the learner.') % {'step': step_hint})
+
+        # 3 — template/kind specific
+        if 'chess' in template or 'chess' in activity_kind:
+            challenges.append(
+                _('Locate the move-validation logic and add a console print '
+                  'for each illegal move attempt.'))
+            challenges.append(
+                _('Change the board colors and explain why you chose them.'))
+        elif 'carrom' in template or 'carrom' in activity_kind:
+            challenges.append(
+                _('Find where the striker is drawn and change its color.'))
+            challenges.append(
+                _('Locate the score counter and add a "foul" penalty.'))
+        elif 'draw' in template or 'paint' in template or 'draw' in activity_kind:
+            challenges.append(
+                _('Change the default brush size and add a label showing '
+                  'the current size.'))
+            challenges.append(
+                _('Add a "Clear canvas" button that resets the drawing.'))
+        elif 'quiz' in template or 'quiz' in activity_kind:
+            challenges.append(
+                _('Add one new question and answer to the quiz data.'))
+            challenges.append(
+                _('Change the feedback message shown when a learner answers '
+                  'incorrectly.'))
+        elif 'puzzle' in template or 'puzzle' in activity_kind:
+            challenges.append(
+                _('Find where the puzzle pieces are created and change one '
+                  "piece's image or color."))
+        elif 'story' in template or 'story' in activity_kind:
+            challenges.append(
+                _('Replace one paragraph of the story with your own version.'))
+            challenges.append(
+                _('Add a learner name field that appears at the start of '
+                  'the story.'))
+        else:
+            # Generic fallbacks for unknown templates
+            challenges.append(
+                _('Find the main label or title widget and personalise the '
+                  'text.'))
+            challenges.append(
+                _('Change one button label to make it more descriptive for '
+                  'learners.'))
+
+        # 4 — interaction-model specific
+        if 'turn' in interaction or 'multiplayer' in interaction:
+            challenges.append(
+                _('Find where turns are tracked and add a visual indicator '
+                  'showing whose turn it is.'))
+        elif 'timed' in interaction or 'timer' in interaction:
+            challenges.append(
+                _('Locate the timer logic and change the countdown duration.'))
+
+        # 5 — feature-based
+        if any('journal' in f for f in features):
+            challenges.append(
+                _('Trace the write_file / read_file methods and describe '
+                  'what data is saved to the Journal.'))
+        if any('score' in f for f in features):
+            challenges.append(
+                _('Find the score variable and add a "high score" display '
+                  'that persists across sessions.'))
+        if any('color' in f or 'colour' in f for f in features):
+            challenges.append(
+                _('Change the color scheme in the activity and note which '
+                  'variable controls each color.'))
+
+        # 6 — always: Journal connection and export
+        challenges.append(
+            _('Describe what %(name)s teaches and why it matters for '
+              'learners your age.') % {'name': name})
+        challenges.append(
+            _('Export the activity and test it by opening the XO file '
+              'in another window.'))
+
+        return challenges[:8]
 
     def _generation_provider_status_text(self, result, plan):
         fallback_reason = plan.get('provider_fallback_reason', '')
