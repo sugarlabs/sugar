@@ -320,6 +320,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._code_size_combo = None
         self._sidebar_visible = True
         self._sidebar_toggle_button = None
+        self._sidebar_revealer = None
         self._template_hint = None
         self._planner_hint = None
         self._provider_combo = None
@@ -1098,7 +1099,14 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         body.pack_start(self._create_studio_preview_panel(),
                         True, True, 0)
         self._studio_right_panel = self._create_learning_sidebar()
-        body.pack_start(self._studio_right_panel, False, False, 0)
+        self._sidebar_revealer = Gtk.Revealer()
+        self._sidebar_revealer.set_transition_type(
+            Gtk.RevealerTransitionType.SLIDE_LEFT)
+        self._sidebar_revealer.set_transition_duration(200)
+        self._sidebar_revealer.add(self._studio_right_panel)
+        self._sidebar_revealer.set_reveal_child(True)
+        self._sidebar_revealer.show()
+        body.pack_start(self._sidebar_revealer, False, False, 0)
 
         footer = Gtk.HBox(spacing=style.zoom(8))
         footer.get_style_context().add_class('create-ai-studio-footer')
@@ -7503,17 +7511,17 @@ if clipboard.wait_is_text_available():
         if self._preview_is_fullscreen:
             if self._studio_left_panel is not None:
                 self._studio_left_panel.hide()
-            if self._studio_right_panel is not None:
-                self._studio_right_panel.hide()
+            if self._sidebar_revealer is not None:
+                self._sidebar_revealer.set_reveal_child(False)
             if self._preview_fullscreen_button is not None:
                 self._preview_fullscreen_button.set_label(
                     _('⛶ Exit Fullscreen'))
         else:
             if self._studio_left_panel is not None:
                 self._studio_left_panel.show()
-            if self._studio_right_panel is not None:
-                if self._sidebar_visible:
-                    self._studio_right_panel.show()
+            if self._sidebar_revealer is not None:
+                self._sidebar_revealer.set_reveal_child(
+                    self._sidebar_visible)
             if self._preview_fullscreen_button is not None:
                 self._preview_fullscreen_button.set_label(
                     _('⛶ Fullscreen'))
@@ -7521,11 +7529,8 @@ if clipboard.wait_is_text_available():
 
     def __sidebar_toggle_cb(self, button):
         self._sidebar_visible = not self._sidebar_visible
-        if self._studio_right_panel is not None:
-            if self._sidebar_visible:
-                self._studio_right_panel.show()
-            else:
-                self._studio_right_panel.hide()
+        if self._sidebar_revealer is not None:
+            self._sidebar_revealer.set_reveal_child(self._sidebar_visible)
         if self._sidebar_toggle_button is not None:
             self._sidebar_toggle_button.set_label(
                 _('◀ Sidebar') if self._sidebar_visible else _('▶ Sidebar'))
