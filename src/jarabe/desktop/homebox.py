@@ -310,6 +310,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._selected_options = {
             'mode': 'make',
             'template': 'logic_math',
+            'age_band': 'all',
+            'collab': 'solo',
             'planner': 'rag',
             'policy': 'standard',
             'validate': 'on',
@@ -537,8 +539,12 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         container.pack_start(options_area, False, False, style.zoom(8))
         options_area.show()
 
+        options_area.pack_start(
+            self._create_section_label(_('Start with')),
+            False, False, style.zoom(2))
+
         options_area.pack_start(self._create_option_group(
-            _('Start with'),
+            '',
             'mode',
             [
                 ('make', _('Make'), _('Create something\nnew')),
@@ -547,17 +553,22 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             ],
             'make'), False, False, 0)
 
+        options_area.pack_start(
+            self._create_section_label(_('Learning area')),
+            False, False, style.zoom(6))
+
         options_area.pack_start(self._create_option_group(
-            _('Learning area'),
+            '',
             'template',
             [
-                ('logic_math', _('Logic & math'), _('Puzzles,\npatterns')),
-                ('tools_utils', _('Tools/utilities'), _('Build helpful\n'
-                                                        'tools')),
+                ('logic_math', _('Logic & math'), _('Puzzles &\npatterns')),
+                ('science', _('Science'), _('Explore &\nmeasure')),
+                ('language', _('Language'), _('Stories &\nwords')),
+                ('tools_utils', _('Tools'), _('Build helpful\ntools')),
                 ('games', _('Games'), _('Play loops\nand score')),
-                ('creation', _('Creation'), _('Make and\nexpress')),
+                ('creation', _('Creation'), _('Make &\nexpress')),
             ],
-            'logic_math'), False, False, 0)
+            'logic_math', card_width=84), False, False, 0)
 
         template_hint = Gtk.Label(
             _('Learning area: logic and math activities for puzzles, patterns, '
@@ -569,6 +580,32 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         container.pack_start(template_hint, False, False, style.zoom(1))
         template_hint.show()
 
+        learner_row = Gtk.HBox(spacing=style.zoom(24))
+        learner_row.set_halign(Gtk.Align.CENTER)
+        container.pack_start(learner_row, False, False, style.zoom(4))
+        learner_row.show()
+
+        learner_row.pack_start(self._create_option_group(
+            _('Who learns'),
+            'age_band',
+            [
+                ('primary', _('Ages 6–9'), _('Early\nprimary')),
+                ('middle', _('Ages 10–13'), _('Upper primary /\nmiddle')),
+                ('senior', _('Ages 14+'), _('Secondary\n& higher')),
+                ('all', _('Any age'), _('Adapt to\nall learners')),
+            ],
+            'all', card_width=96), False, False, 0)
+
+        learner_row.pack_start(self._create_option_group(
+            _('How they work'),
+            'collab',
+            [
+                ('solo', _('Solo maker'), _('One learner\nbuilds & reflects')),
+                ('pair', _('Peer pair'), _('Two learners\ncollaborate')),
+                ('class', _('Whole class'), _('Teacher-led\nwith the group')),
+            ],
+            'solo', card_width=108), False, False, 0)
+
         planner_options = Gtk.HBox(spacing=style.zoom(14))
         planner_options.set_halign(Gtk.Align.CENTER)
         container.pack_start(planner_options, False, False, style.zoom(4))
@@ -579,6 +616,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             'planner',
             [
                 ('rag', _('RAG'), _('Use Sugar\nexamples')),
+                ('direct', _('Direct'), _('No examples,\nfaster')),
             ],
             'rag'), False, False, 0)
 
@@ -586,8 +624,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             _('Policy'),
             'policy',
             [
-                ('standard', _('Standard'),
-                 _('RAG + model\nvalidated')),
+                ('standard', _('Standard'), _('Model\nvalidated')),
+                ('creative', _('Creative'), _('Fewer rules,\nmore flair')),
             ],
             'standard'), False, False, 0)
 
@@ -611,8 +649,15 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         planner_hint.show()
         self._update_planner_hint()
 
-        container.pack_start(self._create_provider_selector(),
-                             False, False, style.zoom(3))
+        provider_expander = Gtk.Expander()
+        provider_expander.set_label(_('LLM provider'))
+        provider_expander.get_style_context().add_class(
+            'create-ai-expander')
+        provider_expander.set_halign(Gtk.Align.CENTER)
+        provider_expander.add(self._create_provider_selector())
+        provider_expander.set_expanded(False)
+        container.pack_start(provider_expander, False, False, style.zoom(3))
+        provider_expander.show_all()
 
         container.pack_start(self._create_license_selector(),
                              False, False, style.zoom(3))
@@ -762,6 +807,13 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         send_btn.show()
 
         return container
+
+    def _create_section_label(self, text):
+        label = Gtk.Label(text)
+        label.get_style_context().add_class('create-ai-section-label')
+        label.set_halign(Gtk.Align.CENTER)
+        label.show()
+        return label
 
     def _create_provider_selector(self):
         selector = Gtk.VBox(spacing=style.zoom(4))
@@ -1026,7 +1078,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         label.get_style_context().add_class('create-ai-option-heading')
         label.set_halign(Gtk.Align.CENTER)
         group.pack_start(label, False, False, 0)
-        label.show()
+        if title:
+            label.show()
 
         row = Gtk.HBox(spacing=style.zoom(7))
         row.set_halign(Gtk.Align.CENTER)
@@ -3503,29 +3556,43 @@ class _CreateAIActivityPanel(Gtk.EventBox):
                 background-color: %(studio_lavender_soft)s;
                 border-color: %(studio_lavender_border)s;
             }
+            .create-ai-section-label {
+                color: %(inactive_stroke)s;
+                font-size: 10px;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+            }
+            .create-ai-expander {
+                color: %(toolbar)s;
+                font-size: 12px;
+            }
             .create-ai-option-heading {
                 color: %(toolbar)s;
                 font-weight: 700;
                 font-size: 12px;
             }
             button.create-ai-option-card {
-                border-radius: 6px;
+                border-radius: 8px;
                 border: 1px solid %(studio_edge)s;
                 background-image: none;
                 background-color: %(studio_surface)s;
                 color: %(toolbar)s;
                 padding: 0;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+                transition: background-color 120ms ease,
+                            border-color 120ms ease,
+                            box-shadow 120ms ease;
             }
             button.create-ai-option-card:hover {
                 background-color: %(studio_lavender_soft)s;
                 border-color: %(studio_lavender_faint)s;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.09);
             }
             button.create-ai-option-card-active {
                 background-color: %(studio_dark)s;
                 border-color: %(studio_dark)s;
                 color: %(studio_dark_text)s;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.13);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
             }
             button.create-ai-option-card-active:hover {
                 background-color: %(studio_dark_hover)s;
@@ -4389,15 +4456,19 @@ class _CreateAIActivityPanel(Gtk.EventBox):
 
         planner_notes = {
             'rag': _('RAG over Sugar activity examples'),
+            'direct': _('direct LLM call, no Sugar examples'),
             'validate': _('local template planning plus AST validation'),
         }
         policy_notes = {
             'standard': _('configured provider, no template fallback'),
+            'creative': _('fewer structural constraints, more expression'),
             'local': _('Ollama when configured, otherwise local templates'),
             'strict': _('fixed local templates without model calls'),
         }
-        planner = planner_notes[self._selected_options['planner']]
-        policy = policy_notes[self._selected_options['policy']]
+        planner = planner_notes.get(self._selected_options['planner'],
+                                    self._selected_options['planner'])
+        policy = policy_notes.get(self._selected_options['policy'],
+                                  self._selected_options['policy'])
         provider = self._get_provider_label(
             self._selected_options['provider'])
         self._planner_hint.set_text(
@@ -4855,17 +4926,22 @@ if clipboard.wait_is_text_available():
             return
 
         notes = {
-            'logic_math': _('Learning area: logic and math activities for '
-                            'puzzles, patterns, and reasoning.'),
-            'tools_utils': _('Learning area: tools and utilities that help '
-                             'learners make, measure, organize, or explore.'),
-            'games': _('Learning area: games with play loops, goals, '
-                       'scoring, and feedback.'),
-            'creation': _('Learning area: creation activities for drawing, '
-                          'writing, building, and expression.'),
+            'logic_math': _('Puzzles, patterns, and reasoning — number games, '
+                            'sequence finders, logic grids.'),
+            'science': _('Experiments and measurement — simulations, data '
+                         'collectors, interactive models.'),
+            'language': _('Stories and words — writing prompts, word games, '
+                          'vocabulary builders, storytelling.'),
+            'tools_utils': _('Tools and utilities — calculators, converters, '
+                             'organizers, exploration helpers.'),
+            'games': _('Play loops and scoring — turn-based games, reflex '
+                       'challenges, board games, simulations.'),
+            'creation': _('Making and expression — drawing canvases, music '
+                          'makers, collage builders, animations.'),
         }
         self._template_hint.set_text(
-            notes[self._selected_options['template']])
+            notes.get(self._selected_options['template'],
+                      self._selected_options['template']))
 
     def _update_license_hint(self):
         if self._license_hint is None:
@@ -6811,12 +6887,28 @@ if clipboard.wait_is_text_available():
         from jarabe.model.aodspec import name_from_prompt
 
         license_info = self._get_selected_license()
+
+        age_band_map = {
+            'primary': 'ages 6-9',
+            'middle': 'ages 10-13',
+            'senior': 'ages 14+',
+            'all': 'all',
+        }
+        age_band = age_band_map.get(
+            self._selected_options.get('age_band', 'all'), 'all')
+
+        collab_prefix = {
+            'pair': _('Two learners collaborate together. '),
+            'class': _('Whole class activity with teacher facilitation. '),
+        }.get(self._selected_options.get('collab', 'solo'), '')
+
         spec = ActivitySpec(
             name=name_from_prompt(prompt),
-            prompt=prompt,
+            prompt=collab_prefix + prompt,
             category=self._selected_options['template'],
             license_id=license_info['spdx'],
             code_size=self._selected_options.get('code_size', 'standard'),
+            age_band=age_band,
         )
         self._submit_generation_spec(
             spec,
@@ -6989,7 +7081,8 @@ if clipboard.wait_is_text_available():
             else:
                 self._sidebar_refine_status_label.set_text(
                     _('Generating activity...'))
-        use_rag = policy not in ('local', 'strict')
+        use_rag = (planner != 'direct'
+                   and policy not in ('local', 'strict'))
         validate_code = self._selected_options.get('validate', 'on') == 'on'
 
         self._detach_generation_job()
