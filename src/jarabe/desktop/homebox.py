@@ -337,6 +337,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._provider_endpoint_entry = None
         self._provider_apply_button = None
         self._provider_remove_button = None
+        self._provider_adv_row = None
         self._provider_status_label = None
         self._provider_test_running = False
         self._license_hint = None
@@ -816,16 +817,12 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         return label
 
     def _create_provider_selector(self):
-        selector = Gtk.VBox(spacing=style.zoom(4))
+        selector = Gtk.VBox(spacing=style.zoom(8))
         selector.set_halign(Gtk.Align.CENTER)
+        selector.set_border_width(style.zoom(8))
 
-        heading = Gtk.Label(_('LLM provider'))
-        heading.get_style_context().add_class('create-ai-option-heading')
-        heading.set_halign(Gtk.Align.CENTER)
-        selector.pack_start(heading, False, False, 0)
-        heading.show()
-
-        row = Gtk.HBox(spacing=style.zoom(7))
+        # Primary row: provider picker + key + save
+        row = Gtk.HBox(spacing=style.zoom(8))
         row.set_halign(Gtk.Align.CENTER)
         selector.pack_start(row, False, False, 0)
         row.show()
@@ -837,7 +834,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         initial_provider = self._initial_provider_option()
         self._selected_options['provider'] = initial_provider
         combo.set_active_id(initial_provider)
-        combo.set_size_request(style.zoom(170), style.zoom(42))
+        combo.set_size_request(style.zoom(180), style.zoom(40))
         combo.get_style_context().add_class('create-ai-provider-combo')
         combo.connect('changed', self.__provider_combo_changed_cb)
         row.pack_start(combo, False, False, 0)
@@ -848,11 +845,11 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         key_entry.set_visibility(False)
         key_entry.set_invisible_char('*')
         key_entry.set_input_purpose(Gtk.InputPurpose.PASSWORD)
-        key_entry.set_placeholder_text(_('API key (masked)'))
+        key_entry.set_placeholder_text(_('API key'))
         key_entry.set_tooltip_text(
-            _('Saved keys stay in the private Sugar profile and are never '
-              'added to generated activities.'))
-        key_entry.set_size_request(style.zoom(245), style.zoom(42))
+            _('Keys stay in your Sugar profile and are never added to '
+              'generated activities.'))
+        key_entry.set_size_request(style.zoom(260), style.zoom(40))
         key_entry.get_style_context().add_class('create-ai-provider-entry')
         key_entry.connect('key-press-event',
                           self.__provider_key_entry_key_press_event_cb)
@@ -863,52 +860,52 @@ class _CreateAIActivityPanel(Gtk.EventBox):
 
         paste_button = Gtk.Button.new_with_label(_('Paste'))
         self._provider_paste_button = paste_button
-        paste_button.set_size_request(style.zoom(75), style.zoom(42))
-        paste_button.set_tooltip_text(_('Paste an API key from the clipboard.'))
-        paste_button.get_style_context().add_class(
-            'create-ai-provider-button')
+        paste_button.set_size_request(style.zoom(72), style.zoom(40))
+        paste_button.get_style_context().add_class('create-ai-provider-button')
         paste_button.connect('clicked', self.__provider_paste_clicked_cb)
         row.pack_start(paste_button, False, False, 0)
         paste_button.show()
 
-        model_entry = Gtk.Entry()
-        self._provider_model_entry = model_entry
-        model_entry.set_placeholder_text(_('Model (optional)'))
-        model_entry.set_size_request(style.zoom(190), style.zoom(42))
-        model_entry.get_style_context().add_class(
-            'create-ai-provider-entry')
-        row.pack_start(model_entry, False, False, 0)
-        model_entry.show()
-
-        endpoint_entry = Gtk.Entry()
-        self._provider_endpoint_entry = endpoint_entry
-        endpoint_entry.set_placeholder_text(_('Endpoint (optional)'))
-        endpoint_entry.set_tooltip_text(
-            _('Use the provider API endpoint, or Ollama /api/generate URL.'))
-        endpoint_entry.set_size_request(style.zoom(245), style.zoom(42))
-        endpoint_entry.get_style_context().add_class(
-            'create-ai-provider-entry')
-        row.pack_start(endpoint_entry, False, False, 0)
-        endpoint_entry.show()
-
-        apply_button = Gtk.Button.new_with_label(_('Save & test'))
+        apply_button = Gtk.Button.new_with_label(_('Save'))
         self._provider_apply_button = apply_button
-        apply_button.set_size_request(style.zoom(125), style.zoom(42))
-        apply_button.get_style_context().add_class(
-            'create-ai-provider-button')
+        apply_button.set_size_request(style.zoom(72), style.zoom(40))
+        apply_button.get_style_context().add_class('create-ai-provider-button')
         apply_button.connect('clicked', self.__provider_apply_clicked_cb)
         row.pack_start(apply_button, False, False, 0)
         apply_button.show()
 
-        remove_button = Gtk.Button.new_with_label(_('Remove key'))
+        remove_button = Gtk.Button.new_with_label(_('Remove'))
         self._provider_remove_button = remove_button
-        remove_button.set_size_request(style.zoom(115), style.zoom(42))
-        remove_button.get_style_context().add_class(
-            'create-ai-provider-button')
+        remove_button.set_size_request(style.zoom(80), style.zoom(40))
+        remove_button.get_style_context().add_class('create-ai-provider-button')
         remove_button.connect('clicked', self.__provider_remove_clicked_cb)
         row.pack_start(remove_button, False, False, 0)
         remove_button.show()
 
+        # Advanced row: model + endpoint (shown only when provider needs it)
+        adv_row = Gtk.HBox(spacing=style.zoom(8))
+        adv_row.set_halign(Gtk.Align.CENTER)
+        selector.pack_start(adv_row, False, False, 0)
+
+        model_entry = Gtk.Entry()
+        self._provider_model_entry = model_entry
+        model_entry.set_placeholder_text(_('Model override (optional)'))
+        model_entry.set_size_request(style.zoom(240), style.zoom(40))
+        model_entry.get_style_context().add_class('create-ai-provider-entry')
+        adv_row.pack_start(model_entry, False, False, 0)
+        model_entry.show()
+
+        endpoint_entry = Gtk.Entry()
+        self._provider_endpoint_entry = endpoint_entry
+        endpoint_entry.set_placeholder_text(_('Endpoint URL (optional)'))
+        endpoint_entry.set_tooltip_text(
+            _('Provider API base URL, or Ollama /api/generate address.'))
+        endpoint_entry.set_size_request(style.zoom(300), style.zoom(40))
+        endpoint_entry.get_style_context().add_class('create-ai-provider-entry')
+        adv_row.pack_start(endpoint_entry, False, False, 0)
+        endpoint_entry.show()
+
+        # model_switch_row (opencode-go specific)
         model_switch_row = Gtk.HBox(spacing=style.zoom(6))
         self._provider_model_switch_row = model_switch_row
         model_switch_row.set_halign(Gtk.Align.CENTER)
@@ -921,10 +918,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             model_button.get_style_context().add_class(
                 'create-ai-provider-button')
             model_button.connect(
-                'clicked',
-                self.__provider_model_switch_clicked_cb,
-                model,
-            )
+                'clicked', self.__provider_model_switch_clicked_cb, model)
             model_switch_row.pack_start(model_button, False, False, 0)
             model_button.show()
         model_switch_row.hide()
@@ -935,10 +929,11 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         status.set_halign(Gtk.Align.CENTER)
         status.set_justify(Gtk.Justification.CENTER)
         status.set_line_wrap(True)
-        status.set_max_width_chars(132)
+        status.set_max_width_chars(100)
         selector.pack_start(status, False, False, 0)
         status.show()
 
+        self._provider_adv_row = adv_row
         self._update_provider_controls()
         selector.show()
         return selector
@@ -4485,12 +4480,20 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             'freemodel', 'openrouter', 'gemini', 'openai', 'deepseek',
             'qwen', 'moonshot', 'opencode', 'opencode-go', 'claude')
         model_provider = cloud_provider or provider_name == 'ollama'
+        needs_adv = model_provider  # show advanced row for any provider with model/endpoint
 
         self._provider_key_entry.set_sensitive(cloud_provider)
         self._provider_paste_button.set_sensitive(cloud_provider)
         self._provider_model_entry.set_sensitive(model_provider)
         self._provider_endpoint_entry.set_sensitive(model_provider)
         self._provider_remove_button.set_sensitive(False)
+
+        if self._provider_adv_row is not None:
+            if needs_adv:
+                self._provider_adv_row.show()
+            else:
+                self._provider_adv_row.hide()
+
         if self._provider_model_switch_row is not None:
             if provider_name == 'opencode-go':
                 self._provider_model_switch_row.show()
