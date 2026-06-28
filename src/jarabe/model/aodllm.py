@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
+import logging
 import os
 import urllib.error
 import urllib.parse
@@ -147,17 +148,19 @@ class GeminiProvider(LLMProvider):
 
     def generate_activity_source(self, system_prompt, user_prompt,
                                  timeout=_PROVIDER_CODEGEN_TIMEOUT,
-                                 stream_callback=None):
+                                 stream_callback=None,
+                                 max_output_tokens=None):
+        tokens = max_output_tokens or _GEMINI_CODEGEN_MAX_OUTPUT_TOKENS
         if stream_callback is not None:
             text = self._stream_content(
                 system_prompt, user_prompt, timeout,
-                max_output_tokens=_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS,
+                max_output_tokens=tokens,
                 stream_callback=stream_callback,
             )
         else:
             text = self._generate_content(
                 system_prompt, user_prompt, timeout,
-                max_output_tokens=_GEMINI_CODEGEN_MAX_OUTPUT_TOKENS,
+                max_output_tokens=tokens,
                 response_json=False,
             )
         return extract_activity_source_from_response(text)
@@ -232,6 +235,8 @@ class GeminiProvider(LLMProvider):
             raise ProviderError(
                 'Gemini response did not contain a result.'
             )
+        if not text:
+            raise ProviderError('Gemini returned an empty response.')
         return text
 
     def _stream_content(self, system_prompt, user_prompt, timeout,
@@ -308,7 +313,9 @@ class GeminiProvider(LLMProvider):
                             try:
                                 stream_callback(accumulated)
                             except Exception:
-                                pass
+                                logging.debug(
+                                    'stream_callback raised; ignoring',
+                                    exc_info=True)
                     else:
                         continue
                     break
@@ -321,6 +328,8 @@ class GeminiProvider(LLMProvider):
         except (OSError, ValueError) as error:
             raise ProviderError('Gemini streaming request failed: %s' % error)
 
+        if not accumulated:
+            raise ProviderError('Gemini streaming returned an empty response.')
         return accumulated
 
 
@@ -348,24 +357,26 @@ class OpenAIProvider(LLMProvider):
 
     def generate_text(self, system_prompt, user_prompt,
                       timeout=_PROVIDER_CODEGEN_TIMEOUT,
-                      stream_callback=None):
+                      stream_callback=None, max_output_tokens=None):
+        tokens = max_output_tokens or _CODEGEN_MAX_TOKENS
         if stream_callback is not None:
             return self._stream_text(
                 system_prompt, user_prompt, timeout,
-                max_tokens=_CODEGEN_MAX_TOKENS,
+                max_tokens=tokens,
                 stream_callback=stream_callback,
             )
         return self._generate_text(
             system_prompt, user_prompt, timeout,
-            max_tokens=_CODEGEN_MAX_TOKENS, json_response=False,
+            max_tokens=tokens, json_response=False,
         )
 
     def generate_activity_source(self, system_prompt, user_prompt,
                                  timeout=_PROVIDER_CODEGEN_TIMEOUT,
-                                 stream_callback=None):
+                                 stream_callback=None, max_output_tokens=None):
         text = self.generate_text(
             system_prompt, user_prompt, timeout,
             stream_callback=stream_callback,
+            max_output_tokens=max_output_tokens,
         )
         return extract_activity_source_from_response(text)
 
@@ -695,10 +706,11 @@ class FreeModelProvider(LLMProvider):
 
     def generate_text(self, system_prompt, user_prompt,
                       timeout=_PROVIDER_CODEGEN_TIMEOUT,
-                      stream_callback=None):
+                      stream_callback=None, max_output_tokens=None):
         text = self._generate_responses_text(
             system_prompt, user_prompt, timeout,
-            max_output_tokens=_FREEMODEL_CODEGEN_MAX_OUTPUT_TOKENS,
+            max_output_tokens=(
+                max_output_tokens or _FREEMODEL_CODEGEN_MAX_OUTPUT_TOKENS),
             reasoning_effort=self._codegen_reasoning_effort,
         )
         if stream_callback is not None:
@@ -710,10 +722,11 @@ class FreeModelProvider(LLMProvider):
 
     def generate_activity_source(self, system_prompt, user_prompt,
                                  timeout=_PROVIDER_CODEGEN_TIMEOUT,
-                                 stream_callback=None):
+                                 stream_callback=None, max_output_tokens=None):
         text = self.generate_text(
             system_prompt, user_prompt, timeout,
             stream_callback=stream_callback,
+            max_output_tokens=max_output_tokens,
         )
         return extract_activity_source_from_response(text)
 
@@ -785,10 +798,10 @@ class ClaudeProvider(LLMProvider):
 
     def generate_text(self, system_prompt, user_prompt,
                       timeout=_PROVIDER_CODEGEN_TIMEOUT,
-                      stream_callback=None):
+                      stream_callback=None, max_output_tokens=None):
         text = self._generate_text(
             system_prompt, user_prompt, timeout,
-            max_tokens=_CODEGEN_MAX_TOKENS,
+            max_tokens=max_output_tokens or _CODEGEN_MAX_TOKENS,
         )
         if stream_callback is not None:
             try:
@@ -799,10 +812,11 @@ class ClaudeProvider(LLMProvider):
 
     def generate_activity_source(self, system_prompt, user_prompt,
                                  timeout=_PROVIDER_CODEGEN_TIMEOUT,
-                                 stream_callback=None):
+                                 stream_callback=None, max_output_tokens=None):
         text = self.generate_text(
             system_prompt, user_prompt, timeout,
             stream_callback=stream_callback,
+            max_output_tokens=max_output_tokens,
         )
         return extract_activity_source_from_response(text)
 
@@ -873,10 +887,10 @@ class OllamaProvider(LLMProvider):
 
     def generate_text(self, system_prompt, user_prompt,
                       timeout=_PROVIDER_CODEGEN_TIMEOUT,
-                      stream_callback=None):
+                      stream_callback=None, max_output_tokens=None):
         text = self._generate_text(
             system_prompt, user_prompt, timeout,
-            num_predict=_CODEGEN_MAX_TOKENS,
+            num_predict=max_output_tokens or _CODEGEN_MAX_TOKENS,
         )
         if stream_callback is not None:
             try:
@@ -887,10 +901,11 @@ class OllamaProvider(LLMProvider):
 
     def generate_activity_source(self, system_prompt, user_prompt,
                                  timeout=_PROVIDER_CODEGEN_TIMEOUT,
-                                 stream_callback=None):
+                                 stream_callback=None, max_output_tokens=None):
         text = self.generate_text(
             system_prompt, user_prompt, timeout,
             stream_callback=stream_callback,
+            max_output_tokens=max_output_tokens,
         )
         return extract_activity_source_from_response(text)
 

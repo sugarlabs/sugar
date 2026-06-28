@@ -26,6 +26,7 @@ from jarabe.model.aodrefine import build_refine_system_prompt
 from jarabe.model.aodrefine import build_refine_user_prompt
 from jarabe.model.aodrefine import parse_search_replace
 from jarabe.model.aodrefine import apply_patches
+from jarabe.model.aodvalidator import validate_activity_source_for_request
 
 
 class PipelineError(Exception):
@@ -47,6 +48,7 @@ _CODEGEN_ATTEMPT_LIMIT = _env_int('AOD_CODEGEN_ATTEMPT_LIMIT', 3)
 
 def generate_activity(spec, output_root=None, provider=None,
                       provider_name='default', use_rag=True,
+                      validate_code=True,
                       progress_cb=None, pace=False, package_bundle=True,
                       template_fallback=False):
     """Run prompt grounding, provider planning, and generation.
@@ -181,6 +183,7 @@ def generate_activity(spec, output_root=None, provider=None,
                 plan,
                 references,
                 progress,
+                validate_code=validate_code,
             )
         )
         plan['codegen_attempts'] = code_attempts
@@ -333,44 +336,86 @@ def _make_codegen_stream_callback(progress, attempt):
     return report_partial
 
 
+_CODE_SIZE_TOKENS = {
+    'compact': 6000,
+    'standard': 14000,
+    'full': None,
+}
+
+
 def _generate_activity_source_with_provider(provider, spec, plan, references,
-                                           progress):
+                                           progress, validate_code=True):
     generate_source = getattr(provider, 'generate_activity_source', None)
     if not callable(generate_source):
         return None, '', 0
 
-    progress.report('generating', 0.56,
-                    'Asking the model to write activity.py')
+    code_size = getattr(spec, 'code_size', 'standard')
+    max_output_tokens = _CODE_SIZE_TOKENS.get(code_size)
 
-    stream_callback = _make_codegen_stream_callback(progress, 1)
-    system_prompt = build_codegen_system_prompt(spec, plan, references)
+    system_prompt = build_codegen_system_prompt(
+        spec, plan, references, code_size=code_size)
     user_prompt = build_codegen_user_prompt(spec, plan)
-    try:
-        try:
-            source = generate_source(
-                system_prompt,
-                user_prompt,
-                stream_callback=stream_callback,
-            )
-        except TypeError:
-            # Older providers / test doubles may not accept
-            # stream_callback; fall back to the non-streaming call.
-            source = generate_source(system_prompt, user_prompt)
-    except ProviderError as error:
-        return None, _redact_provider_error(error, provider), 1
-    except ValueError as error:
-        return None, str(error), 1
+    last_error = ''
 
-    progress.report(
-        'generating',
-        0.64,
-        'Model returned activity.py',
-        {
-            'draft_activity_source': source,
-            'codegen_attempt': 1,
-        },
-    )
-    return source, '', 1
+    for attempt in range(1, _CODEGEN_ATTEMPT_LIMIT + 1):
+        progress.report(
+            'generating',
+            0.56,
+            'Asking the model to write activity.py'
+            if attempt == 1
+            else 'Retrying activity.py generation (attempt %d)' % attempt,
+        )
+        stream_callback = _make_codegen_stream_callback(progress, attempt)
+        retry_prompt = user_prompt
+        if last_error:
+            retry_prompt = (
+                '%s\n\nPrevious attempt was rejected. Fix these issues:\n%s'
+                % (user_prompt, last_error)
+            )
+        try:
+            try:
+                source = generate_source(
+                    system_prompt,
+                    retry_prompt,
+                    stream_callback=stream_callback,
+                    max_output_tokens=max_output_tokens,
+                )
+            except TypeError as err:
+                msg = str(err)
+                if 'stream_callback' not in msg and 'keyword argument' not in msg:
+                    raise
+                # Provider doesn't accept stream_callback/max_output_tokens.
+                source = generate_source(system_prompt, retry_prompt)
+        except ProviderError as error:
+            return None, _redact_provider_error(error, provider), attempt
+        except ValueError as error:
+            return None, str(error), attempt
+
+        progress.report(
+            'generating',
+            0.64,
+            'Model returned activity.py',
+            {
+                'draft_activity_source': source,
+                'codegen_attempt': attempt,
+            },
+        )
+
+        if not validate_code:
+            return source, '', attempt
+
+        report = validate_activity_source_for_request(source, spec, plan)
+        if report.valid:
+            return source, '', attempt
+
+        last_error = '\n'.join(report.errors)
+        progress.report(
+            'generating',
+            0.65,
+            'Validation failed on attempt %d; retrying' % attempt,
+        )
+
+    return None, last_error, _CODEGEN_ATTEMPT_LIMIT
 
 
 def _has_refinement(provider):
@@ -381,6 +426,7 @@ def _has_refinement(provider):
 
 def refine_activity(spec, current_source, current_plan, output_root,
                     provider=None, provider_name='default',
+                    validate_code=True,
                     progress_cb=None, pace=False,
                     package_bundle=False):
     """Refine an existing activity.py using SEARCH/REPLACE blocks.
@@ -498,6 +544,7 @@ def refine_activity(spec, current_source, current_plan, output_root,
                 current_plan,
                 (),
                 progress,
+                validate_code=validate_code,
             )
         )
         if not activity_source:

@@ -7,20 +7,30 @@ import queue
 import threading
 
 
+_MAX_QUEUED_JOBS = 64
+
+
 class AODJobQueue:
     """Small local worker queue for Activity-on-Demand jobs."""
 
-    def __init__(self, runner, worker_count=1):
+    def __init__(self, runner, worker_count=1, max_queued=_MAX_QUEUED_JOBS):
         self._runner = runner
         self._worker_count = max(1, worker_count)
-        self._queue = queue.Queue()
+        self._queue = queue.Queue(maxsize=max_queued)
         self._workers = []
         self._shutdown = threading.Event()
         self._lock = threading.Lock()
 
     def submit(self, job):
         self.start()
-        self._queue.put(job)
+        try:
+            self._queue.put_nowait(job)
+        except queue.Full:
+            raise RuntimeError(
+                'Activity-on-Demand job queue is full (%d pending). '
+                'Wait for running jobs to finish before submitting more.'
+                % self._queue.maxsize
+            )
 
     def start(self):
         with self._lock:

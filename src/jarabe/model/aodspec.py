@@ -19,6 +19,8 @@ CATEGORIES = (
     'creation',
 )
 
+CODE_SIZES = ('compact', 'standard', 'full')
+
 MAX_PROMPT_LENGTH = 12000
 
 TEMPLATES = (
@@ -54,6 +56,7 @@ class ActivitySpec:
     template: str = 'auto'
     age_band: str = 'all'
     learner_goal: str = ''
+    code_size: str = 'standard'
 
     def validate(self):
         errors = []
@@ -83,6 +86,9 @@ class ActivitySpec:
         if not isinstance(self.age_band, str) or not self.age_band.strip():
             errors.append('Activity age band is required.')
 
+        if self.code_size not in CODE_SIZES:
+            errors.append('Unknown code size: %s' % self.code_size)
+
         return errors
 
     def normalized(self):
@@ -95,6 +101,7 @@ class ActivitySpec:
             template=self.template,
             age_band=_normalize_spaces(self.age_band),
             learner_goal=_normalize_spaces(self.learner_goal),
+            code_size=self.code_size,
         )
 
     def to_dict(self):
@@ -133,6 +140,7 @@ class ActivitySpec:
             template=data.get('template', 'auto'),
             age_band=data.get('age_band', 'all'),
             learner_goal=data.get('learner_goal', ''),
+            code_size=data.get('code_size', 'standard'),
         )
 
 

@@ -11,7 +11,29 @@ from jarabe.model.aodvalidator import FORBIDDEN_CALLS
 from jarabe.model.aodvalidator import FORBIDDEN_IMPORT_ROOTS
 
 
-def build_codegen_system_prompt(spec, plan, references=()):
+_CODE_SIZE_INSTRUCTIONS = {
+    'compact': (
+        'Length: Write a focused, complete activity in roughly 300–500 lines. '
+        'Implement the core interaction fully but skip decorative extras. '
+        'Every line must be functional — no placeholders or stubs.'
+    ),
+    'standard': (
+        'Length: Write all necessary code to fully realize the request. '
+        'For complex activities (board games, simulators) this typically '
+        'requires 800–1200 lines. Prioritize completeness over brevity; '
+        'do not abbreviate or stop early.'
+    ),
+    'full': (
+        'Length: Write the most complete, polished version possible with no '
+        'token limit. Include rich toolbar actions, keyboard shortcuts, '
+        'multiple screens/modes, full Journal persistence, edge-case '
+        'handling, and detailed visual polish. 1500+ lines is expected for '
+        'anything non-trivial. Do not stop until the activity is production-ready.'
+    ),
+}
+
+
+def build_codegen_system_prompt(spec, plan, references=(), code_size='standard'):
     """Build the provider prompt for a complete Sugar activity.py file."""
     return (
         'You are Sugar Activity on Demand, a code generator for Sugar '
@@ -39,11 +61,16 @@ def build_codegen_system_prompt(spec, plan, references=()):
         '4. Set up logging:\n'
         '   import logging\n'
         '   _logger = logging.getLogger("GeneratedActivity")\n'
-        '5. Import sugar3 modules:\n'
+        '5. Import sugar3 modules FIRST before any Gtk imports:\n'
         '   from sugar3.activity import activity\n'
         '   from sugar3.graphics.toolbarbox import ToolbarBox\n'
         '   from sugar3.activity.widgets import ActivityToolbarButton\n'
         '   from sugar3.activity.widgets import StopButton\n'
+        '   Always prefer sugar3 / sugar-toolkit-gtk3 APIs over raw Gtk '
+        'equivalents. Use sugar3.graphics.style for colors, fonts, and icon '
+        'sizes. Use sugar3.graphics.toolbutton.ToolButton for toolbar items. '
+        'Use sugar3.graphics.alert for in-activity notifications. Fall back '
+        'to plain GTK3 only when no Sugar wrapper exists.\n'
         '6. Class must be named GeneratedActivity(activity.Activity)\n'
         '7. In __init__:\n'
         '   - Call activity.Activity.__init__(self, handle)\n'
@@ -55,6 +82,23 @@ def build_codegen_system_prompt(spec, plan, references=()):
         '8. Implement read_file(self, file_path) and '
         'write_file(self, file_path)\n'
         '   for Journal persistence using json.\n\n'
+        '## Rendering approach — cairo vs pygame/sugargame\n'
+        'Choose the right rendering backend for the request:\n'
+        '- **GTK3 + cairo (default)**: Use for most activities — '
+        'board games, drawing apps, quizzes, writing tools, simulations. '
+        'Gtk.DrawingArea with a cairo draw callback is idiomatic Sugar and '
+        'integrates cleanly with GTK events. Prefer this unless the request '
+        'is clearly game-loop driven.\n'
+        '- **pygame via sugargame**: Use ONLY when the request explicitly '
+        'asks for a pygame game or when the activity needs a continuous '
+        'game loop (e.g. real-time arcade, physics simulation, animation-'
+        'heavy game). When using pygame, wrap the activity with '
+        'sugargame.canvas.Canvas and run pygame.display.set_mode inside '
+        'the Sugar handle. Import sugargame.canvas and pygame. Still '
+        'inherit from sugar3.activity.activity.Activity. Still use the '
+        'Sugar toolbar and Journal persistence.\n'
+        'When in doubt, use cairo + GTK3. Only choose sugargame when the '
+        'learner prompt clearly describes gameplay that needs a frame loop.\n\n'
         'Hard requirements:\n'
         '- Build the specific activity described by activity_kind, '
         'interaction_model, ui_regions, learner_steps, and the learner '
@@ -123,12 +167,7 @@ def build_codegen_system_prompt(spec, plan, references=()):
         'undo, etc.) via Gtk.AccelGroup or key-press-event when relevant.\n'
         '- No TODO, no "placeholder", no "Add your code here", no demo '
         'strings. Every label and action is final classroom-ready text.\n'
-        '- Length: Write all necessary code to fully realize the request without '
-        'any shortcuts, placeholders, or truncations. For complex activities '
-        '(e.g. board games or simulators), this typically requires 800 to '
-        '1500+ lines of complete, working code. Prioritize completeness and '
-        'correctness over any arbitrary length limits; do not abbreviate or stop '
-        'generation early.\n'
+        '- %(length_instruction)s\n'
         '\n## Examples of richness expected per request type\n'
         '- Drawing: tool palette (pen/eraser), color picker (≥6 colors), '
         'brush-size slider, undo/redo stack, clear-canvas action, save-'
@@ -160,6 +199,8 @@ def build_codegen_system_prompt(spec, plan, references=()):
         'api_reference': get_api_reference(),
         'references': _format_references(references) or
         'No extra references were retrieved.',
+        'length_instruction': _CODE_SIZE_INSTRUCTIONS.get(
+            code_size, _CODE_SIZE_INSTRUCTIONS['standard']),
     }
 
 

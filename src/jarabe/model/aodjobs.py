@@ -41,6 +41,7 @@ class AODJob:
     spec: ActivitySpec
     provider_name: str = 'default'
     use_rag: bool = True
+    validate_code: bool = True
     output_root: str = ''
     session_id: str = ''
     parent_revision_id: str = ''
@@ -61,13 +62,14 @@ class AODJob:
 
     @classmethod
     def create(cls, spec, provider_name='default', use_rag=True,
-               output_root=None, session_id='', parent_revision_id='',
-               user_prompt=''):
+               validate_code=True, output_root=None, session_id='',
+               parent_revision_id='', user_prompt=''):
         return cls(
             job_id=uuid.uuid4().hex,
             spec=spec.normalized(),
             provider_name=provider_name,
             use_rag=use_rag,
+            validate_code=validate_code,
             output_root=output_root or '',
             session_id=session_id or '',
             parent_revision_id=parent_revision_id or '',
@@ -81,6 +83,7 @@ class AODJob:
             spec=ActivitySpec.from_dict(data['spec']),
             provider_name=data.get('provider_name', 'default'),
             use_rag=data.get('use_rag', True),
+            validate_code=data.get('validate_code', True),
             output_root=data.get('output_root', ''),
             session_id=data.get('session_id', ''),
             parent_revision_id=data.get('parent_revision_id', ''),
@@ -106,6 +109,7 @@ class AODJob:
             'spec': self.spec.to_dict(),
             'provider_name': self.provider_name,
             'use_rag': self.use_rag,
+            'validate_code': self.validate_code,
             'output_root': self.output_root,
             'session_id': self.session_id,
             'parent_revision_id': self.parent_revision_id,
@@ -137,6 +141,8 @@ class AODJob:
         self.updated_at = time.time()
 
     def update_progress(self, status, stage, progress, message):
+        if self.is_terminal():
+            return
         self.status = status
         self.stage = stage
         self.progress = max(0.0, min(1.0, float(progress)))
@@ -144,6 +150,8 @@ class AODJob:
         self.updated_at = time.time()
 
     def finish(self, result):
+        if self.is_terminal():
+            return
         self.status = STATUS_FINISHED
         self.stage = STATUS_FINISHED
         self.progress = 1.0
@@ -154,6 +162,8 @@ class AODJob:
         self.updated_at = self.finished_at
 
     def fail(self, error):
+        if self.is_terminal():
+            return
         self.status = STATUS_FAILED
         self.stage = STATUS_FAILED
         self.error = str(error)
@@ -162,6 +172,8 @@ class AODJob:
         self.updated_at = self.finished_at
 
     def cancel(self):
+        if self.is_terminal():
+            return
         self.status = STATUS_CANCELLED
         self.stage = STATUS_CANCELLED
         self.error = ''

@@ -231,6 +231,17 @@ class AODSessionStore:
             self.save(session)
             return session
 
+    def append_messages(self, session_id, messages):
+        """Append multiple messages in one load-mutate-save cycle."""
+        with self._lock:
+            session = self.load(session_id)
+            if session is None:
+                return None
+            for message in messages:
+                session.messages.append(message)
+            self.save(session)
+            return session
+
     def append_revision(self, session_id, revision):
         with self._lock:
             session = self.load(session_id)
@@ -238,6 +249,18 @@ class AODSessionStore:
                 return None
             session.revisions.append(revision)
             session.active_revision_id = revision.revision_id
+            self.save(session)
+            return session
+
+    def append_revision_and_message(self, session_id, revision, message):
+        """Append a revision and its result message atomically."""
+        with self._lock:
+            session = self.load(session_id)
+            if session is None:
+                return None
+            session.revisions.append(revision)
+            session.active_revision_id = revision.revision_id
+            session.messages.append(message)
             self.save(session)
             return session
 

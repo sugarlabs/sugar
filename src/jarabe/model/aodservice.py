@@ -12,6 +12,7 @@ from jarabe.model.aodcredentials import CredentialStoreError
 from jarabe.model.aodgenerator import restore_generation_result
 from jarabe.model.aodjobs import AODJob
 from jarabe.model.aodjobs import AODJobStore
+from jarabe.model.aodjobs import STATUS_FAILED
 from jarabe.model.aodjobs import STATUS_FINISHED
 from jarabe.model.aodjobs import STATUS_GENERATING
 from jarabe.model.aodjobs import STATUS_GROUNDING
@@ -59,8 +60,9 @@ class AODService:
         self._queue = AODJobQueue(self._run_job, worker_count=worker_count)
 
     def submit_activity(self, spec, provider_name='default', use_rag=True,
-                        output_root=None, callback=None, session_id='',
-                        parent_revision_id='', user_prompt=None):
+                        validate_code=True, output_root=None, callback=None,
+                        session_id='', parent_revision_id='',
+                        user_prompt=None):
         errors = spec.validate()
         if errors:
             raise ValueError('\n'.join(errors))
@@ -74,6 +76,7 @@ class AODService:
             spec,
             provider_name=provider_name,
             use_rag=use_rag,
+            validate_code=validate_code,
             output_root=output_root,
             session_id=session.session_id,
             parent_revision_id=parent_revision_id,
@@ -262,9 +265,12 @@ class AODService:
                     )
                     job.result = None
                 if job.result is None:
-                    job.fail(
+                    job.status = STATUS_FAILED
+                    job.stage = STATUS_FAILED
+                    job.error = (
                         'Generated activity artifacts are no longer available.'
                     )
+                    job.message = job.error
                     self._store.save(job)
             self._jobs[job.job_id] = job
 
@@ -282,15 +288,13 @@ class AODService:
             message_type=TYPE_PROMPT,
             job_id=job.job_id,
         )
-        self._session_store.append_message(session_id, message)
-
         status = AODMessage.create(
             ROLE_ASSISTANT,
             'Generating Sugar activity...',
             message_type=TYPE_STATUS,
             job_id=job.job_id,
         )
-        self._session_store.append_message(session_id, status)
+        self._session_store.append_messages(session_id, [message, status])
 
     def _run_job(self, job):
         try:
@@ -352,6 +356,7 @@ class AODService:
                     provider=provider,
                     provider_name=job.provider_name,
                     use_rag=job.use_rag,
+                    validate_code=job.validate_code,
                     progress_cb=lambda stage, fraction, message, metadata=None:
                         self._pipeline_progress(
                             job,
@@ -370,6 +375,10 @@ class AODService:
             logging.exception('Activity-on-Demand job failed')
             self._mark_failed(job, error)
             return
+        except BaseException as error:
+            logging.exception('Activity-on-Demand worker received fatal signal')
+            self._mark_failed(job, error)
+            raise
 
         if job.cancel_requested:
             self._mark_cancelled(job)
@@ -395,6 +404,9 @@ class AODService:
         if job.cancel_requested:
             raise JobCancelled()
 
+        if job.is_terminal():
+            return
+
         status = _status_for_pipeline_stage(stage)
         self._set_progress(job, status, stage, fraction, message, metadata)
 
@@ -413,6 +425,7 @@ class AODService:
                 provider=None,
                 provider_name='local-template',
                 use_rag=job.use_rag,
+                validate_code=job.validate_code,
                 progress_cb=lambda stage, fraction, message, metadata=None:
                     self._pipeline_progress(
                         job, stage, fraction, message, metadata),
@@ -474,6 +487,7 @@ class AODService:
                     job, stage, fraction, message, metadata),
             pace=True,
             package_bundle=False,
+            validate_code=job.validate_code,
         )
 
     def _set_progress(self, job, status, stage, progress, message,
@@ -514,7 +528,6 @@ class AODService:
         if not job.session_id:
             return
 
-        self._session_store.append_revision(job.session_id, revision)
         summary = job.result_summary
         provider = summary.get('provider', job.provider_name)
         model = summary.get('model', '')
@@ -533,7 +546,8 @@ class AODService:
             job_id=job.job_id,
             revision_id=revision.revision_id,
         )
-        self._session_store.append_message(job.session_id, message)
+        self._session_store.append_revision_and_message(
+            job.session_id, revision, message)
 
     def _record_failed_message(self, job):
         if not job.session_id:
@@ -555,6 +569,7 @@ def _status_for_pipeline_stage(stage):
         'provider': STATUS_PROVIDER,
         'generating': STATUS_GENERATING,
         'validating': STATUS_VALIDATING,
+        'assembling': STATUS_PACKAGING,
         'packaging': STATUS_PACKAGING,
         'ready': STATUS_PACKAGING,
     }

@@ -108,36 +108,40 @@ def parse_search_replace(response):
 
     text = response.strip()
 
-    if text == 'FULLREGEN' or text.startswith('FULLREGEN'):
+    if text.startswith('FULLREGEN') and SEARCH_MARKER not in text:
         return None
 
     blocks = []
     pos = 0
+    _NL_DIVIDER = '\n' + DIVIDER_MARKER
+    _NL_REPLACE = '\n' + REPLACE_MARKER
 
     while True:
         search_start = text.find(SEARCH_MARKER, pos)
         if search_start < 0:
             break
 
-        divider_start = text.find(DIVIDER_MARKER, search_start + len(SEARCH_MARKER))
-        if divider_start < 0:
+        after_search = search_start + len(SEARCH_MARKER)
+
+        # Anchor to line boundary so '=======' inside source code is ignored.
+        divider_nl = text.find(_NL_DIVIDER, after_search)
+        if divider_nl < 0:
             raise ValueError(
                 'Malformed SEARCH/REPLACE: missing ======= divider after '
                 '<<<<<<< SEARCH at position %d.' % search_start
             )
+        after_divider = divider_nl + len(_NL_DIVIDER)
 
-        replace_end = text.find(REPLACE_MARKER, divider_start + len(DIVIDER_MARKER))
-        if replace_end < 0:
+        # Same anchoring for >>>>>>> REPLACE.
+        replace_nl = text.find(_NL_REPLACE, after_divider)
+        if replace_nl < 0:
             raise ValueError(
                 'Malformed SEARCH/REPLACE: missing >>>>>>> REPLACE after '
-                '======= divider at position %d.' % divider_start
+                '======= divider at position %d.' % divider_nl
             )
 
-        search_text = text[search_start + len(SEARCH_MARKER):divider_start]
-        replace_text = text[divider_start + len(DIVIDER_MARKER):replace_end]
-
-        search_text = _strip_block_edges(search_text)
-        replace_text = _strip_block_edges(replace_text)
+        search_text = _strip_block_edges(text[after_search:divider_nl])
+        replace_text = _strip_block_edges(text[after_divider:replace_nl])
 
         if not search_text:
             raise ValueError(
@@ -146,7 +150,7 @@ def parse_search_replace(response):
             )
 
         blocks.append((search_text, replace_text))
-        pos = replace_end + len(REPLACE_MARKER)
+        pos = replace_nl + len(_NL_REPLACE)
 
     if not blocks:
         if '<<<<<<<' not in text:

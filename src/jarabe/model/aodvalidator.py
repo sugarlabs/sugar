@@ -24,8 +24,10 @@ ALLOWED_IMPORT_ROOTS = {
     'json',
     'logging',
     'math',
+    'pygame',
     'random',
     'sugar3',
+    'sugargame',
 }
 
 FORBIDDEN_IMPORT_ROOTS = {
@@ -256,7 +258,7 @@ def validate_activity_source_for_request(source, spec, plan=None):
         )
 
     request_words = _tokens(request)
-    overlap = request_words.intersection(_tokens(source_lower))
+    overlap = request_words.intersection(_tokens(source))
     if request_words and len(overlap) < min(2, len(request_words)):
         report.warnings.append(
             'Generated source contains little vocabulary from the request.'

@@ -247,6 +247,11 @@ _API_REFERENCE = """Sugar Activity API reference:
 - Implement write_file(file_path) and read_file(file_path) for Journal data.
 - GTK widgets must be updated on the GTK main thread.
 - Generated activities should work without network access.
+- Prefer sugar3 / sugar-toolkit-gtk3 APIs before raw GTK equivalents:
+  - sugar3.graphics.style: FONT_SIZE, COLOR_*, zoom() for DPI-aware sizing
+  - sugar3.graphics.toolbutton.ToolButton: icon toolbar items with tooltip
+  - sugar3.graphics.alert: NotifyAlert / ConfirmationAlert for in-activity messages
+  - sugar3.graphics.icon.Icon: Sugar icon widget (icon_name, pixel_size)
 """
 
 _REFERENCE_DOCUMENTS = (
@@ -379,5 +384,64 @@ _REFERENCE_DOCUMENTS = (
             'learner-owned input.'
         ),
         tags=('tool', 'utility', 'example'),
+    ),
+    RagDocument(
+        title='sugargame / pygame activity pattern',
+        text=(
+            'sugargame wraps pygame so it runs inside a Sugar GTK3 window. '
+            'Use it ONLY when the activity needs a continuous game loop — '
+            'real-time arcade games, physics simulations, or frame-by-frame '
+            'animation that cannot be driven by GTK signals.\n\n'
+            'Structure for a sugargame activity:\n'
+            '  import sugargame.canvas\n'
+            '  import pygame\n'
+            '  from sugar3.activity import activity\n'
+            '  class GeneratedActivity(activity.Activity):\n'
+            '      def __init__(self, handle):\n'
+            '          super().__init__(handle)\n'
+            '          self._canvas = sugargame.canvas.PygameCanvas(\n'
+            '              self, main=self._game_loop,\n'
+            '              modules=[pygame.display, pygame.font])\n'
+            '          self.set_canvas(self._canvas)\n'
+            '          self.show_all()\n'
+            '          self._canvas.run_pygame(self._game_loop)\n'
+            '      def _game_loop(self):\n'
+            '          pygame.display.set_caption("Activity")\n'
+            '          clock = pygame.time.Clock()\n'
+            '          running = True\n'
+            '          while running:\n'
+            '              for event in pygame.event.get():\n'
+            '                  if event.type == pygame.QUIT:\n'
+            '                      running = False\n'
+            '              # update + draw\n'
+            '              pygame.display.flip()\n'
+            '              clock.tick(30)\n'
+            '      def read_file(self, file_path): pass\n'
+            '      def write_file(self, file_path): pass\n\n'
+            'Still use the Sugar ToolbarBox and Journal persistence. '
+            'For everything else — board games, drawing, quizzes, writing — '
+            'use GTK3 + cairo instead; it integrates better with Sugar.'
+        ),
+        tags=('game', 'pygame', 'sugargame', 'arcade', 'animation', 'loop'),
+    ),
+    RagDocument(
+        title='sugar-toolkit-gtk3 preferred APIs',
+        text=(
+            'Always prefer sugar3 / sugar-toolkit-gtk3 wrappers over raw '
+            'GTK equivalents:\n'
+            '- sugar3.graphics.style.zoom(n): DPI-aware pixel sizes\n'
+            '- sugar3.graphics.style.COLOR_*: Sugar palette colors\n'
+            '- sugar3.graphics.style.FONT_SIZE: standard body font size\n'
+            '- sugar3.graphics.toolbutton.ToolButton(icon_name): toolbar '
+            'icon button with set_tooltip_text()\n'
+            '- sugar3.graphics.alert.NotifyAlert / ConfirmationAlert: '
+            'in-activity banners instead of Gtk.Dialog\n'
+            '- sugar3.graphics.icon.Icon(icon_name, pixel_size): Sugar icon\n'
+            '- sugar3.graphics.toolbarbox.ToolbarBox: the standard toolbar\n'
+            '- sugar3.activity.widgets.ActivityToolbarButton: title + share\n'
+            '- sugar3.activity.widgets.StopButton: the stop/close button\n'
+            'Only fall back to plain Gtk when no Sugar wrapper exists.'
+        ),
+        tags=('api', 'sugar3', 'sugar-toolkit-gtk3', 'toolkit', 'style'),
     ),
 )

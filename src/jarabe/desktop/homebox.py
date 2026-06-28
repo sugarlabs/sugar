@@ -312,9 +312,14 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             'template': 'logic_math',
             'planner': 'rag',
             'policy': 'standard',
+            'validate': 'on',
             'provider': 'default',
             'license': 'mit',
+            'code_size': 'standard',
         }
+        self._code_size_combo = None
+        self._sidebar_visible = True
+        self._sidebar_toggle_button = None
         self._template_hint = None
         self._planner_hint = None
         self._provider_combo = None
@@ -333,6 +338,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._prompt_status_label = None
         self._studio_prompt_labels = []
         self._preview_content_box = None
+        self._live_preview_canvas = None
         self._preview_empty_title = None
         self._preview_empty_note = None
         self._preview_generation_spinner = None
@@ -374,6 +380,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._chat_scroll = None
         self._aod_session_id = ''
         self._aod_active_revision_id = ''
+        self._aod_original_prompt = ''
         self._sidebar_messages_box = None
         self._sidebar_chat_scroll = None
         self._sidebar_refine_entry = None
@@ -429,6 +436,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._review_draft_was_shown = False
         self._aod_session_id = ''
         self._aod_active_revision_id = ''
+        self._aod_original_prompt = ''
         self._show_empty_activity_preview()
         self._use_centered_layout()
         self._stack.set_visible_child_name('choose')
@@ -573,6 +581,15 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             ],
             'standard'), False, False, 0)
 
+        planner_options.pack_start(self._create_option_group(
+            _('Validation'),
+            'validate',
+            [
+                ('on', _('On'), _('Validate and\nretry on errors')),
+                ('off', _('Off'), _('Skip validation\n(faster preview)')),
+            ],
+            'on'), False, False, 0)
+
         planner_hint = Gtk.Label()
         planner_hint.get_style_context().add_class('create-ai-meta-note')
         self._planner_hint = planner_hint
@@ -600,7 +617,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         prompt_box = Gtk.EventBox()
         prompt_box.get_style_context().add_class('create-ai-prompt-box')
         prompt_box.set_above_child(False)
-        prompt_box.set_size_request(style.zoom(1040), style.zoom(226))
+        prompt_box.set_size_request(style.zoom(1040), -1)
         prompt_box.set_halign(Gtk.Align.CENTER)
         container.pack_start(prompt_box, False, False, style.zoom(10))
         prompt_box.show()
@@ -615,12 +632,12 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         prompt_header.show()
 
         prompt_label = Gtk.Label(_('Learning prompt'))
-        prompt_label.get_style_context().add_class('create-ai-meta-label')
+        prompt_label.get_style_context().add_class('create-ai-meta-note')
         prompt_label.set_xalign(0)
         prompt_header.pack_start(prompt_label, False, False, 0)
         prompt_label.show()
 
-        char_label = Gtk.Label(_('0 chars'))
+        char_label = Gtk.Label('')
         self._prompt_char_label = char_label
         char_label.get_style_context().add_class('create-ai-meta-note')
         prompt_header.pack_end(char_label, False, False, 0)
@@ -629,8 +646,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         prompt_scroll = Gtk.ScrolledWindow()
         prompt_scroll.set_policy(Gtk.PolicyType.NEVER,
                                  Gtk.PolicyType.AUTOMATIC)
-        prompt_scroll.set_min_content_height(style.zoom(86))
-        prompt_scroll.set_max_content_height(style.zoom(86))
+        prompt_scroll.set_min_content_height(style.zoom(88))
+        prompt_scroll.set_max_content_height(style.zoom(88))
         prompt_scroll.set_propagate_natural_height(False)
         prompt_inner.pack_start(prompt_scroll, False, False, 0)
         prompt_scroll.show()
@@ -640,20 +657,32 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         text.set_can_focus(True)
         text.set_editable(True)
         text.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
-        text.set_left_margin(style.zoom(10))
-        text.set_right_margin(style.zoom(10))
-        text.set_top_margin(style.zoom(10))
-        text.set_bottom_margin(style.zoom(10))
+        text.set_left_margin(style.zoom(4))
+        text.set_right_margin(style.zoom(4))
+        text.set_top_margin(style.zoom(6))
+        text.set_bottom_margin(style.zoom(6))
         text.get_style_context().add_class('create-ai-textview')
         text.get_buffer().connect('changed',
                                   self.__prompt_buffer_changed_cb)
         text.connect('button-press-event',
                      self.__prompt_button_press_event_cb)
         text.connect('key-press-event', self.__prompt_key_press_event_cb)
-        text.set_size_request(-1, style.zoom(86))
+        text.connect('focus-in-event',
+                     lambda w, e: prompt_box.get_style_context().add_class(
+                         'create-ai-prompt-box-focused'))
+        text.connect('focus-out-event',
+                     lambda w, e: prompt_box.get_style_context().remove_class(
+                         'create-ai-prompt-box-focused'))
+        text.set_size_request(-1, style.zoom(88))
         prompt_scroll.add(text)
         text.show()
         self._set_prompt_placeholder()
+
+        divider = Gtk.EventBox()
+        divider.get_style_context().add_class('create-ai-prompt-divider')
+        divider.set_size_request(-1, 1)
+        prompt_inner.pack_start(divider, False, False, 0)
+        divider.show()
 
         actions = Gtk.EventBox()
         actions.get_style_context().add_class('create-ai-prompt-actions')
@@ -662,7 +691,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         actions.show()
 
         bottom_row = Gtk.HBox(spacing=style.zoom(8))
-        bottom_row.set_border_width(style.zoom(6))
+        bottom_row.set_border_width(style.zoom(8))
         actions.add(bottom_row)
         bottom_row.show()
 
@@ -688,6 +717,21 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         send_row = Gtk.HBox(spacing=style.zoom(6))
         bottom_row.pack_end(send_row, False, False, 0)
         send_row.show()
+
+        code_size_combo = Gtk.ComboBoxText()
+        self._code_size_combo = code_size_combo
+        for size_id, size_label in (
+                ('compact', _('~500 lines')),
+                ('standard', _('~1000 lines')),
+                ('full', _('Full output')),
+        ):
+            code_size_combo.append(size_id, size_label)
+        code_size_combo.set_active_id(
+            self._selected_options.get('code_size', 'standard'))
+        code_size_combo.get_style_context().add_class('create-ai-provider-combo')
+        code_size_combo.connect('changed', self.__code_size_combo_changed_cb)
+        send_row.pack_start(code_size_combo, False, False, 0)
+        code_size_combo.show()
 
         thinking = Gtk.Label(_('Thinking'))
         self._prompt_status_label = thinking
@@ -1254,6 +1298,10 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             _('Review and install'), self.__review_and_install_cb),
             False, False, 0)
 
+        self._sidebar_toggle_button = self._create_plain_button(
+            _('◀ Sidebar'), self.__sidebar_toggle_cb)
+        top.pack_end(self._sidebar_toggle_button, False, False, 0)
+
         tabs = Gtk.HBox(spacing=style.zoom(8))
         panel.pack_start(tabs, False, False, 0)
         tabs.show()
@@ -1366,6 +1414,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             return
         for child in self._preview_content_box.get_children():
             self._preview_content_box.remove(child)
+        self._live_preview_canvas = None
         self._preview_empty_title = None
         self._preview_empty_note = None
         self._preview_generation_spinner = None
@@ -3480,60 +3529,73 @@ class _CreateAIActivityPanel(Gtk.EventBox):
                 color: %(studio_dark_text)s;
             }
             .create-ai-prompt-box {
-                border-radius: 8px;
-                border: 1px solid %(studio_edge)s;
+                border-radius: 14px;
+                border: 1px solid #e2e2e2;
                 background-color: %(studio_surface)s;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.045);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            }
+            .create-ai-prompt-box-focused {
+                border-color: #b8b8b8;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.09), 0 1px 3px rgba(0, 0, 0, 0.05);
             }
             textview.create-ai-textview {
                 color: %(black)s;
-                background-color: %(studio_surface)s;
-                border: 1px solid %(studio_edge)s;
-                border-radius: 7px;
-                font-size: 12px;
+                background-color: transparent;
+                border: 0;
+                border-radius: 0;
+                font-size: 13px;
             }
             textview.create-ai-textview text {
                 color: %(black)s;
-                background-color: %(studio_surface)s;
+                background-color: transparent;
             }
             textview.create-ai-textview:focus {
-                border-color: %(studio_lavender_border)s;
-                background-color: %(studio_surface)s;
+                border: 0;
                 box-shadow: none;
+                background-color: transparent;
+            }
+            .create-ai-prompt-divider {
+                background-color: #ebebeb;
+                min-height: 1px;
             }
             .create-ai-prompt-actions {
-                border-radius: 7px;
-                border: 1px solid %(studio_edge_soft)s;
-                background-color: %(studio_preview)s;
+                border-radius: 0 0 13px 13px;
+                border: 0;
+                background-color: transparent;
             }
             .create-ai-plus {
                 border-radius: 999px;
-                border: 1px solid %(studio_edge)s;
+                border: 1px solid #d4d4d4;
                 background-image: none;
-                background-color: %(studio_surface)s;
+                background-color: #f5f5f5;
                 color: %(studio_lavender_text)s;
                 padding: 0 4px;
-                min-width: 30px;
-                min-height: 26px;
+                min-width: 28px;
+                min-height: 28px;
+            }
+            .create-ai-plus:hover {
+                background-color: %(studio_lavender_soft)s;
+                border-color: %(studio_lavender_border)s;
             }
             .create-ai-plus label {
                 color: %(studio_lavender_text)s;
             }
             .create-ai-send {
                 border-radius: 999px;
-                border: 1px solid %(studio_edge)s;
+                border: 1px solid #555555;
                 background-image: none;
-                background-color: %(studio_surface)s;
-                color: %(studio_lavender_text)s;
+                background-color: #404040;
+                color: #ffffff;
                 padding: 1px 6px;
-                min-width: 30px;
-                min-height: 26px;
+                min-width: 28px;
+                min-height: 28px;
             }
             .create-ai-send label {
-                color: %(studio_lavender_text)s;
+                color: #ffffff;
             }
             .create-ai-send:hover {
-                background-color: %(studio_lavender_soft)s;
+                background-color: #2e2e2e;
+                border-color: #444444;
             }
             .create-ai-studio-workspace {
                 border-radius: 14px;
@@ -4107,7 +4169,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._prompt_is_placeholder = False
         self._prompt_text.get_buffer().set_text('')
         if self._prompt_char_label is not None:
-            self._prompt_char_label.set_text(_('0 chars'))
+            self._prompt_char_label.set_text('')
 
     def _clear_prompt_placeholder(self):
         self._prompt_is_placeholder = False
@@ -4834,6 +4896,7 @@ if clipboard.wait_is_text_available():
         canvas.set_vexpand(True)
         box.pack_start(canvas, True, True, 0)
 
+        self._live_preview_canvas = canvas
         self._preview_content_box.pack_start(shell, True, True, 0)
         shell.show_all()
         return True
@@ -6379,6 +6442,9 @@ if clipboard.wait_is_text_available():
             else:
                 self._prompt_status_label.set_text(status[value])
 
+    def __code_size_combo_changed_cb(self, combo):
+        self._selected_options['code_size'] = combo.get_active_id() or 'standard'
+
     def __provider_combo_changed_cb(self, combo):
         provider_name = combo.get_active_id() or 'default'
         if provider_name == self._selected_options['provider']:
@@ -6503,7 +6569,10 @@ if clipboard.wait_is_text_available():
 
         start, end = text_buffer.get_bounds()
         count = len(text_buffer.get_text(start, end, True))
-        self._prompt_char_label.set_text(_('%d chars') % count)
+        if count > 0:
+            self._prompt_char_label.set_text(_('%d chars') % count)
+        else:
+            self._prompt_char_label.set_text('')
 
     def __prompt_entry_activate_cb(self, entry):
         self.__send_button_clicked_cb(entry)
@@ -6587,6 +6656,7 @@ if clipboard.wait_is_text_available():
             prompt=prompt,
             category=self._selected_options['template'],
             license_id=license_info['spdx'],
+            code_size=self._selected_options.get('code_size', 'standard'),
         )
         self._submit_generation_spec(
             spec,
@@ -6639,6 +6709,7 @@ if clipboard.wait_is_text_available():
         flow = plan.get('classroom_flow') or plan.get('learner_steps') or []
         flow_text = '\n'.join('- %s' % step for step in flow[:5])
         plan_context = self._compact_plan_for_refinement(plan)
+        original_prompt = self._aod_original_prompt or base_spec.prompt
         prompt = (
             'Refine the existing generated Sugar activity. Preserve working '
             'behavior unless the new request changes it.\n\n'
@@ -6651,7 +6722,7 @@ if clipboard.wait_is_text_available():
             'Current plan JSON excerpt:\n%(plan_context)s\n\n'
             'Refinement request:\n%(refinement)s'
         ) % {
-            'original': base_spec.prompt,
+            'original': original_prompt,
             'name': base_spec.name,
             'template': plan.get('template', base_spec.template),
             'summary': plan.get('summary', ''),
@@ -6670,6 +6741,7 @@ if clipboard.wait_is_text_available():
             age_band=base_spec.age_band,
             learner_goal=base_spec.learner_goal or
             plan.get('learner_goal', ''),
+            code_size=self._selected_options.get('code_size', 'standard'),
         )
 
     def _compact_plan_for_refinement(self, plan):
@@ -6751,11 +6823,6 @@ if clipboard.wait_is_text_available():
             if not self._configure_selected_provider(persist=True):
                 return
 
-        if self._prompt_status_label is not None:
-            if is_refinement:
-                self._prompt_status_label.set_text(_('Refining'))
-            else:
-                self._prompt_status_label.set_text(_('Planning'))
         if self._sidebar_refine_status_label is not None:
             if is_refinement:
                 self._sidebar_refine_status_label.set_text(_('Refining...'))
@@ -6763,15 +6830,20 @@ if clipboard.wait_is_text_available():
                 self._sidebar_refine_status_label.set_text(
                     _('Generating activity...'))
         use_rag = policy not in ('local', 'strict')
+        validate_code = self._selected_options.get('validate', 'on') == 'on'
 
         self._detach_generation_job()
         self._generation_result = None
         if not is_refinement:
             self._aod_session_id = ''
             self._aod_active_revision_id = ''
+            self._aod_original_prompt = spec.prompt
         if display_prompt is None:
             display_prompt = spec.prompt
-        self._set_prompt_text(spec.prompt)
+        if is_refinement:
+            self._set_prompt_text(display_prompt)
+        else:
+            self._set_prompt_text(spec.prompt)
         self._set_studio_prompt(display_prompt)
         self._update_preview_license_summary()
         self._append_chat_message(chat_prompt or display_prompt,
@@ -6833,6 +6905,7 @@ if clipboard.wait_is_text_available():
                 spec,
                 provider_name=provider_name,
                 use_rag=use_rag,
+                validate_code=validate_code,
                 session_id=self._aod_session_id if is_refinement else '',
                 parent_revision_id=(
                     self._aod_active_revision_id if is_refinement else ''),
@@ -6845,8 +6918,18 @@ if clipboard.wait_is_text_available():
 
         self._generation_job_id = job.job_id
         self._aod_session_id = job.session_id
+        self._set_chat_entry_sensitive(False)
         service.watch(job.job_id, self._generation_job_callback)
         self._generation_job_updated_from_worker(job)
+
+    def _set_chat_entry_sensitive(self, sensitive):
+        if self._chat_entry is not None:
+            self._chat_entry.set_sensitive(sensitive)
+            if sensitive:
+                self._chat_entry.set_placeholder_text(
+                    _('Ask for a refinement...'))
+                if self._stack.get_visible_child_name() == 'studio':
+                    self._chat_entry.grab_focus()
 
     def _has_active_generation_job(self):
         if self._generation_job_id is None:
@@ -7017,9 +7100,7 @@ if clipboard.wait_is_text_available():
         self._append_chat_status(provider_status)
         self._append_chat_status(
             _('Generated. Select a part or type a refinement.'))
-        if self._chat_entry is not None:
-            self._chat_entry.set_placeholder_text(
-                _('Ask for a refinement...'))
+        self._set_chat_entry_sensitive(True)
         self._append_sidebar_status(provider_status)
         self._append_sidebar_message(
             _('Generated. Type another prompt here to refine '
@@ -7088,6 +7169,7 @@ if clipboard.wait_is_text_available():
             _('Generation failed: %s') % display_error)
         self._append_sidebar_message(
             _('Generation failed: %s') % display_error)
+        self._set_chat_entry_sensitive(True)
         self._set_review_file(self._current_review_file)
         if draft_source:
             self._select_studio_tab('review')
@@ -7110,10 +7192,37 @@ if clipboard.wait_is_text_available():
             if self._studio_left_panel is not None:
                 self._studio_left_panel.show()
             if self._studio_right_panel is not None:
-                self._studio_right_panel.show()
+                if self._sidebar_visible:
+                    self._studio_right_panel.show()
             if self._preview_fullscreen_button is not None:
                 self._preview_fullscreen_button.set_label(
                     _('⛶ Fullscreen'))
+            self._refresh_preview_layout()
+
+    def __sidebar_toggle_cb(self, button):
+        self._sidebar_visible = not self._sidebar_visible
+        if self._studio_right_panel is not None:
+            if self._sidebar_visible:
+                self._studio_right_panel.show()
+            else:
+                self._studio_right_panel.hide()
+        if self._sidebar_toggle_button is not None:
+            self._sidebar_toggle_button.set_label(
+                _('◀ Sidebar') if self._sidebar_visible else _('▶ Sidebar'))
+        self._refresh_preview_layout()
+
+    def _refresh_preview_layout(self):
+        GObject.idle_add(self.__do_refresh_preview_layout)
+        GLib.timeout_add(200, self.__do_refresh_preview_layout)
+
+    def __do_refresh_preview_layout(self):
+        if self._studio_mode_stack is not None:
+            self._studio_mode_stack.queue_resize()
+            self._studio_mode_stack.queue_draw()
+        if self._live_preview_canvas is not None:
+            self._live_preview_canvas.queue_resize()
+            self._live_preview_canvas.queue_draw()
+        return False
 
     def _ensure_generation_bundle(self):
         if self._generation_result is None:
