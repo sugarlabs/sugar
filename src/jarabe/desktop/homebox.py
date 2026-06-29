@@ -6624,6 +6624,7 @@ if clipboard.wait_is_text_available():
             'standard': _('Standard'),
             'local': _('Local'),
             'strict': _('Strict'),
+            'off': _('Off'),
         }
         if self._prompt_status_label is not None:
             if group_name == 'license':

@@ -18,6 +18,7 @@ import os
 import re
 import shutil
 import tempfile
+from gettext import gettext as _
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -270,6 +271,7 @@ def render_activity_preview(project_path, activity_name=''):
 
     bundle_path = project_path
     _install_bundle_path_helper(bundle_path)
+    _install_preview_compatibility()
 
     result = _try_exec_preview(patched_source, source_path,
                                bundle_path, activity_name)
@@ -302,6 +304,10 @@ def _try_exec_preview(patched_source, source_path, bundle_path,
         '__file__': source_path,
         'PreviewActivity': PreviewActivity,
         '_preview_instance': preview,
+        # Keep preview useful when otherwise valid generated code forgot the
+        # standard gettext import.  The exported source is still validated
+        # separately; this fallback only prevents the preview from blanking.
+        '_': _,
     }
 
     try:
@@ -420,6 +426,34 @@ def _patch_source(source):
     )
 
     return patched
+
+
+def _install_preview_compatibility():
+    """Install small shims for common generated GTK/Sugar API mistakes.
+
+    Provider validation normally rejects these calls.  Validation can be
+    disabled for faster iteration, though, and a minor API hallucination
+    should not make the entire preview disappear.  Keep the shims narrowly
+    scoped to unambiguous aliases with the same behavior as the real API.
+    """
+    try:
+        from sugar3.graphics.toolbarbox import ToolbarBox
+        if not hasattr(ToolbarBox, 'add_toolbar_button'):
+            ToolbarBox.add_toolbar_button = _add_toolbar_button
+    except ImportError:
+        pass
+
+    if not hasattr(Gtk.Adjustment, 'set_bounds'):
+        Gtk.Adjustment.set_bounds = _set_adjustment_bounds
+
+
+def _add_toolbar_button(toolbar_box, item):
+    toolbar_box.toolbar.insert(item, -1)
+
+
+def _set_adjustment_bounds(adjustment, lower, upper):
+    adjustment.set_lower(lower)
+    adjustment.set_upper(upper)
 
 
 _bundle_path_override = ['']

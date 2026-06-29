@@ -135,6 +135,20 @@ def validate_source(source):
     if 'ToolbarBox' not in source:
         report.errors.append('Generated activity must include a ToolbarBox.')
 
+    invalid_api_calls = {
+        'add_toolbar_button': (
+            'ToolbarBox has no add_toolbar_button() method; insert items with '
+            'toolbar_box.toolbar.insert(item, position).'
+        ),
+        'set_bounds': (
+            'Gtk.Adjustment has no set_bounds() method; use set_lower() and '
+            'set_upper().'
+        ),
+    }
+    for call_name, message in invalid_api_calls.items():
+        if any(name.endswith(call_name) for name in calls):
+            report.errors.append(message)
+
     return report
 
 

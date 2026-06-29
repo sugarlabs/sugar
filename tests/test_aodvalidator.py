@@ -35,6 +35,34 @@ class TestAodValidator(unittest.TestCase):
             report.errors,
         )
 
+    def test_rejects_invented_toolbar_and_adjustment_apis(self):
+        spec = ActivitySpec(
+            'Counter',
+            'Make a counter utility.',
+            'tools_utils',
+            'MIT',
+        )
+        plan = enrich_plan(spec, {'template': 'utility'})
+        source = render_activity_source(spec, plan)
+        source = source.replace(
+            'toolbar.insert(ActivityToolbarButton(self), 0)',
+            'toolbar_box.add_toolbar_button(ActivityToolbarButton(self))',
+        )
+        source = source.replace(
+            'self.set_canvas(canvas)',
+            'adjustment.set_bounds(0, 10)\n        self.set_canvas(canvas)',
+        )
+
+        report = validate_source(source)
+
+        self.assertFalse(report.valid)
+        self.assertTrue(any(
+            'add_toolbar_button' in error for error in report.errors
+        ))
+        self.assertTrue(any(
+            'set_bounds' in error for error in report.errors
+        ))
+
     def test_request_validation_rejects_generic_source_for_drawing(self):
         spec = ActivitySpec(
             'Draw Together',
