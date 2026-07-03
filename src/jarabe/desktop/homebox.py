@@ -26,6 +26,8 @@ import threading
 import time
 from gettext import gettext as _
 
+import cairo
+
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
@@ -308,12 +310,11 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self.get_style_context().add_class('create-ai-panel')
         self._option_buttons = {}
         self._selected_options = {
-            'mode': 'make',
             'template': 'logic_math',
             'age_band': 'all',
             'collab': 'solo',
             'planner': 'rag',
-            'policy': 'standard',
+            'policy': 'creative',
             'validate': 'on',
             'provider': 'default',
             'license': 'mit',
@@ -325,6 +326,10 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._sidebar_revealer = None
         self._template_hint = None
         self._planner_hint = None
+        self._validate_chip_value_label = None
+        self._provider_chip_value_label = None
+        self._template_card_icons = {}
+        self._template_card_buttons = {}
         self._provider_combo = None
         self._provider_key_entry = None
         self._provider_paste_button = None
@@ -336,12 +341,14 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._provider_adv_row = None
         self._provider_status_label = None
         self._provider_test_running = False
+        self._flatpak_export_running = False
         self._license_hint = None
         self._prompt_text = None
         self._prompt_char_label = None
         self._prompt_status_label = None
         self._studio_prompt_labels = []
         self._preview_content_box = None
+        self._last_preview_error = ''
         self._live_preview_canvas = None
         self._live_preview_activity = None
         self._preview_empty_title = None
@@ -352,6 +359,23 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._preview_generation_steps = []
         self._generation_animation_id = 0
         self._generation_animation_hide_id = 0
+        self._preview_generation_xo = None
+        self._preview_generation_fun = None
+        self._generation_tick_count = 0
+        self._generation_has_fraction = False
+        self._preview_generation_canvas = None
+        self._generation_wheel_cache = None
+        self._generation_anim_start_us = None
+        self._generation_anim_t = 0.0
+        self._generation_anim_done = False
+        self._generation_final_rgb = None
+        self._generation_fun_next = None
+        self._generation_fun_alpha = 1.0
+        self._generation_target_fraction = None
+        self._generation_shown_fraction = 0.0
+        self._generation_fraction_mix = 0.0
+        self._generation_done_at = None
+        self._generation_fade_widgets = []
         self._studio_preview_tab = None
         self._studio_review_tab = None
         self._studio_versions_tab = None
@@ -377,11 +401,25 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._live_edit_status_label = None
         self._live_edit_target_label = None
         self._live_edit_target = _('activity canvas')
+        self._live_edit_target_is_region = False
         self._live_edit_on_button = None
         self._live_edit_off_button = None
         self._live_edit_enabled = True
         self._live_edit_handler_ids = []
         self._live_edit_highlighted = None
+        self._live_edit_panel = None
+        self._live_edit_press_handled = False
+        self._live_edit_targets = []
+        self._preview_shell = None
+        self._select_start = None
+        self._select_rect = None
+        self._ask_bar = None
+        self._ask_bar_entry = None
+        self._ask_bar_target_label = None
+        self._ask_bar_status_label = None
+        self._ask_bar_plus = None
+        self._ask_bar_edit_on = None
+        self._ask_bar_edit_off = None
         self._chat_messages_box = None
         self._chat_entry = None
         self._chat_scroll = None
@@ -512,133 +550,24 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         return content
 
     def _create_create_view(self):
-        container = Gtk.VBox(spacing=style.zoom(11))
+        container = Gtk.VBox(spacing=style.zoom(10))
         container.set_size_request(style.zoom(1280), -1)
 
         title = Gtk.Label()
-        title.set_text(_('Let\'s make a playful learning activity'))
-        title.get_style_context().add_class('create-ai-builder-title')
+        title.set_text(_('What will you make today?'))
+        title.get_style_context().add_class('create-ai-hero-title')
         title.set_justify(Gtk.Justification.CENTER)
         title.set_halign(Gtk.Align.CENTER)
-        container.pack_start(title, False, False, 0)
+        container.pack_start(title, False, False, style.zoom(6))
         title.show()
 
-        subtitle = Gtk.Label(_('Tell me what learners make, play with, and '
-                               'share.'))
+        subtitle = Gtk.Label(_('Describe a learning activity and Sugar will '
+                               'build it with you.'))
         subtitle.get_style_context().add_class('create-ai-builder-subtitle')
         subtitle.set_justify(Gtk.Justification.CENTER)
         subtitle.set_halign(Gtk.Align.CENTER)
         container.pack_start(subtitle, False, False, style.zoom(2))
         subtitle.show()
-
-        options_area = Gtk.VBox(spacing=style.zoom(9))
-        options_area.set_halign(Gtk.Align.CENTER)
-        container.pack_start(options_area, False, False, style.zoom(8))
-        options_area.show()
-
-        options_area.pack_start(
-            self._create_section_label(_('Start with')),
-            False, False, style.zoom(2))
-
-        options_area.pack_start(self._create_option_group(
-            '',
-            'mode',
-            [
-                ('make', _('Make'), _('Create something\nnew')),
-                ('play', _('Play'), _('Try the activity\nquickly')),
-                ('share', _('Share'), _('Prepare an XO\nbundle')),
-            ],
-            'make'), False, False, 0)
-
-        options_area.pack_start(
-            self._create_section_label(_('Learning area')),
-            False, False, style.zoom(6))
-
-        options_area.pack_start(self._create_option_group(
-            '',
-            'template',
-            [
-                ('logic_math', _('Logic & math'), _('Puzzles &\npatterns')),
-                ('science', _('Science'), _('Explore &\nmeasure')),
-                ('language', _('Language'), _('Stories &\nwords')),
-                ('tools_utils', _('Tools'), _('Build helpful\ntools')),
-                ('games', _('Games'), _('Play loops\nand score')),
-                ('creation', _('Creation'), _('Make &\nexpress')),
-            ],
-            'logic_math', card_width=84), False, False, 0)
-
-        template_hint = Gtk.Label(
-            _('Learning area: logic and math activities for puzzles, patterns, '
-              'and reasoning.'))
-        self._template_hint = template_hint
-        template_hint.get_style_context().add_class('create-ai-meta-note')
-        template_hint.set_halign(Gtk.Align.CENTER)
-        template_hint.set_justify(Gtk.Justification.CENTER)
-        container.pack_start(template_hint, False, False, style.zoom(1))
-        template_hint.show()
-
-        planner_options = Gtk.HBox(spacing=style.zoom(14))
-        planner_options.set_halign(Gtk.Align.CENTER)
-        container.pack_start(planner_options, False, False, style.zoom(4))
-        planner_options.show()
-
-        planner_options.pack_start(self._create_option_group(
-            _('Planner'),
-            'planner',
-            [
-                ('rag', _('RAG'), _('Use Sugar\nexamples')),
-                ('direct', _('Direct'), _('No examples,\nfaster')),
-            ],
-            'rag'), False, False, 0)
-
-        planner_options.pack_start(self._create_option_group(
-            _('Policy'),
-            'policy',
-            [
-                ('standard', _('Standard'), _('Model\nvalidated')),
-                ('creative', _('Creative'), _('Fewer rules,\nmore flair')),
-            ],
-            'standard'), False, False, 0)
-
-        planner_options.pack_start(self._create_option_group(
-            _('Validation'),
-            'validate',
-            [
-                ('on', _('On'), _('Validate and\nretry on errors')),
-                ('off', _('Off'), _('Skip validation\n(faster preview)')),
-            ],
-            'on'), False, False, 0)
-
-        planner_hint = Gtk.Label()
-        planner_hint.get_style_context().add_class('create-ai-meta-note')
-        self._planner_hint = planner_hint
-        planner_hint.set_halign(Gtk.Align.CENTER)
-        planner_hint.set_justify(Gtk.Justification.CENTER)
-        planner_hint.set_line_wrap(True)
-        planner_hint.set_max_width_chars(132)
-        container.pack_start(planner_hint, False, False, 0)
-        planner_hint.show()
-        self._update_planner_hint()
-
-        provider_expander = Gtk.Expander()
-        provider_expander.set_label(_('LLM provider'))
-        provider_expander.get_style_context().add_class(
-            'create-ai-expander')
-        provider_expander.set_halign(Gtk.Align.CENTER)
-        provider_expander.add(self._create_provider_selector())
-        provider_expander.set_expanded(False)
-        container.pack_start(provider_expander, False, False, style.zoom(3))
-        provider_expander.show_all()
-
-        container.pack_start(self._create_license_selector(),
-                             False, False, style.zoom(3))
-
-        guided_button = Gtk.ToggleButton.new_with_label(_('Guided spec'))
-        guided_button.get_style_context().add_class('create-ai-meta-button')
-        guided_button.set_halign(Gtk.Align.CENTER)
-        guided_button.connect('toggled', self.__guided_button_toggled_cb)
-        container.pack_start(guided_button, False, False, style.zoom(3))
-        guided_button.show()
 
         prompt_box = Gtk.EventBox()
         prompt_box.get_style_context().add_class('create-ai-prompt-box')
@@ -653,27 +582,11 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         prompt_box.add(prompt_inner)
         prompt_inner.show()
 
-        prompt_header = Gtk.HBox()
-        prompt_inner.pack_start(prompt_header, False, False, 0)
-        prompt_header.show()
-
-        prompt_label = Gtk.Label(_('Learning prompt'))
-        prompt_label.get_style_context().add_class('create-ai-meta-note')
-        prompt_label.set_xalign(0)
-        prompt_header.pack_start(prompt_label, False, False, 0)
-        prompt_label.show()
-
-        char_label = Gtk.Label('')
-        self._prompt_char_label = char_label
-        char_label.get_style_context().add_class('create-ai-meta-note')
-        prompt_header.pack_end(char_label, False, False, 0)
-        char_label.show()
-
         prompt_scroll = Gtk.ScrolledWindow()
         prompt_scroll.set_policy(Gtk.PolicyType.NEVER,
                                  Gtk.PolicyType.AUTOMATIC)
-        prompt_scroll.set_min_content_height(style.zoom(88))
-        prompt_scroll.set_max_content_height(style.zoom(88))
+        prompt_scroll.set_min_content_height(style.zoom(96))
+        prompt_scroll.set_max_content_height(style.zoom(96))
         prompt_scroll.set_propagate_natural_height(False)
         prompt_inner.pack_start(prompt_scroll, False, False, 0)
         prompt_scroll.show()
@@ -699,7 +612,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         text.connect('focus-out-event',
                      lambda w, e: prompt_box.get_style_context().remove_class(
                          'create-ai-prompt-box-focused'))
-        text.set_size_request(-1, style.zoom(88))
+        text.set_size_request(-1, style.zoom(96))
         prompt_scroll.add(text)
         text.show()
         self._set_prompt_placeholder()
@@ -729,20 +642,49 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         add_icon.show()
         hint_icon.set_image(add_icon)
         hint_icon.get_style_context().add_class('create-ai-plus')
+        hint_icon.set_valign(Gtk.Align.CENTER)
+        hint_icon.set_tooltip_text(
+            _('Try an example: treasure-map quest where teams solve clues '
+              'and explain each step.'))
         hint_icon.connect('clicked', self.__prompt_example_clicked_cb)
         bottom_row.pack_start(hint_icon, False, False, 0)
         hint_icon.show()
 
-        hint_text = Gtk.Label(_('Try: treasure-map quest where teams solve '
-                                'clues and explain each step.'))
-        hint_text.get_style_context().add_class('create-ai-meta-note')
-        hint_text.set_xalign(0)
-        bottom_row.pack_start(hint_text, True, True, 0)
-        hint_text.show()
+        validate_chip = Gtk.ToggleButton()
+        validate_chip.set_relief(Gtk.ReliefStyle.NONE)
+        validate_chip.get_style_context().add_class('create-ai-prompt-chip')
+        validate_chip.get_style_context().add_class(
+            'create-ai-prompt-chip-active')
+        validate_content, validate_value = self._build_chip_content(
+            _('Validation'), _('On'))
+        validate_chip.add(validate_content)
+        self._validate_chip_value_label = validate_value
+        validate_chip.set_active(True)
+        validate_chip.connect('toggled', self.__validate_chip_toggled_cb)
+        bottom_row.pack_start(validate_chip, False, False, 0)
+        validate_chip.show()
 
-        send_row = Gtk.HBox(spacing=style.zoom(6))
-        bottom_row.pack_end(send_row, False, False, 0)
-        send_row.show()
+        send_btn = Gtk.Button()
+        send_icon = Icon(icon_name='go-up',
+                         pixel_size=style.SMALL_ICON_SIZE,
+                         stroke_color=style.COLOR_WHITE.get_svg(),
+                         fill_color=style.COLOR_WHITE.get_svg())
+        send_icon.show()
+        send_btn.set_image(send_icon)
+        send_btn.get_style_context().add_class('create-ai-send')
+        send_btn.set_size_request(style.zoom(36), style.zoom(36))
+        send_btn.set_valign(Gtk.Align.CENTER)
+        send_btn.set_tooltip_text(_('Generate the activity'))
+        send_btn.connect('clicked', self.__send_button_clicked_cb)
+        bottom_row.pack_end(send_btn, False, False, 0)
+        send_btn.show()
+
+        thinking = Gtk.Label('')
+        self._prompt_status_label = thinking
+        thinking.get_style_context().add_class('create-ai-prompt-status')
+        thinking.set_valign(Gtk.Align.CENTER)
+        bottom_row.pack_end(thinking, False, False, 0)
+        thinking.show()
 
         code_size_combo = Gtk.ComboBoxText()
         self._code_size_combo = code_size_combo
@@ -754,30 +696,195 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             code_size_combo.append(size_id, size_label)
         code_size_combo.set_active_id(
             self._selected_options.get('code_size', 'standard'))
-        code_size_combo.get_style_context().add_class('create-ai-provider-combo')
+        code_size_combo.get_style_context().add_class(
+            'create-ai-provider-combo')
+        code_size_combo.set_valign(Gtk.Align.CENTER)
         code_size_combo.connect('changed', self.__code_size_combo_changed_cb)
-        send_row.pack_start(code_size_combo, False, False, 0)
+        bottom_row.pack_end(code_size_combo, False, False, 0)
         code_size_combo.show()
 
-        thinking = Gtk.Label(_('Thinking'))
-        self._prompt_status_label = thinking
-        thinking.get_style_context().add_class('create-ai-pill-button')
-        send_row.pack_start(thinking, False, False, 0)
-        thinking.show()
+        provider_selector = self._create_provider_selector()
 
-        send_btn = Gtk.Button()
-        send_icon = Icon(icon_name='go-up',
-                         pixel_size=style.SMALL_ICON_SIZE,
-                         stroke_color=style.COLOR_WHITE.get_svg(),
-                         fill_color=style.COLOR_BLACK.get_svg())
-        send_icon.show()
-        send_btn.set_image(send_icon)
-        send_btn.get_style_context().add_class('create-ai-send')
-        send_btn.connect('clicked', self.__send_button_clicked_cb)
-        send_row.pack_start(send_btn, False, False, 0)
-        send_btn.show()
+        model_chip = Gtk.MenuButton()
+        model_chip.set_relief(Gtk.ReliefStyle.NONE)
+        model_chip.get_style_context().add_class('create-ai-prompt-chip')
+        model_content, model_value = self._build_chip_content(
+            _('Model'),
+            self._get_provider_label(self._selected_options['provider']),
+            caret=True)
+        model_chip.add(model_content)
+        self._provider_chip_value_label = model_value
+        model_popover = Gtk.Popover.new(model_chip)
+        model_popover.get_style_context().add_class('create-ai-popover')
+        model_popover.set_position(Gtk.PositionType.BOTTOM)
+        model_popover.add(provider_selector)
+        model_chip.set_popover(model_popover)
+        bottom_row.pack_end(model_chip, False, False, 0)
+        model_chip.show()
+
+        cards_caption = Gtk.Label(_('Start with a learning area...'))
+        cards_caption.get_style_context().add_class(
+            'create-ai-template-caption')
+        cards_caption.set_halign(Gtk.Align.CENTER)
+        container.pack_start(cards_caption, False, False, style.zoom(6))
+        cards_caption.show()
+
+        cards_row = Gtk.HBox(spacing=style.zoom(10))
+        cards_row.set_halign(Gtk.Align.CENTER)
+        container.pack_start(cards_row, False, False, 0)
+        cards_row.show()
+
+        self._option_buttons['template'] = []
+        self._template_card_icons = {}
+        self._template_card_buttons = {}
+        fan_offsets = [0, 6, 12, 12, 6, 0]
+        for index, (value, card_title, card_detail, icon_name) in \
+                enumerate(self._get_learning_area_options()):
+            card = self._create_template_card(value, card_title,
+                                              card_detail, icon_name)
+            card.set_margin_top(
+                style.zoom(fan_offsets[index % len(fan_offsets)]))
+            if value == self._selected_options.get('template'):
+                card.get_style_context().add_class(
+                    'create-ai-option-card-active')
+            cards_row.pack_start(card, False, False, 0)
+            card.show()
+        self._update_template_card_icons()
+
+        template_hint = Gtk.Label(
+            _('Learning area: logic and math activities for puzzles, '
+              'patterns, and reasoning.'))
+        self._template_hint = template_hint
+        template_hint.get_style_context().add_class('create-ai-meta-note')
+        template_hint.set_halign(Gtk.Align.CENTER)
+        template_hint.set_justify(Gtk.Justification.CENTER)
+        container.pack_start(template_hint, False, False, style.zoom(2))
+        template_hint.show()
+
+        planner_hint = Gtk.Label()
+        planner_hint.get_style_context().add_class('create-ai-meta-note')
+        self._planner_hint = planner_hint
+        planner_hint.set_halign(Gtk.Align.CENTER)
+        planner_hint.set_justify(Gtk.Justification.CENTER)
+        planner_hint.set_line_wrap(True)
+        planner_hint.set_max_width_chars(132)
+        container.pack_start(planner_hint, False, False, 0)
+        planner_hint.show()
+        self._update_planner_hint()
 
         return container
+
+    def _get_learning_area_options(self):
+        return [
+            ('logic_math', _('Logic & math'), _('Puzzles & patterns'),
+             'insert-table'),
+            ('science', _('Science'), _('Explore & measure'),
+             'system-search'),
+            ('language', _('Language'), _('Stories & words'),
+             'edit-description'),
+            ('tools_utils', _('Tools'), _('Build helpful tools'),
+             'preferences-system'),
+            ('games', _('Games'), _('Play loops & score'),
+             'media-playback-start'),
+            ('creation', _('Creation'), _('Make & express'),
+             'toolbar-colors'),
+        ]
+
+    def _build_chip_content(self, caption, value, caret=False):
+        box = Gtk.VBox(spacing=0)
+
+        caption_label = Gtk.Label(caption)
+        caption_label.get_style_context().add_class('create-ai-chip-caption')
+        caption_label.set_xalign(0)
+        box.pack_start(caption_label, False, False, 0)
+        caption_label.show()
+
+        value_row = Gtk.HBox(spacing=style.zoom(4))
+        box.pack_start(value_row, False, False, 0)
+        value_row.show()
+
+        value_label = Gtk.Label(value)
+        value_label.get_style_context().add_class('create-ai-chip-value')
+        value_label.set_xalign(0)
+        value_label.set_ellipsize(Pango.EllipsizeMode.END)
+        value_label.set_max_width_chars(14)
+        value_row.pack_start(value_label, False, False, 0)
+        value_label.show()
+
+        if caret:
+            caret_label = Gtk.Label('▾')
+            caret_label.get_style_context().add_class('create-ai-chip-caret')
+            value_row.pack_start(caret_label, False, False, 0)
+            caret_label.show()
+
+        box.show()
+        return box, value_label
+
+    def _create_template_card(self, value, title, detail, icon_name):
+        button = Gtk.Button()
+        button.set_relief(Gtk.ReliefStyle.NONE)
+        button.get_style_context().add_class('create-ai-template-card')
+        button.set_size_request(style.zoom(150), style.zoom(150))
+        button.connect('clicked', self.__option_card_clicked_cb,
+                       'template', value)
+
+        content = Gtk.VBox(spacing=style.zoom(4))
+        content.set_border_width(style.zoom(10))
+        button.add(content)
+        content.show()
+
+        icon = Icon(icon_name=icon_name,
+                    pixel_size=style.STANDARD_ICON_SIZE,
+                    stroke_color=style.COLOR_TOOLBAR_GREY.get_svg(),
+                    fill_color=style.COLOR_INACTIVE_FILL.get_svg())
+        icon.set_halign(Gtk.Align.CENTER)
+        content.pack_start(icon, True, True, 0)
+        icon.show()
+
+        title_label = Gtk.Label(title)
+        title_label.get_style_context().add_class('create-ai-option-title')
+        title_label.set_justify(Gtk.Justification.CENTER)
+        content.pack_start(title_label, False, False, 0)
+        title_label.show()
+
+        detail_label = Gtk.Label(detail)
+        detail_label.get_style_context().add_class('create-ai-option-detail')
+        detail_label.set_justify(Gtk.Justification.CENTER)
+        detail_label.set_line_wrap(True)
+        detail_label.set_max_width_chars(16)
+        content.pack_start(detail_label, False, False, 0)
+        detail_label.show()
+
+        self._template_card_icons[value] = icon
+        self._template_card_buttons[value] = button
+        self._option_buttons['template'].append(button)
+        return button
+
+    def _update_template_card_icons(self):
+        selected = self._selected_options.get('template')
+        for value, icon in self._template_card_icons.items():
+            if value == selected:
+                icon.props.stroke_color = style.COLOR_WHITE.get_svg()
+                icon.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
+            else:
+                icon.props.stroke_color = style.COLOR_TOOLBAR_GREY.get_svg()
+                icon.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
+
+    def __validate_chip_toggled_cb(self, button):
+        active = button.get_active()
+        self._selected_options['validate'] = 'on' if active else 'off'
+        if self._validate_chip_value_label is not None:
+            self._validate_chip_value_label.set_text(
+                _('On') if active else _('Off'))
+        if active:
+            button.get_style_context().add_class(
+                'create-ai-prompt-chip-active')
+        else:
+            button.get_style_context().remove_class(
+                'create-ai-prompt-chip-active')
+        if self._prompt_status_label is not None:
+            self._prompt_status_label.set_text(
+                _('Validation on') if active else _('Validation off'))
 
     def _create_section_label(self, text):
         label = Gtk.Label(text)
@@ -787,15 +894,25 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         return label
 
     def _create_provider_selector(self):
-        selector = Gtk.VBox(spacing=style.zoom(8))
-        selector.set_halign(Gtk.Align.CENTER)
-        selector.set_border_width(style.zoom(8))
+        selector = Gtk.VBox(spacing=style.zoom(9))
+        selector.set_border_width(style.zoom(14))
+        selector.set_size_request(style.zoom(340), -1)
 
-        # Primary row: provider picker + key + save
-        row = Gtk.HBox(spacing=style.zoom(8))
-        row.set_halign(Gtk.Align.CENTER)
-        selector.pack_start(row, False, False, 0)
-        row.show()
+        heading = Gtk.Label(_('AI model'))
+        heading.get_style_context().add_class('create-ai-provider-heading')
+        heading.set_xalign(0)
+        selector.pack_start(heading, False, False, 0)
+        heading.show()
+
+        subtitle = Gtk.Label(
+            _('Choose who generates your activity. API keys stay private '
+              'in your Sugar profile.'))
+        subtitle.get_style_context().add_class('create-ai-meta-note')
+        subtitle.set_xalign(0)
+        subtitle.set_line_wrap(True)
+        subtitle.set_max_width_chars(46)
+        selector.pack_start(subtitle, False, False, 0)
+        subtitle.show()
 
         combo = Gtk.ComboBoxText()
         self._provider_combo = combo
@@ -804,59 +921,69 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         initial_provider = self._initial_provider_option()
         self._selected_options['provider'] = initial_provider
         combo.set_active_id(initial_provider)
-        combo.set_size_request(style.zoom(180), style.zoom(40))
+        combo.set_size_request(-1, style.zoom(40))
         combo.get_style_context().add_class('create-ai-provider-combo')
         combo.connect('changed', self.__provider_combo_changed_cb)
-        row.pack_start(combo, False, False, 0)
+        selector.pack_start(combo, False, False, 0)
         combo.show()
+
+        key_row = Gtk.HBox(spacing=style.zoom(6))
+        selector.pack_start(key_row, False, False, 0)
+        key_row.show()
 
         key_entry = Gtk.Entry()
         self._provider_key_entry = key_entry
         key_entry.set_visibility(False)
         key_entry.set_invisible_char('*')
         key_entry.set_input_purpose(Gtk.InputPurpose.PASSWORD)
-        key_entry.set_placeholder_text(_('API key'))
+        key_entry.set_placeholder_text(_('Paste your API key here'))
         key_entry.set_tooltip_text(
             _('Keys stay in your Sugar profile and are never added to '
               'generated activities.'))
-        key_entry.set_size_request(style.zoom(260), style.zoom(40))
+        key_entry.set_size_request(-1, style.zoom(40))
         key_entry.get_style_context().add_class('create-ai-provider-entry')
         key_entry.connect('key-press-event',
                           self.__provider_key_entry_key_press_event_cb)
         key_entry.connect('paste-clipboard',
                           self.__provider_key_entry_paste_clipboard_cb)
-        row.pack_start(key_entry, False, False, 0)
+        key_row.pack_start(key_entry, True, True, 0)
         key_entry.show()
 
         paste_button = Gtk.Button.new_with_label(_('Paste'))
         self._provider_paste_button = paste_button
         paste_button.set_size_request(style.zoom(72), style.zoom(40))
-        paste_button.get_style_context().add_class('create-ai-provider-button')
+        paste_button.get_style_context().add_class(
+            'create-ai-provider-button')
         paste_button.connect('clicked', self.__provider_paste_clicked_cb)
-        row.pack_start(paste_button, False, False, 0)
+        key_row.pack_start(paste_button, False, False, 0)
         paste_button.show()
 
-        apply_button = Gtk.Button.new_with_label(_('Save'))
-        self._provider_apply_button = apply_button
-        apply_button.set_size_request(style.zoom(72), style.zoom(40))
-        apply_button.get_style_context().add_class('create-ai-provider-button')
-        apply_button.connect('clicked', self.__provider_apply_clicked_cb)
-        row.pack_start(apply_button, False, False, 0)
-        apply_button.show()
+        action_row = Gtk.HBox(spacing=style.zoom(6))
+        selector.pack_start(action_row, False, False, 0)
+        action_row.show()
 
-        remove_button = Gtk.Button.new_with_label(_('Remove'))
+        remove_button = Gtk.Button.new_with_label(_('Remove key'))
         self._provider_remove_button = remove_button
-        remove_button.set_size_request(style.zoom(80), style.zoom(40))
-        remove_button.get_style_context().add_class('create-ai-provider-button')
+        remove_button.set_size_request(style.zoom(104), style.zoom(40))
+        remove_button.get_style_context().add_class(
+            'create-ai-provider-button')
         remove_button.connect('clicked', self.__provider_remove_clicked_cb)
-        row.pack_start(remove_button, False, False, 0)
+        action_row.pack_start(remove_button, False, False, 0)
         remove_button.show()
+
+        apply_button = Gtk.Button.new_with_label(_('Save key'))
+        self._provider_apply_button = apply_button
+        apply_button.set_size_request(style.zoom(104), style.zoom(40))
+        apply_button.get_style_context().add_class(
+            'create-ai-provider-primary')
+        apply_button.connect('clicked', self.__provider_apply_clicked_cb)
+        action_row.pack_end(apply_button, False, False, 0)
+        apply_button.show()
 
         # Keep model/endpoint widgets as non-visible stubs so the save
         # callback can still read them without crashing.
         self._provider_model_entry = Gtk.Entry()
         self._provider_endpoint_entry = Gtk.Entry()
-        adv_row = None
 
         # model_switch_row (opencode-go specific)
         model_switch_row = Gtk.HBox(spacing=style.zoom(6))
@@ -878,11 +1005,10 @@ class _CreateAIActivityPanel(Gtk.EventBox):
 
         status = Gtk.Label()
         self._provider_status_label = status
-        status.get_style_context().add_class('create-ai-meta-note')
-        status.set_halign(Gtk.Align.CENTER)
-        status.set_justify(Gtk.Justification.CENTER)
+        status.get_style_context().add_class('create-ai-provider-status')
+        status.set_xalign(0)
         status.set_line_wrap(True)
-        status.set_max_width_chars(100)
+        status.set_max_width_chars(46)
         selector.pack_start(status, False, False, 0)
         status.show()
 
@@ -923,37 +1049,6 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         if provider_name in options and provider_name != 'local-template':
             return provider_name
         return 'default'
-
-    def _create_license_selector(self):
-        selector = Gtk.VBox(spacing=style.zoom(4))
-        selector.set_halign(Gtk.Align.CENTER)
-
-        selector.pack_start(self._create_option_group(
-            _('License'),
-            'license',
-            self._get_license_option_cards(),
-            'mit',
-            card_width=142,
-            card_height=76,
-            detail_width=15), False, False, 0)
-
-        hint = Gtk.Label()
-        self._license_hint = hint
-        hint.get_style_context().add_class('create-ai-meta-note')
-        hint.set_halign(Gtk.Align.CENTER)
-        hint.set_justify(Gtk.Justification.CENTER)
-        hint.set_line_wrap(True)
-        hint.set_max_width_chars(120)
-        selector.pack_start(hint, False, False, 0)
-        hint.show()
-
-        self._update_license_hint()
-        selector.show()
-        return selector
-
-    def _get_license_option_cards(self):
-        return [(option['value'], option['label'], option['card_detail'])
-                for option in self._get_license_options()]
 
     def _get_license_options(self):
         return [
@@ -1128,6 +1223,9 @@ class _CreateAIActivityPanel(Gtk.EventBox):
                           False, False, 0)
         footer.pack_start(self._create_plain_button(
             _('Export XO'), self.__export_xo_cb),
+            False, False, 0)
+        footer.pack_start(self._create_plain_button(
+            _('Export Flatpak'), self.__export_flatpak_cb),
             False, False, 0)
         footer.pack_start(self._create_primary_button(
             _('Install & Open'), self.__install_and_open_cb),
@@ -1364,8 +1462,10 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         preview_scroll.add(self._create_preview_frame())
         preview_page.pack_start(preview_scroll, True, True, 0)
         preview_scroll.show()
-        preview_page.pack_start(self._create_live_edit_panel(), False, False,
-                                0)
+        self._live_edit_panel = self._create_live_edit_panel()
+        preview_page.pack_start(self._live_edit_panel, False, False, 0)
+        self._ask_bar = self._create_ask_bar()
+        preview_page.pack_start(self._ask_bar, False, False, 0)
         self._studio_mode_stack.add_named(preview_page, 'preview')
         preview_page.show()
 
@@ -1399,7 +1499,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         preview_align.add(self._create_activity_preview())
 
         help_text = Gtk.Label(
-            _('Click a preview area to select it, then describe the change.'))
+            _('Live edit: click a part or drag across an area, then '
+              'describe the change.'))
         help_text.get_style_context().add_class('create-ai-meta-note')
         help_text.set_xalign(0)
         frame_box.pack_start(help_text, False, False, 0)
@@ -1434,6 +1535,9 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         for child in self._preview_content_box.get_children():
             self._preview_content_box.remove(child)
         self._live_preview_canvas = None
+        self._preview_shell = None
+        self._select_start = None
+        self._select_rect = None
         if self._live_preview_activity is not None:
             try:
                 self._live_preview_activity.cleanup()
@@ -1445,6 +1549,18 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._preview_generation_spinner = None
         self._preview_generation_progress = None
         self._preview_generation_stage = None
+        self._preview_generation_xo = None
+        self._preview_generation_fun = None
+        self._preview_generation_canvas = None
+        self._generation_anim_start_us = None
+        self._generation_anim_done = False
+        self._generation_final_rgb = None
+        self._generation_fun_next = None
+        self._generation_target_fraction = None
+        self._generation_shown_fraction = 0.0
+        self._generation_fraction_mix = 0.0
+        self._generation_done_at = None
+        self._generation_fade_widgets = []
         self._preview_generation_steps = []
         self._preview_generation_step_boxes = []
 
@@ -1468,8 +1584,53 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._preview_content_box.pack_start(note, False, False, 0)
         note.show()
 
-    def _show_generation_activity_preview(self, message=None):
+    def _show_generation_activity_preview(self):
         self._clear_activity_preview()
+
+        self._generation_anim_start_us = None
+        self._generation_anim_t = 0.0
+        self._generation_anim_done = False
+        self._generation_final_rgb = None
+        self._generation_fun_next = None
+        self._generation_fun_alpha = 1.0
+        self._generation_target_fraction = None
+        self._generation_shown_fraction = 0.0
+        self._generation_fraction_mix = 0.0
+        self._generation_done_at = None
+        self._generation_fade_widgets = []
+
+        xo_icon = None
+        canvas = None
+        try:
+            stroke, fill = self._xo_pulse_color(0)
+            xo_icon = Icon(icon_name='computer-xo',
+                           pixel_size=style.zoom(120),
+                           stroke_color=stroke,
+                           fill_color=fill)
+        except Exception:
+            logging.exception('Could not create pulsing XO icon')
+        self._preview_generation_xo = xo_icon
+        if xo_icon is not None:
+            size = style.zoom(200)
+            canvas = Gtk.DrawingArea()
+            canvas.set_size_request(size, size)
+            canvas.connect('draw', self._draw_generation_canvas)
+            self._preview_generation_canvas = canvas
+
+            overlay = Gtk.Overlay()
+            overlay.set_halign(Gtk.Align.CENTER)
+            overlay.set_margin_top(style.zoom(4))
+            overlay.add(canvas)
+            canvas.show()
+
+            xo_icon.set_halign(Gtk.Align.CENTER)
+            xo_icon.set_valign(Gtk.Align.CENTER)
+            overlay.add_overlay(xo_icon)
+            xo_icon.show()
+
+            self._preview_content_box.pack_start(overlay, False, False, 0)
+            overlay.show()
+            canvas.add_tick_callback(self._generation_canvas_tick)
 
         title = Gtk.Label(_('Building your activity'))
         self._preview_empty_title = title
@@ -1479,7 +1640,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         title.show()
 
         note = Gtk.Label(
-            message or _('Turning your idea into a real Sugar activity'))
+            _('Turning your idea into a real Sugar activity'))
         self._preview_empty_note = note
         note.get_style_context().add_class('create-ai-meta-note')
         note.set_justify(Gtk.Justification.CENTER)
@@ -1489,13 +1650,17 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._preview_content_box.pack_start(note, False, False, 0)
         note.show()
 
-        progress = Gtk.ProgressBar()
-        self._preview_generation_progress = progress
-        progress.set_size_request(style.zoom(280), style.zoom(8))
-        progress.get_style_context().add_class('create-ai-generation-progress')
-        self._preview_content_box.pack_start(
-            progress, False, False, style.zoom(6))
-        progress.show()
+        if canvas is None:
+            # No orbit canvas to close into a progress ring, so fall
+            # back to the plain bar.
+            progress = Gtk.ProgressBar()
+            self._preview_generation_progress = progress
+            progress.set_size_request(style.zoom(280), style.zoom(8))
+            progress.get_style_context().add_class(
+                'create-ai-generation-progress')
+            self._preview_content_box.pack_start(
+                progress, False, False, style.zoom(6))
+            progress.show()
 
         stage = Gtk.Label()
         self._preview_generation_stage = stage
@@ -1507,6 +1672,16 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             stage, False, False, style.zoom(4))
         stage.show()
 
+        fun = Gtk.Label(self._generation_fun_messages()[0])
+        self._preview_generation_fun = fun
+        fun.get_style_context().add_class('create-ai-generation-fun')
+        fun.set_justify(Gtk.Justification.CENTER)
+        fun.set_line_wrap(True)
+        fun.set_max_width_chars(60)
+        self._preview_content_box.pack_start(
+            fun, False, False, style.zoom(2))
+        fun.show()
+
         steps_box = Gtk.VBox(spacing=style.zoom(8))
         steps_box.set_margin_top(style.zoom(6))
         self._preview_content_box.pack_start(
@@ -1515,15 +1690,15 @@ class _CreateAIActivityPanel(Gtk.EventBox):
 
         step_defs = [
             (_('Think'), _('Reading your prompt and planning the activity'),
-             'emblem-default'),
+             'emblem-question'),
             (_('Gather'), _('Finding real Sugar activity examples for context'),
              'system-search'),
             (_('Write'), _('Writing the Python code for your activity'),
-             'accessories-text-editor'),
+             'edit-description'),
             (_('Check'), _('Preparing project files and previewing'),
-             'dialog-apply'),
+             'dialog-ok'),
             (_('Ready'), _('Packaging your installable activity bundle'),
-             'package-x-generic'),
+             'package_settings'),
         ]
         self._preview_generation_steps = []
         self._preview_generation_step_boxes = []
@@ -1535,7 +1710,6 @@ class _CreateAIActivityPanel(Gtk.EventBox):
 
             icon = None
             try:
-                from sugar3.graphics.icon import Icon
                 icon = Icon(icon_name=icon_name,
                             pixel_size=style.zoom(16))
             except Exception:
@@ -1567,6 +1741,15 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             row.show()
             self._preview_generation_steps.append(label)
             self._preview_generation_step_boxes.append(row)
+
+        if canvas is not None:
+            # Staggered entrance: each element fades in a beat after
+            # the previous one, driven by the canvas frame tick.
+            self._generation_fade_widgets = [
+                (xo_icon, 0.0), (title, 0.15), (note, 0.25),
+                (stage, 0.35), (fun, 0.45), (steps_box, 0.55)]
+            for widget, _unused in self._generation_fade_widgets:
+                widget.set_opacity(0.0)
 
     def _create_review_page(self):
         review = Gtk.EventBox()
@@ -2827,7 +3010,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         toggle.pack_start(self._live_edit_off_button, False, False, 0)
 
         description = Gtk.Label(
-            _('Click a preview part, then describe the change.'))
+            _('Turn on, then click a part or drag across an area of the '
+              'preview to target it.'))
         description.get_style_context().add_class('create-ai-meta-note')
         description.set_xalign(0)
         description.set_line_wrap(True)
@@ -2874,6 +3058,149 @@ class _CreateAIActivityPanel(Gtk.EventBox):
 
         panel.show()
         return panel
+
+    def _create_ask_bar(self):
+        bar = Gtk.EventBox()
+        bar.get_style_context().add_class('create-ai-ask-bar')
+        bar.set_halign(Gtk.Align.CENTER)
+        bar.set_size_request(style.zoom(720), -1)
+
+        row = Gtk.HBox(spacing=style.zoom(8))
+        row.set_border_width(style.zoom(6))
+        bar.add(row)
+        row.show()
+
+        mode_group = Gtk.HBox(spacing=0)
+        mode_group.get_style_context().add_class('create-ai-ask-mode-group')
+        mode_group.set_valign(Gtk.Align.CENTER)
+        row.pack_start(mode_group, False, False, 0)
+        mode_group.show()
+
+        edit_button = Gtk.Button.new_with_label(_('Edit'))
+        self._ask_bar_edit_on = edit_button
+        edit_button.set_relief(Gtk.ReliefStyle.NONE)
+        edit_button.get_style_context().add_class('create-ai-ask-mode')
+        if self._live_edit_enabled:
+            edit_button.get_style_context().add_class(
+                'create-ai-ask-mode-active')
+        edit_button.set_tooltip_text(
+            _('Edit mode: click or drag on the preview to pick a target.'))
+        edit_button.connect('clicked', self.__live_toggle_clicked_cb, True)
+        mode_group.pack_start(edit_button, False, False, 0)
+        edit_button.show()
+
+        play_button = Gtk.Button.new_with_label(_('Play'))
+        self._ask_bar_edit_off = play_button
+        play_button.set_relief(Gtk.ReliefStyle.NONE)
+        play_button.get_style_context().add_class('create-ai-ask-mode')
+        if not self._live_edit_enabled:
+            play_button.get_style_context().add_class(
+                'create-ai-ask-mode-active')
+        play_button.set_tooltip_text(
+            _('Play mode: try the activity like a learner.'))
+        play_button.connect('clicked', self.__live_toggle_clicked_cb, False)
+        mode_group.pack_start(play_button, False, False, 0)
+        play_button.show()
+
+        plus = Gtk.Button()
+        plus_icon = Icon(icon_name='list-add',
+                         pixel_size=style.SMALL_ICON_SIZE,
+                         stroke_color='#e2e2e2',
+                         fill_color='#e2e2e2')
+        plus_icon.show()
+        plus.set_image(plus_icon)
+        plus.set_relief(Gtk.ReliefStyle.NONE)
+        plus.get_style_context().add_class('create-ai-ask-plus')
+        plus.set_valign(Gtk.Align.CENTER)
+        plus.set_tooltip_text(_('Target the whole activity again'))
+        plus.connect('clicked', self.__ask_bar_reset_target_cb)
+        row.pack_start(plus, False, False, 0)
+        plus.show()
+        self._ask_bar_plus = plus
+
+        target = Gtk.Label(self._live_edit_target)
+        self._ask_bar_target_label = target
+        target.get_style_context().add_class('create-ai-ask-target')
+        target.set_valign(Gtk.Align.CENTER)
+        target.set_ellipsize(Pango.EllipsizeMode.END)
+        target.set_max_width_chars(18)
+        target.set_tooltip_text(
+            _('Click a part of the preview, or drag across an area, '
+              'to change just that part.'))
+        row.pack_start(target, False, False, 0)
+        target.show()
+
+        entry = Gtk.Entry()
+        self._ask_bar_entry = entry
+        entry.set_placeholder_text(
+            _('Describe a change for the selected part')
+            if self._live_edit_enabled else _('Ask anything'))
+        entry.set_has_frame(False)
+        entry.get_style_context().add_class('create-ai-ask-entry')
+        entry.connect('activate', self.__ask_bar_send_cb)
+        row.pack_start(entry, True, True, 0)
+        entry.show()
+
+        status = Gtk.Label('')
+        self._ask_bar_status_label = status
+        status.get_style_context().add_class('create-ai-ask-status')
+        status.set_valign(Gtk.Align.CENTER)
+        status.set_ellipsize(Pango.EllipsizeMode.END)
+        status.set_max_width_chars(24)
+        row.pack_start(status, False, False, 0)
+        status.show()
+
+        send = Gtk.Button()
+        send_icon = Icon(icon_name='go-up',
+                         pixel_size=style.SMALL_ICON_SIZE,
+                         stroke_color=style.COLOR_WHITE.get_svg(),
+                         fill_color=style.COLOR_WHITE.get_svg())
+        send_icon.show()
+        send.set_image(send_icon)
+        send.set_relief(Gtk.ReliefStyle.NONE)
+        send.get_style_context().add_class('create-ai-ask-send')
+        send.set_valign(Gtk.Align.CENTER)
+        send.set_tooltip_text(_('Apply the change'))
+        send.connect('clicked', self.__ask_bar_send_cb)
+        row.pack_start(send, False, False, 0)
+        send.show()
+
+        return bar
+
+    def _set_live_edit_status(self, text):
+        if self._live_edit_status_label is not None:
+            self._live_edit_status_label.set_text(text)
+        if self._ask_bar_status_label is not None:
+            self._ask_bar_status_label.set_text(text)
+
+    def __ask_bar_reset_target_cb(self, button):
+        self._set_live_edit_target(_('activity canvas'))
+        if self._ask_bar_entry is not None:
+            self._ask_bar_entry.grab_focus()
+
+    def __ask_bar_send_cb(self, widget):
+        if self._ask_bar_entry is None or self._live_edit_entry is None:
+            return
+
+        text = self._ask_bar_entry.get_text().strip()
+        if not text:
+            self._ask_bar_entry.grab_focus()
+            self._set_live_edit_status(_('Describe the change first.'))
+            return
+
+        self._ask_bar_entry.set_text('')
+        if self._live_edit_enabled:
+            self._live_edit_entry.set_text(text)
+            self.__live_edit_add_clicked_cb(widget)
+            return
+
+        # Play mode: send the request as a whole-activity refinement.
+        if self._generation_result is None:
+            self._set_live_edit_status(
+                _('Generate an activity before asking for changes.'))
+            return
+        self._set_live_edit_status(_('Refining...'))
+        self._submit_refinement_from_prompt(text, source='chat')
 
     def _create_learning_sidebar(self):
         panel = Gtk.EventBox()
@@ -3296,6 +3623,98 @@ class _CreateAIActivityPanel(Gtk.EventBox):
                 color: #686868;
                 font-size: 13px;
             }
+            .create-ai-hero-title {
+                color: #1c1c1c;
+                font-weight: 700;
+                font-size: 30px;
+            }
+            .create-ai-template-caption {
+                color: #8a8a8a;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.04em;
+            }
+            button.create-ai-prompt-chip {
+                border-radius: 10px;
+                border: 1px solid #e3e3e3;
+                background-image: none;
+                background-color: #fafafa;
+                padding: 3px 10px;
+                min-height: 0;
+            }
+            button.create-ai-prompt-chip:hover {
+                background-color: %(studio_lavender_soft)s;
+                border-color: %(studio_lavender_faint)s;
+            }
+            button.create-ai-prompt-chip-active {
+                background-color: %(studio_lavender_soft)s;
+                border-color: %(studio_lavender_border)s;
+            }
+            .create-ai-chip-caption {
+                color: #9a9a9a;
+                font-size: 9px;
+            }
+            .create-ai-chip-value {
+                color: %(toolbar)s;
+                font-size: 11px;
+                font-weight: 700;
+            }
+            .create-ai-chip-caret {
+                color: #9a9a9a;
+                font-size: 8px;
+            }
+            .create-ai-prompt-status {
+                color: #8a8a8a;
+                font-size: 11px;
+            }
+            popover.create-ai-popover {
+                background-color: %(studio_surface)s;
+                border: 1px solid %(studio_edge)s;
+                border-radius: 10px;
+            }
+            .create-ai-provider-heading {
+                color: #202020;
+                font-weight: 700;
+                font-size: 13px;
+            }
+            .create-ai-provider-status {
+                color: #7a7a7a;
+                font-size: 10px;
+            }
+            button.create-ai-provider-primary {
+                border-radius: 7px;
+                border: 1px solid %(studio_dark)s;
+                background-image: none;
+                background-color: %(studio_dark)s;
+                color: %(studio_dark_text)s;
+                padding: 7px 12px;
+                font-size: 11px;
+                font-weight: 700;
+            }
+            button.create-ai-provider-primary label {
+                color: %(studio_dark_text)s;
+            }
+            button.create-ai-provider-primary:hover {
+                background-color: %(studio_dark_hover)s;
+                border-color: %(studio_dark_hover)s;
+            }
+            button.create-ai-template-card {
+                border-radius: 12px;
+                border: 1px solid %(studio_edge)s;
+                background-image: none;
+                background-color: %(studio_surface)s;
+                color: %(toolbar)s;
+                padding: 0;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+                transition: background-color 120ms ease,
+                            border-color 120ms ease,
+                            box-shadow 120ms ease;
+            }
+            button.create-ai-template-card:hover {
+                background-color: %(studio_lavender_soft)s;
+                border-color: %(studio_lavender_faint)s;
+                box-shadow: 0 4px 9px rgba(0, 0, 0, 0.12);
+            }
             .create-ai-meta-label {
                 color: %(toolbar)s;
                 font-weight: 700;
@@ -3321,10 +3740,16 @@ class _CreateAIActivityPanel(Gtk.EventBox):
                 font-weight: 400;
                 font-size: 11px;
             }
+            .create-ai-generation-fun {
+                color: #a58324;
+                font-size: 11px;
+                font-style: italic;
+            }
             .create-ai-generation-step {
                 color: #aaa;
                 font-size: 11px;
                 font-weight: 400;
+                transition: color 250ms ease-out;
             }
             .create-ai-generation-step-active {
                 color: #333;
@@ -3338,6 +3763,8 @@ class _CreateAIActivityPanel(Gtk.EventBox):
                 padding: 6px 10px;
                 border-radius: 8px;
                 border: 1px solid transparent;
+                transition: background-color 250ms ease-out,
+                            border-color 250ms ease-out;
             }
             .create-ai-generation-step-row-active {
                 background-color: %(studio_lavender_soft)s;
@@ -3623,20 +4050,20 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             }
             .create-ai-send {
                 border-radius: 999px;
-                border: 1px solid #555555;
+                border: 1px solid %(toolbar)s;
                 background-image: none;
-                background-color: #404040;
-                color: #ffffff;
-                padding: 1px 6px;
-                min-width: 28px;
-                min-height: 28px;
+                background-color: %(toolbar)s;
+                color: %(white)s;
+                padding: 0;
+                min-width: 34px;
+                min-height: 34px;
             }
             .create-ai-send label {
-                color: #ffffff;
+                color: %(white)s;
             }
             .create-ai-send:hover {
-                background-color: #2e2e2e;
-                border-color: #444444;
+                background-color: %(black)s;
+                border-color: %(black)s;
             }
             .create-ai-studio-workspace {
                 border-radius: 14px;
@@ -4077,6 +4504,92 @@ class _CreateAIActivityPanel(Gtk.EventBox):
                 border: 2px solid rgba(255, 200, 0, 0.85);
                 border-radius: 3px;
             }
+            .create-ai-ask-bar {
+                border-radius: 999px;
+                border: 1px solid #3d3d3d;
+                background-color: #2b2b2b;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+            }
+            .create-ai-ask-mode-group {
+                border-radius: 999px;
+                border: 1px solid #4d4d4d;
+                background-color: #232323;
+            }
+            button.create-ai-ask-mode {
+                border-radius: 999px;
+                border: 1px solid transparent;
+                background-image: none;
+                background-color: transparent;
+                padding: 2px 10px;
+                font-size: 10px;
+                font-weight: 700;
+                min-height: 0;
+            }
+            button.create-ai-ask-mode label {
+                color: #b8b8b8;
+            }
+            button.create-ai-ask-mode:hover {
+                background-color: #3d3d3d;
+            }
+            button.create-ai-ask-mode-active {
+                background-color: %(studio_cream)s;
+                border-color: %(studio_cream_border)s;
+            }
+            button.create-ai-ask-mode-active label {
+                color: %(studio_cream_text)s;
+            }
+            button.create-ai-ask-mode-active:hover {
+                background-color: %(studio_cream)s;
+            }
+            button.create-ai-ask-plus {
+                border-radius: 999px;
+                border: 0;
+                background-image: none;
+                background-color: transparent;
+                padding: 0;
+                min-width: 30px;
+                min-height: 30px;
+            }
+            button.create-ai-ask-plus:hover {
+                background-color: #3d3d3d;
+            }
+            .create-ai-ask-target {
+                border-radius: 999px;
+                background-color: #3d3d3d;
+                color: #d8d8d8;
+                padding: 2px 10px;
+                font-size: 10px;
+            }
+            entry.create-ai-ask-entry {
+                border: 0;
+                border-radius: 0;
+                background-color: transparent;
+                background-image: none;
+                box-shadow: none;
+                color: #f0f0f0;
+                caret-color: #ffffff;
+                font-size: 13px;
+            }
+            entry.create-ai-ask-entry:focus {
+                border: 0;
+                box-shadow: none;
+            }
+            .create-ai-ask-status {
+                color: #9a9a9a;
+                font-size: 10px;
+            }
+            button.create-ai-ask-send {
+                border-radius: 999px;
+                border: 1px solid #4d4d4d;
+                background-image: none;
+                background-color: #454545;
+                padding: 0;
+                min-width: 32px;
+                min-height: 32px;
+            }
+            button.create-ai-ask-send:hover {
+                background-color: #5a5a5a;
+            }
             .create-ai-learning-sidebar {
                 border-radius: 12px;
                 border: 1px solid %(studio_edge)s;
@@ -4205,7 +4718,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         if self._prompt_text is not None:
             self._set_prompt_placeholder()
         if self._prompt_status_label is not None:
-            self._prompt_status_label.set_text(_('Thinking'))
+            self._prompt_status_label.set_text('')
 
     def _set_prompt_placeholder(self):
         if self._prompt_text is None:
@@ -4247,7 +4760,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._set_prompt_text(text)
         self.focus_prompt()
         if self._prompt_status_label is not None:
-            self._prompt_status_label.set_text(_('Thinking'))
+            self._prompt_status_label.set_text('')
 
     def focus_prompt(self):
         GObject.idle_add(self.__focus_prompt_text)
@@ -4262,17 +4775,18 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         for label in self._studio_prompt_labels:
             label.set_text(prompt)
 
-    def _set_live_edit_target(self, target):
+    def _set_live_edit_target(self, target, is_region=False):
         target = target.strip() if isinstance(target, str) else ''
         if not target:
             target = _('activity canvas')
         self._live_edit_target = target
+        self._live_edit_target_is_region = is_region
         if self._live_edit_target_label is not None:
             self._live_edit_target_label.set_text(
                 _('Preview target: %s') % target)
-        if self._live_edit_status_label is not None:
-            self._live_edit_status_label.set_text(
-                _('Target selected: %s') % target)
+        if self._ask_bar_target_label is not None:
+            self._ask_bar_target_label.set_text(target)
+        self._set_live_edit_status(_('Target selected: %s') % target)
 
     def _attach_live_edit_handlers_to_preview(self, canvas, toolbar):
         """Walk the live preview widget tree and attach click-to-select handlers."""
@@ -4296,6 +4810,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             except Exception:
                 pass
         self._live_edit_handler_ids = []
+        self._live_edit_targets = []
 
     def _walk_and_attach_live_edit(self, widget, in_toolbar=False, depth=0):
         if depth > 12:
@@ -4303,6 +4818,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         desc = self._describe_widget_for_live_edit(widget, in_toolbar)
         if desc:
             # Leaf/interactive widget — attach handler and stop recursing
+            self._live_edit_targets.append((widget, desc))
             try:
                 widget.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
                 hid = widget.connect(
@@ -4382,7 +4898,16 @@ class _CreateAIActivityPanel(Gtk.EventBox):
     def __live_edit_widget_press_cb(self, widget, event, description):
         if not self._live_edit_enabled:
             return False
+        # Mark this press as handled so the outer shell's generic
+        # 'activity canvas' handler does not overwrite the target, but
+        # still return False so the activity itself reacts to the click.
+        self._live_edit_press_handled = True
+        GObject.idle_add(self.__clear_live_edit_press_flag)
         self._set_live_edit_target(description)
+        self._highlight_live_edit_widget(widget)
+        return False
+
+    def _highlight_live_edit_widget(self, widget):
         if self._live_edit_highlighted is not None:
             try:
                 self._live_edit_highlighted.get_style_context().remove_class(
@@ -4390,18 +4915,113 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             except Exception:
                 pass
         self._live_edit_highlighted = widget
+        if widget is None:
+            return
         try:
             widget.get_style_context().add_class('live-edit-selected')
         except Exception:
             pass
-        return True  # stop propagation so outer shell doesn't overwrite target
 
-    def __preview_target_button_press_event_cb(self, widget, event, target):
-        if self._live_edit_enabled:
-            self._set_live_edit_target(target)
+    def _focus_live_edit_entry(self):
+        if self._preview_is_fullscreen and self._ask_bar_entry is not None:
+            self._ask_bar_entry.grab_focus()
+        elif self._live_edit_entry is not None:
+            self._live_edit_entry.grab_focus()
+
+    def __preview_shell_press_cb(self, shell, event):
+        if not self._live_edit_enabled or event.button != 1:
+            return False
+        self._select_start = (event.x, event.y)
+        self._select_rect = None
+        shell.queue_draw()
+        return True
+
+    def __preview_shell_motion_cb(self, shell, event):
+        if self._select_start is None:
+            return False
+        x0, y0 = self._select_start
+        self._select_rect = (min(x0, event.x), min(y0, event.y),
+                             abs(event.x - x0), abs(event.y - y0))
+        shell.queue_draw()
+        return True
+
+    def __preview_shell_release_cb(self, shell, event):
+        if self._select_start is None:
+            return False
+        self._select_start = None
+        rect = self._select_rect
+        if rect is None or (rect[2] < 8 and rect[3] < 8):
+            # A plain click: target the widget under the pointer.
+            self._select_rect = None
+            target = self._pick_live_edit_target_at(shell, event.x, event.y)
+            self._set_live_edit_target(target or _('activity canvas'))
+        else:
+            # A drag: target the marked region, described in percentages
+            # of the preview so refinements know where to look.
+            self._highlight_live_edit_widget(None)
+            alloc = shell.get_allocation()
+            width = max(alloc.width, 1)
+            height = max(alloc.height, 1)
+            x, y, w, h = rect
+            self._set_live_edit_target(
+                _('area %(x)d%%, %(y)d%% • %(w)d%% × %(h)d%%') % {
+                    'x': int(round(x * 100.0 / width)),
+                    'y': int(round(y * 100.0 / height)),
+                    'w': int(round(w * 100.0 / width)),
+                    'h': int(round(h * 100.0 / height)),
+                }, is_region=True)
+        shell.queue_draw()
+        self._focus_live_edit_entry()
+        return True
+
+    def __preview_shell_draw_after_cb(self, shell, cr):
+        rect = self._select_rect
+        if rect is None or not self._live_edit_enabled:
+            return False
+        x, y, w, h = rect
+        cr.set_source_rgba(1.0, 0.78, 0.0, 0.14)
+        cr.rectangle(x, y, w, h)
+        cr.fill()
+        cr.set_source_rgba(1.0, 0.78, 0.0, 0.9)
+        cr.set_line_width(2)
+        cr.rectangle(x, y, w, h)
+        cr.stroke()
         return False
 
+    def _pick_live_edit_target_at(self, shell, x, y):
+        best_desc = None
+        best_widget = None
+        best_area = None
+        for widget, desc in self._live_edit_targets:
+            try:
+                if not widget.get_mapped():
+                    continue
+                pos = widget.translate_coordinates(shell, 0, 0)
+                if not pos:
+                    continue
+                wx, wy = pos
+                alloc = widget.get_allocation()
+            except Exception:
+                continue
+            if not (wx <= x <= wx + alloc.width and
+                    wy <= y <= wy + alloc.height):
+                continue
+            area = alloc.width * alloc.height
+            if best_area is None or area < best_area:
+                best_desc = desc
+                best_widget = widget
+                best_area = area
+        if best_widget is not None:
+            self._highlight_live_edit_widget(best_widget)
+        return best_desc
 
+    def __clear_live_edit_press_flag(self):
+        self._live_edit_press_handled = False
+        return False
+
+    def __preview_target_button_press_event_cb(self, widget, event, target):
+        if self._live_edit_press_handled:
+            return False
         if self._live_edit_enabled:
             self._set_live_edit_target(target)
         return False
@@ -4410,27 +5030,11 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         if self._planner_hint is None:
             return
 
-        planner_notes = {
-            'rag': _('RAG over Sugar activity examples'),
-            'direct': _('direct LLM call, no Sugar examples'),
-            'validate': _('local template planning plus AST validation'),
-        }
-        policy_notes = {
-            'standard': _('configured provider, no template fallback'),
-            'creative': _('fewer structural constraints, more expression'),
-            'local': _('Ollama when configured, otherwise local templates'),
-            'strict': _('fixed local templates without model calls'),
-        }
-        planner = planner_notes.get(self._selected_options['planner'],
-                                    self._selected_options['planner'])
-        policy = policy_notes.get(self._selected_options['policy'],
-                                  self._selected_options['policy'])
         provider = self._get_provider_label(
             self._selected_options['provider'])
         self._planner_hint.set_text(
-            _('Planner mode: %s. Policy: %s. Provider: %s. Generated code '
-              'will still be checked before it becomes an activity.')
-            % (planner, policy, provider))
+            _('Provider: %s. Generated code is still checked before it '
+              'becomes an activity.') % provider)
 
     def _update_provider_controls(self):
         if self._provider_key_entry is None:
@@ -4924,7 +5528,9 @@ if clipboard.wait_is_text_available():
         if self._generation_animation_hide_id:
             GLib.source_remove(self._generation_animation_hide_id)
             self._generation_animation_hide_id = 0
-        self._show_generation_activity_preview(message)
+        self._generation_tick_count = 0
+        self._generation_has_fraction = False
+        self._show_generation_activity_preview()
         if self._preview_generation_progress is not None:
             self._preview_generation_progress.set_fraction(0.0)
             self._preview_generation_progress.show()
@@ -4948,19 +5554,297 @@ if clipboard.wait_is_text_available():
             self._preview_generation_progress.hide()
         if self._preview_generation_stage is not None:
             self._preview_generation_stage.hide()
+        was_done = self._generation_anim_done
+        # Settle the orbit canvas into its calm full ring, then freeze
+        # it; the tick callback removes itself once the reference drops.
+        canvas = self._preview_generation_canvas
+        self._preview_generation_canvas = None
+        if canvas is not None and not was_done:
+            self._generation_anim_done = True
+            canvas.queue_draw()
+        self._generation_fun_next = None
+        # The staggered entrance may not have finished (or even started,
+        # if generation failed within milliseconds) — restore every
+        # faded element so nothing is left invisible.
+        for child, _unused in self._generation_fade_widgets:
+            child.set_opacity(1.0)
+        self._generation_fade_widgets = []
+        if self._preview_generation_fun is not None:
+            self._generation_fun_alpha = 1.0
+            self._preview_generation_fun.set_opacity(1.0)
+            if not was_done:
+                # A playful "building..." quip reads wrong next to a
+                # failure or cancel notice.
+                self._preview_generation_fun.hide()
+
+    def _generation_fun_messages(self):
+        return [
+            _('Great ideas take a moment to build...'),
+            _('Real Sugar activities are lending a hand as examples.'),
+            _('Mixing colors, code, and curiosity...'),
+            _('Teaching your activity how to play fair...'),
+            _('Almost like magic — but it\'s Python!'),
+            _('Wiring up buttons for curious fingers...'),
+            _('Your idea is becoming something learners can touch.'),
+        ]
+
+    def _hex_to_rgb(self, hex_color):
+        hex_color = hex_color.lstrip('#')
+        try:
+            return tuple(int(hex_color[i:i + 2], 16) / 255.0
+                         for i in (0, 2, 4))
+        except (ValueError, IndexError):
+            return (0.16, 0.16, 0.16)
+
+    def _generation_color_wheel(self):
+        if self._generation_wheel_cache is not None:
+            return self._generation_wheel_cache
+        try:
+            from sugar3.graphics.xocolor import colors as xo_colors
+        except Exception:
+            xo_colors = [['#282828', '#B8B8B8']]
+        wheel = []
+        for stroke, fill in xo_colors:
+            red, green, blue = self._hex_to_rgb(fill)
+            # Near-white fills make the XO body vanish on the light
+            # preview panel, so leave them out of the drift.
+            if 0.299 * red + 0.587 * green + 0.114 * blue > 0.86:
+                continue
+            wheel.append((stroke, fill))
+        if not wheel:
+            wheel = [('#282828', '#B8B8B8')]
+        self._generation_wheel_cache = wheel
+        return wheel
+
+    def _xo_pulse_color(self, index):
+        wheel = self._generation_color_wheel()
+        stroke, fill = wheel[index % len(wheel)]
+        return stroke, fill
+
+    def _generation_wheel_rgb(self, phase):
+        """Smoothly interpolated (stroke, fill) rgb along the XO wheel."""
+        wheel = self._generation_color_wheel()
+        index = int(phase)
+        frac = phase - index
+        stroke_a, fill_a = wheel[index % len(wheel)]
+        stroke_b, fill_b = wheel[(index + 1) % len(wheel)]
+
+        def _lerp(hex_a, hex_b):
+            rgb_a = self._hex_to_rgb(hex_a)
+            rgb_b = self._hex_to_rgb(hex_b)
+            return tuple(a + (b - a) * frac for a, b in zip(rgb_a, rgb_b))
+
+        return _lerp(stroke_a, stroke_b), _lerp(fill_a, fill_b)
+
+    def _generation_canvas_tick(self, widget, frame_clock):
+        if widget is not self._preview_generation_canvas:
+            return GLib.SOURCE_REMOVE
+        now = frame_clock.get_frame_time()
+        if self._generation_anim_start_us is None:
+            self._generation_anim_start_us = now
+        previous = self._generation_anim_t
+        self._generation_anim_t = \
+            (now - self._generation_anim_start_us) / 1000000.0
+        dt = max(0.0, self._generation_anim_t - previous)
+
+        # Glide the displayed progress toward the backend's fraction so
+        # the ring never jumps.
+        if self._generation_target_fraction is not None:
+            self._generation_fraction_mix = min(
+                1.0, self._generation_fraction_mix + dt * 2.0)
+            gap = self._generation_target_fraction - \
+                self._generation_shown_fraction
+            self._generation_shown_fraction += gap * min(1.0, dt * 2.5)
+
+        fun = self._preview_generation_fun
+        if fun is not None:
+            # Crossfade the playful messages instead of snapping them.
+            if self._generation_fun_next is not None:
+                self._generation_fun_alpha = max(
+                    0.0, self._generation_fun_alpha - dt * 4.0)
+                if self._generation_fun_alpha == 0.0:
+                    fun.set_text(self._generation_fun_next)
+                    self._generation_fun_next = None
+            elif self._generation_fun_alpha < 1.0:
+                self._generation_fun_alpha = min(
+                    1.0, self._generation_fun_alpha + dt * 4.0)
+
+        # Staggered entrance fades; afterwards opacities hold steady
+        # (GTK ignores set_opacity calls with an unchanged value).
+        for child, delay in self._generation_fade_widgets:
+            progress = (self._generation_anim_t - delay) / 0.5
+            progress = max(0.0, min(1.0, progress))
+            eased = progress * progress * (3.0 - 2.0 * progress)
+            if child is fun:
+                eased *= self._generation_fun_alpha
+            child.set_opacity(eased)
+
+        widget.queue_draw()
+        return GLib.SOURCE_CONTINUE
+
+    def _draw_generation_canvas(self, widget, cr):
+        alloc = widget.get_allocation()
+        center_x = alloc.width / 2.0
+        center_y = alloc.height / 2.0
+        t = self._generation_anim_t
+        orbit_radius = style.zoom(78)
+
+        # Everything eases in together over the first beat.
+        entrance = max(0.0, min(1.0, t / 0.7))
+        entrance = entrance * entrance * (3.0 - 2.0 * entrance)
+
+        if self._generation_anim_done and \
+                self._generation_final_rgb is not None:
+            stroke_rgb, fill_rgb = self._generation_final_rgb
+        else:
+            stroke_rgb, fill_rgb = self._generation_wheel_rgb(t / 0.8)
+
+        # A soft halo breathing behind the XO, like a slow heartbeat.
+        breath = 0.5 + 0.5 * math.sin(t * 2.0 * math.pi / 3.2)
+        if self._generation_anim_done:
+            breath = 0.75
+        halo_radius = style.zoom(58) + style.zoom(10) * breath
+        halo = cairo.RadialGradient(center_x, center_y, style.zoom(20),
+                                    center_x, center_y, halo_radius)
+        halo_alpha = (0.10 + 0.10 * breath) * entrance
+        halo.add_color_stop_rgba(0.0, *fill_rgb, halo_alpha)
+        halo.add_color_stop_rgba(1.0, *fill_rgb, 0.0)
+        cr.set_source(halo)
+        cr.arc(center_x, center_y, halo_radius, 0, 2.0 * math.pi)
+        cr.fill()
+
+        if self._generation_anim_done:
+            # Settled: a calm, complete ring in the learner's colors,
+            # marked once by a soft outward ripple.
+            cr.set_source_rgba(*stroke_rgb, 0.45)
+            cr.set_line_width(style.zoom(3))
+            cr.arc(center_x, center_y, orbit_radius, 0, 2.0 * math.pi)
+            cr.stroke()
+            if self._generation_done_at is not None:
+                ripple = (t - self._generation_done_at) / 0.7
+                if 0.0 <= ripple < 1.0:
+                    cr.set_source_rgba(*stroke_rgb, 0.30 * (1.0 - ripple))
+                    cr.set_line_width(max(1, style.zoom(2)))
+                    cr.arc(center_x, center_y,
+                           orbit_radius + style.zoom(18) * ripple,
+                           0, 2.0 * math.pi)
+                    cr.stroke()
+            return False
+
+        # Faint guide ring the comet travels on.
+        cr.set_line_width(style.zoom(2))
+        cr.set_source_rgba(*stroke_rgb, 0.10 * entrance)
+        cr.arc(center_x, center_y, orbit_radius, 0, 2.0 * math.pi)
+        cr.stroke()
+
+        # Tiny seeds drifting the other way, barely there.
+        seed_angle = -t * 2.0 * math.pi / 14.0
+        for i in range(3):
+            angle = seed_angle + i * 2.0 * math.pi / 3.0
+            cr.set_source_rgba(*stroke_rgb, 0.16 * entrance)
+            cr.arc(center_x + orbit_radius * math.cos(angle),
+                   center_y + orbit_radius * math.sin(angle),
+                   max(2, style.zoom(2)), 0, 2.0 * math.pi)
+            cr.fill()
+
+        mix = self._generation_fraction_mix
+        free_alpha = (1.0 - mix) * entrance
+        if free_alpha > 0.01:
+            # While progress is unknown the comet roams freely; a touch
+            # of sinusoidal drift keeps the motion organic.
+            head_angle = t * 2.0 * math.pi / 4.5 - math.pi / 2.0 + \
+                0.15 * math.sin(t * 0.7)
+            self._draw_generation_comet(
+                cr, center_x, center_y, orbit_radius, head_angle,
+                stroke_rgb, fill_rgb, free_alpha)
+
+        if mix > 0.01 and self._generation_shown_fraction > 0.002:
+            # Real progress: the ring closes as the work completes,
+            # with the comet as the pen drawing it.
+            arc_alpha = mix * entrance
+            start = -math.pi / 2.0
+            end = start + \
+                2.0 * math.pi * self._generation_shown_fraction
+            cr.set_source_rgba(*stroke_rgb, 0.40 * arc_alpha)
+            cr.set_line_width(style.zoom(3))
+            cr.arc(center_x, center_y, orbit_radius, start, end)
+            cr.stroke()
+            self._draw_generation_comet_head(
+                cr, center_x, center_y, orbit_radius, end,
+                stroke_rgb, fill_rgb, arc_alpha)
+        return False
+
+    def _draw_generation_comet(self, cr, center_x, center_y, radius,
+                               head_angle, stroke_rgb, fill_rgb, alpha):
+        tail_span = math.radians(110)
+        segments = 22
+        cr.set_line_width(style.zoom(3))
+        for i in range(segments):
+            frac0 = i / float(segments)
+            frac1 = (i + 1) / float(segments)
+            cr.set_source_rgba(
+                *stroke_rgb, 0.5 * alpha * (1.0 - frac0) ** 1.7)
+            cr.arc(center_x, center_y, radius,
+                   head_angle - tail_span * frac1,
+                   head_angle - tail_span * frac0)
+            cr.stroke()
+        self._draw_generation_comet_head(
+            cr, center_x, center_y, radius, head_angle,
+            stroke_rgb, fill_rgb, alpha)
+
+    def _draw_generation_comet_head(self, cr, center_x, center_y, radius,
+                                    angle, stroke_rgb, fill_rgb, alpha):
+        head_x = center_x + radius * math.cos(angle)
+        head_y = center_y + radius * math.sin(angle)
+        glow = cairo.RadialGradient(head_x, head_y, 0,
+                                    head_x, head_y, style.zoom(9))
+        glow.add_color_stop_rgba(0.0, *stroke_rgb, 0.8 * alpha)
+        glow.add_color_stop_rgba(1.0, *stroke_rgb, 0.0)
+        cr.set_source(glow)
+        cr.arc(head_x, head_y, style.zoom(9), 0, 2.0 * math.pi)
+        cr.fill()
+        cr.set_source_rgba(*fill_rgb, 0.9 * alpha)
+        cr.arc(head_x, head_y, max(3, style.zoom(3)), 0, 2.0 * math.pi)
+        cr.fill()
 
     def _pulse_generation_progress(self):
-        if self._preview_generation_progress is not None:
+        self._generation_tick_count += 1
+        if self._preview_generation_progress is not None and \
+                not self._generation_has_fraction:
             self._preview_generation_progress.pulse()
+
+        xo_icon = self._preview_generation_xo
+        if xo_icon is not None and not self._generation_anim_done and \
+                self._generation_tick_count % 2 == 0:
+            # Drift through the XO color wheel one neighbor at a time,
+            # like Sugar's boot pulse — slow enough to feel calm.
+            stroke, fill = self._xo_pulse_color(
+                self._generation_tick_count // 2)
+            try:
+                xo_icon.props.stroke_color = stroke
+                xo_icon.props.fill_color = fill
+            except Exception:
+                pass
+
+        fun = self._preview_generation_fun
+        if fun is not None and self._generation_tick_count % 9 == 0:
+            messages = self._generation_fun_messages()
+            text = messages[
+                (self._generation_tick_count // 9) % len(messages)]
+            if self._preview_generation_canvas is not None:
+                self._generation_fun_next = text
+            else:
+                fun.set_text(text)
         return True
 
     def _update_generation_animation(self, stage, fraction, message):
+        if fraction > 0:
+            self._generation_has_fraction = True
+            self._generation_target_fraction = max(
+                0.0, min(0.98, float(fraction)))
         if self._preview_generation_progress is not None:
             self._preview_generation_progress.show()
             if fraction > 0:
-                if self._generation_animation_id:
-                    GLib.source_remove(self._generation_animation_id)
-                    self._generation_animation_id = 0
                 self._preview_generation_progress.set_fraction(
                     max(0.0, min(0.98, float(fraction))))
         if self._preview_generation_stage is not None:
@@ -4976,9 +5860,32 @@ if clipboard.wait_is_text_available():
         if self._preview_generation_progress is not None:
             self._preview_generation_progress.set_fraction(1.0)
             self._preview_generation_progress.show()
+        if self._preview_generation_xo is not None:
+            # Settle the pulsing XO on the learner's own colors.
+            try:
+                from sugar3 import profile
+                color = profile.get_color()
+                self._preview_generation_xo.props.stroke_color = \
+                    color.get_stroke_color()
+                self._preview_generation_xo.props.fill_color = \
+                    color.get_fill_color()
+                self._generation_final_rgb = (
+                    self._hex_to_rgb(color.get_stroke_color()),
+                    self._hex_to_rgb(color.get_fill_color()))
+            except Exception:
+                pass
+        self._generation_anim_done = True
+        self._generation_target_fraction = 1.0
+        self._generation_done_at = self._generation_anim_t
         if self._preview_generation_stage is not None:
-            self._preview_generation_stage.set_text(_('Activity is ready'))
+            self._preview_generation_stage.set_text(
+                _('Your activity is ready!'))
             self._preview_generation_stage.show()
+        if self._preview_generation_fun is not None:
+            self._generation_fun_next = None
+            self._generation_fun_alpha = 1.0
+            self._preview_generation_fun.set_opacity(1.0)
+            self._preview_generation_fun.set_text(_('Have fun exploring!'))
         self._set_generation_step_active(4)
         if self._generation_animation_hide_id:
             GLib.source_remove(self._generation_animation_hide_id)
@@ -4993,8 +5900,11 @@ if clipboard.wait_is_text_available():
         return False
 
     def _render_generated_activity_preview(self, result):
-        if self._render_live_generated_activity_preview(result):
-            return
+        try:
+            if self._render_live_generated_activity_preview(result):
+                return
+        except Exception:
+            logging.exception('Could not embed live activity preview')
 
         self._clear_activity_preview()
 
@@ -5024,6 +5934,21 @@ if clipboard.wait_is_text_available():
         error_note.set_justify(Gtk.Justification.CENTER)
         error_box.pack_start(error_note, False, False, 0)
 
+        if self._last_preview_error:
+            error_detail = Gtk.Label(self._last_preview_error[:220])
+            error_detail.get_style_context().add_class(
+                'create-ai-generation-stage')
+            error_detail.set_line_wrap(True)
+            error_detail.set_max_width_chars(70)
+            error_detail.set_justify(Gtk.Justification.CENTER)
+            error_box.pack_start(error_detail, False, False, 0)
+            try:
+                self._append_chat_status(
+                    _('Preview issue: %s')
+                    % self._last_preview_error[:160])
+            except Exception:
+                logging.exception('Could not post preview issue to chat')
+
         self._preview_content_box.pack_start(error_box, True, True, 0)
         error_box.show_all()
 
@@ -5038,15 +5963,18 @@ if clipboard.wait_is_text_available():
                 project_path,
                 getattr(result.spec, 'name', '') or _('Generated Activity'),
             )
-        except Exception:
+        except Exception as error:
             logging.exception('Could not render live generated activity')
+            self._last_preview_error = str(error)
             return False
 
         if preview is None or not isinstance(canvas, Gtk.Widget):
             logging.error(
                 'Live preview failed for %s: %s',
                 project_path, canvas)
+            self._last_preview_error = str(canvas)
             return False
+        self._last_preview_error = ''
 
         self._clear_activity_preview()
 
@@ -5054,10 +5982,20 @@ if clipboard.wait_is_text_available():
         shell.get_style_context().add_class('create-ai-generated-preview')
         shell.set_hexpand(True)
         shell.set_vexpand(True)
-        shell.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
-        shell.connect('button-press-event',
-                      self.__preview_target_button_press_event_cb,
-                      _('activity canvas'))
+        shell.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
+                         Gdk.EventMask.BUTTON_RELEASE_MASK |
+                         Gdk.EventMask.POINTER_MOTION_MASK |
+                         Gdk.EventMask.BUTTON1_MOTION_MASK)
+        shell.connect('button-press-event', self.__preview_shell_press_cb)
+        shell.connect('motion-notify-event', self.__preview_shell_motion_cb)
+        shell.connect('button-release-event', self.__preview_shell_release_cb)
+        shell.connect_after('draw', self.__preview_shell_draw_after_cb)
+        # With live edit on, the shell's input window sits above the
+        # activity so clicks and drags select targets instead of playing.
+        shell.set_above_child(self._live_edit_enabled)
+        self._preview_shell = shell
+        self._select_start = None
+        self._select_rect = None
 
         box = Gtk.VBox(spacing=style.zoom(6))
         box.set_border_width(style.zoom(4))
@@ -6604,6 +7542,7 @@ if clipboard.wait_is_text_available():
 
         if group_name == 'template':
             self._update_template_hint()
+            self._update_template_card_icons()
         elif group_name in ('planner', 'policy'):
             self._update_planner_hint()
         elif group_name == 'license':
@@ -6615,6 +7554,8 @@ if clipboard.wait_is_text_available():
             'play': _('Play'),
             'share': _('Share'),
             'logic_math': _('Logic & math'),
+            'science': _('Science'),
+            'language': _('Language'),
             'tools_utils': _('Tools/utilities'),
             'games': _('Games'),
             'creation': _('Creation'),
@@ -6624,6 +7565,7 @@ if clipboard.wait_is_text_available():
             'standard': _('Standard'),
             'local': _('Local'),
             'strict': _('Strict'),
+            'on': _('On'),
             'off': _('Off'),
         }
         if self._prompt_status_label is not None:
@@ -6631,7 +7573,7 @@ if clipboard.wait_is_text_available():
                 self._prompt_status_label.set_text(
                     self._get_selected_license()['label'])
             else:
-                self._prompt_status_label.set_text(status[value])
+                self._prompt_status_label.set_text(status.get(value, value))
 
     def __code_size_combo_changed_cb(self, combo):
         self._selected_options['code_size'] = combo.get_active_id() or 'standard'
@@ -6645,6 +7587,9 @@ if clipboard.wait_is_text_available():
         self._provider_key_entry.set_text('')
         self._provider_model_entry.set_text('')
         self._provider_endpoint_entry.set_text('')
+        if self._provider_chip_value_label is not None:
+            self._provider_chip_value_label.set_text(
+                self._get_provider_label(provider_name))
         self._update_provider_controls()
         self._update_planner_hint()
 
@@ -6702,16 +7647,6 @@ if clipboard.wait_is_text_available():
         self._provider_status_label.set_text(
             _('%s API key removed.') %
             self._get_provider_label(provider_name))
-
-    def __guided_button_toggled_cb(self, button):
-        if button.get_active():
-            button.get_style_context().add_class('create-ai-pill-active')
-            if self._prompt_status_label is not None:
-                self._prompt_status_label.set_text(_('Guided'))
-        else:
-            button.get_style_context().remove_class('create-ai-pill-active')
-            if self._prompt_status_label is not None:
-                self._prompt_status_label.set_text(_('Thinking'))
 
     def _select_studio_tab(self, tab_name):
         if self._studio_mode_stack is not None:
@@ -6884,9 +7819,27 @@ if clipboard.wait_is_text_available():
         backend_refinement = refinement
         display_refinement = refinement
         if source == 'preview':
+            if self._live_edit_target_is_region:
+                target_note = (
+                    'The learner dragged a selection over the live '
+                    'preview. The target below is that rectangle, in '
+                    'percent of the activity canvas measured from its '
+                    'top-left corner (x, y • width × height). '
+                    'Work out which widgets or drawing fall inside that '
+                    'region and apply the change to them.'
+                )
+            else:
+                target_note = (
+                    'The learner clicked this specific part of the live '
+                    'preview. Apply the change to it.'
+                )
             backend_refinement = (
-                'Target: %(target)s\nChange: %(change)s'
+                '%(note)s Keep the rest of the activity working '
+                'unchanged.\n'
+                'Target: %(target)s\n'
+                'Change: %(change)s'
             ) % {
+                'note': target_note,
                 'target': target,
                 'change': refinement,
             }
@@ -6894,8 +7847,8 @@ if clipboard.wait_is_text_available():
                 'target': target,
                 'change': refinement,
             }
-        if source == 'preview' and self._live_edit_status_label is not None:
-            self._live_edit_status_label.set_text(_('Refining preview...'))
+        if source == 'preview':
+            self._set_live_edit_status(_('Refining preview...'))
         if source == 'sidebar' and \
                 self._sidebar_refine_status_label is not None:
             self._sidebar_refine_status_label.set_text(_('Refining...'))
@@ -6927,6 +7880,7 @@ if clipboard.wait_is_text_available():
             '- Summary: %(summary)s\n'
             '- Classroom flow:\n%(flow)s\n\n'
             'Current plan JSON excerpt:\n%(plan_context)s\n\n'
+            'Current activity.py excerpt:\n%(source)s\n\n'
             'Refinement request:\n%(refinement)s'
         ) % {
             'original': original_prompt,
@@ -6935,6 +7889,7 @@ if clipboard.wait_is_text_available():
             'summary': plan.get('summary', ''),
             'flow': flow_text or '- Keep the activity usable for learners.',
             'plan_context': plan_context,
+            'source': self._source_context_for_refinement(result),
             'refinement': refinement,
         }
         prompt = self._limit_refinement_prompt(prompt)
@@ -6996,10 +7951,10 @@ if clipboard.wait_is_text_available():
         )
 
     def _limit_refinement_prompt(self, prompt):
-        if len(prompt) <= 11500:
+        if len(prompt) <= 18000:
             return prompt
-        keep_head = prompt[:5600].rstrip()
-        keep_tail = prompt[-5600:].lstrip()
+        keep_head = prompt[:8800].rstrip()
+        keep_tail = prompt[-8800:].lstrip()
         return '%s\n\n[Previous context shortened]\n\n%s' % (
             keep_head, keep_tail)
 
@@ -7563,6 +8518,12 @@ if clipboard.wait_is_text_available():
             if self._preview_fullscreen_button is not None:
                 self._preview_fullscreen_button.set_label(
                     _('⛶ Exit Fullscreen'))
+            if self._live_edit_panel is not None:
+                self._live_edit_panel.hide()
+            if self._ask_bar is not None:
+                self._ask_bar.show()
+                if self._ask_bar_entry is not None:
+                    self._ask_bar_entry.grab_focus()
         else:
             if self._studio_left_panel is not None:
                 self._studio_left_panel.show()
@@ -7574,6 +8535,10 @@ if clipboard.wait_is_text_available():
             if self._preview_fullscreen_button is not None:
                 self._preview_fullscreen_button.set_label(
                     _('⛶ Fullscreen'))
+            if self._ask_bar is not None:
+                self._ask_bar.hide()
+            if self._live_edit_panel is not None:
+                self._live_edit_panel.show()
             self._refresh_preview_layout()
 
     def __sidebar_toggle_cb(self, button):
@@ -7621,10 +8586,89 @@ if clipboard.wait_is_text_available():
                 _('XO packaged for export or install.'))
         return bundle_path
 
+    def _prompt_and_apply_license(self, action_label):
+        """Ask which license to bundle with, then apply it to the result.
+
+        Returns True when the learner confirms and the license is applied,
+        False when they cancel or the update fails.
+        """
+        if self._generation_result is None:
+            return False
+
+        options = self._get_license_options()
+        current = self._selected_options.get('license', 'mit')
+
+        dialog = Gtk.Dialog(
+            title=_('Choose a license'),
+            transient_for=self.get_toplevel(),
+            modal=True,
+        )
+        dialog.add_button(_('Cancel'), Gtk.ResponseType.CANCEL)
+        dialog.add_button(action_label, Gtk.ResponseType.ACCEPT)
+        dialog.set_default_response(Gtk.ResponseType.ACCEPT)
+
+        content = dialog.get_content_area()
+        content.set_border_width(style.zoom(12))
+        content.set_spacing(style.zoom(6))
+
+        heading = Gtk.Label(
+            _('Pick the license to bundle with this activity.'))
+        heading.set_xalign(0)
+        content.pack_start(heading, False, False, 0)
+        heading.show()
+
+        buttons = []
+        group = None
+        for option in options:
+            radio = Gtk.RadioButton.new_with_label_from_widget(
+                group, '%s — %s' % (option['label'], option['description']))
+            if group is None:
+                group = radio
+            if option['value'] == current:
+                radio.set_active(True)
+            content.pack_start(radio, False, False, 0)
+            radio.show()
+            buttons.append((option['value'], radio))
+
+        response = dialog.run()
+        selected = current
+        for value, radio in buttons:
+            if radio.get_active():
+                selected = value
+                break
+        dialog.destroy()
+
+        if response != Gtk.ResponseType.ACCEPT:
+            return False
+
+        self._selected_options['license'] = selected
+
+        from jarabe.model.aodpipeline import reapply_generation_license
+
+        license_info = self._get_selected_license()
+        try:
+            reapply_generation_license(
+                self._generation_result, license_info['spdx'])
+        except Exception as error:
+            logging.exception('Could not apply the selected license')
+            if self._prompt_status_label is not None:
+                self._prompt_status_label.set_text(_('License update failed'))
+            self._append_chat_message(
+                _('License update failed: %s') % error)
+            return False
+
+        self._refresh_generated_context()
+        self._append_chat_status(
+            _('License set to %s.') % license_info['label'])
+        return True
+
     def __export_xo_cb(self, button):
         if self._generation_result is None:
             if self._prompt_status_label is not None:
                 self._prompt_status_label.set_text(_('Generate first'))
+            return
+
+        if not self._prompt_and_apply_license(_('Export')):
             return
 
         try:
@@ -7668,10 +8712,123 @@ if clipboard.wait_is_text_available():
         self._append_chat_message(
             _('XO bundle exported to %s') % destination)
 
+    def __export_flatpak_cb(self, button):
+        if self._generation_result is None:
+            if self._prompt_status_label is not None:
+                self._prompt_status_label.set_text(_('Generate first'))
+            return
+
+        if self._flatpak_export_running:
+            if self._prompt_status_label is not None:
+                self._prompt_status_label.set_text(_('Packaging Flatpak...'))
+            return
+
+        if not self._prompt_and_apply_license(_('Export')):
+            return
+
+        # Packaging can invoke flatpak-builder, which may run for many
+        # minutes, so it must not block the Sugar shell's main loop.
+        self._flatpak_export_running = True
+        if self._prompt_status_label is not None:
+            self._prompt_status_label.set_text(_('Packaging Flatpak...'))
+        self._append_chat_status(_('Packaging Flatpak export...'))
+
+        worker = threading.Thread(
+            target=self._flatpak_export_worker,
+            args=(self._generation_result,),
+        )
+        worker.daemon = True
+        worker.start()
+
+    def _flatpak_export_worker(self, result):
+        from jarabe.model.aodflatpak import package_flatpak
+
+        try:
+            export = package_flatpak(result)
+        except Exception as error:
+            logging.exception('Could not package Flatpak export')
+            GObject.idle_add(
+                self._flatpak_export_finished_cb, None, str(error))
+            return
+        GObject.idle_add(self._flatpak_export_finished_cb, export, None)
+
+    def _flatpak_export_finished_cb(self, export, error):
+        # Hold the guard flag through the whole interaction, including the
+        # (non-modal) save dialog's nested loop, so a second click cannot
+        # start a concurrent export that collides on the staging paths.
+        try:
+            if error is not None or export is None:
+                if self._prompt_status_label is not None:
+                    self._prompt_status_label.set_text(_('Packaging failed'))
+                self._append_chat_message(
+                    _('Flatpak packaging failed: %s')
+                    % (error or _('unknown')))
+                return False
+
+            artifact_path = export['path']
+            if export['kind'] == 'flatpak':
+                self._append_chat_status(
+                    _('Built installable Flatpak bundle.'))
+                title = _('Export Flatpak bundle')
+            elif export.get('builder_available'):
+                self._append_chat_status(
+                    _('Flatpak build did not finish; exported buildable '
+                      'Flatpak sources instead.'))
+                title = _('Export Flatpak sources')
+            else:
+                self._append_chat_status(
+                    _('flatpak-builder not found; exported buildable Flatpak '
+                      'sources instead.'))
+                title = _('Export Flatpak sources')
+
+            dialog = Gtk.FileChooserDialog(
+                title=title,
+                parent=self.get_toplevel(),
+                action=Gtk.FileChooserAction.SAVE,
+            )
+            dialog.add_buttons(
+                _('Cancel'), Gtk.ResponseType.CANCEL,
+                _('Export'), Gtk.ResponseType.ACCEPT,
+            )
+            dialog.set_do_overwrite_confirmation(True)
+            dialog.set_current_name(os.path.basename(artifact_path))
+            response = dialog.run()
+            destination = dialog.get_filename()
+            dialog.destroy()
+
+            if response != Gtk.ResponseType.ACCEPT or not destination:
+                return False
+
+            try:
+                shutil.copy2(artifact_path, destination)
+            except OSError as copy_error:
+                logging.exception('Could not export Flatpak artifact')
+                if self._prompt_status_label is not None:
+                    self._prompt_status_label.set_text(_('Export failed'))
+                self._append_chat_message(
+                    _('Export failed: %s') % copy_error)
+                return False
+
+            if self._prompt_status_label is not None:
+                self._prompt_status_label.set_text(_('Exported'))
+            if export['kind'] == 'flatpak':
+                self._append_chat_message(
+                    _('Flatpak bundle exported to %s') % destination)
+            else:
+                self._append_chat_message(
+                    _('Flatpak sources exported to %s. Run flatpak-builder '
+                      'to build the bundle.') % destination)
+            return False
+        finally:
+            self._flatpak_export_running = False
+
     def __install_and_open_cb(self, button):
         if self._generation_result is None:
             if self._prompt_status_label is not None:
                 self._prompt_status_label.set_text(_('Generate first'))
+            return
+
+        if not self._prompt_and_apply_license(_('Install & Open')):
             return
 
         from sugar3.bundle.activitybundle import ActivityBundle
@@ -7767,6 +8924,14 @@ if clipboard.wait_is_text_available():
 
     def __live_toggle_clicked_cb(self, button, enabled):
         self._live_edit_enabled = enabled
+        self._select_start = None
+        self._select_rect = None
+        if self._preview_shell is not None:
+            try:
+                self._preview_shell.set_above_child(enabled)
+                self._preview_shell.queue_draw()
+            except Exception:
+                pass
         if self._live_edit_on_button is not None:
             self._live_edit_on_button.get_style_context().remove_class(
                 'create-ai-live-toggle-active')
@@ -7781,39 +8946,55 @@ if clipboard.wait_is_text_available():
             self._live_edit_off_button.get_style_context().add_class(
                 'create-ai-live-toggle-active')
 
+        for mode_button, mode_enabled in (
+                (self._ask_bar_edit_on, True),
+                (self._ask_bar_edit_off, False)):
+            if mode_button is None:
+                continue
+            mode_context = mode_button.get_style_context()
+            if mode_enabled == enabled:
+                mode_context.add_class('create-ai-ask-mode-active')
+            else:
+                mode_context.remove_class('create-ai-ask-mode-active')
+
+        if self._ask_bar_plus is not None:
+            self._ask_bar_plus.set_visible(enabled)
+        if self._ask_bar_target_label is not None:
+            self._ask_bar_target_label.set_visible(enabled)
+        if self._ask_bar_entry is not None:
+            self._ask_bar_entry.set_placeholder_text(
+                _('Describe a change for the selected part')
+                if enabled else _('Ask anything'))
+
         if self._live_edit_entry is not None:
             self._live_edit_entry.set_sensitive(enabled)
-        if self._live_edit_status_label is not None:
-            if enabled:
-                self._live_edit_status_label.set_text(
-                    _('Ready for preview edits'))
-            else:
-                self._live_edit_status_label.set_text(
-                    _('Live edit is paused'))
+        if enabled:
+            self._set_live_edit_status(
+                _('Click or drag on the preview to pick a target.'))
+        else:
+            self._set_live_edit_status(
+                _('Play mode: clicks go to the activity.'))
 
     def __live_edit_add_clicked_cb(self, button):
         if self._live_edit_entry is None:
             return
 
         if not self._live_edit_enabled:
-            if self._live_edit_status_label is not None:
-                self._live_edit_status_label.set_text(
-                    _('Turn Live Edit on before adding changes.'))
+            self._set_live_edit_status(
+                _('Turn Live Edit on before adding changes.'))
             return
 
         text = self._live_edit_entry.get_text().strip()
         if not text:
             self._live_edit_entry.grab_focus()
-            if self._live_edit_status_label is not None:
-                self._live_edit_status_label.set_text(
-                    _('Describe the preview change first.'))
+            self._set_live_edit_status(
+                _('Describe the preview change first.'))
             return
 
         self._live_edit_entry.set_text('')
         if self._generation_result is None:
-            if self._live_edit_status_label is not None:
-                self._live_edit_status_label.set_text(
-                    _('Generate an activity before preview refinements.'))
+            self._set_live_edit_status(
+                _('Generate an activity before preview refinements.'))
             self._append_chat_message(
                 _('Generate an activity first, then describe refinements.'))
             return

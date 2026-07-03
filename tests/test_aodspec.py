@@ -42,6 +42,33 @@ class TestActivitySpec(unittest.TestCase):
             ActivitySpec.from_dict(original.to_dict()),
         )
 
+    def test_science_and_language_categories_are_valid(self):
+        for category in ('science', 'language'):
+            spec = ActivitySpec(
+                name='Explore Plants',
+                prompt='Measure plant growth over time.',
+                category=category,
+                license_id='MIT',
+            )
+            self.assertEqual([], spec.validate())
+
+    def test_normalized_coerces_unknown_soft_fields(self):
+        spec = ActivitySpec(
+            name='X' * 120,
+            prompt='  Build something fun.  ',
+            category='not-a-category',
+            license_id='MIT',
+            template='not-a-template',
+            age_band='   ',
+            code_size='huge',
+        ).normalized()
+        self.assertEqual('creation', spec.category)
+        self.assertEqual('auto', spec.template)
+        self.assertEqual('standard', spec.code_size)
+        self.assertEqual('all', spec.age_band)
+        self.assertEqual(80, len(spec.name))
+        self.assertEqual([], spec.validate())
+
     def test_name_from_prompt_ignores_instruction_words(self):
         self.assertEqual(
             'Fractions Quiz Children',

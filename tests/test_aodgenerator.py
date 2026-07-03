@@ -169,3 +169,43 @@ class TestAodGenerator(unittest.TestCase):
             '# SPDX-License-Identifier: BSD-3-Clause',
             result.files['activity.py'],
         )
+
+    def test_reapply_license_rewrites_bundle_artifacts(self):
+        from jarabe.model.aodpipeline import reapply_generation_license
+
+        spec = ActivitySpec(
+            'License Switch',
+            'Create a writing activity.',
+            'creation',
+            'MIT',
+            template='narrative',
+        )
+        result = create_prototype_activity(spec, self.output_root)
+        self.assertIn('MIT License', result.files['LICENSE'])
+        self.assertIn(
+            '# SPDX-License-Identifier: MIT',
+            result.files['activity.py'],
+        )
+        self.assertTrue(os.path.isfile(result.bundle_path))
+
+        reapply_generation_license(result, 'BSD-3-Clause')
+
+        self.assertEqual('BSD-3-Clause', result.spec.license_id)
+        self.assertEqual('', result.bundle_path)
+        self.assertIn('BSD 3-Clause License', result.files['LICENSE'])
+        self.assertIn(
+            'license = BSD-3-Clause',
+            result.files['activity/activity.info'],
+        )
+        self.assertIn(
+            '# SPDX-License-Identifier: BSD-3-Clause',
+            result.files['activity.py'],
+        )
+        self.assertNotIn(
+            '# SPDX-License-Identifier: MIT',
+            result.files['activity.py'],
+        )
+        with open(os.path.join(result.project_path, 'LICENSE'),
+                  encoding='utf-8') as license_file:
+            self.assertIn('BSD 3-Clause License', license_file.read())
+        self.assertTrue(validate_project(result.project_path).valid)

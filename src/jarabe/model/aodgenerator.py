@@ -159,11 +159,13 @@ def infer_template(spec):
 
     defaults = {
         'logic_math': 'quiz',
+        'science': 'utility',
+        'language': 'narrative',
         'tools_utils': 'utility',
         'games': 'grid',
         'creation': 'narrative',
     }
-    return defaults[spec.category]
+    return defaults.get(spec.category, 'narrative')
 
 
 def build_plan(spec):
@@ -629,6 +631,52 @@ def read_project_files(project_path):
     return result
 
 
+_SPDX_RE = re.compile(r'^(\s*#\s*SPDX-License-Identifier:).*$', re.MULTILINE)
+
+
+def _replace_spdx_identifier(source, license_id):
+    """Rewrite the first SPDX header line to the given license id."""
+    def substitute(match):
+        return '%s %s' % (match.group(1), license_id)
+
+    updated, count = _SPDX_RE.subn(substitute, source, count=1)
+    return updated if count else source
+
+
+def apply_license_to_project(project_path, spec, plan):
+    """Rewrite the on-disk license artifacts to match ``spec.license_id``.
+
+    Generation bakes a default license into the project. When the learner
+    chooses a license at install or export time we regenerate the LICENSE
+    file, the ``activity.info`` license field, and the ``activity.py`` SPDX
+    header so the packaged bundle carries the selected license. Returns the
+    refreshed project file mapping.
+    """
+    license_info = get_license(spec.license_id)
+
+    license_path = os.path.join(project_path, 'LICENSE')
+    with open(license_path, 'w', encoding='utf-8') as license_file:
+        license_file.write(license_info.get_text())
+
+    info_path = os.path.join(project_path, 'activity', 'activity.info')
+    with open(info_path, 'w', encoding='utf-8') as info_file:
+        info_file.write(_render_activity_info(spec, plan))
+
+    source_path = os.path.join(project_path, 'activity.py')
+    try:
+        with open(source_path, encoding='utf-8') as source_file:
+            source = source_file.read()
+    except OSError:
+        source = ''
+    if source:
+        updated = _replace_spdx_identifier(source, spec.license_id)
+        if updated != source:
+            with open(source_path, 'w', encoding='utf-8') as source_file:
+                source_file.write(updated)
+
+    return read_project_files(project_path)
+
+
 def _render_activity_info(spec, plan):
     return (
         '[Activity]\n'
@@ -741,6 +789,14 @@ def _category_template_order(category):
     orders = {
         'logic_math': [
             'quiz', 'grid', 'carrom', 'utility', 'canvas', 'narrative',
+            'chess',
+        ],
+        'science': [
+            'utility', 'canvas', 'grid', 'quiz', 'narrative', 'carrom',
+            'chess',
+        ],
+        'language': [
+            'narrative', 'quiz', 'canvas', 'grid', 'utility', 'carrom',
             'chess',
         ],
         'tools_utils': [

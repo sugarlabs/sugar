@@ -168,7 +168,12 @@ def validate_activity_source_for_request(source, spec, plan=None):
     prompt_words = _tokens(prompt)
     source_lower = source.lower()
 
-    if len(source) < 1200:
+    min_source_size = 1200
+    if getattr(spec, 'code_size', 'standard') == 'compact':
+        # Compact activities are intentionally small; only reject sizes
+        # that cannot possibly hold a working Sugar activity.
+        min_source_size = 800
+    if len(source) < min_source_size:
         report.errors.append(
             'Generated activity is too small to be a full learner activity.'
         )

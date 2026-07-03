@@ -10,6 +10,7 @@ from sugar3 import env
 
 from jarabe.model.aodcodegen import build_codegen_system_prompt
 from jarabe.model.aodcodegen import build_codegen_user_prompt
+from jarabe.model.aodgenerator import apply_license_to_project
 from jarabe.model.aodgenerator import build_plan
 from jarabe.model.aodgenerator import create_prototype_activity
 from jarabe.model.aodgenerator import enrich_plan
@@ -126,19 +127,36 @@ def generate_activity(spec, output_root=None, provider=None,
         user_prompt = build_user_prompt(spec)
         progress.report('provider', 0.43,
                         'Asking the configured model to plan from RAG context')
-        try:
-            provider_plan = selected_provider.generate_plan(
-                system_prompt,
-                user_prompt,
-            )
-            plan = normalize_plan(spec, provider_plan)
-            provider_used = selected_provider.name
-            model_used = selected_provider.model
-            progress.report('provider', 0.52,
-                            'Checking the model plan')
-        except (ProviderError, ValueError) as error:
+        plan_error = None
+        for plan_attempt in (1, 2):
+            try:
+                provider_plan = selected_provider.generate_plan(
+                    system_prompt,
+                    user_prompt,
+                )
+                plan = normalize_plan(spec, provider_plan)
+                provider_used = selected_provider.name
+                model_used = selected_provider.model
+                plan_error = None
+                progress.report('provider', 0.52,
+                                'Checking the model plan')
+                break
+            except ValueError as error:
+                # A malformed plan response is usually a one-off; one
+                # fresh attempt is cheap compared to failing the job.
+                plan_error = error
+                if plan_attempt == 1:
+                    progress.report(
+                        'provider', 0.45,
+                        'Model plan was malformed; asking once more')
+            except ProviderError as error:
+                # Transient network failures were already retried at the
+                # HTTP layer, so what reaches here is not worth repeating.
+                plan_error = error
+                break
+        if plan_error is not None:
             provider_error = _redact_provider_error(
-                error,
+                plan_error,
                 selected_provider,
             )
             if not template_fallback:
@@ -253,6 +271,23 @@ def package_generation_result(result):
         plan_file.write('\n')
     result.files = read_project_files(result.project_path)
     return result.bundle_path
+
+
+def reapply_generation_license(result, license_id):
+    """Switch a generated activity to ``license_id`` before packaging.
+
+    Rewrites the license artifacts on disk, refreshes the in-memory file
+    mapping, and invalidates any previously built bundle so the next
+    :func:`package_generation_result` call repackages with the new license.
+    """
+    if result.spec.license_id == license_id and result.bundle_path:
+        return result
+
+    result.spec.license_id = license_id
+    result.files = apply_license_to_project(
+        result.project_path, result.spec, result.plan)
+    result.bundle_path = ''
+    return result
 
 
 def _progress(callback, stage, fraction, message, metadata=None):
@@ -384,8 +419,21 @@ def _generate_activity_source_with_provider(provider, spec, plan, references,
                 msg = str(err)
                 if 'stream_callback' not in msg and 'keyword argument' not in msg:
                     raise
-                # Provider doesn't accept stream_callback/max_output_tokens.
-                source = generate_source(system_prompt, retry_prompt)
+                # Provider doesn't accept every optional kwarg; drop
+                # max_output_tokens first but keep streaming if the
+                # provider supports it.
+                try:
+                    source = generate_source(
+                        system_prompt,
+                        retry_prompt,
+                        stream_callback=stream_callback,
+                    )
+                except TypeError as err2:
+                    msg2 = str(err2)
+                    if ('stream_callback' not in msg2
+                            and 'keyword argument' not in msg2):
+                        raise
+                    source = generate_source(system_prompt, retry_prompt)
         except ProviderError as error:
             return None, _redact_provider_error(error, provider), attempt
         except ValueError as error:

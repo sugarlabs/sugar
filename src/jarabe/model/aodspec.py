@@ -14,10 +14,14 @@ import re
 
 CATEGORIES = (
     'logic_math',
+    'science',
+    'language',
     'tools_utils',
     'games',
     'creation',
 )
+
+CATEGORY_FALLBACK = 'creation'
 
 CODE_SIZES = ('compact', 'standard', 'full')
 
@@ -92,16 +96,31 @@ class ActivitySpec:
         return errors
 
     def normalized(self):
-        """Return a copy with user-entered whitespace normalized."""
+        """Return a copy with whitespace normalized and soft steering
+        fields coerced to safe values.
+
+        Category, template, and code size only steer the plan, so an
+        unrecognized value (from UI drift or an older saved session)
+        falls back to a sensible default instead of failing the whole
+        generation.
+        """
+        name = _normalize_spaces(self.name)
+        if isinstance(name, str):
+            name = name[:80]
+        prompt = self.prompt.strip() if isinstance(self.prompt, str) \
+            else self.prompt
         return ActivitySpec(
-            name=_normalize_spaces(self.name),
-            prompt=self.prompt.strip(),
-            category=self.category,
+            name=name,
+            prompt=prompt,
+            category=self.category if self.category in CATEGORIES
+            else CATEGORY_FALLBACK,
             license_id=self.license_id,
-            template=self.template,
-            age_band=_normalize_spaces(self.age_band),
+            template=self.template if self.template in TEMPLATES
+            else 'auto',
+            age_band=_normalize_spaces(self.age_band) or 'all',
             learner_goal=_normalize_spaces(self.learner_goal),
-            code_size=self.code_size,
+            code_size=self.code_size if self.code_size in CODE_SIZES
+            else 'standard',
         )
 
     def to_dict(self):

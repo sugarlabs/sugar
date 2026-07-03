@@ -28,6 +28,19 @@ class TestAodPrompts(unittest.TestCase):
         self.assertNotIn('local generator owns Python source', prompt)
         self.assertIn('large editable area', prompt)
 
+    def test_system_prompt_supports_science_and_language(self):
+        for category, expected in (
+                ('science', 'experimenting'),
+                ('language', 'storytelling')):
+            spec = ActivitySpec(
+                'Explore', 'Measure plant growth.', category, 'MIT')
+            self.assertIn(expected, build_system_prompt(spec))
+
+    def test_system_prompt_falls_back_on_unknown_category(self):
+        spec = ActivitySpec(
+            'Explore', 'Measure plant growth.', 'mystery', 'MIT')
+        self.assertIn('learner-owned', build_system_prompt(spec))
+
     def test_extracts_fenced_json(self):
         value = extract_json_object(
             '```json\n{"template": "quiz", "summary": "Test"}\n```'

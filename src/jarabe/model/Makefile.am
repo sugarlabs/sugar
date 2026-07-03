@@ -5,6 +5,7 @@ sugar_PYTHON =			\
 	__init__.py		\
 	aodcodegen.py		\
 	aodcredentials.py	\
+	aodflatpak.py		\
 	aodgenerator.py		\
 	aodjobs.py		\
 	aodlicenses.py		\

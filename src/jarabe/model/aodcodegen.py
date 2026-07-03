@@ -126,6 +126,12 @@ def build_codegen_system_prompt(spec, plan, references=(), code_size='standard')
         '- Make the canvas/work area fill the activity window naturally with '
         'Gtk containers that expand. Avoid small centered toy panels unless '
         'the requested activity is intentionally compact.\n'
+        '- Boards, grids, and play areas must scale with the window: '
+        'compute cell/tile sizes from the allocated space (a size-allocate '
+        'callback or an expanding Gtk.DrawingArea that redraws from its '
+        'allocation), never hardcoded small pixel sizes. On a large screen '
+        'the play area should use most of the window, centered, with '
+        'square cells staying square.\n'
         '- If the structured request includes "Current activity.py excerpt", '
         'this is a refinement. Preserve working behavior from that source '
         'and apply the requested change directly in the regenerated source.\n'
@@ -241,12 +247,21 @@ def extract_activity_source(value):
         files = value.get('files')
         if isinstance(files, dict):
             source = files.get('activity.py') or files.get('activity_py') or ''
+            if not source:
+                for path, content in files.items():
+                    if (isinstance(path, str)
+                            and path.endswith('activity.py')
+                            and isinstance(content, str)):
+                        source = content
+                        break
         elif isinstance(files, list):
             for item in files:
                 if not isinstance(item, dict):
                     continue
                 path = item.get('path') or item.get('name')
-                if path in ('activity.py', './activity.py'):
+                if (isinstance(path, str)
+                        and (path in ('activity.py', './activity.py')
+                             or path.endswith('/activity.py'))):
                     source = item.get('content') or item.get('source') or ''
                     break
         if not source:
@@ -322,24 +337,58 @@ def extract_activity_source_from_response(text):
         value = extract_json_object(text)
     except ValueError:
         value = text
+    if isinstance(value, dict):
+        try:
+            return extract_activity_source(value)
+        except ValueError:
+            # The "JSON" was an explanation object, or a dict literal
+            # inside the code misread as the response wrapper. Fall back
+            # to reading the raw text as fenced/plain code.
+            return extract_activity_source(text)
     return extract_activity_source(value)
 
 
 def _strip_code_fence(source):
     source = (source or '').strip()
-    if source.startswith('```'):
-        first_newline = source.find('\n')
-        last_fence = source.rfind('```')
-        if first_newline >= 0 and last_fence > first_newline:
-            source = source[first_newline + 1:last_fence].strip()
-    else:
-        fence_start = source.find('```')
-        if fence_start >= 0:
-            first_newline = source.find('\n', fence_start)
-            fence_end = source.find('```', first_newline + 1)
-            if first_newline >= 0 and fence_end > first_newline:
-                source = source[first_newline + 1:fence_end].strip()
-    return source
+    if '```' not in source:
+        return source
+
+    blocks = _fenced_blocks(source)
+    if blocks:
+        for block in blocks:
+            if 'GeneratedActivity' in block:
+                return block
+        return max(blocks, key=len)
+
+    # Unterminated fence (usually a truncated stream): keep everything
+    # after the opening fence line so the caller can report a clear
+    # truncation/syntax problem instead of "no activity.py".
+    fence_start = source.find('```')
+    first_newline = source.find('\n', fence_start)
+    if first_newline >= 0:
+        return source[first_newline + 1:].strip()
+    return ''
+
+
+def _fenced_blocks(source):
+    """Return the contents of all complete ``` fenced blocks."""
+    blocks = []
+    index = 0
+    while True:
+        start = source.find('```', index)
+        if start < 0:
+            break
+        first_newline = source.find('\n', start)
+        if first_newline < 0:
+            break
+        end = source.find('```', first_newline + 1)
+        if end < 0:
+            break
+        block = source[first_newline + 1:end].strip()
+        if block:
+            blocks.append(block)
+        index = end + 3
+    return blocks
 
 
 def _format_references(references):

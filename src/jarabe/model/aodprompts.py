@@ -8,7 +8,8 @@ from jarabe.model.aodrag import get_api_reference
 
 
 def build_system_prompt(spec, references=()):
-    learning_direction = _CATEGORY_BLOCKS[spec.category]
+    learning_direction = _CATEGORY_BLOCKS.get(
+        spec.category, _CATEGORY_BLOCKS['creation'])
     if spec.template != 'auto':
         learning_direction = '%s\n%s' % (
             learning_direction,
@@ -127,6 +128,15 @@ _CATEGORY_BLOCKS = {
     'logic_math': (
         'Favor patterns, reasoning, explanation, immediate feedback, and '
         'multiple ways to reach or describe an answer.'
+    ),
+    'science': (
+        'Favor observing, predicting, experimenting, measuring, and '
+        'comparing results, with simple simulations or data the learner '
+        'can change and re-run.'
+    ),
+    'language': (
+        'Favor reading, writing, vocabulary, storytelling, and word play, '
+        'with feedback that celebrates expression and revision.'
     ),
     'tools_utils': (
         'Favor a focused tool that helps learners measure, organize, count, '

@@ -138,10 +138,20 @@ class PreviewActivity(Gtk.Window):
 
     def __getattr__(self, name):
         # Generated activities sometimes call self.some_method() or
-        # access self.some_widget before it is created in __init__.
+        # access attributes (including private ones like
+        # self._lesson_steps) before creating them in __init__.
         # Return a safe no-op proxy that absorbs all attribute access
-        # and calls instead of crashing with AttributeError.
-        if name.startswith('_'):
+        # and calls instead of crashing with AttributeError.  Dunder
+        # lookups must still fail normally so Python protocol probes
+        # (copy, pickle, GObject machinery) behave correctly, and once
+        # construction is over private attributes raise normally again
+        # so lazy-init idioms in event handlers keep working:
+        #     if not hasattr(self, '_count'):
+        #         self._count = 0
+        if name.startswith('__') and name.endswith('__'):
+            raise AttributeError(name)
+        if name.startswith('_') and self.__dict__.get(
+                '_preview_construction_done', False):
             raise AttributeError(name)
         return _NoOpProxy()
 
@@ -290,6 +300,16 @@ def render_activity_preview(project_path, activity_name=''):
         return result
 
     logging.warning('Hardened preview also failed: %s', result[1])
+
+    # Last attempt: wrap every import so no exotic module the model
+    # hallucinated can take the whole preview down.
+    aggressive_source = _harden_imports(patched_source, aggressive=True)
+    result = _try_exec_preview(aggressive_source, source_path,
+                               bundle_path, activity_name)
+    if result[0] is not None:
+        return result
+
+    logging.warning('Aggressive preview also failed: %s', result[1])
     return None, first_error, None
 
 
@@ -323,31 +343,89 @@ def _try_exec_preview(patched_source, source_path, bundle_path,
     if activity_class is None:
         return None, 'GeneratedActivity class not found in source', None
 
+    # Construct via __new__ + explicit __init__ so that when the
+    # generated __init__ crashes we still hold the partially-built
+    # instance and can salvage whatever canvas it managed to set,
+    # without running side effects (timers, tempdirs) a second time.
     try:
-        instance = activity_class(handle=None)
+        instance = activity_class.__new__(activity_class)
+        if isinstance(instance, PreviewActivity):
+            PreviewActivity.__init__(instance)
+    except Exception as error:
+        logging.exception('Preview instance allocation failed')
+        return None, 'Activity __init__ failed: %s' % error, None
+
+    try:
+        instance.__init__(handle=None)
     except Exception as error:
         logging.exception('Preview __init__ failed')
-        return None, 'Activity __init__ failed: %s' % error, None
+        if not _has_salvageable_canvas(instance):
+            _dispose_preview_instance(instance)
+            return None, 'Activity __init__ failed: %s' % error, None
+        logging.warning(
+            'Preview salvaged a partial canvas after __init__ failed: %s',
+            error)
 
     if not isinstance(instance, PreviewActivity):
         return None, 'Activity did not inherit from PreviewActivity', None
 
-    canvas = instance.get_canvas()
-    toolbar = instance.get_toolbar_box()
+    instance.__dict__['_preview_construction_done'] = True
 
-    if canvas is None:
+    try:
+        canvas = instance.get_canvas()
+    except Exception:
+        canvas = None
+    try:
+        toolbar = instance.get_toolbar_box()
+    except Exception:
+        toolbar = None
+    if isinstance(toolbar, _NoOpProxy):
+        toolbar = None
+
+    if canvas is None or isinstance(canvas, _NoOpProxy):
         return None, 'Activity did not call set_canvas()', None
 
     return instance, canvas, toolbar
 
 
-def _harden_imports(source):
+def _has_salvageable_canvas(instance):
+    """Return True when a crashed instance still holds a usable canvas.
+
+    Many generated activities crash after set_canvas() while wiring
+    secondary features (timers, journal hooks, decorations).  The
+    canvas that was already built is still perfectly previewable, so
+    keep it instead of losing the whole preview.
+    """
+    try:
+        canvas = instance.get_canvas()
+    except Exception:
+        return False
+    return canvas is not None and not isinstance(canvas, _NoOpProxy)
+
+
+def _dispose_preview_instance(instance):
+    """Best-effort teardown of a failed preview instance."""
+    try:
+        instance.cleanup()
+    except Exception:
+        pass
+    try:
+        if isinstance(instance, Gtk.Widget):
+            instance.destroy()
+    except Exception:
+        pass
+
+
+def _harden_imports(source, aggressive=False):
     """Wrap problematic imports so preview survives missing modules.
 
     LLM-generated code sometimes imports sugar3 sub-modules that exist
     at runtime but fail during in-process exec (e.g. sugar3.datastore,
     sugar3.presence).  We wrap known-problematic import lines in
     try/except so the rest of the activity can still render.
+
+    With aggressive=True every single-line import except the gi core is
+    wrapped, as a last resort before giving up on the preview.
     """
     fragile_modules = (
         'sugar3.datastore',
@@ -363,7 +441,24 @@ def _harden_imports(source):
     for line in lines:
         stripped = line.lstrip()
         if stripped.startswith(('import ', 'from ')):
-            if any(module in stripped for module in fragile_modules):
+            if aggressive:
+                is_core = (
+                    stripped == 'import gi' or
+                    stripped.startswith(('import gi.', 'import gi ',
+                                         'from gi import', 'from gi.',
+                                         'from __future__')))
+                balanced = stripped.count('(') == stripped.count(')')
+                # Only wrap top-level imports: indented ones are often
+                # already inside a try/except ImportError fallback, and
+                # wrapping those would swallow the ImportError the
+                # fallback depends on.
+                top_level = line == stripped
+                wrap = (not is_core and balanced and top_level and
+                        not stripped.endswith('\\'))
+            else:
+                wrap = any(module in stripped
+                           for module in fragile_modules)
+            if wrap:
                 indent = line[:len(line) - len(stripped)]
                 patched_lines.append('%stry:' % indent)
                 patched_lines.append('    %s' % line)

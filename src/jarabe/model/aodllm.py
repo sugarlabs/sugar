@@ -5,6 +5,7 @@
 import json
 import logging
 import os
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -50,6 +51,41 @@ _OPENROUTER_REASONING_CODEGEN_EFFORT = 'minimal'
 # reject disable, so if we can't tell, we fall back to a minimal effort.
 _REASONING_DISABLE_VALUES = ('none', 'false', 'off', 'disabled')
 _REASONING_SAFE_MINIMAL_EFFORT = 'minimal'
+
+
+# Rate limits and server-side hiccups usually clear within seconds, so a
+# short backoff turns "job failed" into "job took a moment longer".
+_TRANSIENT_HTTP_CODES = (429, 500, 502, 503, 504, 529)
+_TRANSIENT_RETRIES = _env_int('AOD_PROVIDER_TRANSIENT_RETRIES', 2)
+
+
+def _urlopen_with_retry(request, timeout, label):
+    """urlopen with short exponential backoff on transient failures.
+
+    Only errors that usually clear on their own are retried (rate
+    limits, 5xx responses, dropped connections and timeouts).  Auth and
+    other client errors raise immediately so each caller's error
+    handling stays unchanged.
+    """
+    attempt = 0
+    while True:
+        attempt += 1
+        try:
+            return urllib.request.urlopen(request, timeout=timeout)
+        except urllib.error.HTTPError as error:
+            if attempt > _TRANSIENT_RETRIES or \
+                    error.code not in _TRANSIENT_HTTP_CODES:
+                raise
+            logging.warning(
+                '%s request got HTTP %d; retrying (%d/%d)',
+                label, error.code, attempt, _TRANSIENT_RETRIES)
+        except OSError as error:
+            if attempt > _TRANSIENT_RETRIES:
+                raise
+            logging.warning(
+                '%s request failed (%s); retrying (%d/%d)',
+                label, error, attempt, _TRANSIENT_RETRIES)
+        time.sleep(min(2.0 ** (attempt - 1), 4.0))
 
 
 class LLMProvider:
@@ -211,7 +247,8 @@ class GeminiProvider(LLMProvider):
             method='POST',
         )
         try:
-            with urllib.request.urlopen(request, timeout=timeout) as response:
+            with _urlopen_with_retry(
+                    request, timeout, 'Gemini') as response:
                 response_data = json.loads(response.read().decode('utf-8'))
         except urllib.error.HTTPError as error:
             detail = error.read().decode('utf-8', errors='replace')[:500]
@@ -277,7 +314,8 @@ class GeminiProvider(LLMProvider):
         )
         accumulated = ''
         try:
-            with urllib.request.urlopen(request, timeout=timeout) as response:
+            with _urlopen_with_retry(
+                    request, timeout, 'Gemini') as response:
                 buf = ''
                 while True:
                     chunk = response.read(4096)
@@ -423,8 +461,8 @@ class OpenAIProvider(LLMProvider):
         )
         parts = []
         try:
-            with urllib.request.urlopen(
-                    request, timeout=timeout) as response:
+            with _urlopen_with_retry(
+                    request, timeout, self.label) as response:
                 for raw_line in response:
                     line = raw_line.decode(
                         'utf-8', errors='replace').rstrip('\r\n')
@@ -461,7 +499,15 @@ class OpenAIProvider(LLMProvider):
             raise ProviderError(
                 '%s stream failed: %s' % (self._request_label(), error)
             )
-        return ''.join(parts)
+        text = ''.join(parts)
+        if not text.strip():
+            raise ProviderError(
+                '%s streamed an empty code response. Reasoning models can '
+                'spend the whole output budget before emitting code; try '
+                'again, use a smaller prompt, or switch models.'
+                % self._request_label()
+            )
+        return text
 
     def _generate_text(self, system_prompt, user_prompt, timeout,
                        max_tokens=None, json_response=True):
@@ -1150,7 +1196,7 @@ def _post_json(url, payload, headers, timeout, label):
         method='POST',
     )
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
+        with _urlopen_with_retry(request, timeout, label) as response:
             response_data = json.loads(response.read().decode('utf-8'))
     except urllib.error.HTTPError as error:
         detail = error.read().decode('utf-8', errors='replace')[:500]

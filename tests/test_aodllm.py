@@ -23,6 +23,59 @@ from jarabe.model.aodllm import get_provider_statuses
 
 class TestAodLLMProviders(unittest.TestCase):
 
+    def test_transient_http_error_is_retried(self):
+        import io
+        import urllib.error
+
+        from jarabe.model import aodllm
+
+        response = mock.Mock()
+        rate_limited = urllib.error.HTTPError(
+            'https://api.example', 429, 'Too Many Requests', {},
+            io.BytesIO(b''))
+
+        with mock.patch('urllib.request.urlopen',
+                        side_effect=[rate_limited, response]) as opener:
+            with mock.patch('time.sleep') as sleeper:
+                result = aodllm._urlopen_with_retry(
+                    mock.Mock(), 30, 'Test')
+
+        self.assertIs(response, result)
+        self.assertEqual(2, opener.call_count)
+        sleeper.assert_called_once()
+
+    def test_network_error_is_retried(self):
+        from jarabe.model import aodllm
+
+        response = mock.Mock()
+        with mock.patch('urllib.request.urlopen',
+                        side_effect=[OSError('reset'), response]) as opener:
+            with mock.patch('time.sleep'):
+                result = aodllm._urlopen_with_retry(
+                    mock.Mock(), 30, 'Test')
+
+        self.assertIs(response, result)
+        self.assertEqual(2, opener.call_count)
+
+    def test_auth_error_is_not_retried(self):
+        import io
+        import urllib.error
+
+        from jarabe.model import aodllm
+
+        unauthorized = urllib.error.HTTPError(
+            'https://api.example', 401, 'Unauthorized', {},
+            io.BytesIO(b''))
+
+        with mock.patch('urllib.request.urlopen',
+                        side_effect=unauthorized) as opener:
+            with mock.patch('time.sleep') as sleeper:
+                with self.assertRaises(urllib.error.HTTPError):
+                    aodllm._urlopen_with_retry(mock.Mock(), 30, 'Test')
+
+        self.assertEqual(1, opener.call_count)
+        sleeper.assert_not_called()
+
     def test_local_template_provider_returns_none(self):
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertEqual('local-template', get_default_provider_name())
