@@ -129,7 +129,7 @@ def build_codegen_system_prompt(spec, plan, references=(), code_size='standard')
         '8. Implement read_file(self, file_path) and '
         'write_file(self, file_path)\n'
         '   for Journal persistence using json.\n\n'
-        + _rendering_guidance() +
+        '%(rendering_guidance)s'
         'Hard requirements:\n'
         '- Build the specific activity described by activity_kind, '
         'interaction_model, ui_regions, learner_steps, and the learner '
@@ -230,6 +230,7 @@ def build_codegen_system_prompt(spec, plan, references=(), code_size='standard')
         'Sugar Activity API reference:\n%(api_reference)s\n\n'
         'Retrieved Sugar references:\n%(references)s'
     ) % {
+        'rendering_guidance': _rendering_guidance(),
         'allowed': ', '.join(sorted(ALLOWED_IMPORT_ROOTS)),
         'forbidden_imports': ', '.join(sorted(FORBIDDEN_IMPORT_ROOTS)),
         'forbidden_calls': ', '.join(sorted(FORBIDDEN_CALLS)),
