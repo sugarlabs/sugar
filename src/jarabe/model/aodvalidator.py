@@ -4,6 +4,7 @@
 
 import ast
 import configparser
+import importlib.util
 from dataclasses import dataclass
 from dataclasses import field
 import os
@@ -29,6 +30,25 @@ ALLOWED_IMPORT_ROOTS = {
     'sugar3',
     'sugargame',
 }
+
+# Allowed only when the runtime actually provides them.  pygame and
+# sugargame are common in real Sugar games but are not installed
+# everywhere; code importing a missing one would pass static checks and
+# then crash in the preview and on launch.
+OPTIONAL_RUNTIME_ROOTS = ('pygame', 'sugargame')
+
+_module_availability = {}
+
+
+def _module_available(root):
+    if root not in _module_availability:
+        try:
+            _module_availability[root] = \
+                importlib.util.find_spec(root) is not None
+        except (ImportError, ValueError):
+            _module_availability[root] = False
+    return _module_availability[root]
+
 
 FORBIDDEN_IMPORT_ROOTS = {
     'ctypes',
@@ -90,6 +110,13 @@ def validate_source(source):
             report.errors.append('Forbidden import: %s' % name)
         elif name not in ALLOWED_IMPORT_ROOTS:
             report.errors.append('Import is not allowlisted: %s' % name)
+        elif name in OPTIONAL_RUNTIME_ROOTS and not _module_available(name):
+            report.errors.append(
+                "The '%s' library is not installed on this system; "
+                'rewrite the activity with GTK3 + cairo instead — use a '
+                'Gtk.DrawingArea draw callback with GLib.timeout_add for '
+                'the frame loop and GTK key-press-event handlers for '
+                'controls.' % name)
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):

@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import unittest
+from unittest import mock
 
 from jarabe.model.aodspec import ActivitySpec
 from jarabe.model.aodtemplates import render_activity_source
@@ -26,6 +27,45 @@ class TestAodValidator(unittest.TestCase):
         self.assertFalse(report.valid)
         self.assertIn('Forbidden import: subprocess', report.errors)
         self.assertIn('Forbidden call: eval', report.errors)
+
+    def test_rejects_optional_modules_missing_at_runtime(self):
+        with mock.patch(
+                'jarabe.model.aodvalidator._module_available',
+                return_value=False):
+            report = validate_source('import sugargame\n')
+        self.assertTrue(any(
+            "'sugargame' library is not installed" in error
+            for error in report.errors), report.errors)
+
+    def test_accepts_optional_modules_present_at_runtime(self):
+        with mock.patch(
+                'jarabe.model.aodvalidator._module_available',
+                return_value=True):
+            report = validate_source('import sugargame\nimport pygame\n')
+        self.assertFalse(any(
+            'is not installed' in error for error in report.errors),
+            report.errors)
+
+    def test_codegen_prompt_bans_pygame_when_unavailable(self):
+        from jarabe.model import aodcodegen
+
+        spec = ActivitySpec(
+            'Racer', 'A space racer 2d game.', 'games', 'MIT')
+        plan = enrich_plan(spec, {
+            'name': 'Racer', 'template': 'grid',
+            'bundle_id': 'org.sugarlabs.aod.Racer1234567890',
+            'class_name': 'GeneratedActivity',
+        })
+        with mock.patch.object(
+                aodcodegen, '_module_available', return_value=False):
+            prompt = aodcodegen.build_codegen_system_prompt(spec, plan)
+        self.assertIn('NOT installed on this system', prompt)
+        self.assertNotIn('pygame via sugargame', prompt)
+
+        with mock.patch.object(
+                aodcodegen, '_module_available', return_value=True):
+            prompt = aodcodegen.build_codegen_system_prompt(spec, plan)
+        self.assertIn('pygame via sugargame', prompt)
 
     def test_requires_activity_structure(self):
         report = validate_source('class PlainObject:\n    pass\n')

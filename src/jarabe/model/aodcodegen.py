@@ -9,6 +9,7 @@ from jarabe.model.aodrag import get_api_reference
 from jarabe.model.aodvalidator import ALLOWED_IMPORT_ROOTS
 from jarabe.model.aodvalidator import FORBIDDEN_CALLS
 from jarabe.model.aodvalidator import FORBIDDEN_IMPORT_ROOTS
+from jarabe.model.aodvalidator import _module_available
 
 
 _CODE_SIZE_INSTRUCTIONS = {
@@ -31,6 +32,47 @@ _CODE_SIZE_INSTRUCTIONS = {
         'anything non-trivial. Do not stop until the activity is production-ready.'
     ),
 }
+
+
+def _rendering_guidance():
+    """Backend guidance for the system prompt, matched to this system.
+
+    pygame/sugargame are only offered when the runtime actually has
+    them; otherwise the model is steered to cairo so generated code can
+    always preview and launch on this machine.
+    """
+    if _module_available('pygame') and _module_available('sugargame'):
+        return (
+            '## Rendering approach — cairo vs pygame/sugargame\n'
+            'Choose the right rendering backend for the request:\n'
+            '- **GTK3 + cairo (default)**: Use for most activities — '
+            'board games, drawing apps, quizzes, writing tools, '
+            'simulations. Gtk.DrawingArea with a cairo draw callback is '
+            'idiomatic Sugar and integrates cleanly with GTK events. '
+            'Prefer this unless the request is clearly game-loop '
+            'driven.\n'
+            '- **pygame via sugargame**: Use ONLY when the request '
+            'explicitly asks for a pygame game or when the activity '
+            'needs a continuous game loop (e.g. real-time arcade, '
+            'physics simulation, animation-heavy game). When using '
+            'pygame, wrap the activity with sugargame.canvas.Canvas and '
+            'run pygame.display.set_mode inside the Sugar handle. '
+            'Import sugargame.canvas and pygame. Still inherit from '
+            'sugar3.activity.activity.Activity. Still use the Sugar '
+            'toolbar and Journal persistence.\n'
+            'When in doubt, use cairo + GTK3. Only choose sugargame '
+            'when the learner prompt clearly describes gameplay that '
+            'needs a frame loop.\n\n'
+        )
+    return (
+        '## Rendering approach — GTK3 + cairo only\n'
+        'The pygame/sugargame libraries are NOT installed on this '
+        'system, so never import them. Build every activity — '
+        'including arcade-style and real-time games — with GTK3 + '
+        'cairo: draw in a Gtk.DrawingArea draw callback, drive the '
+        'frame loop with GLib.timeout_add (about 33 ms per frame), '
+        'and handle controls with GTK key-press-event handlers.\n\n'
+    )
 
 
 def build_codegen_system_prompt(spec, plan, references=(), code_size='standard'):
@@ -87,23 +129,7 @@ def build_codegen_system_prompt(spec, plan, references=(), code_size='standard')
         '8. Implement read_file(self, file_path) and '
         'write_file(self, file_path)\n'
         '   for Journal persistence using json.\n\n'
-        '## Rendering approach — cairo vs pygame/sugargame\n'
-        'Choose the right rendering backend for the request:\n'
-        '- **GTK3 + cairo (default)**: Use for most activities — '
-        'board games, drawing apps, quizzes, writing tools, simulations. '
-        'Gtk.DrawingArea with a cairo draw callback is idiomatic Sugar and '
-        'integrates cleanly with GTK events. Prefer this unless the request '
-        'is clearly game-loop driven.\n'
-        '- **pygame via sugargame**: Use ONLY when the request explicitly '
-        'asks for a pygame game or when the activity needs a continuous '
-        'game loop (e.g. real-time arcade, physics simulation, animation-'
-        'heavy game). When using pygame, wrap the activity with '
-        'sugargame.canvas.Canvas and run pygame.display.set_mode inside '
-        'the Sugar handle. Import sugargame.canvas and pygame. Still '
-        'inherit from sugar3.activity.activity.Activity. Still use the '
-        'Sugar toolbar and Journal persistence.\n'
-        'When in doubt, use cairo + GTK3. Only choose sugargame when the '
-        'learner prompt clearly describes gameplay that needs a frame loop.\n\n'
+        + _rendering_guidance() +
         'Hard requirements:\n'
         '- Build the specific activity described by activity_kind, '
         'interaction_model, ui_regions, learner_steps, and the learner '
