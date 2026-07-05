@@ -5,10 +5,13 @@
 import json
 import os
 import time
+from dataclasses import replace
 
 from sugar3 import env
 
 from jarabe.model.aodcodegen import build_codegen_system_prompt
+from jarabe.model.aodenhance import enhance_prompt
+from jarabe.model.aodenhance import needs_enhancement
 from jarabe.model.aodcodegen import build_codegen_user_prompt
 from jarabe.model.aodgenerator import apply_license_to_project
 from jarabe.model.aodgenerator import build_plan
@@ -51,7 +54,7 @@ def generate_activity(spec, output_root=None, provider=None,
                       provider_name='default', use_rag=True,
                       validate_code=True,
                       progress_cb=None, pace=False, package_bundle=True,
-                      template_fallback=False):
+                      template_fallback=False, enhance=True):
     """Run prompt grounding, provider planning, and generation.
 
     When template_fallback is True and the provider fails to deliver valid
@@ -62,6 +65,21 @@ def generate_activity(spec, output_root=None, provider=None,
     remains the default for tests and CLI callers that want to fail fast.
     """
     progress = _PipelineProgress(progress_cb, pace)
+
+    original_prompt = spec.prompt
+    prompt_was_enhanced = False
+    if provider is not None and enhance and needs_enhancement(spec.prompt):
+        progress.report('enhancing', 0.03,
+                        'Making your idea crystal clear...')
+        enhanced_text, prompt_was_enhanced = enhance_prompt(
+            provider, spec.prompt, spec)
+        if prompt_was_enhanced:
+            spec = replace(spec, prompt=enhanced_text)
+            progress.report(
+                'enhancing', 0.05,
+                'Refined your idea into a clear brief',
+                metadata={'enhanced_prompt': enhanced_text})
+
     progress.report('planning', 0.06,
                     'Reading the prompt and classroom goal')
     selected_provider = provider
@@ -188,6 +206,9 @@ def generate_activity(spec, output_root=None, provider=None,
     plan = dict(plan)
     plan['provider'] = provider_used
     plan['model'] = model_used
+    if prompt_was_enhanced:
+        plan['original_prompt'] = original_prompt
+        plan['enhanced_prompt'] = spec.prompt
     if provider_error:
         plan['provider_fallback_reason'] = provider_error
 

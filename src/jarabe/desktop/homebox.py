@@ -316,6 +316,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             'planner': 'rag',
             'policy': 'creative',
             'validate': 'on',
+            'enhance': 'on',
             'provider': 'default',
             'license': 'mit',
             'code_size': 'standard',
@@ -433,6 +434,10 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         self._sidebar_challenge_box = None
         self._sidebar_level_label = None
         self._prompt_is_placeholder = False
+        self._enhance_button = None
+        self._enhance_chip_value_label = None
+        self._enhance_running = False
+        self._enhanced_prompt_announced = False
         self._preview_is_fullscreen = False
         self._preview_fullscreen_button = None
         self._studio_left_panel = None
@@ -664,6 +669,23 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         bottom_row.pack_start(validate_chip, False, False, 0)
         validate_chip.show()
 
+        enhance_chip = Gtk.ToggleButton()
+        enhance_chip.set_relief(Gtk.ReliefStyle.NONE)
+        enhance_chip.get_style_context().add_class('create-ai-prompt-chip')
+        enhance_chip.get_style_context().add_class(
+            'create-ai-prompt-chip-active')
+        enhance_content, enhance_value = self._build_chip_content(
+            _('Enhance'), _('Auto'))
+        enhance_chip.add(enhance_content)
+        self._enhance_chip_value_label = enhance_value
+        enhance_chip.set_active(True)
+        enhance_chip.set_tooltip_text(
+            _('Automatically expand short prompts into a detailed '
+              'brief before generating'))
+        enhance_chip.connect('toggled', self.__enhance_chip_toggled_cb)
+        bottom_row.pack_start(enhance_chip, False, False, 0)
+        enhance_chip.show()
+
         send_btn = Gtk.Button()
         send_icon = Icon(icon_name='go-up',
                          pixel_size=style.SMALL_ICON_SIZE,
@@ -678,6 +700,17 @@ class _CreateAIActivityPanel(Gtk.EventBox):
         send_btn.connect('clicked', self.__send_button_clicked_cb)
         bottom_row.pack_end(send_btn, False, False, 0)
         send_btn.show()
+
+        enhance_btn = Gtk.Button.new_with_label('✨ ' + _('Enhance'))
+        self._enhance_button = enhance_btn
+        enhance_btn.set_relief(Gtk.ReliefStyle.NONE)
+        enhance_btn.get_style_context().add_class('create-ai-prompt-chip')
+        enhance_btn.set_valign(Gtk.Align.CENTER)
+        enhance_btn.set_tooltip_text(
+            _('Expand your idea into a detailed brief you can edit'))
+        enhance_btn.connect('clicked', self.__enhance_button_clicked_cb)
+        bottom_row.pack_end(enhance_btn, False, False, style.zoom(6))
+        enhance_btn.show()
 
         thinking = Gtk.Label('')
         self._prompt_status_label = thinking
@@ -869,6 +902,83 @@ class _CreateAIActivityPanel(Gtk.EventBox):
             else:
                 icon.props.stroke_color = style.COLOR_TOOLBAR_GREY.get_svg()
                 icon.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
+
+    def __enhance_chip_toggled_cb(self, button):
+        active = button.get_active()
+        self._selected_options['enhance'] = 'on' if active else 'off'
+        if self._enhance_chip_value_label is not None:
+            self._enhance_chip_value_label.set_text(
+                _('Auto') if active else _('Off'))
+        if active:
+            button.get_style_context().add_class(
+                'create-ai-prompt-chip-active')
+        else:
+            button.get_style_context().remove_class(
+                'create-ai-prompt-chip-active')
+        if self._prompt_status_label is not None:
+            self._prompt_status_label.set_text(
+                _('Short prompts will be auto-enhanced') if active
+                else _('Prompts are sent exactly as written'))
+
+    def __enhance_button_clicked_cb(self, button):
+        self._start_prompt_enhancement()
+
+    def _start_prompt_enhancement(self):
+        if self._enhance_running:
+            return
+        prompt = '' if self._prompt_is_placeholder else \
+            self._get_prompt_text()
+        if not prompt:
+            if self._prompt_status_label is not None:
+                self._prompt_status_label.set_text(
+                    _('Type your idea first, then press Enhance'))
+            return
+
+        from jarabe.model.aodllm import get_configured_provider
+        from jarabe.model.aodllm import normalize_provider_name
+
+        provider_name = normalize_provider_name(
+            self._selected_options.get('provider', 'default'))
+        try:
+            provider = get_configured_provider(provider_name)
+        except Exception:
+            logging.exception('Could not resolve provider for enhance')
+            provider = None
+        if provider is None:
+            if self._prompt_status_label is not None:
+                self._prompt_status_label.set_text(
+                    _('Enhance needs an AI provider (not the local '
+                      'template)'))
+            return
+
+        self._enhance_running = True
+        if self._enhance_button is not None:
+            self._enhance_button.set_sensitive(False)
+        if self._prompt_status_label is not None:
+            self._prompt_status_label.set_text(
+                _('Enhancing your idea...'))
+
+        def worker():
+            from jarabe.model.aodenhance import enhance_prompt
+            text, enhanced = enhance_prompt(provider, prompt)
+            GObject.idle_add(self.__enhance_finished_cb, text, enhanced)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def __enhance_finished_cb(self, text, enhanced):
+        self._enhance_running = False
+        if self._enhance_button is not None:
+            self._enhance_button.set_sensitive(True)
+        if enhanced:
+            self._set_prompt_text(text)
+            if self._prompt_status_label is not None:
+                self._prompt_status_label.set_text(
+                    _('Enhanced — edit it if you like, then Send'))
+        elif self._prompt_status_label is not None:
+            self._prompt_status_label.set_text(
+                _('Could not enhance right now; your prompt is '
+                  'unchanged'))
+        return False
 
     def __validate_chip_toggled_cb(self, button):
         active = button.get_active()
@@ -3642,6 +3752,9 @@ class _CreateAIActivityPanel(Gtk.EventBox):
                 padding: 3px 10px;
                 min-height: 0;
             }
+            button.create-ai-prompt-chip label {
+                color: #333333;
+            }
             button.create-ai-prompt-chip:hover {
                 background-color: %(studio_lavender_soft)s;
                 border-color: %(studio_lavender_faint)s;
@@ -5580,6 +5693,7 @@ if clipboard.wait_is_text_available():
     def _generation_fun_messages(self):
         return [
             _('Great ideas take a moment to build...'),
+            _('Turning "make X" into a plan learners can touch...'),
             _('Real Sugar activities are lending a hand as examples.'),
             _('Mixing colors, code, and curiosity...'),
             _('Teaching your activity how to play fair...'),
@@ -7509,6 +7623,7 @@ if clipboard.wait_is_text_available():
     def _generation_step_index_for_stage(self, stage):
         stage_indexes = {
             'queued': 0,
+            'enhancing': 0,
             'planning': 0,
             'provider': 0,
             'grounding': 1,
@@ -8063,6 +8178,7 @@ if clipboard.wait_is_text_available():
             else:
                 self._prompt_status_label.set_text(_('Generating'))
 
+        self._enhanced_prompt_announced = False
         try:
             job = service.submit_activity(
                 spec,
@@ -8073,6 +8189,7 @@ if clipboard.wait_is_text_available():
                 parent_revision_id=(
                     self._aod_active_revision_id if is_refinement else ''),
                 user_prompt=chat_prompt or display_prompt,
+                enhance=self._selected_options.get('enhance', 'on') == 'on',
             )
         except Exception as error:
             logging.exception('Could not submit Activity on Demand job')
@@ -8146,6 +8263,13 @@ if clipboard.wait_is_text_available():
     def _generation_progress_cb(self, stage, fraction, message, job=None):
         if self._prompt_status_label is not None:
             self._prompt_status_label.set_text(message)
+        enhanced = getattr(job, 'enhanced_prompt', '') if job else ''
+        if enhanced and not self._enhanced_prompt_announced:
+            self._enhanced_prompt_announced = True
+            self._append_chat_status(_('✨ Enhanced your prompt'))
+            self._append_chat_message(
+                _('I understood your idea as:\n%s') % enhanced,
+                from_user=False)
         self._update_live_review_generation(stage, fraction, message, job)
         self._update_provider_call_status(stage, fraction, message)
         self._update_generation_animation(stage, fraction, message)
@@ -8186,7 +8310,15 @@ if clipboard.wait_is_text_available():
         provider = self._get_provider_label(
             self._selected_options.get('provider', 'default'))
         percent = int(fraction * 100)
-        if stage == 'grounding':
+        if stage == 'enhancing':
+            self._provider_status_label.set_text(
+                _('%(provider)s is clarifying the idea before planning '
+                  '- %(percent)d%%') % {
+                    'provider': provider,
+                    'percent': percent,
+                }
+            )
+        elif stage == 'grounding':
             self._provider_status_label.set_text(
                 _('RAG selected Sugar examples for %(provider)s context - '
                   '%(percent)d%%. No training or ingestion is happening.') % {

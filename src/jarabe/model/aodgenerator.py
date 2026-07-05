@@ -552,7 +552,9 @@ def normalize_plan(spec, plan):
             'codegen_provider',
             'codegen_model',
             'codegen_fallback_reason',
-            'refine_method'):
+            'refine_method',
+            'original_prompt',
+            'enhanced_prompt'):
         value = plan.get(field)
         if isinstance(value, str) and value:
             normalized[field] = value

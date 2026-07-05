@@ -46,6 +46,8 @@ class AODJob:
     session_id: str = ''
     parent_revision_id: str = ''
     user_prompt: str = ''
+    enhance: bool = True
+    enhanced_prompt: str = ''
     status: str = STATUS_QUEUED
     stage: str = STATUS_QUEUED
     progress: float = 0.0
@@ -63,7 +65,7 @@ class AODJob:
     @classmethod
     def create(cls, spec, provider_name='default', use_rag=True,
                validate_code=True, output_root=None, session_id='',
-               parent_revision_id='', user_prompt=''):
+               parent_revision_id='', user_prompt='', enhance=True):
         return cls(
             job_id=uuid.uuid4().hex,
             spec=spec.normalized(),
@@ -74,6 +76,7 @@ class AODJob:
             session_id=session_id or '',
             parent_revision_id=parent_revision_id or '',
             user_prompt=user_prompt or spec.prompt,
+            enhance=bool(enhance),
         )
 
     @classmethod
@@ -88,6 +91,8 @@ class AODJob:
             session_id=data.get('session_id', ''),
             parent_revision_id=data.get('parent_revision_id', ''),
             user_prompt=data.get('user_prompt', ''),
+            enhance=data.get('enhance', True),
+            enhanced_prompt=data.get('enhanced_prompt', ''),
             status=data.get('status', STATUS_QUEUED),
             stage=data.get('stage', STATUS_QUEUED),
             progress=data.get('progress', 0.0),
@@ -114,6 +119,8 @@ class AODJob:
             'session_id': self.session_id,
             'parent_revision_id': self.parent_revision_id,
             'user_prompt': self.user_prompt,
+            'enhance': self.enhance,
+            'enhanced_prompt': self.enhanced_prompt,
             'status': self.status,
             'stage': self.stage,
             'progress': self.progress,

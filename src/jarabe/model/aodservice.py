@@ -62,7 +62,7 @@ class AODService:
     def submit_activity(self, spec, provider_name='default', use_rag=True,
                         validate_code=True, output_root=None, callback=None,
                         session_id='', parent_revision_id='',
-                        user_prompt=None):
+                        user_prompt=None, enhance=True):
         errors = spec.validate()
         if errors:
             raise ValueError('\n'.join(errors))
@@ -81,6 +81,7 @@ class AODService:
             session_id=session.session_id,
             parent_revision_id=parent_revision_id,
             user_prompt=prompt_text,
+            enhance=enhance,
         )
         if callback is not None:
             self.watch(job.job_id, callback)
@@ -367,6 +368,7 @@ class AODService:
                         ),
                     pace=True,
                     package_bundle=False,
+                    enhance=job.enhance,
                 )
         except JobCancelled:
             self._mark_cancelled(job)
@@ -498,6 +500,9 @@ class AODService:
                 draft_source = metadata.get('draft_activity_source')
                 if isinstance(draft_source, str) and draft_source:
                     job.draft_activity_source = draft_source
+                enhanced = metadata.get('enhanced_prompt')
+                if isinstance(enhanced, str) and enhanced:
+                    job.enhanced_prompt = enhanced
             self._store.save(job)
         self._notify(job)
 

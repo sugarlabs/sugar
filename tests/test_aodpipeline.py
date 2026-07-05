@@ -133,6 +133,38 @@ class _FailingCodegenProvider(_FakeProvider):
         raise ProviderError('codegen offline for test')
 
 
+class _EnhancingCodegenProvider(_CodegenProvider):
+    """Codegen provider that also supports prompt enhancement."""
+
+    ENHANCED = (
+        'A fractions quiz where learners pick equivalent fractions.\n'
+        '- Tap the fraction card that matches the target\n'
+        '- Score panel and streak counter\n'
+        '- Wins after ten correct answers\n'
+        '- Practices equivalent fractions\n'
+        '- Saves score history to the Journal')
+
+    def __init__(self, source, fail_enhance=False):
+        _CodegenProvider.__init__(self, source)
+        self.enhance_calls = 0
+        self.observed_plan_prompts = []
+        self.fail_enhance = fail_enhance
+
+    def generate_text(self, system_prompt, user_prompt, timeout=120,
+                      stream_callback=None):
+        self.enhance_calls += 1
+        if self.fail_enhance:
+            raise ProviderError('enhancer offline')
+        if 'Sugar (GTK3) learning activity' not in system_prompt:
+            raise AssertionError('Missing enhancement instructions')
+        return self.ENHANCED
+
+    def generate_plan(self, system_prompt, user_prompt, timeout=45):
+        self.observed_plan_prompts.append(user_prompt)
+        return _CodegenProvider.generate_plan(
+            self, system_prompt, user_prompt, timeout)
+
+
 class TestAodPipeline(unittest.TestCase):
 
     def setUp(self):
@@ -175,6 +207,76 @@ class TestAodPipeline(unittest.TestCase):
                 encoding='utf-8') as plan_file:
             saved_plan = json.load(plan_file)
         self.assertEqual('fake', saved_plan['provider'])
+
+    def test_short_prompt_is_enhanced_before_planning(self):
+        events = []
+        provider = _EnhancingCodegenProvider(
+            _valid_activity_source(self.spec))
+
+        result = generate_activity(
+            self.spec,
+            self.output_root,
+            provider=provider,
+            progress_cb=lambda *event: events.append(event),
+        )
+
+        self.assertEqual(1, provider.enhance_calls)
+        stages = [event[0] for event in events]
+        self.assertIn('enhancing', stages)
+        self.assertLess(stages.index('enhancing'), stages.index('planning'))
+        metadata_events = [
+            event[3] for event in events
+            if len(event) > 3 and isinstance(event[3], dict)]
+        self.assertTrue(any(
+            meta.get('enhanced_prompt') == provider.ENHANCED
+            for meta in metadata_events))
+        self.assertIn(provider.ENHANCED.splitlines()[0],
+                      provider.observed_plan_prompts[0])
+        self.assertEqual('Make a fractions quiz.',
+                         result.plan['original_prompt'])
+        self.assertEqual(provider.ENHANCED, result.plan['enhanced_prompt'])
+        self.assertEqual(provider.ENHANCED, result.spec.prompt)
+
+    def test_enhancement_disabled_skips_enhancer(self):
+        provider = _EnhancingCodegenProvider(
+            _valid_activity_source(self.spec))
+        result = generate_activity(
+            self.spec,
+            self.output_root,
+            provider=provider,
+            enhance=False,
+        )
+        self.assertEqual(0, provider.enhance_calls)
+        self.assertNotIn('enhanced_prompt', result.plan)
+
+    def test_detailed_prompt_skips_enhancer(self):
+        provider = _EnhancingCodegenProvider(
+            _valid_activity_source(self.spec))
+        long_spec = ActivitySpec(
+            'Fraction Quest',
+            'Make a fractions quiz. ' + 'Learners compare cards. ' * 25,
+            'logic_math',
+            'MIT',
+        )
+        generate_activity(
+            long_spec,
+            self.output_root,
+            provider=provider,
+        )
+        self.assertEqual(0, provider.enhance_calls)
+
+    def test_enhancer_failure_falls_back_to_original_prompt(self):
+        provider = _EnhancingCodegenProvider(
+            _valid_activity_source(self.spec), fail_enhance=True)
+        result = generate_activity(
+            self.spec,
+            self.output_root,
+            provider=provider,
+        )
+        self.assertEqual(1, provider.enhance_calls)
+        self.assertNotIn('enhanced_prompt', result.plan)
+        self.assertIn('Make a fractions quiz.',
+                      provider.observed_plan_prompts[0])
 
     def test_provider_rag_search_is_not_template_filtered(self):
         search_calls = []
