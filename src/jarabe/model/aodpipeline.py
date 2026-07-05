@@ -10,6 +10,7 @@ from dataclasses import replace
 from sugar3 import env
 
 from jarabe.model.aodcodegen import build_codegen_system_prompt
+from jarabe.model.aodcritic import run_critic_round
 from jarabe.model.aodenhance import enhance_prompt
 from jarabe.model.aodenhance import needs_enhancement
 from jarabe.model.aodcodegen import build_codegen_user_prompt
@@ -30,6 +31,7 @@ from jarabe.model.aodrefine import build_refine_system_prompt
 from jarabe.model.aodrefine import build_refine_user_prompt
 from jarabe.model.aodrefine import parse_search_replace
 from jarabe.model.aodrefine import apply_patches
+from jarabe.model.aodruntime import run_runtime_check
 from jarabe.model.aodvalidator import validate_activity_source_for_request
 
 
@@ -230,6 +232,21 @@ def generate_activity(spec, output_root=None, provider=None,
             plan['code_source'] = 'provider'
             plan['codegen_provider'] = selected_provider.name
             plan['codegen_model'] = selected_provider.model
+            if validate_code:
+                progress.report(
+                    'generating', 0.68,
+                    'Reviewing the code for weak spots...')
+                # Static validation is cheap; re-run it to hand the
+                # critic the accepted source's warnings as context.
+                accepted_report = validate_activity_source_for_request(
+                    activity_source, spec, plan)
+                activity_source = run_critic_round(
+                    selected_provider,
+                    spec,
+                    plan,
+                    activity_source,
+                    warnings=accepted_report.warnings,
+                )
         elif code_error:
             if template_fallback:
                 plan['codegen_fallback_reason'] = code_error
@@ -475,14 +492,38 @@ def _generate_activity_source_with_provider(provider, spec, plan, references,
 
         report = validate_activity_source_for_request(source, spec, plan)
         if report.valid:
-            return source, '', attempt
-
-        last_error = '\n'.join(report.errors)
-        progress.report(
-            'generating',
-            0.65,
-            'Validation failed on attempt %d; retrying' % attempt,
-        )
+            progress.report(
+                'generating',
+                0.66,
+                'Running the activity to make sure it works...',
+            )
+            runtime_ok, runtime_detail = run_runtime_check(
+                source, getattr(spec, 'name', 'Generated Activity'))
+            if runtime_ok:
+                plan['runtime_check'] = runtime_detail
+                return source, '', attempt
+            last_error = (
+                'The generated code crashed when run:\n%s\nFix the crash.'
+                % runtime_detail
+            )
+            progress.report(
+                'generating',
+                0.65,
+                'The code crashed when run (attempt %d); retrying'
+                % attempt,
+            )
+        else:
+            last_error = '\n'.join(report.errors)
+            progress.report(
+                'generating',
+                0.65,
+                'Validation failed on attempt %d; retrying' % attempt,
+            )
+        if report.warnings:
+            last_error += ''.join(
+                '\nAlso consider: %s' % warning
+                for warning in report.warnings
+            )
         # Brief backoff before the next attempt so we don't hammer the
         # provider immediately after a validation failure (1s, 2s, 4s…).
         if attempt < _CODEGEN_ATTEMPT_LIMIT:

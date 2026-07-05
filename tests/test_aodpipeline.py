@@ -126,6 +126,45 @@ class _QualityRetryCodegenProvider(_FakeProvider):
         return self.specific_source
 
 
+class _RuntimeCrashRetryProvider(_FakeProvider):
+    """First source passes static checks but crashes when run."""
+
+    def __init__(self, clean_source):
+        self.clean_source = clean_source
+        self.crashing_source = clean_source.replace(
+            'self._build_canvas()',
+            'self._build_canvas()\n'
+            '        raise RuntimeError("boom-at-runtime")',
+            1,
+        )
+        assert self.crashing_source != clean_source
+        self.codegen_calls = 0
+        self.observed_retry_prompts = []
+
+    def generate_activity_source(self, system_prompt, user_prompt,
+                                 timeout=90):
+        self.codegen_calls += 1
+        if self.codegen_calls == 1:
+            return self.crashing_source
+        self.observed_retry_prompts.append(user_prompt)
+        return self.clean_source
+
+
+class _CriticOkProvider(_CodegenProvider):
+    """Codegen provider whose critic review replies OK."""
+
+    def __init__(self, source):
+        _CodegenProvider.__init__(self, source)
+        self.critic_calls = 0
+
+    def generate_text(self, system_prompt, user_prompt, timeout=120,
+                      stream_callback=None):
+        if 'reviewing a Sugar activity' not in system_prompt:
+            raise AssertionError('Expected the critic system prompt')
+        self.critic_calls += 1
+        return 'OK'
+
+
 class _FailingCodegenProvider(_FakeProvider):
 
     def generate_activity_source(self, system_prompt, user_prompt,
@@ -479,6 +518,49 @@ class TestAodPipeline(unittest.TestCase):
         self.assertEqual('provider', result.plan['code_source'])
         self.assertEqual(2, provider.codegen_calls)
         self.assertIn('DrawingArea', result.files['activity.py'])
+
+    def test_critic_round_runs_after_accepted_source(self):
+        provider = _CriticOkProvider(_valid_activity_source(self.spec))
+        with mock.patch.dict(os.environ, {'AOD_CRITIC': 'on'}):
+            result = generate_activity(
+                self.spec,
+                self.output_root,
+                provider=provider,
+                enhance=False,
+            )
+        self.assertEqual(1, provider.critic_calls)
+        self.assertEqual('ok', result.plan['critic'])
+        self.assertEqual('provider', result.plan['code_source'])
+
+    def test_runtime_check_marker_recorded_when_disabled(self):
+        provider = _CodegenProvider(_valid_activity_source(self.spec))
+        with mock.patch.dict(os.environ, {'AOD_RUNTIME_CHECK': 'off'}):
+            result = generate_activity(
+                self.spec,
+                self.output_root,
+                provider=provider,
+            )
+        self.assertEqual('skipped: disabled', result.plan['runtime_check'])
+
+    @unittest.skipUnless(
+        os.environ.get('DISPLAY') or os.environ.get('WAYLAND_DISPLAY'),
+        'needs a display')
+    def test_provider_codegen_retries_after_runtime_crash(self):
+        provider = _RuntimeCrashRetryProvider(
+            _valid_activity_source(self.spec))
+        with mock.patch.dict(os.environ, {'AOD_RUNTIME_CHECK': 'on'}):
+            result = generate_activity(
+                self.spec,
+                self.output_root,
+                provider=provider,
+            )
+        self.assertEqual(2, provider.codegen_calls)
+        self.assertIn('crashed when run',
+                      provider.observed_retry_prompts[0])
+        self.assertIn('boom-at-runtime',
+                      provider.observed_retry_prompts[0])
+        self.assertEqual('provider', result.plan['code_source'])
+        self.assertEqual('passed', result.plan['runtime_check'])
 
 
 def _valid_activity_source(spec):

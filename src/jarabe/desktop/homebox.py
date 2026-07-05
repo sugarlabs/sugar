@@ -1805,7 +1805,7 @@ class _CreateAIActivityPanel(Gtk.EventBox):
              'system-search'),
             (_('Write'), _('Writing the Python code for your activity'),
              'edit-description'),
-            (_('Check'), _('Preparing project files and previewing'),
+            (_('Check'), _('Testing the code and preparing files'),
              'dialog-ok'),
             (_('Ready'), _('Packaging your installable activity bundle'),
              'package_settings'),

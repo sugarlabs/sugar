@@ -554,7 +554,9 @@ def normalize_plan(spec, plan):
             'codegen_fallback_reason',
             'refine_method',
             'original_prompt',
-            'enhanced_prompt'):
+            'enhanced_prompt',
+            'runtime_check',
+            'critic'):
         value = plan.get(field)
         if isinstance(value, str) and value:
             normalized[field] = value
@@ -594,7 +596,7 @@ def assemble_project(spec, plan, output_root, activity_source=None):
         'aod_plan.json': json.dumps(plan, indent=2, sort_keys=True) + '\n',
         os.path.join('activity', 'activity.info'):
             _render_activity_info(spec, plan),
-        os.path.join('activity', 'activity.svg'): _ACTIVITY_ICON,
+        os.path.join('activity', 'activity.svg'): _activity_icon(plan),
     }
 
     for relative_path, content in files.items():
@@ -1059,6 +1061,16 @@ from sugar3.activity import bundlebuilder
 if __name__ == '__main__':
     bundlebuilder.start()
 """
+
+
+def _activity_icon(plan):
+    """Per-activity icon, falling back to the classic checkmark."""
+    try:
+        from jarabe.model.aodicons import render_activity_icon
+        return render_activity_icon(plan)
+    except Exception:
+        return _ACTIVITY_ICON
+
 
 _ACTIVITY_ICON = """<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg"
