@@ -21,6 +21,7 @@ from jarabe.model.aodgenerator import enrich_plan
 from jarabe.model.aodgenerator import normalize_plan
 from jarabe.model.aodgenerator import package_project
 from jarabe.model.aodgenerator import read_project_files
+from jarabe.model.aodicons import request_icon_svg
 from jarabe.model.aodllm import ProviderError
 from jarabe.model.aodllm import get_configured_provider
 from jarabe.model.aodprompts import build_system_prompt
@@ -268,6 +269,17 @@ def generate_activity(spec, output_root=None, provider=None,
                 'Provider does not support activity source generation; '
                 'using template renderer.'
             )
+
+    if selected_provider is not None and provider_used != 'local' \
+            and not plan.get('icon_svg'):
+        progress.report('generating', 0.72,
+                        'Drawing an icon for your activity...')
+        icon_svg = request_icon_svg(selected_provider, spec, plan)
+        if icon_svg:
+            plan['icon_svg'] = icon_svg
+            plan['icon_source'] = 'ai'
+        else:
+            plan['icon_source'] = 'generated'
 
     progress.report('generating', 0.60,
                     'Expanding the plan into activity screens')

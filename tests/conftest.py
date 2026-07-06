@@ -16,3 +16,4 @@ import os
 
 os.environ.setdefault('AOD_RUNTIME_CHECK', 'off')
 os.environ.setdefault('AOD_CRITIC', 'off')
+os.environ.setdefault('AOD_AI_ICON', 'off')

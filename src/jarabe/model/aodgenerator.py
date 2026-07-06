@@ -556,7 +556,9 @@ def normalize_plan(spec, plan):
             'original_prompt',
             'enhanced_prompt',
             'runtime_check',
-            'critic'):
+            'critic',
+            'icon_source',
+            'icon_svg'):
         value = plan.get(field)
         if isinstance(value, str) and value:
             normalized[field] = value
@@ -1064,8 +1066,15 @@ if __name__ == '__main__':
 
 
 def _activity_icon(plan):
-    """Per-activity icon, falling back to the classic checkmark."""
+    """Per-activity icon: the model's own drawing when the plan
+    carries one, else the deterministic glyph, else the checkmark."""
     try:
+        icon_svg = plan.get('icon_svg')
+        if icon_svg:
+            from jarabe.model.aodicons import sanitize_icon_svg
+            safe = sanitize_icon_svg(icon_svg)
+            if safe:
+                return safe
         from jarabe.model.aodicons import render_activity_icon
         return render_activity_icon(plan)
     except Exception:

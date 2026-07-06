@@ -2,17 +2,21 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"""Deterministic per-activity icons.
+"""Per-activity icons.
 
-Every generated activity used to ship the same checkmark.  This module
-renders a small Sugar-style SVG icon whose glyph follows the activity's
-template/category and whose accent varies with the activity name, so
-the home ring shows a distinct, colorizable icon per activity.  Icons
-use Sugar's ``&stroke_color;``/``&fill_color;`` entities so they take
-the learner's XO colors wherever Sugar recolors icons.
+The model that wrote the activity also draws its icon: one small
+``generate_text`` call returns a 55x55 Sugar-style SVG built on
+Sugar's ``&stroke_color;``/``&fill_color;`` entities, so every icon
+is specific to the idea ("space racer" gets a rocket, not a category
+glyph) and still recolors to the learner's XO colors.  The reply is
+strictly sanitized; anything doubtful falls back to the deterministic
+template/category glyph below, which never fails.
 """
 
 import hashlib
+import logging
+import os
+import re
 
 _HEADER = (
     '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -161,3 +165,128 @@ def render_activity_icon(plan):
             'accent_x': 46,
             'accent_y': 8,
         }
+
+
+_MAX_ICON_CHARS = 6000
+
+_FORBIDDEN_MARKUP = (
+    '<script', '<image', '<foreignobject', '<iframe', '<text',
+    '<style', 'javascript:', '<lineargradient', '<radialgradient',
+    '<filter', '<use', '<animate',
+)
+
+_EVENT_ATTR = re.compile(r'\bon[a-z]+\s*=', re.IGNORECASE)
+_EXTERNAL_REF = re.compile(r'(?:xlink:)?href\s*=\s*["\'](?!#)')
+
+
+def build_icon_system_prompt():
+    return (
+        'You draw icons for Sugar learning activities.\n\n'
+        'Return ONLY an SVG document for a 55x55 icon of the activity '
+        'described.  No explanations, no markdown fences.\n\n'
+        'Rules:\n'
+        '- The root element must be: <svg '
+        'xmlns="http://www.w3.org/2000/svg" width="55" height="55" '
+        'viewBox="0 0 55 55">\n'
+        '- Draw with Sugar\'s color entities: stroke="&stroke_color;" '
+        'for outlines, fill="&fill_color;" for filled shapes, and '
+        'fill="&stroke_color;" for small solid accents.  Never use '
+        'literal colors.\n'
+        '- Bold and simple so it reads at small size: 2-6 shapes, '
+        'stroke-width 3 to 4.5, stroke-linecap="round", '
+        'stroke-linejoin="round".\n'
+        '- Keep about 4 units of padding inside the edges.\n'
+        '- Use only these elements: path, rect, circle, ellipse, '
+        'line, polyline, polygon, g.  No text, gradients, filters, '
+        'images, scripts, style blocks, or external references.\n'
+        '- Draw ONE clear visual metaphor for what the learner does '
+        'in this activity (a rocket for a space game, a flower for a '
+        'garden counter).\n'
+    )
+
+
+def build_icon_user_prompt(spec, plan):
+    parts = [
+        'Draw the icon for this Sugar activity.\n',
+        'Name: %s\n' % getattr(spec, 'name', ''),
+    ]
+    if isinstance(plan, dict):
+        kind = plan.get('activity_kind') or ''
+        summary = plan.get('summary') or ''
+        if kind:
+            parts.append('What it is: %s\n' % kind)
+        if summary:
+            parts.append('Summary: %s\n' % summary)
+    parts.append('Learning area: %s\n' % getattr(spec, 'category', ''))
+    parts.append('\nReturn only the SVG.')
+    return ''.join(parts)
+
+
+def sanitize_icon_svg(text):
+    """Return a safe, colorizable Sugar icon SVG, or None.
+
+    Accepts raw model output (possibly fenced or wrapped in prose),
+    extracts the <svg> element, rejects anything scriptable or
+    externally referencing, requires Sugar's color entities and the
+    55x55 viewBox, and re-heads the document with the canonical
+    entity declaration so the icon parses everywhere Sugar loads it.
+    """
+    if not isinstance(text, str):
+        return None
+
+    start = text.find('<svg')
+    end = text.find('</svg>', start)
+    if start < 0 or end < 0:
+        return None
+    svg = text[start:end + len('</svg>')]
+
+    if len(svg) > _MAX_ICON_CHARS:
+        return None
+    lowered = svg.lower()
+    if any(marker in lowered for marker in _FORBIDDEN_MARKUP):
+        return None
+    if _EVENT_ATTR.search(svg) or _EXTERNAL_REF.search(svg):
+        return None
+    if 'viewBox="0 0 55 55"' not in svg:
+        return None
+    if '&stroke_color;' not in svg:
+        return None
+
+    candidate = _HEADER + svg + '\n'
+    try:
+        from xml.dom import minidom
+        document = minidom.parseString(candidate)
+        if document.documentElement.tagName != 'svg':
+            return None
+    except Exception:
+        return None
+    return candidate
+
+
+def request_icon_svg(provider, spec, plan):
+    """Ask the model to draw this activity's icon; never raises.
+
+    Returns a sanitized SVG string, or None when the feature is off,
+    the provider cannot draw, or the reply fails sanitization — the
+    caller then falls back to render_activity_icon().
+    """
+    if os.environ.get('AOD_AI_ICON', 'on').lower() in (
+            'off', '0', 'no', 'false'):
+        return None
+    generate_text = getattr(provider, 'generate_text', None)
+    if not callable(generate_text):
+        return None
+
+    try:
+        response = generate_text(
+            build_icon_system_prompt(),
+            build_icon_user_prompt(spec, plan),
+        )
+    except Exception as error:
+        logging.warning('Icon drawing call failed: %s', error)
+        return None
+
+    icon = sanitize_icon_svg(response)
+    if icon is None:
+        logging.warning('Model icon failed sanitization; using fallback')
+    return icon

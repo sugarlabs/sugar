@@ -165,6 +165,30 @@ class _CriticOkProvider(_CodegenProvider):
         return 'OK'
 
 
+class _IconDrawingProvider(_CodegenProvider):
+    """Codegen provider that also draws the activity icon."""
+
+    ICON_SVG = (
+        '<svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" '
+        'viewBox="0 0 55 55">\n'
+        '  <path d="M27 8 L35 30 L27 26 L19 30 Z" fill="&fill_color;" '
+        'stroke="&stroke_color;" stroke-width="3" '
+        'stroke-linejoin="round"/>\n'
+        '</svg>'
+    )
+
+    def __init__(self, source):
+        _CodegenProvider.__init__(self, source)
+        self.icon_calls = 0
+
+    def generate_text(self, system_prompt, user_prompt, timeout=120,
+                      stream_callback=None):
+        if 'draw icons for Sugar' not in system_prompt:
+            raise AssertionError('Expected the icon system prompt')
+        self.icon_calls += 1
+        return self.ICON_SVG
+
+
 class _FailingCodegenProvider(_FakeProvider):
 
     def generate_activity_source(self, system_prompt, user_prompt,
@@ -531,6 +555,40 @@ class TestAodPipeline(unittest.TestCase):
         self.assertEqual(1, provider.critic_calls)
         self.assertEqual('ok', result.plan['critic'])
         self.assertEqual('provider', result.plan['code_source'])
+
+    def test_ai_icon_is_used_when_provider_draws_one(self):
+        provider = _IconDrawingProvider(_valid_activity_source(self.spec))
+        with mock.patch.dict(os.environ, {'AOD_AI_ICON': 'on'}):
+            result = generate_activity(
+                self.spec,
+                self.output_root,
+                provider=provider,
+                enhance=False,
+            )
+        self.assertEqual(1, provider.icon_calls)
+        self.assertEqual('ai', result.plan['icon_source'])
+        icon_path = os.path.join(result.project_path, 'activity',
+                                 'activity.svg')
+        with open(icon_path, encoding='utf-8') as icon_file:
+            svg = icon_file.read()
+        self.assertIn('M27 8 L35 30', svg)
+        self.assertIn('<!ENTITY stroke_color', svg)
+
+    def test_icon_falls_back_when_provider_cannot_draw(self):
+        provider = _CodegenProvider(_valid_activity_source(self.spec))
+        with mock.patch.dict(os.environ, {'AOD_AI_ICON': 'on'}):
+            result = generate_activity(
+                self.spec,
+                self.output_root,
+                provider=provider,
+            )
+        self.assertEqual('generated', result.plan['icon_source'])
+        icon_path = os.path.join(result.project_path, 'activity',
+                                 'activity.svg')
+        with open(icon_path, encoding='utf-8') as icon_file:
+            svg = icon_file.read()
+        self.assertIn('<!ENTITY stroke_color', svg)
+        self.assertNotIn('M27 8 L35 30', svg)
 
     def test_runtime_check_marker_recorded_when_disabled(self):
         provider = _CodegenProvider(_valid_activity_source(self.spec))
