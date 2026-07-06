@@ -2,5 +2,8 @@
 
 # E402 module level import not at top of file
 # gi.require_version() is required before later imports
+# W503/W504 (line break before/after binary operator) are in flake8's
+# default ignore list; setting ignore= would otherwise re-enable both,
+# and they can never be satisfied at the same time.
 
-ignore = E402
+ignore = E402, W503, W504

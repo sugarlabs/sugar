@@ -1,0 +1,710 @@
+# Copyright (C) 2026 Sugar Labs
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+import json
+import os
+import time
+from dataclasses import replace
+
+from sugar3 import env
+
+from jarabe.model.aodcodegen import build_codegen_system_prompt
+from jarabe.model.aodcritic import run_critic_round
+from jarabe.model.aodenhance import enhance_prompt
+from jarabe.model.aodenhance import needs_enhancement
+from jarabe.model.aodcodegen import build_codegen_user_prompt
+from jarabe.model.aodgenerator import apply_license_to_project
+from jarabe.model.aodgenerator import build_plan
+from jarabe.model.aodgenerator import create_prototype_activity
+from jarabe.model.aodgenerator import enrich_plan
+from jarabe.model.aodgenerator import normalize_plan
+from jarabe.model.aodgenerator import package_project
+from jarabe.model.aodgenerator import read_project_files
+from jarabe.model.aodicons import request_icon_svg
+from jarabe.model.aodllm import ProviderError
+from jarabe.model.aodllm import get_configured_provider
+from jarabe.model.aodprompts import build_system_prompt
+from jarabe.model.aodprompts import build_user_prompt
+from jarabe.model.aodrag import build_corpus
+from jarabe.model.aodrag import search
+from jarabe.model.aodrefine import build_refine_system_prompt
+from jarabe.model.aodrefine import build_refine_user_prompt
+from jarabe.model.aodrefine import parse_search_replace
+from jarabe.model.aodrefine import apply_patches
+from jarabe.model.aodruntime import run_runtime_check
+from jarabe.model.aodvalidator import validate_activity_source_for_request
+
+
+class PipelineError(Exception):
+    pass
+
+
+_LOCAL_PROVIDER_NAMES = ('local', 'local-template')
+
+
+def _env_int(name, default):
+    try:
+        return int(os.environ.get(name, str(default)))
+    except ValueError:
+        return default
+
+
+_CODEGEN_ATTEMPT_LIMIT = _env_int('AOD_CODEGEN_ATTEMPT_LIMIT', 3)
+
+
+def generate_activity(spec, output_root=None, provider=None,
+                      provider_name='default', use_rag=True,
+                      validate_code=True,
+                      progress_cb=None, pace=False, package_bundle=True,
+                      template_fallback=False, enhance=True):
+    """Run prompt grounding, provider planning, and generation.
+
+    When template_fallback is True and the provider fails to deliver valid
+    activity code, the pipeline renders activity.py from the local template
+    using the provider's plan instead of raising. The plan records
+    codegen_fallback_reason so callers can surface what happened to the user.
+    The default stays False so the pipeline's strict no-fallback contract
+    remains the default for tests and CLI callers that want to fail fast.
+    """
+    progress = _PipelineProgress(progress_cb, pace)
+
+    original_prompt = spec.prompt
+    prompt_was_enhanced = False
+    if provider is not None and enhance and needs_enhancement(spec.prompt):
+        progress.report('enhancing', 0.03,
+                        'Making your idea crystal clear...')
+        enhanced_text, prompt_was_enhanced = enhance_prompt(
+            provider, spec.prompt, spec)
+        if prompt_was_enhanced:
+            spec = replace(spec, prompt=enhanced_text)
+            progress.report(
+                'enhancing', 0.05,
+                'Refined your idea into a clear brief',
+                metadata={'enhanced_prompt': enhanced_text})
+
+    progress.report('planning', 0.06,
+                    'Reading the prompt and classroom goal')
+    selected_provider = provider
+    provider_error = ''
+    references = []
+    provider_required = (
+        selected_provider is not None or
+        provider_name not in _LOCAL_PROVIDER_NAMES
+    )
+
+    if selected_provider is None and provider_name not in (
+            'local', 'local-template'):
+        try:
+            selected_provider = get_configured_provider(provider_name)
+        except ProviderError as error:
+            provider_error = str(error)
+
+    if provider_required and selected_provider is None:
+        if provider_error:
+            raise PipelineError(
+                'Configured model is required for RAG generation: %s'
+                % provider_error
+            )
+        raise PipelineError(
+            'No configured model is available. Save an API key and choose '
+            'a provider before generating.'
+        )
+
+    if selected_provider is not None:
+        use_rag = True
+
+    if selected_provider is not None:
+        progress.report('planning', 0.16,
+                        'Preparing Sugar example context for the model')
+    else:
+        progress.report('planning', 0.16,
+                        'Drafting local activity structure')
+        local_plan = build_plan(spec)
+
+    if use_rag:
+        if selected_provider is not None:
+            progress.report('grounding', 0.24,
+                            'Retrieving Sugar activity examples for context')
+            template_filter = ''
+            reference_limit = 10
+        else:
+            progress.report('grounding', 0.24,
+                            'Searching Sugar activity patterns')
+            template_filter = local_plan['template']
+            reference_limit = 4
+        corpus = build_corpus()
+        references = search(
+            spec.prompt,
+            limit=reference_limit,
+            template=template_filter,
+            corpus=corpus,
+        )
+        progress.report('grounding', 0.34,
+                        'Selecting useful Sugar API and interaction patterns')
+
+    if selected_provider is not None:
+        system_prompt = build_system_prompt(spec, references)
+        user_prompt = build_user_prompt(spec)
+        progress.report('provider', 0.43,
+                        'Asking the configured model to plan from RAG context')
+        plan_error = None
+        for plan_attempt in (1, 2):
+            try:
+                provider_plan = selected_provider.generate_plan(
+                    system_prompt,
+                    user_prompt,
+                )
+                plan = normalize_plan(spec, provider_plan)
+                provider_used = selected_provider.name
+                model_used = selected_provider.model
+                plan_error = None
+                progress.report('provider', 0.52,
+                                'Checking the model plan')
+                break
+            except ValueError as error:
+                # A malformed plan response is usually a one-off; one
+                # fresh attempt is cheap compared to failing the job.
+                plan_error = error
+                if plan_attempt == 1:
+                    progress.report(
+                        'provider', 0.45,
+                        'Model plan was malformed; asking once more')
+            except ProviderError as error:
+                # Transient network failures were already retried at the
+                # HTTP layer, so what reaches here is not worth repeating.
+                plan_error = error
+                break
+        if plan_error is not None:
+            provider_error = _redact_provider_error(
+                plan_error,
+                selected_provider,
+            )
+            if not template_fallback:
+                raise PipelineError(
+                    'Provider did not answer: %s' % provider_error
+                )
+            # Provider unavailable but caller asked for graceful degradation:
+            # build the activity from the local template so the user still
+            # gets something usable without burning further API credits.
+            progress.report(
+                'provider', 0.46,
+                'Provider did not answer; using local template instead',
+            )
+            plan = build_plan(spec)
+            provider_used = 'local'
+            model_used = ''
+            selected_provider = None
+    else:
+        plan = local_plan
+        provider_used = 'local'
+        model_used = ''
+        progress.report('provider', 0.43,
+                        'Using the local activity builder')
+
+    if output_root is None:
+        output_root = env.get_profile_path(os.path.join('aod', 'projects'))
+
+    plan = enrich_plan(spec, plan, references)
+    plan = dict(plan)
+    plan['provider'] = provider_used
+    plan['model'] = model_used
+    if prompt_was_enhanced:
+        plan['original_prompt'] = original_prompt
+        plan['enhanced_prompt'] = spec.prompt
+    if provider_error:
+        plan['provider_fallback_reason'] = provider_error
+
+    activity_source = None
+    plan['code_source'] = 'template'
+    if selected_provider is not None and provider_used != 'local':
+        activity_source, code_error, code_attempts = (
+            _generate_activity_source_with_provider(
+                selected_provider,
+                spec,
+                plan,
+                references,
+                progress,
+                validate_code=validate_code,
+            )
+        )
+        plan['codegen_attempts'] = code_attempts
+        if activity_source:
+            plan['code_source'] = 'provider'
+            plan['codegen_provider'] = selected_provider.name
+            plan['codegen_model'] = selected_provider.model
+            if validate_code:
+                progress.report(
+                    'generating', 0.68,
+                    'Reviewing the code for weak spots...')
+                # Static validation is cheap; re-run it to hand the
+                # critic the accepted source's warnings as context.
+                accepted_report = validate_activity_source_for_request(
+                    activity_source, spec, plan)
+                activity_source = run_critic_round(
+                    selected_provider,
+                    spec,
+                    plan,
+                    activity_source,
+                    warnings=accepted_report.warnings,
+                )
+        elif code_error:
+            if template_fallback:
+                plan['codegen_fallback_reason'] = code_error
+                plan['code_source'] = 'template_after_codegen_failure'
+                progress.report(
+                    'generating', 0.58,
+                    'Provider code failed validation; using local '
+                    'template instead',
+                )
+            else:
+                raise PipelineError(
+                    'Provider could not generate valid activity code: %s'
+                    % code_error
+                )
+        else:
+            # Provider only supports planning, not code generation.
+            # Fall back to the local template renderer.
+            plan['codegen_fallback_reason'] = (
+                'Provider does not support activity source generation; '
+                'using template renderer.'
+            )
+
+    if selected_provider is not None and provider_used != 'local' \
+            and not plan.get('icon_svg'):
+        progress.report('generating', 0.72,
+                        'Drawing an icon for your activity...')
+        icon_svg = request_icon_svg(selected_provider, spec, plan)
+        if icon_svg:
+            plan['icon_svg'] = icon_svg
+            plan['icon_source'] = 'ai'
+        else:
+            plan['icon_source'] = 'generated'
+
+    progress.report('generating', 0.60,
+                    'Expanding the plan into activity screens')
+    result = create_prototype_activity(
+        spec,
+        output_root,
+        plan=plan,
+        package_bundle=False,
+        activity_source=activity_source,
+    )
+    result.provider = provider_used
+    result.model = model_used
+
+    progress.report('assembling', 0.78,
+                    'Assembling the activity project')
+    plan_path = os.path.join(result.project_path, 'aod_plan.json')
+    with open(plan_path, 'w', encoding='utf-8') as plan_file:
+        json.dump(result.plan, plan_file, indent=2, sort_keys=True)
+        plan_file.write('\n')
+
+    if package_bundle:
+        progress.report('packaging', 0.88,
+                        'Packaging the XO bundle')
+        package_generation_result(result)
+
+    progress.report('ready', 1.0, 'Activity project is ready')
+    return result
+
+
+def package_generation_result(result):
+    """Build the XO bundle for an already generated project."""
+    if result.bundle_path and os.path.isfile(result.bundle_path):
+        return result.bundle_path
+
+    result.bundle_path = package_project(result.project_path)
+    plan_path = os.path.join(result.project_path, 'aod_plan.json')
+    with open(plan_path, 'w', encoding='utf-8') as plan_file:
+        json.dump(result.plan, plan_file, indent=2, sort_keys=True)
+        plan_file.write('\n')
+    result.files = read_project_files(result.project_path)
+    return result.bundle_path
+
+
+def reapply_generation_license(result, license_id):
+    """Switch a generated activity to ``license_id`` before packaging.
+
+    Rewrites the license artifacts on disk, refreshes the in-memory file
+    mapping, and invalidates any previously built bundle so the next
+    :func:`package_generation_result` call repackages with the new license.
+    """
+    if result.spec.license_id == license_id and result.bundle_path:
+        return result
+
+    result.spec.license_id = license_id
+    result.files = apply_license_to_project(
+        result.project_path, result.spec, result.plan)
+    result.bundle_path = ''
+    return result
+
+
+def _progress(callback, stage, fraction, message, metadata=None):
+    if callback is not None:
+        try:
+            if metadata is None:
+                callback(stage, fraction, message)
+            else:
+                callback(stage, fraction, message, metadata)
+        except TypeError:
+            callback(stage, fraction, message)
+
+
+class _PipelineProgress:
+    """Progress reporter with optional UI pacing for real service jobs."""
+
+    def __init__(self, callback, pace=False):
+        self._callback = callback
+        self._pace = pace
+
+    def report(self, stage, fraction, message, metadata=None):
+        _progress(self._callback, stage, fraction, message, metadata)
+        if not self._pace:
+            return
+
+        end_time = time.time() + 0.15
+        while time.time() < end_time:
+            time.sleep(0.05)
+            _progress(self._callback, stage, fraction, message)
+
+    def report_immediate(self, stage, fraction, message, metadata=None):
+        """Report progress without the pacing sleep.
+
+        Used for streaming token updates where blocking the response
+        thread would slow down how fast new tokens arrive.
+        """
+        _progress(self._callback, stage, fraction, message, metadata)
+
+
+def _redact_provider_error(error, provider):
+    message = str(error)
+    api_key = getattr(provider, '_api_key', '')
+    if api_key:
+        message = message.replace(api_key, '[redacted]')
+    return message
+
+
+_STREAM_REPORT_INTERVAL_SECONDS = 0.08
+
+
+def _make_codegen_stream_callback(progress, attempt):
+    """Build a stream callback that forwards partial codegen text to the UI.
+
+    The callback is debounced so the UI is not repainted on every single
+    token; intermediate updates land at most once per ~80ms. The first
+    and final chunks are always reported so the preview lights up
+    immediately and reflects the final draft.
+    """
+    state = {'last_emit': 0.0, 'last_text': ''}
+
+    def report_partial(partial_text):
+        if not isinstance(partial_text, str):
+            return
+        state['last_text'] = partial_text
+        now = time.time()
+        if now - state['last_emit'] < _STREAM_REPORT_INTERVAL_SECONDS:
+            return
+        state['last_emit'] = now
+        progress.report_immediate(
+            'generating',
+            0.58,
+            'Streaming activity.py from the model '
+            '(%d chars)' % len(partial_text),
+            {
+                'draft_activity_source': partial_text,
+                'codegen_attempt': attempt,
+                'codegen_streaming': True,
+            },
+        )
+
+    return report_partial
+
+
+_CODE_SIZE_TOKENS = {
+    'compact': 6000,
+    'standard': 14000,
+    'full': None,
+}
+
+
+def _generate_activity_source_with_provider(provider, spec, plan, references,
+                                           progress, validate_code=True):
+    generate_source = getattr(provider, 'generate_activity_source', None)
+    if not callable(generate_source):
+        return None, '', 0
+
+    code_size = getattr(spec, 'code_size', 'standard')
+    max_output_tokens = _CODE_SIZE_TOKENS.get(code_size)
+
+    system_prompt = build_codegen_system_prompt(
+        spec, plan, references, code_size=code_size)
+    user_prompt = build_codegen_user_prompt(spec, plan)
+    last_error = ''
+
+    for attempt in range(1, _CODEGEN_ATTEMPT_LIMIT + 1):
+        progress.report(
+            'generating',
+            0.56,
+            'Asking the model to write activity.py'
+            if attempt == 1
+            else 'Retrying activity.py generation (attempt %d)' % attempt,
+        )
+        stream_callback = _make_codegen_stream_callback(progress, attempt)
+        retry_prompt = user_prompt
+        if last_error:
+            retry_prompt = (
+                '%s\n\nPrevious attempt was rejected. Fix these issues:\n%s'
+                % (user_prompt, last_error)
+            )
+        try:
+            try:
+                source = generate_source(
+                    system_prompt,
+                    retry_prompt,
+                    stream_callback=stream_callback,
+                    max_output_tokens=max_output_tokens,
+                )
+            except TypeError as err:
+                msg = str(err)
+                if 'stream_callback' not in msg and 'keyword argument' not in msg:
+                    raise
+                # Provider doesn't accept every optional kwarg; drop
+                # max_output_tokens first but keep streaming if the
+                # provider supports it.
+                try:
+                    source = generate_source(
+                        system_prompt,
+                        retry_prompt,
+                        stream_callback=stream_callback,
+                    )
+                except TypeError as err2:
+                    msg2 = str(err2)
+                    if ('stream_callback' not in msg2
+                            and 'keyword argument' not in msg2):
+                        raise
+                    source = generate_source(system_prompt, retry_prompt)
+        except ProviderError as error:
+            return None, _redact_provider_error(error, provider), attempt
+        except ValueError as error:
+            return None, str(error), attempt
+
+        progress.report(
+            'generating',
+            0.64,
+            'Model returned activity.py',
+            {
+                'draft_activity_source': source,
+                'codegen_attempt': attempt,
+            },
+        )
+
+        if not validate_code:
+            return source, '', attempt
+
+        report = validate_activity_source_for_request(source, spec, plan)
+        if report.valid:
+            progress.report(
+                'generating',
+                0.66,
+                'Running the activity to make sure it works...',
+            )
+            runtime_ok, runtime_detail = run_runtime_check(
+                source, getattr(spec, 'name', 'Generated Activity'))
+            if runtime_ok:
+                plan['runtime_check'] = runtime_detail
+                return source, '', attempt
+            last_error = (
+                'The generated code crashed when run:\n%s\nFix the crash.'
+                % runtime_detail
+            )
+            progress.report(
+                'generating',
+                0.65,
+                'The code crashed when run (attempt %d); retrying'
+                % attempt,
+            )
+        else:
+            last_error = '\n'.join(report.errors)
+            progress.report(
+                'generating',
+                0.65,
+                'Validation failed on attempt %d; retrying' % attempt,
+            )
+        if report.warnings:
+            last_error += ''.join(
+                '\nAlso consider: %s' % warning
+                for warning in report.warnings
+            )
+        # Brief backoff before the next attempt so we don't hammer the
+        # provider immediately after a validation failure (1s, 2s, 4s…).
+        if attempt < _CODEGEN_ATTEMPT_LIMIT:
+            time.sleep(min(2.0 ** (attempt - 1), 4.0))
+
+    return None, last_error, _CODEGEN_ATTEMPT_LIMIT
+
+
+def _has_refinement(provider):
+    """Check if a provider supports the raw text generation needed for refinement."""
+    generate_text = getattr(provider, 'generate_text', None)
+    return callable(generate_text)
+
+
+def refine_activity(spec, current_source, current_plan, output_root,
+                    provider=None, provider_name='default',
+                    validate_code=True,
+                    progress_cb=None, pace=False,
+                    package_bundle=False):
+    """Refine an existing activity.py using SEARCH/REPLACE blocks.
+
+    Tries the cheap SEARCH/REPLACE path first (~1k output tokens).  If
+    the model requests FULLREGEN, or any patch fails to match, falls
+    back to full regeneration (skipping the planner call by reusing
+    current_plan).
+
+    Returns a GenerationResult like generate_activity().
+    """
+    progress = _PipelineProgress(progress_cb, pace)
+    selected_provider = provider
+    if selected_provider is None and provider_name not in (
+            'local', 'local-template'):
+        try:
+            selected_provider = get_configured_provider(provider_name)
+        except ProviderError as error:
+            raise PipelineError(
+                'Configured model is required for refinement: %s' % error
+            )
+
+    if selected_provider is None:
+        raise PipelineError(
+            'A configured model is required for refinement.'
+        )
+
+    generate_source = getattr(
+        selected_provider, 'generate_activity_source', None)
+    if not callable(generate_source):
+        raise PipelineError(
+            'Provider does not support activity source generation.'
+        )
+
+    if output_root is None:
+        output_root = env.get_profile_path(os.path.join('aod', 'projects'))
+
+    refinement_request = spec.prompt
+    plan_context = json.dumps({
+        'template': current_plan.get('template', ''),
+        'activity_kind': current_plan.get('activity_kind', ''),
+        'interaction_model': current_plan.get('interaction_model', ''),
+    }, indent=2)
+
+    progress.report('generating', 0.30,
+                    'Asking the model for targeted edits')
+
+    generate_text = getattr(selected_provider, 'generate_text', None)
+    if not callable(generate_text):
+        generate_text = None
+
+    patched_source = None
+    refine_method = 'search_replace'
+    try:
+        if generate_text is not None:
+            response = generate_text(
+                build_refine_system_prompt(),
+                build_refine_user_prompt(
+                    current_source,
+                    refinement_request,
+                    plan_context=plan_context,
+                ),
+            )
+        else:
+            response = None
+            refine_method = 'full_regen'
+    except (ProviderError, ValueError) as error:
+        progress.report(
+            'generating', 0.35,
+            'Edit request failed; falling back to full regeneration')
+        response = None
+        refine_method = 'full_regen'
+
+    if response is not None:
+        try:
+            patches = parse_search_replace(response)
+        except ValueError:
+            patches = None
+            refine_method = 'full_regen'
+
+        if patches is None:
+            refine_method = 'full_regen'
+            progress.report(
+                'generating', 0.40,
+                'Model requested full regeneration')
+        else:
+            progress.report(
+                'generating', 0.55,
+                'Applying %d targeted edits' % len(patches),
+            )
+            patched, applied, failed = apply_patches(
+                current_source, patches)
+            if failed > 0 or applied == 0:
+                progress.report(
+                    'generating', 0.45,
+                    '%d edits matched, %d failed; '
+                    'falling back to full regeneration'
+                    % (applied, failed),
+                )
+                refine_method = 'full_regen'
+                patched_source = None
+            else:
+                patched_source = patched
+                progress.report(
+                    'generating', 0.70,
+                    'Edits applied successfully')
+
+    if patched_source is None:
+        progress.report('generating', 0.55,
+                        'Regenerating full activity.py')
+        activity_source, code_error, code_attempts = (
+            _generate_activity_source_with_provider(
+                selected_provider,
+                spec,
+                current_plan,
+                (),
+                progress,
+                validate_code=validate_code,
+            )
+        )
+        if not activity_source:
+            raise PipelineError(
+                'Refinement failed: %s' % (code_error or 'no source')
+            )
+        patched_source = activity_source
+
+    plan = dict(current_plan)
+    plan['code_source'] = 'provider'
+    plan['refine_method'] = refine_method
+    plan['codegen_provider'] = selected_provider.name
+    plan['codegen_model'] = selected_provider.model
+
+    progress.report('generating', 0.80,
+                    'Assembling the refined project')
+    result = create_prototype_activity(
+        spec,
+        output_root,
+        plan=plan,
+        package_bundle=False,
+        activity_source=patched_source,
+    )
+    result.provider = selected_provider.name
+    result.model = selected_provider.model
+
+    plan_path = os.path.join(result.project_path, 'aod_plan.json')
+    with open(plan_path, 'w', encoding='utf-8') as plan_file:
+        json.dump(result.plan, plan_file, indent=2, sort_keys=True)
+        plan_file.write('\n')
+
+    if package_bundle:
+        progress.report('packaging', 0.95, 'Packaging the XO bundle')
+        package_generation_result(result)
+
+    progress.report('ready', 1.0, 'Refined activity is ready')
+    return result
