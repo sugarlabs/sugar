@@ -756,10 +756,14 @@ class Neighborhood(GObject.GObject):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        self._buddies = {None: get_owner_instance()}
-        self._buddies_by_key={}
-        self._buddies_by_handle={}
+        owner = get_owner_instance()
+        self._buddies = {None: owner}
+        self._buddies_by_key = {}
+        if owner.props.key is not None:
+            self._buddies_by_key[owner.props.key] = owner
+        self._buddies_by_handle = {}
         self._activities = {}
+        self._activities_by_room = {}
         self._link_local_account = None
         self._server_account = None
         self._shell_model = shell.get_model()
@@ -998,7 +1002,7 @@ class Neighborhood(GObject.GObject):
         if 'key' in properties:
             old_key = buddy.props.key
             if old_key is not None:
-                self._buddies_by_key.pop(old_key,None)
+                self._buddies_by_key.pop(old_key, None)
             buddy.props.key = properties['key']
             self._buddies_by_key[buddy.props.key] = buddy
 
@@ -1018,9 +1022,9 @@ class Neighborhood(GObject.GObject):
 
         buddy = self._buddies[contact_id]
         if buddy.props.key is not None:
-            self._buddies_by_key.pop(buddy.props.key,None)
+            self._buddies_by_key.pop(buddy.props.key, None)
         if not buddy.is_owner():
-            self._buddies_by_handle.pop(buddy.handle,None)
+            self._buddies_by_handle.pop(buddy.handle, None)
             
         del self._buddies[contact_id]
 
@@ -1035,6 +1039,7 @@ class Neighborhood(GObject.GObject):
 
         activity = ActivityModel(activity_id, room_handle)
         self._activities[activity_id] = activity
+        self._activities_by_room[room_handle] = activity
 
     def __activity_updated_cb(self, account, activity_id, properties):
         logging.debug('__activity_updated_cb %r %r', activity_id, properties)
@@ -1071,6 +1076,7 @@ class Neighborhood(GObject.GObject):
                           activity_id)
             return
         activity = self._activities[activity_id]
+        self._activities_by_room.pop(activity.room_handle, None)
         del self._activities[activity_id]
         self._shell_model.remove_shared_activity(activity_id)
 
@@ -1132,19 +1138,16 @@ class Neighborhood(GObject.GObject):
         return list(self._buddies.values())
 
     def get_buddy_by_key(self, key):
-        return self._buddies_by_key.get(key)
+        return self._buddies_by_key.get(key, None)
 
     def get_buddy_by_handle(self, contact_handle):
-        return self._buddies_by_handle.get(contact_handle)
+        return self._buddies_by_handle.get(contact_handle, None)
 
     def get_activity(self, activity_id):
         return self._activities.get(activity_id, None)
 
     def get_activity_by_room(self, room_handle):
-        for activity in list(self._activities.values()):
-            if activity.room_handle == room_handle:
-                return activity
-        return None
+        return self._activities_by_room.get(room_handle, None)
 
     def get_activities(self):
         return list(self._activities.values())
