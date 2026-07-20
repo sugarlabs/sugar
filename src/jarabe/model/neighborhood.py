@@ -757,6 +757,8 @@ class Neighborhood(GObject.GObject):
         GObject.GObject.__init__(self)
 
         self._buddies = {None: get_owner_instance()}
+        self._buddies_by_key={}
+        self._buddies_by_handle={}
         self._activities = {}
         self._link_local_account = None
         self._server_account = None
@@ -972,6 +974,7 @@ class Neighborhood(GObject.GObject):
             contact_id=contact_id,
             handle=handle)
         self._buddies[contact_id] = buddy
+        self._buddies_by_handle[handle] = buddy
 
     def __buddy_updated_cb(self, account, contact_id, properties):
         logging.debug('__buddy_updated_cb %r', contact_id)
@@ -993,7 +996,11 @@ class Neighborhood(GObject.GObject):
             buddy.props.color = XoColor(str(properties['color']))
 
         if 'key' in properties:
+            old_key = buddy.props.key
+            if old_key is not None:
+                self._buddies_by_key.pop(old_key,None)
             buddy.props.key = properties['key']
+            self._buddies_by_key[buddy.props.key] = buddy
 
         nick_key = CONNECTION_INTERFACE_ALIASING + '/alias'
         if nick_key in properties:
@@ -1010,6 +1017,11 @@ class Neighborhood(GObject.GObject):
             return
 
         buddy = self._buddies[contact_id]
+        if buddy.props.key is not None:
+            self._buddies_by_key.pop(buddy.props.key,None)
+        if not buddy.is_owner():
+            self._buddies_by_handle.pop(buddy.handle,None)
+            
         del self._buddies[contact_id]
 
         if buddy.props.key is not None:
@@ -1120,16 +1132,10 @@ class Neighborhood(GObject.GObject):
         return list(self._buddies.values())
 
     def get_buddy_by_key(self, key):
-        for buddy in list(self._buddies.values()):
-            if buddy.key == key:
-                return buddy
-        return None
+        return self._buddies_by_key.get(key)
 
     def get_buddy_by_handle(self, contact_handle):
-        for buddy in list(self._buddies.values()):
-            if not buddy.is_owner() and buddy.handle == contact_handle:
-                return buddy
-        return None
+        return self._buddies_by_handle.get(contact_handle)
 
     def get_activity(self, activity_id):
         return self._activities.get(activity_id, None)
