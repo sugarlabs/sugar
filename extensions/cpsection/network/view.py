@@ -642,7 +642,7 @@ class Network(SectionView):
                     if hostname:
                         non_blank_host_name_counter += 1
                         try:
-                            response = subprocess.run(["ping", "-c", "1", "-W", "1", hostname], 
+                            response = subprocess.run(["ping", "-c", "1", "-W", "1", "--", hostname], 
                                                       stdout=subprocess.DEVNULL, 
                                                       stderr=subprocess.DEVNULL, 
                                                       check=False,).returncode
