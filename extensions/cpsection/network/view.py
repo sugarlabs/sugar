@@ -648,7 +648,7 @@ class Network(SectionView):
                                 stderr=subprocess.DEVNULL
                             ).returncode
                         except (OSError, subprocess.SubprocessError):
-                            response=1
+                            response = 1
                         if (response):
                             self._proxy_inline_alerts[schema].show()
                             response_to_return = False
