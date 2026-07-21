@@ -29,6 +29,7 @@ from sugar3.graphics.alert import Alert
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
+import subprocess
 import os
 
 CLASS = 'Network'
@@ -638,9 +639,13 @@ class Network(SectionView):
                 if (schema != 'org.sugarlabs.system.proxy'):
                     hostname = Gio.Settings.get_string(
                         self._proxy_settings[schema], 'host')
-                    if hostname != '':
+                    if hostname:
                         non_blank_host_name_counter += 1
-                        response = os.system("ping -c 1 -W 1 " + hostname)
+                        try:
+                            response=subprocess.run(["ping","-c","1","-W","1",hostname], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False,).returncode
+                        except (OSError, subprocess.SubprocessError):
+                            response=1
+    
                         if (response):
                             self._proxy_inline_alerts[schema].show()
                             response_to_return = False
