@@ -639,7 +639,7 @@ class Network(SectionView):
                 if (schema != 'org.sugarlabs.system.proxy'):
                     hostname = Gio.Settings.get_string(
                         self._proxy_settings[schema], 'host')
-                    if hostname:
+                    if hostname: 
                         non_blank_host_name_counter += 1
                         try:
                             response = subprocess.run(
