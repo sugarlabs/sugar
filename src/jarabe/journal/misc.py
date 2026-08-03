@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2007, One Laptop Per Child
 # Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from jarabe.util import activityfactory
+from sugar4.activity import activityfactory
 from sugar4.activity.activityhandle import ActivityHandle
 from sugar4.graphics.icon import get_icon_file_name
 from sugar4.graphics.xocolor import XoColor

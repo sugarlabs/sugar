@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2006-2007 Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -300,7 +300,7 @@ class HomeWindow(Gtk.Box):
     def busy(self):
         if self._busy_count == 0:
             self._old_cursor = self.get_cursor()
-            self._set_cursor(Gdk.Cursor.new_from_name('wait', None))
+            self._set_cursor(Gdk.Cursor.new_from_name('wait'))
         self._busy_count += 1
 
     def unbusy(self):

@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2006-2007 Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -110,14 +110,24 @@ class Frame(object):
         self._wanted = False
         self.current_position = 0.0
         self._animator = None
-
+        self._hide_timeout_id = 0
+ 
         self._event_area = EventArea(self.settings)
         self._event_area.connect('enter', self._enter_corner_cb)
-
+        self._event_area.connect('leave', self._leave_corner_cb)
+ 
         self._top_panel = self._create_top_panel()
         self._bottom_panel = self._create_bottom_panel()
         self._left_panel = self._create_left_panel()
         self._right_panel = self._create_right_panel()
+
+        for panel in (self._top_panel, self._bottom_panel,
+                      self._left_panel, self._right_panel):
+            if panel:
+                controller = Gtk.EventControllerMotion.new()
+                controller.connect('enter', self._panel_enter_cb, panel)
+                controller.connect('leave', self._panel_leave_cb, panel)
+                panel.add_controller(controller)
 
         from jarabe.model import shell
         shell_model = shell.get_model()
@@ -171,6 +181,7 @@ class Frame(object):
             self.hide()
 
     def hide(self):
+        self._cancel_hide_timeout()
         if not self._wanted:
             return
         self._wanted = False
@@ -181,6 +192,7 @@ class Frame(object):
                 panel.set_reveal_child(False)
 
     def show(self):
+        self._cancel_hide_timeout()
         if self._wanted:
             return
         self._wanted = True
@@ -261,9 +273,44 @@ class Frame(object):
         self._update_position()
 
     def _enter_corner_cb(self, event_area):
+        self._cancel_hide_timeout()
         self.toggle()
 
+    def _panel_enter_cb(self, controller, x, y, panel):
+        panel.hover = True
+        self._cancel_hide_timeout()
+
+    def _panel_leave_cb(self, controller, panel):
+        panel.hover = False
+        self._check_auto_hide()
+
+    def _leave_corner_cb(self, event_area):
+        self._check_auto_hide()
+
+    def _cancel_hide_timeout(self):
+        if self._hide_timeout_id:
+            GLib.source_remove(self._hide_timeout_id)
+            self._hide_timeout_id = 0
+
+    def _check_auto_hide(self):
+        self._cancel_hide_timeout()
+        # Schedule auto-hide check after 250ms
+        self._hide_timeout_id = GLib.timeout_add(250, self._auto_hide_cb)
+
+    def _auto_hide_cb(self):
+        self._hide_timeout_id = 0
+        any_hover = self._event_area._hover or \
+                    (self._top_panel and getattr(self._top_panel, 'hover', False)) or \
+                    (self._bottom_panel and getattr(self._bottom_panel, 'hover', False)) or \
+                    (self._left_panel and getattr(self._left_panel, 'hover', False)) or \
+                    (self._right_panel and getattr(self._right_panel, 'hover', False))
+        
+        if not any_hover and self._wanted:
+            self.hide()
+        return False
+
     def notify_key_press(self):
+        self._cancel_hide_timeout()
         self.toggle()
 
     '''
@@ -318,7 +365,7 @@ class Frame(object):
             if hasattr(parent, 'remove_overlay'):
                 parent.remove_overlay(window)
             else:
-                parent.remove(window)
+                window.unparent()
         del self._notif_by_icon[icon]
 
     def __button_release_event_cb(self, gesture, n_press, x, y, icon):

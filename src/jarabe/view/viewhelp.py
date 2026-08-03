@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2013 Kalpa Welivitigoda
+# Copyright (C) 2013 Kalpa Welivitigoda
 # Copyright (C) 2015-2016 Sam Parkinson
 # Copyright (C) 2016 James Cameron <quozl@laptop.org>
 #
@@ -215,7 +215,7 @@ class ViewHelp(Gtk.Window):
         self._load_mode(self._mode)
 
     def __stop_clicked_cb(self, widget):
-        self.destroy()
+        self.close()
 
     def __key_press_event_cb(self, controller, keyval, keycode, state):
         if keyval == Gdk.KEY_Escape:

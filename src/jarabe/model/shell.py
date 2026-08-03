@@ -146,17 +146,13 @@ class Activity(GObject.GObject):
     def close_window(self):
         window = self.get_window()
         if window is not None:
-            if hasattr(window, 'destroy'):
-                window.destroy()
-            elif hasattr(window, 'close'):
+            if hasattr(window, 'close'):
                 window.close()
             elif hasattr(window, 'unparent'):
                 window.unparent()
 
         for w in self._shell_windows:
-            if hasattr(w, 'destroy'):
-                w.destroy()
-            elif hasattr(w, 'close'):
+            if hasattr(w, 'close'):
                 w.close()
             elif hasattr(w, 'unparent'):
                 w.unparent()
@@ -366,6 +362,7 @@ class Activity(GObject.GObject):
             self._set_launch_status(Activity.LAUNCH_FAILED)
 
     def _state_changed_cb(self, main_window, *args):
+        # Check minimized state using GdkToplevelState under GTK4
         surface = main_window.get_surface() if hasattr(main_window, 'get_surface') else None
         if surface is not None and hasattr(surface, 'get_state'):
             state = surface.get_state()
@@ -380,6 +377,14 @@ class Activity(GObject.GObject):
 
 
 class ShellModel(Gtk.Application):
+    """Model of the Shell, the point of registration for all running activities.
+
+    Traps 'window-added' / 'window-removed' events from Gtk.Application to
+    track which activity windows are alive, and emits signals consumed by the
+    home view and tray.  A Casilda Wayland compositor (self.compositor) is
+    embedded as a child widget so activity processes render into the shell
+    rather than as independent top-level windows.
+    """
     __gsignals__ = {
         'activity-added': (GObject.SignalFlags.RUN_FIRST, None,
                            ([GObject.TYPE_PYOBJECT])),
@@ -412,9 +417,9 @@ class ShellModel(Gtk.Application):
             flags=Gio.ApplicationFlags.NON_UNIQUE)
         self.set_default()
 
-        self._stack = Gtk.Stack()
-        self._stack.add_css_class('sugar-shell-stack')
-        self._stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
+        self.stack = Gtk.Stack()
+        self.stack.add_css_class('sugar-shell-stack')
+        self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
         self._main_window = None
 
         self.compositor = Casilda.Compositor(socket="wayland-sugar")
@@ -441,6 +446,9 @@ class ShellModel(Gtk.Application):
             'maximum-number-of-open-activities')
 
         self._launch_timers = {}
+
+        self.zoom_level_changed.connect(self._zoom_level_changed_cb)
+        self.connect('active-activity-changed', self._active_activity_changed_cb)
 
     def add_window(self, window):
         super().add_window(window)
@@ -496,6 +504,24 @@ class ShellModel(Gtk.Application):
 
     zoom_level = property(_get_zoom_level)
 
+    def _zoom_level_changed_cb(self, signal=None, sender=None, **kwargs):
+        new_level = kwargs.get('new_level')
+        if new_level == self.ZOOM_ACTIVITY:
+            active_activity = self.get_active_activity()
+            if active_activity and active_activity.is_journal():
+                self.stack.set_visible_child_name("journal")
+            else:
+                self.stack.set_visible_child_name("activity")
+        else:
+            self.stack.set_visible_child_name("home")
+
+    def _active_activity_changed_cb(self, shell_model, activity):
+        if self.zoom_level == self.ZOOM_ACTIVITY:
+            if activity and activity.is_journal():
+                self.stack.set_visible_child_name("journal")
+            else:
+                self.stack.set_visible_child_name("activity")
+
     def _get_activities_with_window(self):
         ret = []
         for i in self._activities:
@@ -528,6 +554,7 @@ class ShellModel(Gtk.Application):
         return activities[0]
 
     def get_active_activity(self):
+        """Returns the activity that the user is currently working in"""
         return self._active_activity
 
     def add_shared_activity(self, activity_id, color):
@@ -816,8 +843,3 @@ def get_model():
     if _model is None:
         _model = ShellModel()
     return _model
-
-
-
-
-

@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2011 Walter Bender
 # Copyright (C) 2014-15 Ignacio Rodriguez
@@ -774,7 +774,7 @@ class SourceDisplay(Gtk.ScrolledWindow):
 
         provider = Gtk.CssProvider()
         css = b".view-source-text { font-family: monospace; font-size: %dpt; }" % style.FONT_SIZE
-        provider.load_from_data(css)
+        provider.load_from_string(css.decode('utf-8'))
         Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
         mime_type = mime.get_for_file(self._file_path)
@@ -837,7 +837,7 @@ class SourceDisplay(Gtk.ScrolledWindow):
 
         provider = Gtk.CssProvider()
         css = b".nofile-box { background-color: %s; }" % style.COLOR_WHITE.get_html().encode('utf-8')
-        provider.load_from_data(css)
+        provider.load_from_string(css.decode('utf-8'))
         Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
         nofile_box.append(nofile_label)

@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2014 Sam Parkinson
+# Copyright (C) 2014 Sam Parkinson
 # Copyright (C) 2015 Martin Abente Lahaye
 #
 # This program is free software: you can redistribute it and/or modify
@@ -182,7 +182,7 @@ class DisplayPalette(Palette):
         self._screenshot = PaletteMenuItem(_('Take a screenshot'))
         icon = Icon(icon_name='camera-external',
                     pixel_size=style.SMALL_ICON_SIZE)
-        self._screenshot.set_image(icon)
+        self._screenshot.set_icon_widget(icon)
         self._screenshot.connect('activate', self.__screenshot_cb)
 
         self._box = PaletteMenuBox()

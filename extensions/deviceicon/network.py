@@ -1,4 +1,4 @@
-﻿#
+#
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009 Paraguay Educa, Martin Abente
@@ -95,7 +95,7 @@ class WirelessPalette(Palette):
         self._disconnect_item = PaletteMenuItem(_('Disconnect'))
         icon = Icon(pixel_size=style.SMALL_ICON_SIZE,
                     icon_name='media-eject')
-        self._disconnect_item.set_image(icon)
+        self._disconnect_item.set_icon_widget(icon)
         self._disconnect_item.connect('activate',
                                       self.__disconnect_activate_cb)
         self._info.append(self._disconnect_item)
@@ -322,14 +322,14 @@ class GsmPalette(Palette):
             self.props.secondary_text = _('Disconnected')
             icon = Icon(icon_name='dialog-ok',
                         pixel_size=style.SMALL_ICON_SIZE)
-            self._toggle_state_item.set_image(icon)
+            self._toggle_state_item.set_icon_widget(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTING:
             self._toggle_state_item.set_label(_('Cancel'))
             self.props.secondary_text = _('Connecting...')
             icon = Icon(icon_name='dialog-cancel',
                         pixel_size=style.SMALL_ICON_SIZE)
-            self._toggle_state_item.set_image(icon)
+            self._toggle_state_item.set_icon_widget(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTED:
             self._failed_connection = False
@@ -337,7 +337,7 @@ class GsmPalette(Palette):
             self.update_connection_time()
             icon = Icon(icon_name='media-eject',
                         pixel_size=style.SMALL_ICON_SIZE)
-            self._toggle_state_item.set_image(icon)
+            self._toggle_state_item.set_icon_widget(icon)
 
         elif self._current_state == _GSM_STATE_FAILED:
             message_error = self._get_error_by_nm_reason(reason)

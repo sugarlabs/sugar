@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2007, One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ from sugar4.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
 from jarabe.journal.listview import BaseListView
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.journaltoolbox import MainToolbox
-from jarabe.journal.volumestoolbar import VolumesToolbar
 from jarabe.model import bundleregistry
 
 from jarabe.journal.iconview import IconView
@@ -82,7 +81,6 @@ class ObjectChooser(Gtk.Window):
         vbox.set_visible(True)
 
         title_box = TitleBox(what_filter, filter_type)
-        title_box.connect('volume-changed', self.__volume_changed_cb)
         title_box.close_button.connect('clicked',
                                        self.__close_button_clicked_cb)
         title_box.set_size_request(-1, style.GRID_CELL_SIZE)
@@ -167,9 +165,6 @@ class ObjectChooser(Gtk.Window):
         else:
             self._icon_view.update_with_query(query)
 
-    def __volume_changed_cb(self, volume_toolbar, mount_point):
-        logging.debug('Selected volume: %r.', mount_point)
-        self._toolbar.set_mount_point(mount_point)
 
     def __visibility_notify_event_cb(self, widget):
         logging.debug('visibility_notify_event_cb %r', self)

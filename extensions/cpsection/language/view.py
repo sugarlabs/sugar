@@ -479,8 +479,16 @@ def set_palette_list(palette_list):
     item_width = style.GRID_CELL_SIZE * 3
     item_height = style.GRID_CELL_SIZE + style.DEFAULT_PADDING
 
-    palette_width = 400
-    palette_height = 600
+    from gi.repository import Gdk
+    display = Gdk.Display.get_default()
+    monitors = display.get_monitors()
+    if monitors.get_n_items() > 0:
+        geometry = monitors.get_item(0).get_geometry()
+        palette_width = geometry.width
+        palette_height = geometry.height
+    else:
+        palette_width = 800
+        palette_height = 600
 
     nx = min(3, int(palette_width / item_width))
     ny = min(8, int(palette_height / item_height), len(palette_list))

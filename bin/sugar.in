@@ -32,7 +32,7 @@ if test -z "$SUGAR_ACTIVITIES_HIDDEN"; then
     export SUGAR_ACTIVITIES_HIDDEN="$sugardatadir/activities.hidden"
 fi
 
-export GDK_BACKEND="wayland,x11"
+export GDK_BACKEND="wayland"
 export GTK_THEME="Sugar"
 
 # Set default language

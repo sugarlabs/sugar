@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2006-2007, Red Hat, Inc.
+# Copyright (C) 2006-2007, Red Hat, Inc.
 # Copyright (C) 2009 Simon Schampijer
 #
 # This program is free software: you can redistribute it and/or modify
@@ -292,9 +292,6 @@ class KeyHandler(object):
             if keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R, Gdk.KEY_Meta_L, Gdk.KEY_Meta_R]:
                 event = controller.get_current_event()
                 self._tabbing_handler.stop(event.get_time() if event else 0)
-
-            return True
-        return False
 
 
 def setup(frame):

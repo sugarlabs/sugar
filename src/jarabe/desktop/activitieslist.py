@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso
 # Copyright (C) 2008-2013 Sugar Labs
 # Copyright (C) 2013 Daniel Francis
@@ -332,7 +332,7 @@ class ListModel(Gtk.TreeModelSort):
             if registry.handler_is_connected(sid):
                 registry.disconnect(sid)
         self._registry_sids = []
-        GObject.GObject.do_dispose(self)
+        super().do_dispose()
 
     def __activity_added_cb(self, activity_registry, activity_info):
         self._add_activity(activity_info)
@@ -458,7 +458,7 @@ class ClearMessageBox(Gtk.Box):
 
         icon = Icon(pixel_size=style.LARGE_ICON_SIZE,
                     icon_name='system-search',
-                    stroke_color=style.COLOR_BLACK.get_svg(),
+                    stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
                     fill_color=style.COLOR_TRANSPARENT.get_svg())
         box.append(icon)
 
@@ -656,7 +656,7 @@ class ActivityListPalette(ActivityPalette):
             self._favorite_icons.append(
                 Icon(icon_name=desktop.get_favorite_icons()[i],
                      pixel_size=style.SMALL_ICON_SIZE))
-            self._favorite_items[i].set_image(self._favorite_icons[i])
+            self._favorite_items[i].set_icon_widget(self._favorite_icons[i])
             self._favorite_items[i].connect(
                 'activate', self.__change_favorite_activate_cb, i)
             self.menu_box.append_item(self._favorite_items[i])
@@ -678,8 +678,7 @@ class ActivityListPalette(ActivityPalette):
             if registry.handler_is_connected(sid):
                 registry.disconnect(sid)
         self._activity_changed_sid = []
-        # Chain up - call parent's dispose
-        GObject.GObject.do_dispose(self)
+        super().do_dispose()
 
     def _add_erase_option(self, registry, activity_info):
         menu_item = PaletteMenuItem(_('Erase'), 'list-remove')

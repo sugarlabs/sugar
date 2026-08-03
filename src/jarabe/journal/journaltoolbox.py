@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2007, One Laptop Per Child
 # Copyright (C) 2009,14 Walter Bender
 #
 # This program is free software: you can redistribute it and/or modify
@@ -587,7 +587,7 @@ class DetailToolbox(ToolbarBox):
         # Use the menu defined in CopyMenu
         while palette.menu.get_first_child():
             child = palette.menu.get_first_child()
-            palette.menu.remove(child)
+            child.unparent()
 
         CopyMenuBuilder(self._journalactivity, self.__get_uid_list_cb,
                         self.__volume_error_cb, palette.menu)
@@ -615,7 +615,7 @@ class DetailToolbox(ToolbarBox):
 
         palette = self._refresh.get_palette()
         while palette.menu.get_first_child():
-            palette.menu.remove(palette.menu.get_first_child())
+            palette.menu.get_first_child().unparent()
 
         for account in accountsmanager.get_configured_accounts():
             if hasattr(account, 'get_shared_journal_entry'):
@@ -692,7 +692,7 @@ class SortingButton(ToolButton):
             button = PaletteMenuItem(label)
             button_icon = Icon(pixel_size=style.SMALL_ICON_SIZE,
                                icon_name=icon)
-            button.set_image(button_icon)
+            button.set_icon_widget(button_icon)
             button_icon.set_visible(True)
             button.connect('clicked',
                            self.__sort_type_changed_cb,

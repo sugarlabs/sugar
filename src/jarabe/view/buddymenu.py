@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -70,7 +70,7 @@ class BuddyMenu(Palette):
             if GObject.signal_handler_is_connected(self._buddy, self._notify_nick_hid):
                 self._buddy.disconnect(self._notify_nick_hid)
             self._notify_nick_hid = None
-        GObject.GObject.do_dispose(self)
+        super().do_dispose()
 
     def _add_buddy_items(self):
         menu_item = None
@@ -203,7 +203,7 @@ class BuddyMenu(Palette):
             icon = Icon(file=activity.get_icon_path(),
                         pixel_size=style.SMALL_ICON_SIZE)
             icon.props.xo_color = activity.get_icon_color()
-            self._invite_menu.set_image(icon)
+            self._invite_menu.set_icon_widget(icon)
             icon.set_visible(True)
 
             self._invite_menu.set_visible(True)

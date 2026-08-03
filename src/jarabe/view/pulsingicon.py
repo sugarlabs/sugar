@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -94,7 +94,7 @@ class PulsingIcon(Icon):
         self._pulsing = False
 
         Icon.__init__(self, **kwargs)
-        self.connect('destroy', self.__destroy_cb)
+        self.connect('unrealize', self.__destroy_cb)
         self._palette = None
 
     def set_pulse_color(self, pulse_color):
@@ -183,7 +183,7 @@ class EventPulsingIcon(CanvasIcon):
         self._pulsing = False
 
         CanvasIcon.__init__(self, **kwargs)
-        self.connect('destroy', self.__destroy_cb)
+        self.connect('unrealize', self.__destroy_cb)
 
     def __destroy_cb(self, widget):
         self._pulser.stop()

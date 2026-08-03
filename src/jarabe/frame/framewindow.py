@@ -171,7 +171,7 @@ class FrameWindow(Gtk.Revealer):
 
         super().__init__(
             transition_type=transition,
-            transition_duration=250,  # 250ms slide animation (matches GTK3 Sugar)
+            transition_duration=0,  # 0ms slide animation (driven by frame.py timer manually)
             reveal_child=False,
         )
 

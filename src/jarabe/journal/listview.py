@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2009, Tomeu Vizoso
+# Copyright (C) 2009, Tomeu Vizoso
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -199,7 +199,7 @@ class BaseListView(Gtk.Box):
         if self._current_child == new_child:
             return
         if self._current_child:
-            self.remove(self._current_child)
+            self._current_child.unparent()
         self.append(new_child)
         self._current_child = new_child
 
@@ -411,7 +411,7 @@ class BaseListView(Gtk.Box):
     def __favorite_set_data_cb(self, column, cell, tree_model,
                                tree_iter, data):
         favorite = tree_model[tree_iter][ListModel.COLUMN_FAVORITE]
-        if favorite:
+        if favorite and str(favorite) not in ('0', 'false', 'False'):
             cell.props.xo_color = profile.get_color()
         else:
             cell.props.xo_color = None
@@ -472,8 +472,8 @@ class BaseListView(Gtk.Box):
         # Cursor setting
         root = self.get_root()
         if root:
-            root.set_cursor(Gdk.Cursor.new_from_name("wait", None))
-            Gdk.Display.get_default().sync()
+            root.set_cursor(Gdk.Cursor.new_from_name("wait"))
+            Gdk.Display.get_default().flush()
         GLib.idle_add(self._do_refresh, new_query)
 
     def _do_refresh(self, new_query=False):
@@ -493,7 +493,7 @@ class BaseListView(Gtk.Box):
         root = self.get_root()
         if root:
             root.set_cursor(None)
-            Gdk.Display.get_default().sync()
+            Gdk.Display.get_default().flush()
 
     def __model_ready_cb(self, tree_model):
         self._stop_progress_bar()

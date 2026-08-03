@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2016, Abhijit Patel
+# Copyright (C) 2016, Abhijit Patel
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
 
-from jarabe.util import activityfactory
+from sugar4.activity import activityfactory
 from sugar4.graphics import iconentry
 from sugar4.graphics import style
 from sugar4.graphics.toolbutton import ToolButton
@@ -165,7 +165,7 @@ class ActivityChooser(Gtk.Window):
 
     def __close_button_clicked_cb(self, button):
         shell.get_model().pop_modal()
-        self.destroy()
+        self.close()
 
     def __realize_cb(self, widget):
         shell.get_model().push_modal()
@@ -198,7 +198,7 @@ class ActivityChooser(Gtk.Window):
         keyname = Gdk.keyval_name(keyval)
         if keyname == 'Escape':
             shell.get_model().pop_modal()
-            self.destroy()
+            self.close()
             return True
 
         search_entry = self.search_bar.search_entry
@@ -219,7 +219,7 @@ class ActivityChooser(Gtk.Window):
 
                 self.emit('activity-selected', bundle_id, activity_id)
                 shell.get_model().pop_modal()
-                self.destroy()
+                self.close()
                 return True
         return False
 
@@ -234,7 +234,7 @@ class ActivityChooser(Gtk.Window):
         activity_id = activityfactory.create_activity_id()
         self.emit('activity-selected', bundle_id, activity_id)
         shell.get_model().pop_modal()
-        self.destroy()
+        self.close()
 
     def __row_activated_cb(self, treeview, path, col):
         if col is not treeview.get_column(0):

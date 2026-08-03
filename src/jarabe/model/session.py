@@ -52,12 +52,6 @@ class SessionManager(GObject.GObject):
         self._shutdown_tries = 0
         self._logout_mode = None
 
-    def start(self):
-        pass
-        #self.session.start()
-        #self.session.connect('shutdown-completed',
-        #                     self.__shutdown_completed_cb)
-
     def initiate_shutdown(self, logout_mode):
         self._logout_mode = logout_mode
         self.shutdown_signal.emit()

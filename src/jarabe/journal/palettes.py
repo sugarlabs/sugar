@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
-#from gi.repository import SugarExt
+
 
 from sugar4.graphics import style
 from sugar4.graphics.palette import Palette
@@ -45,6 +45,14 @@ from jarabe.webservice import accountsmanager
 from jarabe.journal.misc import get_mount_color
 
 PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
+
+
+def _popdown_palette_chain(widget):
+    p = widget.get_parent()
+    while p:
+        if hasattr(p, 'popdown'):
+            p.popdown()
+        p = p.get_parent()
 
 
 class ObjectPalette(Palette):
@@ -353,7 +361,7 @@ class CopyMenuBuilder():
     def update_mount_point(self):
         vbox = getattr(self._menu, '_vbox', self._menu)
         while vbox.get_first_child():
-            vbox.remove(vbox.get_first_child())
+            vbox.get_first_child().unparent()
         self._create_menu_items()
 
     def __mount_added_cb(self, volume_monitor, mount):
@@ -382,8 +390,7 @@ class CopyMenuBuilder():
 
     def __mount_removed_cb(self, volume_monitor, mount):
         volume_menu = self._volumes[mount.get_root().get_path()]
-        vbox = getattr(self._menu, '_vbox', self._menu)
-        vbox.remove(volume_menu)
+        volume_menu.unparent()
         del self._volumes[mount.get_root().get_path()]
 
 
@@ -448,11 +455,7 @@ class VolumeMenu(MenuItem):
                               e.strerror)
 
     def _close_menus(self):
-        p = self.get_parent()
-        while p:
-            if hasattr(p, 'popdown'):
-                p.popdown()
-            p = p.get_parent()
+        _popdown_palette_chain(self)
 
 
 class ClipboardMenu(MenuItem):
@@ -489,11 +492,7 @@ class ClipboardMenu(MenuItem):
             clipboard.set_content(provider)
 
     def _close_menus(self):
-        p = self.get_parent()
-        while p:
-            if hasattr(p, 'popdown'):
-                p.popdown()
-            p = p.get_parent()
+        _popdown_palette_chain(self)
 
 
 class FriendsMenu(Gtk.Popover):
@@ -540,11 +539,7 @@ class FriendsMenu(Gtk.Popover):
         self._close_menus()
 
     def _close_menus(self):
-        p = self.get_parent()
-        while p:
-            if hasattr(p, 'popdown'):
-                p.popdown()
-            p = p.get_parent()
+        _popdown_palette_chain(self)
 
 
 class StartWithMenu(Gtk.Popover):
@@ -561,7 +556,8 @@ class StartWithMenu(Gtk.Popover):
         self._vbox.set_visible(True)
 
         for activity_info in misc.get_activities(metadata):
-            menu_item = MenuItem(text_label=activity_info.get_name(), file_name=activity_info.get_icon())
+            menu_item = MenuItem(text_label=activity_info.get_name(),
+                                 file_name=activity_info.get_icon())
             menu_item.connect('clicked', self.__item_activate_cb,
                               activity_info.get_bundle_id())
             self._vbox.append(menu_item)
@@ -587,11 +583,7 @@ class StartWithMenu(Gtk.Popover):
         self._close_menus()
 
     def _close_menus(self):
-        p = self.get_parent()
-        while p:
-            if hasattr(p, 'popdown'):
-                p.popdown()
-            p = p.get_parent()
+        _popdown_palette_chain(self)
 
 
 class BuddyPalette(Palette):

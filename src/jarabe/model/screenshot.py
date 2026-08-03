@@ -39,6 +39,16 @@ def take_screenshot():
     os.close(fd)
 
     width, height = 1024, 768
+    display = Gdk.Display.get_default()
+    if display:
+        monitors = display.get_monitors()
+        if monitors.get_n_items() > 0:
+            monitor = monitors.get_item(0)
+            if monitor is not None:
+                geometry = monitor.get_geometry()
+                width = geometry.width
+                height = geometry.height
+
     screenshot_surface = None
     
     # Try GNOME Shell DBus (Mutter)

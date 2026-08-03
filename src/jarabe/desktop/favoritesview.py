@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2008-2013 Sugar Labs
 # Copyright (C) 2013 Daniel Francis
@@ -34,7 +34,7 @@ from sugar4.graphics.palettemenu import PaletteMenuItem
 from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar4.graphics.alert import Alert, ErrorAlert
 from sugar4.graphics.xocolor import XoColor
-from jarabe.util import activityfactory
+from sugar4.activity import activityfactory
 from sugar4 import dispatch
 from sugar4.datastore import datastore
 
@@ -592,8 +592,8 @@ class CurrentActivityIcon(CanvasIcon):
         self.props.pixel_size = style.STANDARD_ICON_SIZE
 
         if self.palette is not None:
-            if isinstance(self.palette, Gtk.Window):
-                self.palette.destroy()
+            if hasattr(self.palette, "popdown"):
+                self.palette.popdown(immediate=True)
             self.palette = None
 
     def _unbusy(self):
@@ -644,18 +644,10 @@ class OwnerIcon(BuddyIcon):
 
     def __init__(self, size):
         BuddyIcon.__init__(self, buddy=get_owner_instance(), pixel_size=size)
-
-        def __enter_notify_event_cb(controller, x, y):
-            self.unset_state_flags(Gtk.StateFlags.PRELIGHT)
-            GLib.idle_add(self.remove_controller, controller)
-
-        controller = Gtk.EventControllerMotion()
-        controller.connect('enter', __enter_notify_event_cb)
-        self.add_controller(controller)
-        
-        # Ensure left-click toggles the palette
-        if hasattr(self, 'palette_invoker') and self.palette_invoker:
-            self.palette_invoker.props.toggle_palette = True
+        # GTK4: toggle_palette is already set by BuddyIcon.__init__ via
+        # self.palette_invoker.props.toggle_palette = True (line 36).
+        # No extra EventControllerMotion workaround needed — CanvasIcon's
+        # _setup_state_controllers() handles PRELIGHT correctly in GTK4.
 
     def create_palette(self):
         palette = BuddyMenu(get_owner_instance())

@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2006-2007, Red Hat, Inc.
+# Copyright (C) 2006-2007, Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -304,14 +304,11 @@ class DeviceModel(GObject.GObject):
 
 
 def setup(tray):
-    bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)
-    up_proxy = bus.get_object('org.freedesktop.UPower',
-                              '/org/freedesktop/UPower')
-    upower = dbus.Interface(up_proxy, 'org.freedesktop.UPower')
-
-    for device_path in upower.EnumerateDevices():
-        device = bus.get_object('org.freedesktop.UPower', device_path)
-        device_prop_iface = dbus.Interface(device, dbus.PROPERTIES_IFACE)
-        device_type = device_prop_iface.Get(_UP_DEVICE_IFACE, 'Type')
-        if device_type == _UP_TYPE_BATTERY:
-            tray.add_device(DeviceView(device_path))
+    try:
+        client = UPowerGlib.Client.new_full(None)
+        devices = client.get_devices()
+        for device in devices:
+            if device.kind == UPowerGlib.DeviceKind.BATTERY:
+                tray.add_device(DeviceView(device.get_object_path()))
+    except Exception as e:
+        logging.warning("Could not setup battery device: %s", e)

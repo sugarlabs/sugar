@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2011 One Laptop Per Child
+# Copyright (C) 2011 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ class SpeechPalette(Palette):
             icon_name='player_play',
             text_label=_('Say selected text'),
             accelerator='<Shift><Alt>s')
-        self._play_pause_menu.set_image(self._play_icon)
+        self._play_pause_menu.set_icon_widget(self._play_icon)
         self._play_pause_menu.connect('activate', self.__play_activated_cb)
         box.append_item(self._play_pause_menu)
 
@@ -129,17 +129,17 @@ class SpeechPalette(Palette):
 
     def _set_menu_state(self, manager, signal):
         if signal == 'play':
-            self._play_pause_menu.set_image(self._pause_icon)
+            self._play_pause_menu.set_icon_widget(self._pause_icon)
             self._play_pause_menu.set_label(_('Pause playback'))
             self._stop_menu.set_sensitive(True)
 
         elif signal == 'pause':
-            self._play_pause_menu.set_image(self._play_icon)
+            self._play_pause_menu.set_icon_widget(self._play_icon)
             self._play_pause_menu.set_label(_('Say selected text'))
             self._stop_menu.set_sensitive(True)
 
         elif signal == 'stop':
-            self._play_pause_menu.set_image(self._play_icon)
+            self._play_pause_menu.set_icon_widget(self._play_icon)
             self._play_pause_menu.set_label(_('Say selected text'))
             self._stop_menu.set_sensitive(False)
 

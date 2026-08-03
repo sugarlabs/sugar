@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -152,7 +152,7 @@ class NotificationBox(Gtk.Box):
         while child:
             next_child = child.get_next_sibling()
             if child.get_parent() == self._notifications_box:
-                self._notifications_box.remove(child)
+                child.unparent()
             child = next_child
         self._service.clear_by_name(self._name)
         self.set_visible(False)

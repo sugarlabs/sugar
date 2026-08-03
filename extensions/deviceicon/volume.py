@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software: you can redistribute it and/or modify
@@ -62,7 +62,7 @@ class DeviceView(TrayIcon):
         icon = Icon(icon_name=self._icon_name,
                     pixel_size=style.SMALL_ICON_SIZE,
                     xo_color=color)
-        menu_item.set_image(icon)
+        menu_item.set_icon_widget(icon)
 
         menu_item.connect('activate', self.__show_contents_cb)
         palette.content_box.prepend(menu_item)

@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009-2010 One Laptop per Child
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
@@ -81,14 +81,14 @@ class _ActivityIcon(CanvasIcon):
             item = PaletteMenuItem(_('Resume'))
             icon = Icon(
                 pixel_size=style.SMALL_ICON_SIZE, icon_name='activity-start')
-            item.set_image(icon)
+            item.set_icon_widget(icon)
             item.connect('item-activated', self.__palette_item_clicked_cb)
             menu_box.append_item(item)
         elif not private and is_joinable:
             item = PaletteMenuItem(_('Join'))
             icon = Icon(
                 pixel_size=style.SMALL_ICON_SIZE, icon_name='activity-start')
-            item.set_image(icon)
+            item.set_icon_widget(icon)
             item.connect('item-activated', self.__palette_item_clicked_cb)
             menu_box.append_item(item)
 

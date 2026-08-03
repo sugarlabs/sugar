@@ -97,9 +97,10 @@ class TimeZone(SectionView):
         zone = self._model.get_timezone()
         for row in self._store:
             if zone == row[0]:
-                self._treeview.set_cursor(row.path, self._timezone_column,
+                path = self._store.get_path(row.iter)
+                self._treeview.set_cursor(path, self._timezone_column,
                                           False)
-                self._treeview.scroll_to_cell(row.path, self._timezone_column,
+                self._treeview.scroll_to_cell(path, self._timezone_column,
                                               True, 0.5, 0.5)
                 break
 
@@ -125,18 +126,19 @@ class TimeZone(SectionView):
         list_, row = treeview.get_selection().get_selected()
         if not row:
             return False
-        if self._model.get_timezone() == self._store.get_value(row, 0):
+        timezone_val = self._store.get_value(row, 0)
+        if self._model.get_timezone() == timezone_val:
             return False
 
         if self._zone_sid:
             GLib.source_remove(self._zone_sid)
         self._zone_sid = GLib.timeout_add(self._APPLY_TIMEOUT,
-                                          self.__zone_timeout_cb, row)
+                                          self.__zone_timeout_cb, timezone_val)
         return True
 
-    def __zone_timeout_cb(self, row):
+    def __zone_timeout_cb(self, timezone_val):
         self._zone_sid = 0
-        self._model.set_timezone(self._store.get_value(row, 0))
+        self._model.set_timezone(timezone_val)
         self.restart_alerts.append('zone')
         self.needs_restart = True
         self._zone_alert.props.msg = self.restart_msg

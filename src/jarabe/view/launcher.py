@@ -152,8 +152,8 @@ def add_launcher(activity_id, icon_path, icon_color):
 
     launch_window = LaunchWindow(activity_id, icon_path, icon_color)
 
-    model._stack.add_named(launch_window, f"launcher_{activity_id}")
-    model._stack.set_visible_child_name(f"launcher_{activity_id}")
+    model.stack.add_named(launch_window, f"launcher_{activity_id}")
+    model.stack.set_visible_child_name(f"launcher_{activity_id}")
     model.register_launcher(activity_id, launch_window)
 
 
@@ -198,8 +198,8 @@ def _destroy_launcher(home_activity):
         return
 
     model.unregister_launcher(activity_id)
-    if launcher.get_parent() == model._stack:
-        model._stack.remove(launcher)
-    if model._stack.get_visible_child() is None:
-        model._stack.set_visible_child_name("home")
+    if launcher.get_parent() == model.stack:
+        model.stack.remove(launcher)
+    if model.stack.get_visible_child() is None:
+        model.stack.set_visible_child_name("home")
 

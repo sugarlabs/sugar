@@ -86,7 +86,8 @@ class LayoutCombo(Gtk.Box):
         self.set_margin_end(style.DEFAULT_SPACING)
         self.set_spacing(style.DEFAULT_SPACING)
 
-        label = Gtk.Label(label=' <b>%s</b> ' % str(n + 1))
+        label = Gtk.Label(label=' <span foreground="%s"><b>%s</b></span> ' %
+                          (style.COLOR_SELECTION_GREY.get_svg(), str(n + 1)))
         label.set_use_markup(True)
         label.set_halign(Gtk.Align.CENTER)
         label.set_valign(Gtk.Align.CENTER)
@@ -160,7 +161,11 @@ class LayoutCombo(Gtk.Box):
     def get_layout(self):
         """Gets the selected layout (with variant)"""
         it = self._kvariant_combo.get_active_iter()
+        if it is None:
+            return ''
         model = self._kvariant_combo.get_model()
+        if model is None:
+            return ''
         return model.get(it, 0)[0]
 
     def _set_kvariant_store(self, lang):
@@ -174,13 +179,21 @@ class LayoutCombo(Gtk.Box):
 
     def _klang_combo_changed_cb(self, combobox):
         it = combobox.get_active_iter()
+        if it is None:
+            return
         model = combobox.get_model()
+        if model is None:
+            return
         lang = model.get(it, 0)[0]
         self._set_kvariant_store(lang)
 
     def _kvariant_combo_changed_cb(self, combobox):
         it = combobox.get_active_iter()
+        if it is None:
+            return
         model = combobox.get_model()
+        if model is None:
+            return
         layout = model.get(it, 0)[0]
         self.emit('selection-changed', layout, self._index)
 
@@ -212,13 +225,26 @@ class Keyboard(SectionView):
 
         _build_ISO_639_dictionary()
 
-        display = Gdk.Display.get_default()
-        if display is not None and hasattr(display, 'get_xdisplay'):
-            xdisplay = display.get_xdisplay()
-        else:
+        display_manager = Gdk.DisplayManager.get()
+        xdisplay = None
+        for display in display_manager.list_displays():
+            if hasattr(display, 'get_xdisplay'):
+                xdisplay = display.get_xdisplay()
+                break
+
+        if xdisplay is None:
+            display_name = os.environ.get('DISPLAY')
+            if display_name:
+                try:
+                    x11_display = display_manager.open_display(display_name)
+                    if x11_display is not None and hasattr(x11_display, 'get_xdisplay'):
+                        xdisplay = x11_display.get_xdisplay()
+                except Exception:
+                    pass
+
+        if xdisplay is None:
             logging.warning('Keyboard: Could not get X11 display, '
                             'keyboard settings may not work.')
-            xdisplay = None
         self._keyboard_manager = model.KeyboardManager(xdisplay)
 
         self._layout_combo_list = []
@@ -290,10 +316,14 @@ class Keyboard(SectionView):
     def __kmodel_timeout_cb(self, combobox):
         self.__kmodel_sid = None
         it = combobox.get_active_iter()
+        if it is None:
+            return False
         model = combobox.get_model()
+        if model is None:
+            return False
         self._selected_kmodel = model.get(it, 0)[0]
         if self._selected_kmodel == self._keyboard_manager.get_current_model():
-            return
+            return False
         try:
             self._keyboard_manager.set_model(self._selected_kmodel)
         except Exception:
@@ -358,11 +388,15 @@ class Keyboard(SectionView):
     def __group_switch_timeout_cb(self, combobox):
         self.__group_switch_sid = None
         it = combobox.get_active_iter()
+        if it is None:
+            return False
         model = combobox.get_model()
+        if model is None:
+            return False
         self._selected_group_switch_option = model.get(it, 0)[0]
         if self._selected_group_switch_option == \
                 self._keyboard_manager.get_current_option_group():
-            return
+            return False
         try:
             self._keyboard_manager.set_option_group(
                 self._selected_group_switch_option)
@@ -466,7 +500,9 @@ class Keyboard(SectionView):
         self._selected_klayouts = []
         for combo in self._layout_combo_list:
             if combo.get_visible():
-                self._selected_klayouts.append(combo.get_layout())
+                layout = combo.get_layout()
+                if layout:
+                    self._selected_klayouts.append(layout)
 
         self.__determine_add_remove_box_visibility()
 

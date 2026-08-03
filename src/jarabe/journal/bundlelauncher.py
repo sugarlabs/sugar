@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2014, Sugarlabs (Manuel Quinones)
+# Copyright (C) 2014, Sugarlabs (Manuel Quinones)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import logging
 
-from jarabe.util import activityfactory
+from sugar4.activity import activityfactory
 from sugar4.activity.activityhandle import ActivityHandle
 from sugar4.datastore import datastore
 

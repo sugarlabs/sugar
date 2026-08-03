@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2006, Red Hat, Inc.
+# Copyright (C) 2006, Red Hat, Inc.
 # Copyright (C) 2009, One Laptop Per Child Association Inc
 #
 # This program is free software: you can redistribute it and/or modify
@@ -83,7 +83,7 @@ from jarabe import apisocket
 from jarabe import testrunner
 from jarabe.model import brightness
 
-_mutter_process = None
+_casilda_process = None
 _window_manager_started = False
 _starting_desktop = False
 
@@ -143,18 +143,18 @@ def _complete_desktop_startup():
 
 def __window_manager_failed_cb(fd, condition):
     logging.error('window manager did fail, restarting')
-    GLib.source_remove(_mutter_sid)
+    GLib.source_remove(_casilda_sid)
     GLib.timeout_add(1000, _restart_window_manager)
     return False
 
 
 def _restart_window_manager():
-    global _mutter_process, _mutter_sid
+    global _casilda_process, _casilda_sid
 
-    _mutter_process = subprocess.Popen(
-        ['dbus-run-session', 'mutter', '--wayland'],
+    _casilda_process = subprocess.Popen(
+        ['casilda'],
         stdout=subprocess.PIPE)
-    _mutter_sid = GLib.io_add_watch(_mutter_process.stdout, GLib.IO_HUP,
+    _casilda_sid = GLib.io_add_watch(_casilda_process.stdout, GLib.IO_HUP,
                                     __window_manager_failed_cb)
     return False
 
@@ -171,29 +171,8 @@ def _start_window_manager():
 
 
 def _stop_window_manager():
-    if _mutter_process:
-        _mutter_process.terminate()
-
-
-def _zoom_level_changed_cb(signal=None, sender=None, **kwargs):
-    shell_model = sender
-    new_level = kwargs.get('new_level')
-    if new_level == shell_model.ZOOM_ACTIVITY:
-        active_activity = shell_model.get_active_activity()
-        if active_activity and active_activity.is_journal():
-            shell_model._stack.set_visible_child_name("journal")
-        else:
-            shell_model._stack.set_visible_child_name("activity")
-    else:
-        shell_model._stack.set_visible_child_name("home")
-
-
-def _active_activity_changed_cb(shell_model, activity):
-    if shell_model.zoom_level == shell_model.ZOOM_ACTIVITY:
-        if activity and activity.is_journal():
-            shell_model._stack.set_visible_child_name("journal")
-        else:
-            shell_model._stack.set_visible_child_name("activity")
+    if _casilda_process:
+        _casilda_process.terminate()
 
 
 def _begin_desktop_startup():
@@ -210,19 +189,15 @@ def _begin_desktop_startup():
 
     setup_keyhandler_cb()
 
-    shell_instance._stack.add_named(home_window, "home")
-    shell_instance._stack.add_named(shell_instance.compositor, "activity")
-    shell_instance._stack.set_visible_child_name("home")
+    shell_instance.stack.add_named(home_window, "home")
+    shell_instance.stack.add_named(shell_instance.compositor, "activity")
+    shell_instance.stack.set_visible_child_name("home")
 
     os.environ["WAYLAND_DISPLAY"] = "wayland-sugar"
     if "DISPLAY" in os.environ:
         del os.environ["DISPLAY"]
 
-    shell_instance.zoom_level_changed.connect(_zoom_level_changed_cb)
-    shell_instance.connect('active-activity-changed', _active_activity_changed_cb)
-
     session_manager = get_session_manager()
-    session_manager.start()
 
     _complete_desktop_startup()
 
@@ -320,15 +295,6 @@ def setup_theme():
     Gtk.IconTheme.get_for_display(
         Gdk.Display.get_default()).add_search_path(icons_path)
 
-    css_path = os.path.join(config.data_path, 'sugar.css')
-    if os.path.exists(css_path):
-        provider = Gtk.CssProvider()
-        provider.load_from_path(css_path)
-        Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(),
-            provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-
 
 def _setup_main_window(shell_instance):
     if not shell_instance._main_window:
@@ -336,7 +302,7 @@ def _setup_main_window(shell_instance):
         shell_instance._main_window.set_title("Sugar")
         
         shell_instance._overlay = Gtk.Overlay()
-        shell_instance._overlay.set_child(shell_instance._stack)
+        shell_instance._overlay.set_child(shell_instance.stack)
         
         shell_instance._main_window.set_child(shell_instance._overlay)
         if os.environ.get('SUGAR_WINDOWED', '0') == '1':
@@ -350,8 +316,8 @@ def _start_intro(shell, start_on_age_page=False):
     _setup_main_window(shell)
     intro_box = IntroWindow(start_on_age_page=start_on_age_page)
 
-    shell._stack.add_named(intro_box, "intro")
-    shell._stack.set_visible_child_name("intro")
+    shell.stack.add_named(intro_box, "intro")
+    shell.stack.set_visible_child_name("intro")
     intro_box.connect('done', __intro_window_done_cb)
 
 
@@ -374,6 +340,16 @@ def _check_group_label():
 def main(shell):
     logging.warning("Running main")
     
+    # Create default profile directories if they do not exist
+    profile_path = env.get_profile_path()
+    for subdir in ['datastore', 'logs', 'data']:
+        path = os.path.join(profile_path, subdir)
+        if not os.path.exists(path):
+            try:
+                os.makedirs(path, 0o770)
+            except OSError as e:
+                logging.error('Failed to create directory %s: %s', path, e)
+
     import signal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -406,5 +382,13 @@ def main(shell):
         _begin_desktop_startup()
 
 shell = shell.get_model()
+
+from sugar4.activity import activityfactory
+def _get_compositor_fd():
+    if hasattr(shell, 'compositor') and shell.compositor is not None:
+        return shell.compositor.get_client_socket_fd()
+    return -1
+activityfactory.set_compositor_fd_getter(_get_compositor_fd)
+
 shell.connect('activate', main)
 shell.run(None)

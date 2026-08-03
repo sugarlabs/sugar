@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2006, Red Hat, Inc.
+# Copyright (C) 2006, Red Hat, Inc.
 # Copyright (C) 2007, One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ from gi.repository import GLib
 from sugar4.graphics.alert import ErrorAlert
 from sugar4 import env
 from sugar4.datastore import datastore
-from jarabe.util import activityfactory
+from sugar4.activity import activityfactory
 
 from jarabe.journal.journaltoolbox import MainToolbox
 from jarabe.journal.journaltoolbox import AddNewBar
@@ -447,7 +447,7 @@ class JournalActivity(JournalWindow):
         return False
 
     def __choose_project_cb(self, tree_view, metadata_to_send):
-        project_chooser = ObjectChooser(self)
+        project_chooser = ObjectChooser(None)
         project_chooser.present()
         project_chooser.connect('response', self.__project_chooser_response_cb,
                                 metadata_to_send)
@@ -689,7 +689,7 @@ def get_journal():
     if _journal is None:
         _journal = JournalActivity()
 
-        shell.get_model()._stack.add_named(_journal, "journal")
+        shell.get_model().stack.add_named(_journal, "journal")
 
         _journal._setup()
 

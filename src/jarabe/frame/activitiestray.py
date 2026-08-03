@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
@@ -484,8 +484,7 @@ class BaseTransferButton(ToolButton):
     def remove(self):
         frame = jarabe.frame.get_view()
         frame.remove_notification(self.notif_icon)
-        if self.get_parent():
-            self.get_parent().remove(self)
+        self.unparent()
 
     def __notify_state_cb(self, file_transfer, pspec):
         logging.debug('_update state: %r %r', file_transfer.props.state,
@@ -712,7 +711,7 @@ class IncomingTransferPalette(BaseTransferPalette):
             menu_item = PaletteMenuItem(_('Accept'))
             icon = Icon(icon_name='dialog-ok',
                         pixel_size=style.SMALL_ICON_SIZE)
-            menu_item.set_image(icon)
+            menu_item.set_icon_widget(icon)
             icon.set_visible(True)
             menu_item.connect('activate', self.__accept_activate_cb)
             box.append_item(menu_item)
@@ -721,7 +720,7 @@ class IncomingTransferPalette(BaseTransferPalette):
             menu_item = PaletteMenuItem(_('Decline'))
             icon = Icon(icon_name='dialog-cancel',
                         pixel_size=style.SMALL_ICON_SIZE)
-            menu_item.set_image(icon)
+            menu_item.set_icon_widget(icon)
             icon.set_visible(True)
             menu_item.connect('activate', self.__decline_activate_cb)
             box.append_item(menu_item)
@@ -757,7 +756,7 @@ class IncomingTransferPalette(BaseTransferPalette):
             menu_item = PaletteMenuItem(_('Cancel'))
             icon = Icon(icon_name='dialog-cancel',
                         pixel_size=style.SMALL_ICON_SIZE)
-            menu_item.set_image(icon)
+            menu_item.set_icon_widget(icon)
             icon.set_visible(True)
             menu_item.connect('activate', self.__cancel_activate_cb)
             box.append_item(menu_item)
@@ -786,7 +785,7 @@ class IncomingTransferPalette(BaseTransferPalette):
             menu_item = PaletteMenuItem(_('Dismiss'))
             icon = Icon(icon_name='dialog-cancel',
                         pixel_size=style.SMALL_ICON_SIZE)
-            menu_item.set_image(icon)
+            menu_item.set_icon_widget(icon)
             icon.set_visible(True)
             menu_item.connect('activate', self.__dismiss_activate_cb)
             box.append_item(menu_item)
@@ -800,7 +799,7 @@ class IncomingTransferPalette(BaseTransferPalette):
                 menu_item = PaletteMenuItem(_('Dismiss'))
                 icon = Icon(icon_name='dialog-cancel',
                             pixel_size=style.SMALL_ICON_SIZE)
-                menu_item.set_image(icon)
+                menu_item.set_icon_widget(icon)
                 icon.set_visible(True)
                 menu_item.connect('activate', self.__dismiss_activate_cb)
                 box.append_item(menu_item)
@@ -879,7 +878,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
             menu_item = PaletteMenuItem(_('Cancel'))
             icon = Icon(icon_name='dialog-cancel',
                         pixel_size=style.SMALL_ICON_SIZE)
-            menu_item.set_image(icon)
+            menu_item.set_icon_widget(icon)
             icon.set_visible(True)
             menu_item.connect('activate', self.__cancel_activate_cb)
             box.append_item(menu_item)
@@ -912,7 +911,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
             menu_item = PaletteMenuItem(_('Cancel'))
             icon = Icon(icon_name='dialog-cancel',
                         pixel_size=style.SMALL_ICON_SIZE)
-            menu_item.set_image(icon)
+            menu_item.set_icon_widget(icon)
             icon.set_visible(True)
             menu_item.connect('activate', self.__cancel_activate_cb)
             box.append_item(menu_item)
@@ -942,7 +941,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
             menu_item = PaletteMenuItem(_('Dismiss'))
             icon = Icon(icon_name='dialog-cancel',
                         pixel_size=style.SMALL_ICON_SIZE)
-            menu_item.set_image(icon)
+            menu_item.set_icon_widget(icon)
             icon.set_visible(True)
             menu_item.connect('activate', self.__dismiss_activate_cb)
             box.append_item(menu_item)
