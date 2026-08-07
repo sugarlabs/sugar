@@ -25,7 +25,6 @@ logging.debug('STARTUP: Starting the shell')
 
 import os
 import sys
-import subprocess
 import shutil
 
 # Disable overlay scrolling before GTK is loaded
@@ -83,7 +82,6 @@ from jarabe import apisocket
 from jarabe import testrunner
 from jarabe.model import brightness
 
-_casilda_process = None
 _window_manager_started = False
 _starting_desktop = False
 
@@ -141,24 +139,6 @@ def _complete_desktop_startup():
     testrunner.check_environment()
 
 
-def __window_manager_failed_cb(fd, condition):
-    logging.error('window manager did fail, restarting')
-    GLib.source_remove(_casilda_sid)
-    GLib.timeout_add(1000, _restart_window_manager)
-    return False
-
-
-def _restart_window_manager():
-    global _casilda_process, _casilda_sid
-
-    _casilda_process = subprocess.Popen(
-        ['casilda'],
-        stdout=subprocess.PIPE)
-    _casilda_sid = GLib.io_add_watch(_casilda_process.stdout, GLib.IO_HUP,
-                                    __window_manager_failed_cb)
-    return False
-
-
 def _start_window_manager():
     global _cursor_theme_settings, _cursor_theme
 
@@ -168,11 +148,6 @@ def _start_window_manager():
     global _starting_desktop
     if _starting_desktop:
         _complete_desktop_startup()
-
-
-def _stop_window_manager():
-    if _casilda_process:
-        _casilda_process.terminate()
 
 
 def _begin_desktop_startup():
@@ -222,7 +197,7 @@ def cleanup_temporary_files():
         os.makedirs(data_dir)
     except OSError as e:
         # non-fatal: full or read-only disk should not block startup
-        print('temporary files cleanup failed: %s' % e)
+        logging.warning('temporary files cleanup failed: %s', e)
 
 
 def setup_timezone():
@@ -385,7 +360,7 @@ shell = shell.get_model()
 
 from sugar4.activity import activityfactory
 def _get_compositor_fd():
-    if hasattr(shell, 'compositor') and shell.compositor is not None:
+    if shell.compositor is not None:
         return shell.compositor.get_client_socket_fd()
     return -1
 activityfactory.set_compositor_fd_getter(_get_compositor_fd)

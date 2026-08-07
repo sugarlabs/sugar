@@ -162,7 +162,7 @@ class ViewHelp(Gtk.Window):
         self.set_modal(True)
         self.set_decorated(False)
 
-        # Set transient parent for Wayland XDG-dialog positioning
+        # Set transient parent window
         shell_model = shell.get_model()
         if shell_model and shell_model._main_window:
             self.set_transient_for(shell_model._main_window)

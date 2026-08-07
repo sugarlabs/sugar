@@ -644,10 +644,6 @@ class OwnerIcon(BuddyIcon):
 
     def __init__(self, size):
         BuddyIcon.__init__(self, buddy=get_owner_instance(), pixel_size=size)
-        # GTK4: toggle_palette is already set by BuddyIcon.__init__ via
-        # self.palette_invoker.props.toggle_palette = True (line 36).
-        # No extra EventControllerMotion workaround needed — CanvasIcon's
-        # _setup_state_controllers() handles PRELIGHT correctly in GTK4.
 
     def create_palette(self):
         palette = BuddyMenu(get_owner_instance())

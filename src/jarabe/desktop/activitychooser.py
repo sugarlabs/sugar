@@ -74,7 +74,7 @@ class ActivityChooser(Gtk.Window):
         self.set_modal(True)
         self.set_focusable(True)
 
-        # Set transient parent for Wayland XDG-dialog support
+        # Set transient parent window
         from jarabe.model import shell as _shell
         shell_model = _shell.get_model()
         if shell_model and shell_model._main_window:
@@ -152,8 +152,7 @@ class ActivityChooser(Gtk.Window):
         self.tree_view.fav_column.set_visible(False)
         self.tree_view.version_column.set_visible(False)
 
-        # Disconnect the default row-activated handler set by ActivitiesTreeView
-        # so it does not also fire (double-launch). Mirrors GTK3 disconnect block.
+        # Disconnect default row-activated handler to prevent double launch
         if self.tree_view.row_activated_handler:
             self.tree_view.disconnect(self.tree_view.row_activated_handler)
             self.tree_view.row_activated_handler = None

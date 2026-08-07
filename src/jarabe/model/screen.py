@@ -57,19 +57,10 @@ def _get_ohm():
 
 
 def unfreeze():
-    """Unfreeze the display.
+    """Unfreeze the display or inhibit screensaver.
     
-    GTK3/OLPC: Called once at startup to wake the OLPC DCON display chip 
-    after it was frozen by ohmd/powerd during boot.
-    
-    GTK4/Wayland: On OLPC hardware, still calls ohmd. On all other systems
-    (Ubuntu, Fedora, Debian), instead registers a ScreenSaver idle inhibitor
-    which prevents the compositor from blanking/suspending while Sugar is active.
-    This uses org.freedesktop.ScreenSaver which is supported by:
-      - GNOME (routes to zwp_idle_inhibit_unstable_v1 on Wayland)
-      - KDE Plasma
-      - XFCE (via xfce4-screensaver or xss-lock)
-      - Any XDG-portal-supporting compositor
+    On OLPC hardware, sends the unfreeze command to ohmd. On standard
+    desktop systems, registers an idle inhibitor with the screensaver service.
     """
     if using_powerd():
 

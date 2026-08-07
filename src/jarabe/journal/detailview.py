@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2007, One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,12 +28,12 @@ from jarabe.journal import model
 
 
 def _set_css_bg(widget, color):
-    widget.remove_css_class('detailview-bg-panel')
-    widget.remove_css_class('detailview-bg-selection')
     if color == style.COLOR_PANEL_GREY:
-        widget.add_css_class('detailview-bg-panel')
+        widget.set_css_classes(['detailview-bg-panel'])
     elif color == style.COLOR_SELECTION_GREY:
-        widget.add_css_class('detailview-bg-selection')
+        widget.set_css_classes(['detailview-bg-selection'])
+    else:
+        widget.set_css_classes([])
 
 
 class DetailView(Gtk.Box):

@@ -146,16 +146,10 @@ class Activity(GObject.GObject):
     def close_window(self):
         window = self.get_window()
         if window is not None:
-            if hasattr(window, 'close'):
-                window.close()
-            elif hasattr(window, 'unparent'):
-                window.unparent()
+            window.close()
 
         for w in self._shell_windows:
-            if hasattr(w, 'close'):
-                w.close()
-            elif hasattr(w, 'unparent'):
-                w.unparent()
+            w.close()
 
     def remove_window(self, window):
         """Remove a window from the windows stack."""
@@ -362,15 +356,11 @@ class Activity(GObject.GObject):
             self._set_launch_status(Activity.LAUNCH_FAILED)
 
     def _state_changed_cb(self, main_window, *args):
-        # Check minimized state using GdkToplevelState under GTK4
-        surface = main_window.get_surface() if hasattr(main_window, 'get_surface') else None
-        if surface is not None and hasattr(surface, 'get_state'):
+        # Track minimized state
+        surface = main_window.get_surface()
+        if surface is not None:
             state = surface.get_state()
-            if hasattr(Gdk, 'ToplevelState'):
-                is_minimized = bool(state & Gdk.ToplevelState.MINIMIZED)
-            else:
-                is_minimized = False
-            if is_minimized:
+            if state & Gdk.ToplevelState.MINIMIZED:
                 self.emit('pause')
             else:
                 self.emit('resume')

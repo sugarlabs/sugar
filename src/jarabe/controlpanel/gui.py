@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,12 +38,12 @@ _logger = logging.getLogger('ControlPanel')
 
 
 def _set_css_bg(widget, color):
-    widget.remove_css_class('controlpanel-bg-black')
-    widget.remove_css_class('controlpanel-bg-white')
     if color == style.COLOR_BLACK:
-        widget.add_css_class('controlpanel-bg-black')
+        widget.set_css_classes(['controlpanel-bg-black'])
     elif color == style.COLOR_WHITE:
-        widget.add_css_class('controlpanel-bg-white')
+        widget.set_css_classes(['controlpanel-bg-white'])
+    else:
+        widget.set_css_classes([])
 
 # Inject CSS for backgrounds
 provider = Gtk.CssProvider()
@@ -79,7 +79,7 @@ class ControlPanel(Gtk.Window):
         self.set_focusable(True)
         self.add_css_class('controlpanel-bg-black')
 
-        # Set transient parent so Wayland XDG-dialog positioning works
+        # Set transient parent window
         shell_model = shell.get_model()
         if shell_model and shell_model._main_window:
             self.set_transient_for(shell_model._main_window)

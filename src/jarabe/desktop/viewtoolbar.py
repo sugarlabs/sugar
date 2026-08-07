@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009-2012 One Laptop per Child
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
@@ -29,7 +29,6 @@ from gi.repository import GLib
 from sugar4.graphics import style
 from sugar4.graphics import iconentry
 from sugar4.graphics.radiotoolbutton import RadioToolButton
-
 
 
 from jarabe.desktop import favoritesview

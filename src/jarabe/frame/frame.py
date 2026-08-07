@@ -61,7 +61,7 @@ class _Animation:
     requires the widget to be on screen first).
     """
 
-    _DURATION_MS = 500  # matches GTK3 animator duration
+    _DURATION_MS = 500
     _STEP_MS = 16       # ~60 fps
 
     def __init__(self, frame, start, end):
@@ -137,9 +137,7 @@ class Frame(object):
                 shell_model._overlay.add_overlay(box)
                 box.set_visible(True)
                 
-            # Add frame panels — they start hidden off-screen via negative margin
-            # set in FrameWindow.__init__.  We keep them visible so GTK4 can
-            # allocate / measure them at all times.
+            # Add frame panels
             shell_model._overlay.add_overlay(self._top_panel)
             shell_model._overlay.add_overlay(self._bottom_panel)
             shell_model._overlay.add_overlay(self._left_panel)

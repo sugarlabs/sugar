@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -189,10 +189,14 @@ class HomeBox(Gtk.Box):
     _REDRAW_TIMEOUT = 5 * 60 * 1000  # 5 minutes
 
     def resume(self):
-        pass
+        visible = self._view_stack.get_visible_child()
+        if hasattr(visible, 'resume'):
+            visible.resume()
 
     def suspend(self):
-        pass
+        visible = self._view_stack.get_visible_child()
+        if hasattr(visible, 'suspend'):
+            visible.suspend()
 
     def set_resume_mode(self, resume_mode, favorite_view=0):
         self._resume_mode = resume_mode

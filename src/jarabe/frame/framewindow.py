@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2006-2007 Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -179,7 +179,7 @@ class FrameWindow(Gtk.Revealer):
         self.size = style.GRID_CELL_SIZE + style.LINE_WIDTH
         self._position = position
 
-        # Shortcut controller (replaces GTK3 accel group)
+        # Shortcut controller
         self.shortcut_controller = Gtk.ShortcutController.new()
         self.shortcut_controller.set_scope(Gtk.ShortcutScope.GLOBAL)
         self.add_controller(self.shortcut_controller)

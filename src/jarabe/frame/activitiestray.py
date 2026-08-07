@@ -85,13 +85,7 @@ class ActivityButton(RadioToolButton):
         if home_activity.get_icon_path():
             self._icon.props.file = home_activity.get_icon_path()
         else:
-            window = home_activity.get_window()
-
-            if window and not getattr(window, 'get_icon_is_fallback', lambda: True)():
-                pixbuf = window.get_icon()
-                self._icon.pixbuf = pixbuf
-            else:
-                self._icon.props.icon_name = 'image-missing'
+            self._icon.props.icon_name = 'image-missing'
 
         self.set_icon_widget(self._icon)
         self._icon.set_visible(True)
@@ -376,12 +370,7 @@ class ActivitiesTray(HTray):
         button.set_active(True)
         self._freeze_button_clicks = False
 
-        self.scroll_to_item(button)
-
-        # Force UI update to match GTK3's process_updates(True) behavior
-        ctx = GLib.main_context_default()
-        while ctx.pending():
-            ctx.iteration(False)
+        GLib.idle_add(self.scroll_to_item, button)
 
     def __activity_changed_cb(self, home_model, home_activity):
         logging.debug('__activity_changed_cb: %r', home_activity)
@@ -410,11 +399,7 @@ class ActivitiesTray(HTray):
             if window:
                 frame = jarabe.frame.get_view()
                 frame.hide()
-                if hasattr(window, 'present'):
-                    window.present()
-                elif hasattr(window, 'activate'):
-                    from gi.repository import Gtk
-                    window.activate(Gtk.get_current_event_time())
+                window.present()
 
     def __remove_invite_cb(self, icon, invite):
         self._invites.remove_invite(invite)

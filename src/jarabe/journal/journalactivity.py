@@ -641,8 +641,7 @@ class JournalActivity(JournalWindow):
         """Become visible, show main view, and focus the search entry."""
         self.reveal()
         self.show_main_view()
-        # Focus the search entry so the user can type immediately —
-        # matches the GTK3 behavior triggered by F5.
+        # Focus the search entry so the user can type immediately.
         if self._init_done and self._main_toolbox is not None:
             GLib.idle_add(self._main_toolbox.search_entry.grab_focus)
         else:

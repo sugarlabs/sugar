@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2007, One Laptop Per Child
 # Copyright (C) 2008-2013, Sugar Labs
 #
 # This program is free software: you can redistribute it and/or modify
@@ -42,12 +42,12 @@ from jarabe.journal import journalwindow
 
 
 def _set_css_bg(widget, color):
-    widget.remove_css_class('expandedentry-bg-panel')
-    widget.remove_css_class('expandedentry-bg-white')
     if color == style.COLOR_PANEL_GREY:
-        widget.add_css_class('expandedentry-bg-panel')
+        widget.set_css_classes(['expandedentry-bg-panel'])
     elif color == style.COLOR_WHITE:
-        widget.add_css_class('expandedentry-bg-white')
+        widget.set_css_classes(['expandedentry-bg-white'])
+    else:
+        widget.set_css_classes([])
 
 
 class Separator(Gtk.Box):

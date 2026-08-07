@@ -48,7 +48,7 @@ class ModalAlert(Gtk.Window):
         self.set_resizable(False)
         self.set_modal(True)
 
-        # Set transient parent for Wayland modal positioning
+        # Set transient parent window
         shell_model = shell.get_model()
         if shell_model and shell_model._main_window:
             self.set_transient_for(shell_model._main_window)

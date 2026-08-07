@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2011-2012 One Laptop Per Child
+# Copyright (C) 2011-2012 One Laptop Per Child
 # Copyright (C) 2010 Tomeu Vizoso
 # Copyright (C) 2011 Walter Bender
 # Copyright (C) 2011 Raul Gutierrez Segales
@@ -61,9 +61,13 @@ class ViewContainer(Gtk.Widget):
                 self.queue_resize()
 
     def do_measure(self, orientation, for_size):
+        min_size = 0
+        nat_size = 0
         for child in self.get_children():
-            child.measure(orientation, for_size)
-        return (0, 0, -1, -1)
+            child_min, child_nat, _, _ = child.measure(orientation, for_size)
+            min_size = max(min_size, child_min)
+            nat_size = max(nat_size, child_nat)
+        return (min_size, nat_size, -1, -1)
 
     def do_size_allocate(self, width, height, baseline):
         if not self._layout:

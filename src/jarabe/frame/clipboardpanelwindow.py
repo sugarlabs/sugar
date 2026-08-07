@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2007, One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ class ClipboardPanelWindow(FrameWindow):
         if not mime_types:
             return
 
-        # Filter out internal/control targets â€” same as GTK3 baseline.
+        # Filter out internal/control targets.
         targets = [t for t in mime_types if t not in _SKIP_TARGETS]
         if not targets:
             return
@@ -108,8 +108,7 @@ class ClipboardPanelWindow(FrameWindow):
             if data and not state['cancelled']:
                 on_disk = False
                 if mime_type == 'text/uri-list':
-                    # Mirror GTK3 _add_selection(): extract first URI,
-                    # determine on_disk, compute data_hash from file md5.
+                    # Extract first URI and compute data hash
                     text = data.decode('utf-8', errors='replace')
                     uris = [u.strip() for u in text.splitlines()
                             if u.strip() and not u.strip().startswith('#')]

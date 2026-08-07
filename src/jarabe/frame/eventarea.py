@@ -49,8 +49,6 @@ class EventArea(GObject.GObject):
         window = Gtk.Box()
         window.add_css_class('transparent-window')
         
-        # Wayland compositors may ignore fully transparent surfaces for input,
-        # so we use a nearly invisible 1% opacity black background.
         provider = Gtk.CssProvider()
         provider.load_from_string('.transparent-window, .transparent-window:hover { background-color: rgba(0, 0, 0, 0.01); }')
         window.get_style_context().add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)

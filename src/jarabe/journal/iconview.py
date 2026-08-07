@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2013, Gonzalo Odiard
+# Copyright (C) 2013, Gonzalo Odiard
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,9 +31,8 @@ from sugar4.activity.activity import PREVIEW_SIZE
 
 
 def _set_css_bg(widget, color):
-    widget.remove_css_class('iconview-bg-white')
-    if color == style.COLOR_WHITE:
-        widget.add_css_class('iconview-bg-white')
+    widget.set_css_classes(
+        ['iconview-bg-white'] if color == style.COLOR_WHITE else [])
 
 
 class PreviewFlowBox(Gtk.FlowBox):

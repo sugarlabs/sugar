@@ -184,7 +184,7 @@ class ViewSource(Gtk.Window):
         self.set_modal(True)
         self.set_decorated(False)
 
-        # Set transient parent for Wayland XDG-dialog positioning
+        # Set transient parent window
         from jarabe.model import shell as _shell
         shell_model = _shell.get_model()
         if shell_model and shell_model._main_window:
