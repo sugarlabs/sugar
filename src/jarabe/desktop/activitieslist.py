@@ -102,8 +102,6 @@ class ActivitiesTreeView(Gtk.TreeView):
         cell_text = Gtk.CellRendererText()
         cell_text.props.ellipsize = style.ELLIPSIZE_MODE_DEFAULT
         cell_text.props.ellipsize_set = True
-        cell_text.props.foreground = style.COLOR_BLACK.get_html()
-
         column = Gtk.TreeViewColumn()
         column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
         column.props.expand = True
@@ -114,7 +112,6 @@ class ActivitiesTreeView(Gtk.TreeView):
 
         cell_text = Gtk.CellRendererText()
         cell_text.props.xalign = 1
-        cell_text.props.foreground = style.COLOR_BLACK.get_html()
 
         self.version_column = Gtk.TreeViewColumn()
         self.version_column.set_alignment(1)
@@ -130,7 +127,6 @@ class ActivitiesTreeView(Gtk.TreeView):
 
         cell_text = Gtk.CellRendererText()
         cell_text.props.xalign = 1
-        cell_text.props.foreground = style.COLOR_BLACK.get_html()
 
         self.date_column = Gtk.TreeViewColumn()
         self.date_column.set_alignment(1)
@@ -417,6 +413,8 @@ class CellRendererFavorite(CellRendererIcon):
         self.props.height = style.GRID_CELL_SIZE
         self.props.size = style.SMALL_ICON_SIZE
         self.props.icon_name = desktop.get_favorite_icons()[favorite_view]
+        self.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
+        self.props.stroke_color = style.COLOR_TRANSPARENT.get_svg()
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
 
 
