@@ -171,7 +171,7 @@ class FrameWindow(Gtk.Revealer):
 
         super().__init__(
             transition_type=transition,
-            transition_duration=0,  # 0ms slide animation (driven by frame.py timer manually)
+            transition_duration=500,
             reveal_child=False,
         )
 
@@ -217,22 +217,6 @@ class FrameWindow(Gtk.Revealer):
             monitors = display.get_monitors()
             if monitors:
                 monitors.connect('items-changed', self._size_changed_cb)
-
-    def set_margin(self, margin):
-        """Called by frame.py animation with values from -size (hidden) to 0 (visible).
-
-        We map this to Revealer reveal_child: when margin reaches 0, reveal;
-        when margin is < 0, hide.
-
-        The actual animation is driven externally by frame.py's _Animation
-        which updates position continuously. We use the Revealer's own
-        animation only as a backup for instant show/hide.
-        """
-        # Convert margin (-size..0) to fraction (0..1)
-        fraction = (margin + self.size) / self.size  # 0 when hidden, 1 when visible
-        reveal = fraction > 0.01
-        if self.get_reveal_child() != reveal:
-            self.set_reveal_child(reveal)
 
     def append(self, child, expand=True, fill=True):
         if expand:

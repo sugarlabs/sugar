@@ -20,7 +20,6 @@ from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gio
 
-from sugar4.graphics import animator
 from sugar4.graphics import style
 from sugar4.graphics import palettegroup
 from sugar4 import profile
@@ -53,46 +52,6 @@ def _get_screen_size():
     return 1024, 768
 
 
-class _Animation:
-    """Simple timer-based frame animation.
-
-    Uses GLib.timeout_add so it works regardless of whether the panel
-    widget is currently mapped/realized (unlike add_tick_callback which
-    requires the widget to be on screen first).
-    """
-
-    _DURATION_MS = 500
-    _STEP_MS = 16       # ~60 fps
-
-    def __init__(self, frame, start, end):
-        self._frame = frame
-        self.start = start
-        self.end = end
-        self._sid = 0
-        self._elapsed_ms = 0
-
-    def start_anim(self):
-        self._elapsed_ms = 0
-        self._sid = GLib.timeout_add(self._STEP_MS, self._on_tick)
-
-    def stop(self):
-        if self._sid:
-            GLib.source_remove(self._sid)
-            self._sid = 0
-
-    def _on_tick(self):
-        self._elapsed_ms += self._STEP_MS
-        progress = min(self._elapsed_ms / self._DURATION_MS, 1.0)
-        current = self.start + (self.end - self.start) * progress
-        self._frame.move_panels(current)
-
-        if progress >= 1.0:
-            self._sid = 0
-            # At position 0.0 the panels are off-screen via margin; no
-            # visibility change needed.
-            return False  # stop timer
-        return True  # continue
-
 
 class Frame(object):
 
@@ -108,8 +67,6 @@ class Frame(object):
         self._bottom_panel = None
 
         self._wanted = False
-        self.current_position = 0.0
-        self._animator = None
         self._hide_timeout_id = 0
  
         self._event_area = EventArea(self.settings)
@@ -198,14 +155,6 @@ class Frame(object):
                       self._left_panel, self._right_panel):
             if panel:
                 panel.set_reveal_child(True)
-
-    def _hide_windows(self):
-        # No-op: Revealer handles hiding with slide animation.
-        pass
-
-    def move_panels(self, pos):
-        # Legacy method kept for compatibility; not used with Revealer approach.
-        self.current_position = pos
 
     def _create_top_panel(self):
         panel = self._create_panel(Gtk.PositionType.TOP)

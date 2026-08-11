@@ -60,7 +60,8 @@ _EXCLUDE_EXTENSIONS = ('.pyc', '.pyo', '.so', '.o', '.a', '.la', '.mo', '~',
 _EXCLUDE_NAMES = ['.deps', '.libs']
 
 _IMPORT_TYPES = {'sugar3': 3, 'from gi.repository import Gtk': 3,
-                 'sugar.': 2, 'import pygtk': 2, 'pygtk.require': 2}
+                 'sugar.': 2, 'import pygtk': 2, 'pygtk.require': 2,
+                 'sugar4': 4}
 
 _SOURCE_FONT = Pango.FontDescription('Monospace %d' % style.FONT_SIZE)
 
@@ -104,7 +105,7 @@ def _get_toolkit_path(bundle_path, bundle_id):
     if _is_gtk3_activity(bundle_path, bundle_id):
         sugar_module = 'sugar3'
     else:
-        sugar_module = 'sugar'
+        sugar_module = 'sugar4'
 
     for path in sys.path:
         if path.endswith(('site-packages', 'dist-packages')):
@@ -205,7 +206,7 @@ class ViewSource(Gtk.Window):
         self._parent_window_id = window_id
         self._sugar_toolkit_path = sugar_toolkit_path
 
-        self.connect('realize', self.__realize_cb)
+        self.connect('map', self.__realize_cb)
         self._document_path = document_path
         
         key_controller = Gtk.EventControllerKey()

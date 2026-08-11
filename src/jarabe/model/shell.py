@@ -323,7 +323,8 @@ class Activity(GObject.GObject):
                 logging.debug('Activity._name_owner_changed_cb: '
                               'activity %s started up', name)
                 self._retrieve_service()
-                self.set_active(True)
+                if self.get_window() is not None:
+                    self.set_active(True)
                 get_model().emit('launch-completed', self)
 
     def set_active(self, state):
@@ -660,6 +661,8 @@ class ShellModel(Gtk.Application):
                 startup_time = time.time() - home_activity.get_launch_time()
                 logging.debug('%s launched in %f seconds.',
                               activity_id, startup_time)
+                if self._active_activity == home_activity:
+                    home_activity.set_active(True)
                 self.emit('active-window-changed', window)
 
             if self._active_activity is None:
@@ -689,7 +692,12 @@ class ShellModel(Gtk.Application):
                     logging.debug('last window gone - remove activity %s',
                                   activity)
                     activity.close_window()
+                    self.stack.set_transition_type(
+                        Gtk.StackTransitionType.NONE)
                     self._remove_activity(activity)
+                    GLib.idle_add(
+                        lambda: self.stack.set_transition_type(
+                            Gtk.StackTransitionType.CROSSFADE) or False)
 
     def _get_activity_by_bundle_id(self, bundle_id):
         for home_activity in self._activities:
@@ -778,7 +786,6 @@ class ShellModel(Gtk.Application):
         self._add_activity(home_activity)
 
         self._set_active_activity(home_activity)
-
         self.set_zoom_level(self.ZOOM_ACTIVITY)
         self.emit('launch-started', home_activity)
 

@@ -219,12 +219,6 @@ class JournalActivity(JournalWindow):
             self._session_manager_shutdown_cb)
 
     def _setup(self):
-        """Create all child widgets.
-
-        Must be called after self has been added to the shell Gtk.Stack so
-        that a native GdkSurface ancestor exists; GTK4 popovers crash
-        without one ('gdk_surface_new_popup: assertion GDK_IS_SURFACE (parent) failed').
-        """
         self._setup_main_view()
         self._setup_secondary_view()
         self._setup_project_view()
@@ -706,12 +700,8 @@ def get_journal():
             color=get_owner_instance().props.color,
             window=_journal
         )
-        
-        # The Journal is instantiated internally, so we must manually mark it as launched.
-        # Otherwise, the JournalPalette will be stuck on "Starting..." forever.
-        home_activity._set_launch_status(Activity.LAUNCHED)
-        
         shell.get_model()._add_activity(home_activity)
+        shell.get_model().emit('launch-completed', home_activity)
 
     return _journal
 
