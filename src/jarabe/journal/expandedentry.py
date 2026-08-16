@@ -34,19 +34,20 @@ import json
 from sugar3 import profile
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.icon import CanvasIcon, get_icon_file_name
-from sugar3.graphics.icon import Icon, CellRendererIcon
-from sugar3.graphics.alert import Alert, ConfirmationAlert
+from sugar3.graphics.icon import CanvasIcon, Icon
+from sugar3.graphics.alert import ConfirmationAlert
 from sugar3.util import format_size
 from sugar3.graphics.objectchooser import get_preview_pixbuf
-from sugar3.activity.activity import PREVIEW_SIZE
 
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal import journalwindow
-from jarabe.journal.momentcard import draw_mark, draw_star
+from jarabe.journal import reflection
+from jarabe.journal.momentcard import SNAP_KEY, draw_mark, \
+    draw_star, FoldGlyph
+from jarabe.journal.reflectionview import ReflectionView, RAIL_WIDTH
 from jarabe.journal import reflectstyle
 
 
@@ -417,13 +418,6 @@ def _trim_letterbox(pixbuf):
         return pixbuf
 
 
-class Separator(Gtk.VBox):
-
-    def __init__(self, orientation):
-        Gtk.VBox.__init__(
-            self, background_color=style.COLOR_PANEL_GREY.get_gdk_color())
-
-
 class BuddyList(Gtk.Alignment):
 
     def __init__(self, buddies):
@@ -449,134 +443,145 @@ class TextView(Gtk.TextView):
         self.set_buffer(text_buffer)
         self.set_left_margin(style.DEFAULT_PADDING)
         self.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
+        self.get_style_context().add_class('journal-body')
 
 
-class CommentsView(Gtk.TreeView):
+class CommentsView(Gtk.VBox):
+    """Comments from friends as little speech cards.
+
+    Same stored JSON in, same JSON out on erase - only the face
+    changed; nothing here writes a comment.
+    """
+
     __gsignals__ = {
         'comments-changed': (GObject.SignalFlags.RUN_FIRST, None, ([str])),
-        'clicked': (GObject.SignalFlags.RUN_FIRST, None, [object]),
     }
 
     FROM = 'from'
     MESSAGE = 'message'
     ICON = 'icon'
     ICON_COLOR = 'icon-color'
-    COMMENT_ICON = 0
-    COMMENT_ICON_COLOR = 1
-    COMMENT_FROM = 2
-    COMMENT_MESSAGE = 3
-    COMMENT_ERASE_ICON = 4
-    COMMENT_ERASE_ICON_COLOR = 5
 
     def __init__(self):
-        Gtk.TreeView.__init__(self)
-        self.set_headers_visible(False)
-        self._store = Gtk.ListStore(str, object, str, str, str, object)
+        Gtk.VBox.__init__(self)
+        self.props.spacing = style.DEFAULT_PADDING
         self._comments = []
-        self._init_model()
+        self._editable = True
+
+    def set_editable(self, editable):
+        self._editable = editable
 
     def update_comments(self, comments):
-        self._store.clear()
-
+        for child in self.get_children():
+            self.remove(child)
+        self._comments = []
         if comments:
-            self._comments = json.loads(comments)
-            for comment in self._comments:
-                self._add_row(comment.get(self.FROM, ''),
-                              comment.get(self.MESSAGE, ''),
-                              comment.get(self.ICON, 'computer-xo'),
-                              comment.get(self.ICON_COLOR, '#FFFFFF,#000000'))
+            try:
+                self._comments = json.loads(comments)
+            except ValueError:
+                logging.exception('expandedentry: bad comments JSON')
+                self._comments = []
+        for comment in self._comments:
+            self.pack_start(self._create_card(comment), False, False, 0)
+        self.show_all()
 
-    def _get_selected_row(self):
-        selection = self.get_selection()
-        return selection.get_selected()
+    def _create_card(self, comment):
+        holder = Gtk.VBox()
+        holder.set_halign(Gtk.Align.START)
+        tail = Gtk.DrawingArea()
+        tail.set_size_request(style.zoom(44), style.zoom(11))
+        tail.set_halign(Gtk.Align.START)
+        tail.connect('draw', self._tail_draw_cb)
+        holder.pack_start(tail, False, False, 0)
+        card = Gtk.EventBox()
+        card.get_style_context().add_class('journal-comment')
+        card.set_halign(Gtk.Align.START)
+        row = Gtk.HBox()
+        row.set_spacing(style.DEFAULT_PADDING)
+        row.set_border_width(style.zoom(9))
 
-    def _add_row(self, sender, message, icon_name, icon_color):
-        self._store.append((get_icon_file_name(icon_name),
-                            XoColor(icon_color),
-                            sender,
-                            message,
-                            get_icon_file_name('list-remove'),
-                            XoColor('#FFFFFF,#000000')))
+        icon = Icon(icon_name=comment.get(self.ICON, 'computer-xo'),
+                    pixel_size=style.SMALL_ICON_SIZE)
+        icon.props.xo_color = XoColor(
+            comment.get(self.ICON_COLOR, '#FFFFFF,#000000'))
+        icon.set_valign(Gtk.Align.START)
+        row.pack_start(icon, False, False, 0)
 
-    def _init_model(self):
-        self.set_model(self._store)
-        col = Gtk.TreeViewColumn()
+        column = Gtk.VBox()
+        who = Gtk.Label(label=comment.get(self.FROM, ''))
+        who.get_style_context().add_class('journal-comment-who')
+        who.set_xalign(0)
+        column.pack_start(who, False, False, 0)
+        said = Gtk.Label(label=comment.get(self.MESSAGE, ''))
+        said.get_style_context().add_class('journal-comment-said')
+        said.set_xalign(0)
+        said.set_line_wrap(True)
+        said.set_max_width_chars(30)
+        column.pack_start(said, False, False, 0)
+        row.pack_start(column, True, True, 0)
 
-        who_icon = CellRendererCommentIcon()
-        col.pack_start(who_icon, False)
-        col.add_attribute(who_icon, 'file-name', self.COMMENT_ICON)
-        col.add_attribute(who_icon, 'xo-color', self.COMMENT_ICON_COLOR)
+        if self._editable:
+            erase = Gtk.Button(label='×')
+            erase.set_relief(Gtk.ReliefStyle.NONE)
+            erase.get_style_context().add_class('journal-comment-erase')
+            erase.set_valign(Gtk.Align.START)
+            erase.connect('clicked', self._erase_comment_cb,
+                          comment, column)
+            row.pack_start(erase, False, False, 0)
 
-        who_text = Gtk.CellRendererText()
-        col.pack_start(who_text, True)
-        col.add_attribute(who_text, 'text', self.COMMENT_FROM)
+        card.add(row)
+        holder.pack_start(card, False, False, 0)
+        return holder
 
-        comment_text = Gtk.CellRendererText()
-        col.pack_start(comment_text, True)
-        col.add_attribute(comment_text, 'text', self.COMMENT_MESSAGE)
+    def _tail_draw_cb(self, widget, cr):
+        _set_source(cr, reflectstyle.CARD)
+        height = widget.get_allocated_height()
+        apex = style.zoom(31)
+        half = style.zoom(9)
+        cr.move_to(apex - half, height)
+        cr.line_to(apex, 0)
+        cr.line_to(apex + half, height)
+        cr.close_path()
+        cr.fill()
+        return False
 
-        erase_icon = CellRendererCommentIcon()
-        erase_icon.connect('clicked', self._erase_comment_cb)
-        col.pack_start(erase_icon, False)
-        col.add_attribute(erase_icon, 'file-name', self.COMMENT_ERASE_ICON)
-        col.add_attribute(
-            erase_icon, 'xo-color', self.COMMENT_ERASE_ICON_COLOR)
+    def _erase_comment_cb(self, button, comment, column):
+        # The question stands inside the card itself, no dialog: the
+        # same speech bubble asks whether it should go.
+        if getattr(column, '_confirm_row', None) is not None:
+            return
+        confirm = Gtk.HBox()
+        confirm.set_spacing(style.DEFAULT_PADDING)
+        confirm.set_margin_top(style.zoom(6))
+        line = Gtk.Label(label=_('erase this comment?'))
+        line.get_style_context().add_class('journal-confirm-line')
+        confirm.pack_start(line, False, False, 0)
+        yes = Gtk.Button(label=_('erase'))
+        yes.set_relief(Gtk.ReliefStyle.NONE)
+        yes.get_style_context().add_class('journal-confirm-pill')
+        yes.get_style_context().add_class('journal-confirm-yes')
+        yes.connect('clicked', self._erase_confirmed_cb, comment)
+        confirm.pack_start(yes, False, False, 0)
+        keep = Gtk.Button(label=_('keep'))
+        keep.set_relief(Gtk.ReliefStyle.NONE)
+        keep.get_style_context().add_class('journal-confirm-pill')
+        keep.connect('clicked', self._erase_kept_cb, column)
+        confirm.pack_start(keep, False, False, 0)
+        column._confirm_row = confirm
+        column.pack_start(confirm, False, False, 0)
+        confirm.show_all()
 
-        self.append_column(col)
-
-    def _erase_comment_cb(self, widget, event):
-        alert = Alert()
-
-        entry = self.get_selection().get_selected()[1]
-        erase_string = _('Erase')
-        alert.props.title = erase_string
-        alert.props.msg = _('Do you want to permanently erase \"%s\"?') \
-            % self._store[entry][self.COMMENT_MESSAGE]
-
-        icon = Icon(icon_name='dialog-cancel')
-        alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel'), icon)
-        icon.show()
-
-        ok_icon = Icon(icon_name='dialog-ok')
-        alert.add_button(Gtk.ResponseType.OK, erase_string, ok_icon)
-        ok_icon.show()
-
-        alert.connect('response', self._erase_alert_response_cb, entry)
-
-        journalwindow.get_journal_window().add_alert(alert)
-        alert.show()
-
-    def _erase_alert_response_cb(self, alert, response_id, entry):
-        journalwindow.get_journal_window().remove_alert(alert)
-
-        if response_id is Gtk.ResponseType.OK:
-            self._store.remove(entry)
-
-            # Regenerate comments from current contents of store
-            self._comments = []
-            for entry in self._store:
-                self._comments.append({
-                    self.FROM: entry[self.COMMENT_FROM],
-                    self.MESSAGE: entry[self.COMMENT_MESSAGE],
-                    self.ICON: entry[self.COMMENT_ICON],
-                    self.ICON_COLOR: '[%s]' % (
-                        entry[self.COMMENT_ICON_COLOR].to_string()),
-                })
-
+    def _erase_confirmed_cb(self, button, comment):
+        if comment in self._comments:
+            self._comments.remove(comment)
+            self.update_comments(json.dumps(self._comments))
             self.emit('comments-changed', json.dumps(self._comments))
 
-
-class CellRendererCommentIcon(CellRendererIcon):
-
-    def __init__(self):
-        CellRendererIcon.__init__(self)
-
-        self.props.width = style.SMALL_ICON_SIZE
-        self.props.height = style.SMALL_ICON_SIZE
-        self.props.size = style.SMALL_ICON_SIZE
-        self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-        self.props.fill_color = style.COLOR_BLACK.get_svg()
-        self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
+    def _erase_kept_cb(self, button, column):
+        confirm = getattr(column, '_confirm_row', None)
+        if confirm is not None:
+            column.remove(confirm)
+            column._confirm_row = None
 
 
 class _MountFace(Gtk.DrawingArea):
@@ -1130,113 +1135,707 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         BaseExpandedEntry.__init__(self)
         self._journalactivity = journalactivity
         Gtk.EventBox.__init__(self)
-        self._vbox = Gtk.VBox()
-        self.add(self._vbox)
+        _ensure_css()
+        self.get_style_context().add_class('journal-page')
 
         self.in_focus = False
         self._metadata = None
         self._update_title_sid = None
+        self._staged_seq = None
+        self._rail_open = False
+        self._kept_texts = []
+        self._minis = []
+        self._sidecol_moments = []
+        self._sidecol_editable = False
+        self._tag_commit = None
+        self._tag_stickers = {}
+        self._snap_cache = {}
+        self._artwork_key = None
+        self._artwork_pix = None
+        self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+        self.connect('button-press-event', self.__page_press_cb)
 
-        self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
+        # Layout: the work and the child's words on the left, moments
+        # and comments beside them, the talk with Jo as its own rail
+        # on the right.
+        page = Gtk.HBox()
+        self.add(page)
 
-        self._header = self.create_header()
-        self._vbox.pack_start(self._header, False, False,
-                              style.DEFAULT_SPACING * 2)
+        scrolled = Gtk.ScrolledWindow()
+        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        scrolled.set_shadow_type(Gtk.ShadowType.NONE)
+        page.pack_start(scrolled, True, True, 0)
+
+        main = Gtk.VBox()
+        main.set_margin_top(style.zoom(24))
+        main.set_margin_bottom(style.zoom(24))
+        main.set_margin_start(style.zoom(44))
+        main.set_margin_end(style.zoom(12))
+        scrolled.add(main)
+
+        header = self._create_titlerow()
+        main.pack_start(header, False, False, 0)
+
+        row = Gtk.HBox()
+        row.set_spacing(style.zoom(32))
+        row.set_margin_top(style.zoom(24))
+        main.pack_start(row, False, False, 0)
+
+        self._workcol = Gtk.VBox()
+        self._workcol.set_size_request(_MOUNT_W, -1)
+        row.pack_start(self._workcol, False, False, 0)
+
+        self._sidecol = Gtk.VBox()
+        self._sidecol.set_spacing(style.DEFAULT_PADDING)
+        row.pack_start(self._sidecol, True, True, 0)
+
+        self._build_workcol()
+
+        foot = Gtk.HBox()
+        foot.set_margin_top(style.DEFAULT_SPACING)
+        self._technical_box = Gtk.VBox()
+        foot.pack_start(self._technical_box, False, False, 0)
+        self._buddy_list = Gtk.VBox()
+        foot.pack_end(self._buddy_list, False, False, 0)
+        main.pack_start(foot, False, False, 0)
+
+        self._reflection = ReflectionView()
+        self._reflection.connect('reflections-changed',
+                                 self._reflections_changed_cb)
+        self._reflection.connect('keep-toggled',
+                                 self._reflection_keep_toggled_cb)
+        page.pack_start(self._reflection, False, False, 0)
+
+        self.show_all()
+        if ReflectionView.rail_shut():
+            self._reflection.hide()
+
+    def set_rail_shown(self, shown):
+        """The toolbar's word: show the talk or put it away. The
+        choice holds for the whole session and is never written into
+        the entry.
+        """
+        ReflectionView.set_rail_shut(not shown)
+        # Order matters: the moments must narrow BEFORE the talk
+        # returns, or their grid holds the width open and the talk
+        # maps past the screen edge.
+        if shown:
+            if self._metadata is not None:
+                self._refresh_sidecol(self._sidecol_moments,
+                                      self._sidecol_editable)
+            self._reflection.set_visible(True)
+        else:
+            self._reflection.set_visible(False)
+            if self._metadata is not None:
+                self._refresh_sidecol(self._sidecol_moments,
+                                      self._sidecol_editable)
+
+    def _create_titlerow(self):
+        box = Gtk.EventBox()
+        box.get_style_context().add_class('journal-titlerow')
+        row = Gtk.HBox()
+        row.set_spacing(style.DEFAULT_SPACING)
+        row.set_border_width(style.zoom(4))
+        box.add(row)
+
+        self._icon_box = Gtk.HBox()
+        self._icon_box.set_margin_start(style.zoom(16))
+        row.pack_start(self._icon_box, False, False, 0)
+
+        self._title = Gtk.Entry()
+        self._title.get_style_context().add_class('journal-title-entry')
+        self._title.connect('activate', self._title_entered)
+        self._title.connect('focus-out-event', self._focus_out_cb)
+        self._title.connect('focus-in-event', self._focus_in_cb)
+        row.pack_start(self._title, True, True, 0)
+
+        self._keep_icon = KeepIcon()
+        # The only ember-colored star on the page.
+        self._keep_icon.set_xo_color(
+            XoColor('%s,%s' % (reflectstyle.EMBER, reflectstyle.EMBER)))
         self._keep_sid = self._keep_icon.connect(
             'toggled', self._keep_icon_toggled_cb)
-        self._title.connect('activate', self._title_entered)
-        self._title.connect(
-            'focus-out-event', self._focus_out_cb)
-        self._title.connect(
-            'focus-in-event', self._focus_in_cb)
+        row.pack_start(self._keep_icon, False, False, 0)
+
+        self._date = Gtk.Label()
+        self._date.get_style_context().add_class('journal-when')
+        self._date.set_margin_end(style.zoom(12))
+        row.pack_start(self._date, False, False, 0)
 
         if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
-            # Reverse header children.
-            for child in self._header.get_children():
-                self._header.reorder_child(child, 0)
+            for child in row.get_children():
+                row.reorder_child(child, 0)
+        return box
 
-        # Create a two-column body
-        body_box = Gtk.EventBox()
-        body_box.set_border_width(style.DEFAULT_SPACING)
-        body_box.modify_bg(Gtk.StateType.NORMAL,
-                           style.COLOR_WHITE.get_gdk_color())
-        self._vbox.pack_start(body_box, True, True, 0)
-        body = Gtk.HBox()
-        body_box.add(body)
+    def _build_workcol(self):
+        self._mount = _MountFace()
+        self._mount.connect('tapped', self._mount_tapped_cb)
+        overlay = Gtk.Overlay()
+        overlay.add(self._mount)
+        self._words_face = Gtk.VBox()
+        self._words_face.set_spacing(style.zoom(22))
+        self._words_face.set_halign(Gtk.Align.CENTER)
+        self._words_face.set_valign(Gtk.Align.CENTER)
+        self._words_face.set_no_show_all(True)
+        overlay.add_overlay(self._words_face)
+        overlay.set_overlay_pass_through(self._words_face, True)
+        self._workcol.pack_start(overlay, False, False, 0)
 
-        first_column = Gtk.VBox()
-        body.pack_start(first_column, False, False, style.DEFAULT_SPACING)
+        self._stagecap = Gtk.HBox()
+        self._stagecap.set_spacing(style.DEFAULT_PADDING)
+        self._stagecap.set_halign(Gtk.Align.CENTER)
+        self._stagecap.set_margin_top(style.zoom(8))
+        self._stagecap.set_no_show_all(True)
+        self._workcol.pack_start(self._stagecap, False, False, 0)
 
-        second_column = Gtk.VBox()
-        body.pack_start(second_column, True, True, 0)
+        sheet = Gtk.EventBox()
+        sheet.get_style_context().add_class('journal-desc')
+        # anchored, not centered: centering re-seats the sheet any
+        # time something momentarily widens the column
+        sheet.set_halign(Gtk.Align.START)
+        sheet.set_margin_start(style.zoom(21))
+        sheet.set_size_request(style.zoom(668), -1)
+        sheet.set_no_show_all(True)
+        self._desc_sheet = sheet
+        inner = Gtk.VBox()
+        inner.set_border_width(style.zoom(12))
+        sheet.add(inner)
 
-        # First body column
-        self._preview_box = Gtk.Frame()
-        style_context = self._preview_box.get_style_context()
-        style_context.add_class('journal-preview-box')
-        first_column.pack_start(self._preview_box, False, True, 0)
+        label = Gtk.Label(label=_('DESCRIPTION'))
+        label.get_style_context().add_class('journal-desc-label')
+        label.set_xalign(0)
+        label.set_margin_start(style.zoom(10))
+        inner.pack_start(label, False, False, 0)
 
-        self._technical_box = Gtk.VBox()
-        first_column.pack_start(self._technical_box, False, False, 0)
+        self._description = Gtk.TextView()
+        self._description.set_buffer(Gtk.TextBuffer())
+        self._description.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
+        self._description.set_left_margin(style.zoom(12))
+        self._description.set_right_margin(style.zoom(12))
+        self._description.set_pixels_below_lines(style.zoom(9))
+        # room inside the view for the inviting blank line; anything
+        # drawn past the allocation is clipped away
+        self._description.set_bottom_margin(style.zoom(44))
+        self._description.get_style_context().add_class('journal-desc-text')
+        self._description.connect('focus-in-event', self._focus_in_cb)
+        self._description.connect('focus-out-event',
+                                  self._description_focus_out_event_cb)
+        self._description.connect_after('draw', self._description_rules_cb)
+        inner.pack_start(self._description, False, False, 0)
 
-        # Second body column
-        description_box, self._description = self._create_description()
-        second_column.pack_start(description_box, True, True,
-                                 style.DEFAULT_SPACING)
+        self._kept_box = Gtk.VBox()
+        self._kept_box.set_margin_top(style.zoom(6))
+        self._kept_box.set_margin_bottom(style.zoom(4))
+        self._kept_box.set_no_show_all(True)
+        inner.pack_start(self._kept_box, False, False, 0)
 
-        tags_box, self._tags = self._create_tags()
-        second_column.pack_start(tags_box, True, True,
-                                 style.DEFAULT_SPACING)
+        self._workcol.pack_start(sheet, False, False, 0)
 
-        comments_box, self._comments = self._create_comments()
-        second_column.pack_start(comments_box, True, True,
-                                 style.DEFAULT_SPACING)
-
-        self._buddy_list = Gtk.VBox()
-        second_column.pack_start(self._buddy_list, True, False, 0)
-        self.show_all()
+        self._tagrow = Gtk.VBox()
+        self._tagrow.set_spacing(style.zoom(4))
+        self._tagrow.set_margin_top(style.zoom(16))
+        self._tagrow.set_margin_start(style.zoom(18))
+        self._tagrow.set_margin_end(style.zoom(18))
+        self._workcol.pack_start(self._tagrow, False, False, 0)
 
     def set_metadata(self, metadata):
         if self._metadata == metadata:
             return
+        first_look = self._metadata is None or \
+            metadata.get('uid') != self._metadata.get('uid')
         self._metadata = metadata
+        if first_look:
+            self._staged_seq = None
+            self._rail_open = False
+            self._snap_cache.clear()
+            self._artwork_key = None
+            self._artwork_pix = None
 
         self._keep_icon.handler_block(self._keep_sid)
         self._keep_icon.set_active(int(metadata.get('keep', 0)) == 1)
         self._keep_icon.handler_unblock(self._keep_sid)
 
         self._icon = self._create_icon()
-        for child in self._icon_box.get_children():
-            self._icon_box.remove(child)
-            # FIXME: self._icon_box.foreach(self._icon_box.remove)
-        self._icon_box.pack_start(self._icon, False, False, 0)
+        _replace_child(self._icon_box, self._icon)
 
         self._date.set_text(misc.get_date(metadata))
+        # A background save echoing back must never rewrite the field
+        # under the child's cursor.
+        if first_look or not self.in_focus:
+            self._title.set_text(metadata.get('title', _('Untitled')))
+        self._title.set_editable(model.is_editable(metadata))
 
-        self._title.set_text(metadata.get('title', _('Untitled')))
+        self._refresh_page()
 
-        if self._preview_box.get_child():
-            self._preview_box.remove(self._preview_box.get_child())
-        self._preview_box.add(self._create_preview())
+        _replace_child(self._technical_box, self._create_technical(),
+                       style.DEFAULT_SPACING)
+        _replace_child(self._buddy_list, self._create_buddy_list(),
+                       style.DEFAULT_SPACING)
 
-        for child in self._technical_box.get_children():
-            self._technical_box.remove(child)
-            # FIXME: self._technical_box.foreach(self._technical_box.remove)
-        self._technical_box.pack_start(self._create_technical(),
-                                       False, False, style.DEFAULT_SPACING)
+        self._reflection.set_metadata(metadata)
+        GLib.idle_add(self._reflection.focus_entry)
 
-        for child in self._buddy_list.get_children():
-            self._buddy_list.remove(child)
-            # FIXME: self._buddy_list.foreach(self._buddy_list.remove)
-        self._buddy_list.pack_start(self._create_buddy_list(), False, False,
-                                    style.DEFAULT_SPACING)
+    def _refresh_page(self):
+        """Everything below the title that follows the metadata:
+        mount, staging, description zones, tags, moments, comments.
+        """
+        metadata = self._metadata
+        editable = model.is_editable(metadata)
+        moments = self._moments()
+        if self._staged_seq is not None and \
+                not any(m.get('snap_seq') == self._staged_seq
+                        for m in moments):
+            self._staged_seq = None
 
-        description = metadata.get('description', '')
-        self._description.get_buffer().set_text(description)
-        tags = metadata.get('tags', '')
-        self._tags.get_buffer().set_text(tags)
-        comments = metadata.get('comments', '')
-        self._comments.update_comments(comments)
+        self._refresh_mount(moments)
+        self._refresh_description(editable)
+        self._refresh_tags(editable)
+        self._refresh_sidecol(moments, editable)
+
+    def _moments(self):
+        data = reflection.loads(self._metadata.get('reflections', ''))
+        return list(reversed(data.get('moments', [])))
+
+    def _staged_moment(self, moments):
+        for moment in moments:
+            if moment.get('snap_seq') == self._staged_seq:
+                return moment
+        return None
+
+    def _snap_pixbuf(self, seq):
+        # Snaps never change under a seq; decoding base64 JPEG on
+        # every echo refresh is what made the page drag.
+        if seq not in self._snap_cache:
+            self._snap_cache[seq] = _decode_snap(
+                self._metadata.get(SNAP_KEY % seq, ''))
+        return self._snap_cache[seq]
+
+    def _refresh_mount(self, moments):
+        for child in self._stagecap.get_children():
+            self._stagecap.remove(child)
+        for child in self._words_face.get_children():
+            self._words_face.remove(child)
+
+        staged = self._staged_moment(moments)
+        if staged is not None:
+            snap = self._snap_pixbuf(staged.get('snap_seq'))
+            self._mount.set_pixbuf(snap)
+            self._words_face.hide()
+            if staged.get('mark'):
+                glyph = Gtk.DrawingArea()
+                # Badge scale: below this the maze mark reads as a blob.
+                size = style.zoom(32)
+                glyph.set_size_request(size, size)
+                glyph.connect('draw', self._stage_mark_draw_cb,
+                              staged['mark'])
+                self._stagecap.pack_start(glyph, False, False, 0)
+            if staged.get('caption'):
+                cap = Gtk.Label(label=staged['caption'])
+                cap.get_style_context().add_class('journal-stagecap')
+                cap.set_ellipsize(Pango.EllipsizeMode.END)
+                cap.set_max_width_chars(40)
+                self._stagecap.pack_start(cap, False, False, 0)
+            back = Gtk.Button(label=_('back to the work'))
+            back.set_relief(Gtk.ReliefStyle.NONE)
+            back.get_style_context().add_class('journal-back-pill')
+            back.connect('clicked', self._unstage_cb)
+            self._stagecap.pack_start(back, False, False, 0)
+            _reveal(self._stagecap)
+            self._desc_sheet.hide()
+            return
+
+        self._stagecap.hide()
+        _reveal(self._desc_sheet)
+
+        artwork = self._artwork_pixbuf()
+        if artwork is None:
+            thumb = get_preview_pixbuf(self._metadata.get('preview', ''))
+            artwork = _trim_letterbox(thumb)
+        if artwork is not None:
+            self._mount.set_pixbuf(artwork)
+            self._words_face.hide()
+            return
+
+        # Not a picture: the honest face is the activity's own icon
+        # and the child's kept words, inside the same mount.
+        self._mount.set_pixbuf(None)
+        icon = Icon(pixel_size=style.zoom(88))
+        icon.props.file = misc.get_icon_name(self._metadata)
+        icon.props.xo_color = misc.get_icon_color(self._metadata)
+        self._words_face.pack_start(icon, False, False, 0)
+        kepts = reflection.kept_lines(
+            self._metadata.get('reflections', ''),
+            self._metadata.get('description', ''), limit=2)
+        if not kepts:
+            none = Gtk.Label(label=_('nothing kept here yet'))
+            none.get_style_context().add_class('journal-none')
+            self._words_face.pack_start(none, False, False, 0)
+        for position, line in enumerate(kepts):
+            quote = Gtk.Label(label='“%s”' % line)
+            quote.set_line_wrap(True)
+            quote.set_max_width_chars(38)
+            quote.set_justify(Gtk.Justification.CENTER)
+            quote.get_style_context().add_class(
+                'journal-kq' if position == 0 else 'journal-kq-soft')
+            self._words_face.pack_start(quote, False, False, 0)
+        _reveal(self._words_face)
+
+    def _stage_mark_draw_cb(self, widget, cr, kind):
+        size = min(widget.get_allocated_width(),
+                   widget.get_allocated_height())
+        cr.scale(size / 18.0, size / 18.0)
+        draw_mark(cr, kind, _kid_colors()[0])
+        return False
+
+    def _mount_tapped_cb(self, widget):
+        # Only active when a moment is staged: tapping again puts
+        # the work back.
+        if self._staged_seq is not None:
+            self._staged_seq = None
+            self._refresh_page()
+
+    def _unstage_cb(self, button):
+        self._staged_seq = None
+        self._refresh_page()
+
+    def _kept_sources(self):
+        """Every text the child has starred somewhere: talk lines and
+        moment captions.
+        """
+        data = reflection.loads(self._metadata.get('reflections', ''))
+        texts = set()
+        for session in data.get('sessions', []):
+            for turn in session.get('turns', []):
+                if turn.get('role') == reflection.ROLE_CHILD and \
+                        turn.get('text'):
+                    texts.add(turn['text'])
+        for moment in data.get('moments', []):
+            if moment.get('caption'):
+                texts.add(moment['caption'])
+        return texts
+
+    def _split_description(self, description):
+        """The two zones: the child's own writing, and the kept lines
+        clustered at the tail.
+        """
+        sources = self._kept_sources()
+        lines = (description or '').split('\n')
+        kept = []
+        while lines and lines[-1] and lines[-1] in sources:
+            kept.insert(0, lines.pop())
+        return '\n'.join(lines), kept
+
+    def _full_description(self):
+        bounds = self._description.get_buffer().get_bounds()
+        typed = self._description.get_buffer().get_text(
+            bounds[0], bounds[1], include_hidden_chars=False)
+        typed = typed.rstrip('\n')
+        if not self._kept_texts:
+            return typed
+        kept = '\n'.join(self._kept_texts)
+        return (typed + '\n' + kept) if typed else kept
+
+    def _refresh_description(self, editable):
+        typed, kept = self._split_description(
+            self._metadata.get('description', ''))
+        self._kept_texts = kept
+        # Trailing blanks collapse; the ruled paper offers its own
+        # inviting blank line instead. While the child is typing, an
+        # echo may refresh everything else, but never the words under
+        # the cursor.
+        if not self.in_focus:
+            self._description.get_buffer().set_text(typed.rstrip('\n'))
+        self._description.set_editable(editable)
+        self._description.set_cursor_visible(editable)
+
+        for child in self._kept_box.get_children():
+            self._kept_box.remove(child)
+        # Kept words came from the talk and the moments, starred by
+        # the child - each is its own slip pasted under the writing,
+        # tilted like everything else stuck to this desk. Short
+        # slips share a row instead of each hoarding a whole line.
+        max_width = style.zoom(600)
+        row = None
+        used = 0
+        for position, text in enumerate(kept):
+            slip = _KeptSlip(text, position % 2 == 1, editable,
+                             max_width)
+            slip.connect('star-tapped', self._kept_star_cb, text)
+            slip.set_valign(Gtk.Align.START)
+            need = slip.get_size_request()[0]
+            if row is None or used + need > max_width:
+                row = Gtk.HBox()
+                self._kept_box.pack_start(row, False, False, 0)
+                used = 0
+            row.pack_start(slip, False, False, 0)
+            used += need
+        if kept:
+            _reveal(self._kept_box)
+        else:
+            self._kept_box.hide()
+        if not editable and not typed and not kept:
+            self._desc_sheet.hide()
+
+    def _description_rules_cb(self, text_view, cr):
+        """Ruled paper under the child's writing: one line per line of
+        text and one inviting blank below.
+        """
+        if not text_view.get_editable():
+            return False
+        buffer = text_view.get_buffer()
+        alloc = text_view.get_allocation()
+        _set_source(cr, reflectstyle.RULE_PAGE)
+        cr.set_line_width(2)
+        seen_y = []
+        end = buffer.get_end_iter()
+        line_iter = buffer.get_start_iter()
+        while True:
+            rect = text_view.get_iter_location(line_iter)
+            wx, wy = text_view.buffer_to_window_coords(
+                Gtk.TextWindowType.TEXT, rect.x, rect.y + rect.height)
+            if not seen_y or wy > seen_y[-1]:
+                seen_y.append(wy)
+            if not text_view.forward_display_line(line_iter):
+                break
+        rect = text_view.get_iter_location(end)
+        _wx, last_bottom = text_view.buffer_to_window_coords(
+            Gtk.TextWindowType.TEXT, rect.x, rect.y + rect.height)
+        step = style.zoom(36)
+        rules = list(seen_y)
+        if buffer.get_char_count():
+            rules.append(last_bottom + step)
+        for wy in rules:
+            y = wy + style.zoom(4)
+            if 0 <= y <= alloc.height:
+                cr.move_to(style.zoom(2), y)
+                cr.line_to(alloc.width - style.zoom(2), y)
+                cr.stroke()
+        return False
+
+    def _commit_description(self, description, new_description, sync=False):
+        if new_description != description:
+            self._metadata['description'] = new_description
+            self._write_entry()
+            self._refresh_page()
+            if sync:
+                self._reflection.sync_kept(new_description)
+
+    def _kept_star_cb(self, star, text):
+        # Letting a kept line go un-stars it wherever it was starred.
+        description = self._full_description()
+        new_description = reflection.unkeep_from_description(
+            description, text)
+        self._commit_description(description, new_description, sync=True)
+
+    def _refresh_tags(self, editable):
+        # A background echo may rebuild this row while the child is
+        # mid-word in the tag input; their word is saved first, never
+        # destroyed under the cursor.
+        if self._tag_commit is not None:
+            commit = self._tag_commit
+            self._tag_commit = None
+            commit()
+        for child in self._tagrow.get_children():
+            self._tagrow.remove(child)
+        pieces = []
+        self._tag_stickers = {}
+        tags = (self._metadata.get('tags', '') or '').split()
+        for position, tag in enumerate(tags):
+            sticker = _TagSticker(tag, position % 2 == 1, editable)
+            sticker.connect('remove-tapped', self._tag_remove_cb, tag)
+            self._tag_stickers[tag] = sticker
+            pieces.append(sticker)
+        if editable:
+            add = Gtk.Button(label='+')
+            add.set_relief(Gtk.ReliefStyle.NONE)
+            add.get_style_context().add_class('journal-tag-add')
+            add.set_can_focus(False)
+            add.connect('clicked', self._tag_add_cb)
+            add.set_valign(Gtk.Align.CENTER)
+            pieces.append(add)
+
+        # Hand-wrapped rows: the stickers keep their natural widths.
+        # Stickers carry exact size requests; the theme sizes the + button
+        # itself (and lies before realization), so it gets a
+        # generous reservation - wrapping early is harmless,
+        # allocating wide nudges the whole desk. The budget is the
+        # mount's width minus this box's own side margins: the row
+        # box re-adds them to whatever the widest row asks for.
+        limit = _MOUNT_W + 2 * _CORNER_PEEK - 2 * style.zoom(18)
+        row = None
+        used = 0
+        self._tag_plus_need = style.zoom(96)
+        for piece in pieces:
+            need = piece.get_size_request()[0]
+            if need < 0:
+                need = self._tag_plus_need
+            if row is None or used + need > limit:
+                row = Gtk.HBox()
+                self._tagrow.pack_start(row, False, False, 0)
+                used = 0
+            row.pack_start(piece, False, False, 0)
+            used += need
+        self._tag_row_used = used
+        self._tagrow.show_all()
+
+    def _tag_remove_cb(self, sticker, tag):
+        tags = (self._metadata.get('tags', '') or '').split()
+        if tag in tags:
+            tags.remove(tag)
+            self._metadata['tags'] = ' '.join(tags)
+            self._write_entry()
+        self._refresh_tags(model.is_editable(self._metadata))
+
+    def _tag_add_cb(self, button):
+        entry = Gtk.Entry()
+        entry.get_style_context().add_class('journal-tag-input')
+        entry.set_placeholder_text(_('tag…'))
+        entry.set_width_chars(8)
+        entry.set_max_width_chars(8)
+        row = button.get_parent()
+        row.remove(button)
+        # the input is a little wider than the +; only when it truly
+        # would not fit does it take a fresh row (it paints ~90 wide
+        # under the css cap - measured live, not guessed)
+        if self._tag_row_used - self._tag_plus_need + \
+                style.zoom(100) > \
+                _MOUNT_W + 2 * _CORNER_PEEK - 2 * style.zoom(18):
+            row = Gtk.HBox()
+            self._tagrow.pack_start(row, False, False, 0)
+            row.show()
+        row.pack_start(entry, False, False, 0)
+        entry.show()
+        # after allocation, or the scroll-to-focus jumps to a stale
+        # (0, 0) and yanks the page to the top
+        GLib.idle_add(entry.grab_focus)
+        done = [False]
+
+        def close(save):
+            if done[0]:
+                return
+            done[0] = True
+            self._tag_commit = None
+            already_here = None
+            if save:
+                value = '-'.join(entry.get_text().split())
+                if value:
+                    tags = (self._metadata.get('tags', '') or '').split()
+                    if value not in tags:
+                        tags.append(value)
+                        self._metadata['tags'] = ' '.join(tags)
+                        self._write_entry()
+                    else:
+                        already_here = value
+            self._refresh_tags(model.is_editable(self._metadata))
+            if already_here is not None:
+                sticker = self._tag_stickers.get(already_here)
+                if sticker is not None:
+                    sticker.flash()
+
+        def key_cb(widget, event):
+            if event.keyval == Gdk.KEY_Escape:
+                close(save=False)
+                return True
+            return False
+
+        entry.connect('activate', lambda w: close(save=True))
+        entry.connect('focus-out-event', lambda w, e: close(save=True))
+        entry.connect('key-press-event', key_cb)
+        # a tap anywhere else on the page also lets the entry go
+        self._tag_commit = lambda: close(save=True)
+
+    def _refresh_sidecol(self, moments, editable):
+        self._sidecol_moments = moments
+        self._sidecol_editable = editable
+        for child in self._sidecol.get_children():
+            self._sidecol.remove(child)
+        self._minis = []
+
+        # With the talk put away, the moments spread into its
+        # width. Computed from the fixed page geometry, never from
+        # allocations: a wide grid holds the window open, so its own
+        # measure can never be trusted to shrink it again.
+        side_w = Gdk.Screen.get_default().get_width() \
+            - style.zoom(44 + 12 + 32) - (_MOUNT_W + 2 * _CORNER_PEEK)
+        if not ReflectionView.rail_shut():
+            side_w -= RAIL_WIDTH
+        mini_w = _MINI_W + 2 * _MINI_MARGIN
+        columns = max(2, int(round(side_w / float(mini_w))))
+        description = self._metadata.get('description', '')
+        if moments:
+            lead = Gtk.Label(label=_('MOMENTS'))
+            lead.get_style_context().add_class('journal-lead-label')
+            lead.set_xalign(0)
+            lead.set_margin_start(style.zoom(4))
+            self._sidecol.pack_start(lead, False, False, 0)
+
+            rail = Gtk.Grid()
+            rail.set_column_spacing(0)
+            rail.set_row_spacing(0)
+            shown = moments if self._rail_open \
+                else moments[:_RAIL_FOLD_AFTER]
+            for position, moment in enumerate(shown):
+                pixbuf = self._snap_pixbuf(moment.get('snap_seq'))
+                mini = _MomentMini(moment, pixbuf,
+                                   position % columns == columns - 1,
+                                   editable)
+                mini.set_onstage(
+                    moment.get('snap_seq') == self._staged_seq)
+                if moment.get('caption'):
+                    mini.set_starred(reflection.has_kept_line(
+                        description, moment['caption']))
+                mini.connect('stage-tapped', self._mini_stage_cb, moment)
+                mini.connect('star-tapped', self._mini_star_cb, moment)
+                rail.attach(mini, position % columns,
+                            position // columns, 1, 1)
+                self._minis.append(mini)
+            self._sidecol.pack_start(rail, False, False, 0)
+
+            if len(moments) > _RAIL_FOLD_AFTER:
+                fold = Gtk.Button()
+                face = Gtk.HBox()
+                face.set_spacing(style.DEFAULT_PADDING)
+                face.pack_start(FoldGlyph(), False, False, 0)
+                face.pack_start(Gtk.Label(
+                    label=_('fewer') if self._rail_open
+                    else _('the rest of your moments')), False, False, 0)
+                fold.add(face)
+                fold.set_relief(Gtk.ReliefStyle.NONE)
+                fold.get_style_context().add_class('journal-railfold')
+                fold.set_halign(Gtk.Align.START)
+                fold.set_margin_start(style.zoom(15))
+                fold.connect('clicked', self._railfold_cb)
+                self._sidecol.pack_start(fold, False, False, 0)
+
+        comments = CommentsView()
+        comments.set_editable(editable)
+        comments.connect('comments-changed', self._comments_changed_cb)
+        comments.set_margin_start(style.zoom(15))
+        comments.update_comments(self._metadata.get('comments', ''))
+        self._sidecol.pack_start(comments, False, False, 0)
+        self._sidecol.show_all()
+
+    def _railfold_cb(self, button):
+        self._rail_open = not self._rail_open
+        self._refresh_page()
+
+    def _mini_stage_cb(self, mini, moment):
+        seq = moment.get('snap_seq')
+        self._staged_seq = None if self._staged_seq == seq else seq
+        self._refresh_page()
+
+    def _mini_star_cb(self, mini, moment):
+        caption = moment.get('caption', '')
+        if not caption:
+            return
+        description = self._full_description()
+        if reflection.has_kept_line(description, caption):
+            new_description = reflection.unkeep_from_description(
+                description, caption)
+        else:
+            new_description = reflection.keep_in_description(
+                description, caption)
+        self._commit_description(description, new_description, sync=True)
 
     def _create_icon(self):
         icon = CanvasIcon(file_name=misc.get_icon_name(self._metadata))
@@ -1253,31 +1852,41 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
         return icon
 
-    def _create_preview(self):
-
-        box = Gtk.EventBox()
-        box.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
-
-        metadata = self._metadata
-        pixbuf = get_preview_pixbuf(metadata.get('preview', ''))
-        has_preview = pixbuf is not None
-
-        if has_preview:
-            im = Gtk.Image()
-            im.set_from_pixbuf(pixbuf)
-            box.add(im)
-            im.show()
-        else:
-            label = Gtk.Label()
-            label.set_text(_('No preview'))
-            width, height = PREVIEW_SIZE[0], PREVIEW_SIZE[1]
-            label.set_size_request(width, height)
-            box.add(label)
-            label.show()
-
-        box.connect_after('button-release-event',
-                          self._preview_box_button_release_event_cb)
-        return box
+    def _artwork_pixbuf(self):
+        # The stored preview is a small thumbnail; for image work the
+        # saved file IS the artwork, so the mount reads it at real
+        # quality and only falls back to the thumbnail. Re-read only
+        # when the work itself changed, not on every echo.
+        mime = self._metadata.get('mime_type', '') or ''
+        if not mime.startswith('image/'):
+            return None
+        key = (self._metadata.get('uid'),
+               self._metadata.get('timestamp'))
+        if key == self._artwork_key:
+            return self._artwork_pix
+        pixbuf = None
+        try:
+            path = model.get_file(self._metadata['uid'])
+            if path:
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file(str(path))
+        except GLib.Error:
+            pixbuf = None
+        except Exception:
+            logging.exception('Artwork lookup failed')
+            pixbuf = None
+        if pixbuf is not None:
+            limit_w, limit_h = style.zoom(1280), style.zoom(760)
+            if pixbuf.get_width() > limit_w or \
+                    pixbuf.get_height() > limit_h:
+                scale = min(limit_w / float(pixbuf.get_width()),
+                            limit_h / float(pixbuf.get_height()))
+                pixbuf = pixbuf.scale_simple(
+                    int(pixbuf.get_width() * scale),
+                    int(pixbuf.get_height() * scale),
+                    GdkPixbuf.InterpType.BILINEAR)
+        self._artwork_key = key
+        self._artwork_pix = pixbuf
+        return pixbuf
 
     def _create_technical(self):
         vbox = Gtk.VBox()
@@ -1294,14 +1903,10 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             _('Size: %s') % (format_size(int(filesize)))
         ]
 
-        for line in lines:
-            linebox = Gtk.HBox()
-            vbox.pack_start(linebox, False, False, 0)
-
-            text = Gtk.Label()
-            text.set_markup('<span foreground="%s">%s</span>' % (
-                style.COLOR_BUTTON_GREY.get_html(), line))
-            linebox.pack_start(text, False, False, 0)
+        text = Gtk.Label(label=' · '.join(lines))
+        text.get_style_context().add_class('journal-tech-line')
+        text.set_xalign(0)
+        vbox.pack_start(text, False, False, 0)
 
         return vbox
 
@@ -1329,9 +1934,8 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         if not buddies:
             return vbox
 
-        text = Gtk.Label()
-        text.set_markup('<span foreground="%s">%s</span>' % (
-            style.COLOR_BUTTON_GREY.get_html(), _('Participants:')))
+        text = Gtk.Label(label=_('Participants'))
+        text.get_style_context().add_class('journal-field-label')
         halign = Gtk.Alignment.new(0, 0, 0, 0)
         halign.add(text)
         vbox.pack_start(halign, False, False, 0)
@@ -1339,48 +1943,12 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         vbox.pack_start(BuddyList(buddies), False, False, 0)
         return vbox
 
-    def _create_scrollable(self, widget, label=None):
-        vbox = Gtk.VBox()
-        vbox.props.spacing = style.DEFAULT_SPACING
-
-        if label is not None:
-            text = Gtk.Label()
-            text.set_markup('<span foreground="%s">%s</span>' % (
-                style.COLOR_BUTTON_GREY.get_html(), label))
-
-            halign = Gtk.Alignment.new(0, 0, 0, 0)
-            halign.add(text)
-            vbox.pack_start(halign, False, False, 0)
-
-        scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
-                                   Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        scrolled_window.add(widget)
-        vbox.pack_start(scrolled_window, True, True, 0)
-
-        return vbox
-
-    def _create_description(self):
-        widget = TextView()
-        widget.connect('focus-in-event', self._focus_in_cb)
-        widget.connect('focus-out-event',
-                       self._description_tags_focus_out_event_cb)
-        return self._create_scrollable(widget, label=_('Description:')), widget
-
-    def _create_tags(self):
-        widget = TextView()
-        widget.connect('focus-in-event', self._focus_in_cb)
-        widget.connect('focus-out-event',
-                       self._description_tags_focus_out_event_cb)
-        return self._create_scrollable(widget, label=_('Tags:')), widget
-
-    def _create_comments(self):
-        widget = CommentsView()
-        widget.connect('comments-changed', self._comments_changed_cb)
-        widget.connect('focus-in-event', self._focus_in_cb)
-        widget.connect('focus-out-event', self._focus_out_cb)
-        return self._create_scrollable(widget, label=_('Comments:')), widget
+    def reveal_reflection(self):
+        # Hands the talk the keyboard, bringing it back first if it
+        # was put away.
+        if ReflectionView.rail_shut():
+            self.set_rail_shown(True)
+        GLib.idle_add(self._reflection.focus_entry)
 
     def _focus_in_cb(self, widget, event):
         self.in_focus = True
@@ -1389,7 +1957,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         self.in_focus = False
 
     def _title_entered(self, widget):
-        self._update_entry()
+        self._title_changed_event_cb(widget)
         self._title.hide()
         self._title.show()
 
@@ -1418,7 +1986,8 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
             self._update_entry()
 
-    def _title_alert_response_cb(self, alert, response_id, old_title, old_title_set_by_user):
+    def _title_alert_response_cb(self, alert, response_id, old_title,
+                                 old_title_set_by_user):
         journalwindow.get_journal_window().remove_alert(alert)
 
         if response_id is Gtk.ResponseType.CANCEL:
@@ -1428,12 +1997,30 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             self._metadata['title_set_by_user'] = old_title_set_by_user
             self._update_entry(needs_update=True)
 
-    def _description_tags_focus_out_event_cb(self, text_view, event):
+    def _description_focus_out_event_cb(self, text_view, event):
         self._update_entry()
 
     def _comments_changed_cb(self, event, comments):
         self._metadata['comments'] = comments
         self._write_entry()
+
+    def _reflections_changed_cb(self, view, reflections, next_steps):
+        self._metadata['reflections'] = reflections
+        # Unconditional: a retired note clears only if '' is written.
+        self._metadata['next_steps'] = next_steps
+        self._write_entry()
+        # New moments or turns may have landed; the shelf follows.
+        self._refresh_page()
+
+    def _reflection_keep_toggled_cb(self, view, text, kept):
+        description = self._full_description()
+        if kept:
+            new_description = reflection.keep_in_description(
+                description, text)
+        else:
+            new_description = reflection.unkeep_from_description(
+                description, text)
+        self._commit_description(description, new_description)
 
     def _update_entry(self, needs_update=False):
         self.in_focus = False
@@ -1448,20 +2035,8 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             self._metadata['title_set_by_user'] = '1'
             needs_update = True
 
-
-        bounds = self._tags.get_buffer().get_bounds()
-        old_tags = self._metadata.get('tags', None)
-        new_tags = self._tags.get_buffer().get_text(bounds[0], bounds[1],
-                                                    include_hidden_chars=False)
-
-        if old_tags != new_tags:
-            self._metadata['tags'] = new_tags
-            needs_update = True
-
-        bounds = self._description.get_buffer().get_bounds()
         old_description = self._metadata.get('description', None)
-        new_description = self._description.get_buffer().get_text(
-            bounds[0], bounds[1], include_hidden_chars=False)
+        new_description = self._full_description()
         if old_description != new_description:
             self._metadata['description'] = new_description
             needs_update = True
@@ -1494,8 +2069,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
                     alert_window=journalwindow.get_journal_window())
         return True
 
-    def _preview_box_button_release_event_cb(self, button, event):
-        logging.debug('_preview_box_button_release_event_cb')
-        misc.resume(self._metadata,
-                    alert_window=journalwindow.get_journal_window())
-        return True
+    def __page_press_cb(self, widget, event):
+        if self._tag_commit is not None:
+            self._tag_commit()
+        return False
