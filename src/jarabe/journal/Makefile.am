@@ -23,6 +23,7 @@ sugar_PYTHON =				\
 	timeline.py			\
 	palettes.py			\
 	joglyph.py			\
+	reflectguard.py			\
 	reflection.py			\
 	reflectstyle.py			\
 	volumestoolbar.py
