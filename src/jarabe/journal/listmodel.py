@@ -176,8 +176,14 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
             xo_color = misc.get_icon_color(metadata)
         self._cached_row.append(xo_color)
 
-        title = GObject.markup_escape_text(metadata.get('title',
-                                                        _('Untitled')))
+        title_value = metadata.get('title', _('Untitled'))
+        if not isinstance(title_value, str):
+            # GObject.markup_escape_text raises TypeError on
+            # anything that isn't a string.
+            logging.warning('Content of title for %r is not a string: %r',
+                            metadata['uid'], title_value)
+            title_value = _('Untitled')
+        title = GObject.markup_escape_text(title_value)
         self._cached_row.append('<b>%s</b>' % (title, ))
 
         try:
