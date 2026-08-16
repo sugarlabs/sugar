@@ -78,8 +78,11 @@ class MainToolbox(ToolbarBox):
 
     query_changed_signal = GObject.Signal('query-changed',
                                           arg_types=([object]))
+    view_mode_changed_signal = GObject.Signal('view-mode-changed',
+                                              arg_types=([bool]))
 
-    def __init__(self, default_what_filter=None, default_filter_type=None):
+    def __init__(self, default_what_filter=None, default_filter_type=None,
+                 enable_grid_view=False):
         ToolbarBox.__init__(self)
         self._mount_point = None
         self._filter_type = default_filter_type
@@ -133,6 +136,14 @@ class MainToolbox(ToolbarBox):
         self._sorting_button.connect('sort-property-changed',
                                      self.__sort_changed_cb)
         self._sorting_button.show()
+
+        if enable_grid_view:
+            self._grid_view_button = ToggleToolButton('view-box')
+            self._grid_view_button.set_tooltip(_('Grid view'))
+            self._grid_view_button.connect('toggled',
+                                           self.__grid_view_toggled_cb)
+            self.toolbar.insert(self._grid_view_button, -1)
+            self._grid_view_button.show()
 
         '''
         # TODO: enable it when the DS supports saving the buddies.
@@ -308,6 +319,9 @@ class MainToolbox(ToolbarBox):
 
     def __sort_changed_cb(self, button):
         self._update_if_needed()
+
+    def __grid_view_toggled_cb(self, button):
+        self.view_mode_changed_signal.emit(button.props.active)
 
     def _update_if_needed(self):
         new_query = self._build_query()
