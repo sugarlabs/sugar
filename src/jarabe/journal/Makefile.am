@@ -23,4 +23,5 @@ sugar_PYTHON =				\
 	timeline.py			\
 	palettes.py			\
 	reflection.py			\
+	reflectstyle.py			\
 	volumestoolbar.py
