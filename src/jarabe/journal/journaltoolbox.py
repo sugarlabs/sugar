@@ -997,7 +997,7 @@ class FilterToolItem(Gtk.ToolButton):
             # draw a black background, has been done by the engine before
             cr.set_source_rgb(0, 0, 0)
             cr.rectangle(0, 0, allocation.width, allocation.height)
-            cr.paint()
+            cr.fill()
 
         Gtk.ToolButton.do_draw(self, cr)
 

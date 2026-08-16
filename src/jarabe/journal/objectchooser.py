@@ -150,7 +150,7 @@ class ObjectChooser(Gtk.Window):
 
     def __visibility_notify_event_cb(self, window, event):
         logging.debug('visibility_notify_event_cb %r', self)
-        visible = event.get_state() == Gdk.VisibilityState.FULLY_OBSCURED
+        visible = event.get_state() != Gdk.VisibilityState.FULLY_OBSCURED
         if not self._show_preview:
             self._list_view.set_is_visible(visible)
         else:
