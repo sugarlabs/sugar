@@ -36,6 +36,7 @@ extensions/deviceicon/battery.py
 extensions/deviceicon/display.py
 extensions/deviceicon/frame.py
 extensions/deviceicon/network.py
+extensions/deviceicon/reflectjo.py
 extensions/deviceicon/speech.py
 extensions/deviceicon/touchpad.py
 extensions/deviceicon/volume.py

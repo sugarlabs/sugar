@@ -7,6 +7,7 @@ sugar_PYTHON = 		\
 	display.py	\
 	frame.py	\
 	network.py	\
+	reflectjo.py	\
 	speech.py	\
 	touchpad.py	\
 	volume.py
