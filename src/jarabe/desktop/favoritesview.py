@@ -57,8 +57,6 @@ from jarabe.util.normalize import normalize_string
 
 _logger = logging.getLogger('FavoritesView')
 
-_ICON_DND_TARGET = ('activity-icon', Gtk.TargetFlags.SAME_WIDGET, 0)
-
 LAYOUT_MAP = {favoriteslayout.RingLayout.key: favoriteslayout.RingLayout,
               favoriteslayout.BoxLayout.key: favoriteslayout.BoxLayout,
               favoriteslayout.TriangleLayout.key:
@@ -77,12 +75,13 @@ class FavoritesBox(Gtk.Box):
     __gtype_name__ = 'SugarFavoritesBox'
 
     def __init__(self, favorite_view):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
 
         self.favorite_view = favorite_view
         self._view = FavoritesView(self)
-        self.pack_start(self._view, True, True, 0)
-        self._view.show()
+        self.append(self._view)
+        self._view.set_vexpand(True)
+        self._view.set_hexpand(True)
 
         self._alert = None
 
@@ -94,14 +93,13 @@ class FavoritesBox(Gtk.Box):
 
     def grab_focus(self):
         # overwrite grab focus in order to grab focus from the parent
-        self._view.grab_focus()
+        return self._view.grab_focus()
 
     def add_alert(self, alert):
         if self._alert is not None:
             self.remove_alert()
         self._alert = alert
-        self.pack_start(alert, False, True, 0)
-        self.reorder_child(alert, 0)
+        self.prepend(alert)
 
     def remove_alert(self):
         self.remove(self._alert)
@@ -128,22 +126,10 @@ class FavoritesView(ViewContainer):
                                activity_icon=current_activity)
         self.set_can_focus(False)
 
-        self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
-                        Gdk.EventMask.POINTER_MOTION_HINT_MASK)
-        self.drag_dest_set(0, [], 0)
-
-        # Drag and drop is set only for the Random layout.  This is
-        # the flag that enables or disables it.
+        # Drag and drop is set only for the Random layout.
         self._dragging_mode = False
+        self._drop_target = None
 
-        self._drag_motion_hid = None
-        self._drag_drop_hid = None
-        self._drag_data_received_hid = None
-
-        self._dragging = False
-        self._pressed_button = None
-        self._press_start_x = 0
-        self._press_start_y = 0
         self._hot_x = None
         self._hot_y = None
         self._last_clicked_icon = None
@@ -156,7 +142,9 @@ class FavoritesView(ViewContainer):
 
         favorites_settings = get_settings(self._box.favorite_view)
         favorites_settings.changed.connect(self.__settings_changed_cb)
-        self._set_layout(favorites_settings.layout)
+        layout_set = self._set_layout(favorites_settings.layout)
+        if layout_set:
+            self.set_layout(self._layout)
 
     def __settings_changed_cb(self, **kwargs):
         favorites_settings = get_settings(self._box.favorite_view)
@@ -172,23 +160,21 @@ class FavoritesView(ViewContainer):
 
     def _set_layout(self, layout):
         if layout not in LAYOUT_MAP:
-            logging.warn('Unknown favorites layout: %r', layout)
+            logging.warning('Unknown favorites layout: %r', layout)
             layout = favoriteslayout.RingLayout.key
             assert layout in LAYOUT_MAP
 
         if self._layout is not None and self._dragging_mode:
-            self.disconnect(self._drag_motion_hid)
-            self.disconnect(self._drag_drop_hid)
-            self.disconnect(self._drag_data_received_hid)
+            if self._drop_target:
+                self.remove_controller(self._drop_target)
+                self._drop_target = None
 
         if layout == favoriteslayout.RandomLayout.key:
             self._dragging_mode = True
-            self._drag_motion_hid = self.connect(
-                'drag-motion', self.__drag_motion_cb)
-            self._drag_drop_hid = self.connect(
-                'drag-drop', self.__drag_drop_cb)
-            self._drag_data_received_hid = self.connect(
-                'drag-data-received', self.__drag_data_received_cb)
+            self._drop_target = Gtk.DropTarget.new(type=GObject.TYPE_STRING, actions=Gdk.DragAction.MOVE)
+            self._drop_target.connect('motion', self.__drag_motion_cb)
+            self._drop_target.connect('drop', self.__drag_drop_cb)
+            self.add_controller(self._drop_target)
         else:
             self._dragging_mode = False
 
@@ -197,96 +183,61 @@ class FavoritesView(ViewContainer):
 
     layout = property(None, _set_layout)
 
-    def do_add(self, child):
+    def add(self, child):
         if child != self._owner_icon and child != self._activity_icon:
             self._children.append(child)
-            child.connect('button-press-event', self.__button_press_cb)
-            child.connect('button-release-event', self.__button_release_cb)
-            child.connect('motion-notify-event', self.__motion_notify_event_cb)
-            child.connect('drag-begin', self.__drag_begin_cb)
-        if child.get_realized():
-            child.set_parent_window(self.get_parent_window())
+            
+            drag_source = Gtk.DragSource.new()
+            drag_source.set_actions(Gdk.DragAction.MOVE)
+            drag_source.connect("prepare", self.__drag_prepare_cb, child)
+            drag_source.connect("drag-begin", self.__drag_begin_cb, child)
+            child.add_controller(drag_source)
+
         child.set_parent(self)
 
-    def __button_release_cb(self, widget, event):
-        if self._dragging:
-            return True
-        return False
-
-    def __button_press_cb(self, widget, event):
-        if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:
-            self._last_clicked_icon = widget
-            self._pressed_button = event.button
-            self._press_start_x = event.x
-            self._press_start_y = event.y
-        return False
-
-    def __motion_notify_event_cb(self, widget, event):
+    def __drag_prepare_cb(self, source, x, y, child):
         if not self._dragging_mode:
-            return False
+            return None
+        self._last_clicked_icon = child
+        v = GObject.Value(GObject.TYPE_STRING, "activity-icon")
+        return Gdk.ContentProvider.new_for_value(v)
 
-        # if the mouse button is not pressed, no drag should occurr
-        if not event.get_state() & Gdk.ModifierType.BUTTON1_MASK:
-            self._pressed_button = None
-            return False
-
-        if event.is_hint:
-            x, y, state_ = event.window.get_pointer()
-        else:
-            x = event.x
-            y = event.y
-
-        if widget.drag_check_threshold(int(self._press_start_x),
-                                       int(self._press_start_y),
-                                       int(x),
-                                       int(y)):
-            self._dragging = True
-            target_entry = Gtk.TargetEntry.new(*_ICON_DND_TARGET)
-            target_list = Gtk.TargetList.new([target_entry])
-            widget.drag_begin(target_list,
-                              Gdk.DragAction.MOVE,
-                              1,
-                              event)
-        return False
-
-    def __drag_begin_cb(self, widget, context):
+    def __drag_begin_cb(self, source, drag, child):
         if not self._dragging_mode:
-            return False
+            return
+        if not child.props.file_name:
+            return
+        try:
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file(child.props.file_name)
+            self._hot_x = pixbuf.get_width() / 2
+            self._hot_y = pixbuf.get_height() / 2
+            texture = Gdk.Texture.new_for_pixbuf(pixbuf)
+            source.set_icon(texture, self._hot_x, self._hot_y)
+        except Exception as e:
+            logging.error("Failed to create drag icon: %s", e)
+            self._hot_x = 0
+            self._hot_y = 0
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file(widget.props.file_name)
-
-        self._hot_x = pixbuf.props.width / 2
-        self._hot_y = pixbuf.props.height / 2
-        Gtk.drag_set_icon_pixbuf(context, pixbuf, self._hot_x, self._hot_y)
-
-    def __drag_motion_cb(self, widget, context, x, y, time):
+    def __drag_motion_cb(self, target, x, y):
         if self._last_clicked_icon is not None:
-            Gdk.drag_status(context, context.get_suggested_action(), time)
-            return True
-        return False
+            return Gdk.DragAction.MOVE
+        return Gdk.DragAction(0)
 
-    def __drag_drop_cb(self, widget, context, x, y, time):
+    def __drag_drop_cb(self, target, value, x, y):
         if self._last_clicked_icon is not None:
-            target = Gdk.Atom.intern_static_string(_ICON_DND_TARGET[0])
-            self.drag_get_data(context, target, time)
+            allocation = Gdk.Rectangle()
+            allocation.x = 0
+            allocation.y = 0
+            allocation.width = self.get_width()
+            allocation.height = self.get_height()
             self._layout.move_icon(self._last_clicked_icon,
-                                   x - self._hot_x, y - self._hot_y,
-                                   self.get_allocation())
+                                   x - self._hot_x, y - self._hot_y, allocation)
 
-            self._pressed_button = None
-            self._press_start_x = None
-            self._press_start_y = None
             self._hot_x = None
             self._hot_y = None
             self._last_clicked_icon = None
-            self._dragging = False
-
             return True
         return False
-
-    def __drag_data_received_cb(self, widget, context, x, y, selection_data,
-                                info, time):
-        Gdk.drop_finish(context, success=True, time_=time)
 
     def __connect_to_bundle_registry_cb(self):
         registry = bundleregistry.get_registry()
@@ -312,7 +263,6 @@ class FavoritesView(ViewContainer):
         icon.props.pixel_size = style.STANDARD_ICON_SIZE
         # icon.set_resume_mode(self._resume_mode)
         self.add(icon)
-        icon.show()
 
     def __activity_added_cb(self, activity_registry, activity_info):
         registry = bundleregistry.get_registry()
@@ -493,15 +443,11 @@ class ActivityIcon(CanvasIcon):
     def __palette_entry_activate_cb(self, palette, metadata):
         self._resume(metadata)
 
-    def do_get_preferred_width(self):
-        width = CanvasIcon.do_get_preferred_width(self)[0]
-        width += ActivityIcon._BORDER_WIDTH * 2
-        return (width, width)
-
-    def do_get_preferred_height(self):
-        height = CanvasIcon.do_get_preferred_height(self)[0]
-        height += ActivityIcon._BORDER_WIDTH * 2
-        return (height, height)
+    def do_measure(self, orientation, for_size):
+        min_size, nat_size, min_base, nat_base = super().do_measure(orientation, for_size)
+        min_size += ActivityIcon._BORDER_WIDTH * 2
+        nat_size += ActivityIcon._BORDER_WIDTH * 2
+        return (min_size, nat_size, min_base, nat_base)
 
     def __button_activate_cb(self, icon):
         self._activate()
@@ -582,15 +528,17 @@ class FavoritePalette(ActivityPalette):
                                             xo_color=color)
                 menu_item.connect('activate', self.__resume_entry_cb, entry)
                 menu_items.append(menu_item)
-                menu_item.show()
 
             if journal_entries:
                 separator = PaletteMenuItemSeparator()
                 menu_items.append(separator)
-                separator.show()
 
             for i in range(0, len(menu_items)):
-                self.menu_box.pack_start(menu_items[i], True, True, 0)
+                menu_items[i].set_hexpand(True)
+                menu_items[i].set_vexpand(True)
+                menu_items[i].set_halign(Gtk.Align.FILL)
+                menu_items[i].set_valign(Gtk.Align.FILL)
+                self.menu_box.append(menu_items[i])
 
     def __resume_entry_cb(self, menu_item, entry):
         if entry is not None:
@@ -605,17 +553,30 @@ class CurrentActivityIcon(CanvasIcon):
         self._home_model = shell.get_model()
         self._home_activity = self._home_model.get_active_activity()
 
-        if self._home_activity is not None:
-            self._update()
+        if self._home_activity is None:
+            self._home_activity = self._get_journal_activity()
+
+        self._update()
 
         self._home_model.connect('active-activity-changed',
                                  self.__active_activity_changed_cb)
 
         self.connect_after('activate', self.__activate_cb)
 
+    def _get_journal_activity(self):
+        for activity in self._home_model._activities:
+            if activity.is_journal():
+                return activity
+        return None
+
     def __activate_cb(self, icon):
-        window = self._home_model.get_active_activity().get_window()
-        window.activate(Gtk.get_current_event_time())
+        active_activity = self._home_model.get_active_activity()
+        if active_activity is None:
+            # No activity open: reveal the Journal directly.
+            from jarabe.journal import journalactivity
+            journalactivity.get_journal().reveal()
+        else:
+            self._home_model.activate_activity(active_activity)
 
     def _update(self):
         if self._home_activity is not None:
@@ -625,33 +586,51 @@ class CurrentActivityIcon(CanvasIcon):
             if self._home_activity.is_journal():
                 if self._unbusy():
                     GLib.timeout_add(100, self._unbusy)
+        else:
+            self.props.xo_color = get_owner_instance().props.color
 
         self.props.pixel_size = style.STANDARD_ICON_SIZE
 
         if self.palette is not None:
-            self.palette.destroy()
+            if hasattr(self.palette, "popdown"):
+                self.palette.popdown(immediate=True)
             self.palette = None
 
     def _unbusy(self):
-        if self.get_window():
-            import jarabe.desktop.homewindow
-            jarabe.desktop.homewindow.get_instance().unbusy()
+        import jarabe.desktop.homewindow
+        hw = jarabe.desktop.homewindow.get_instance()
+        if hw and hw.get_root():
+            hw.unbusy()
             return False
         return True
 
     def create_palette(self):
+        if self._home_activity is None:
+            # Journal may not be registered yet – initialize it now.
+            from jarabe.journal import journalactivity as _ja
+            _ja.get_journal()
+            self._home_activity = self._get_journal_activity()
+
         if self._home_activity is not None:
             if self._home_activity.is_journal():
                 palette = JournalPalette(self._home_activity)
             else:
                 palette = CurrentActivityPalette(self._home_activity)
             self.connect_to_palette_pop_events(palette)
-        else:
-            palette = None
-        return palette
+            return palette
+
+        return None
 
     def __active_activity_changed_cb(self, home_model, home_activity):
-        self._home_activity = home_activity
+        if home_activity is None:
+            self._home_activity = self._get_journal_activity()
+            if self._home_activity is None:
+                # journal not yet registered – initialize it
+                from jarabe.journal import journalactivity as _ja
+                _ja.get_journal()
+                self._home_activity = self._get_journal_activity()
+        else:
+            self._home_activity = home_activity
         self._update()
 
 
@@ -666,15 +645,6 @@ class OwnerIcon(BuddyIcon):
     def __init__(self, size):
         BuddyIcon.__init__(self, buddy=get_owner_instance(), pixel_size=size)
 
-        # This is a workaround to skip the callback for
-        # enter-notify-event in the parent class the first time.
-        def __enter_notify_event_cb(icon, event):
-            self.unset_state_flags(Gtk.StateFlags.PRELIGHT)
-            self.disconnect(self._enter_notify_hid)
-
-        self._enter_notify_hid = self.connect('enter-notify-event',
-                                              __enter_notify_event_cb)
-
     def create_palette(self):
         palette = BuddyMenu(get_owner_instance())
 
@@ -688,9 +658,13 @@ class OwnerIcon(BuddyIcon):
                 text = _('Register again')
 
             register_menu = PaletteMenuItem(text, 'media-record')
-            register_menu.connect('activate', self.__register_activate_cb)
-            palette.menu_box.pack_end(register_menu, True, True, 0)
-            register_menu.show()
+            register_menu.connect('item-activated', self.__register_activate_cb)
+            register_menu.set_hexpand(True)
+            register_menu.set_vexpand(True)
+            register_menu.set_halign(Gtk.Align.FILL)
+            register_menu.set_valign(Gtk.Align.FILL)
+            palette.menu_box.append_item(register_menu)
+            register_menu.set_visible(True)
 
         self.connect_to_palette_pop_events(palette)
 

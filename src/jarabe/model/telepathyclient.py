@@ -1,4 +1,4 @@
-# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
+﻿# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ CONNECTION_HANDLE_TYPE_CONTACT = TelepathyGLib.HandleType.CONTACT
 
 from sugar4 import dispatch
 
-
 SUGAR_CLIENT_SERVICE = 'org.freedesktop.Telepathy.Client.Sugar'
 SUGAR_CLIENT_PATH = '/org/freedesktop/Telepathy/Client/Sugar'
 
@@ -46,7 +45,7 @@ class TelepathyClient(service.Object):
                                 CLIENT_INTERFACE_REQUESTS, PROPERTIES_IFACE,
                                 CLIENT_APPROVER])
 
-        bus = dbus.Bus()
+        bus = dbus.SessionBus()
         bus_name = service.BusName(SUGAR_CLIENT_SERVICE, bus=bus)
 
         service.Object.__init__(self, bus_name, SUGAR_CLIENT_PATH)

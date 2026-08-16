@@ -1,4 +1,4 @@
-# Copyright (C) 2008 Red Hat, Inc.
+﻿# Copyright (C) 2008 Red Hat, Inc.
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009-2010 One Laptop per Child
 # Copyright (C) 2009 Paraguay Educa, Martin Abente
@@ -327,7 +327,7 @@ def frequency_to_channel(frequency):
     bg_table = {2412: 1, 2417: 2, 2422: 3, 2427: 4,
                 2432: 5, 2437: 6, 2442: 7, 2447: 8,
                 2452: 9, 2457: 10, 2462: 11, 2467: 12,
-                2472: 13, 14: 2484}
+                2472: 13, 2484: 14}
 
     a_table = {5035: 7, 5040: 8, 5045: 9, 5055: 11,
                5060: 12, 5080: 16, 5170: 34,
@@ -639,7 +639,7 @@ class AccessPoint(GObject.GObject):
     }
 
     def __init__(self, device, model):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self.device = device
         self.model = model
 
@@ -787,7 +787,7 @@ class Connection(GObject.GObject):
     }
 
     def __init__(self, bus, path):
-        GObject.GObject.__init__(self)
+        super().__init__()
         obj = bus.get_object(NM_SERVICE, path)
         self._connection = dbus.Interface(obj, NM_CONNECTION_IFACE)
         self._removed_handle = self._connection.connect_to_signal(
@@ -1129,7 +1129,6 @@ def ssid_to_display_name(ssid):
             return display_name
 
     return ':'.join(['%02x' % (ord(byte), ) for byte in ssid])
-
 
 wifi_whitelist = ('Sugar Ad-hoc Network 1',
                   'Sugar Ad-hoc Network 6',

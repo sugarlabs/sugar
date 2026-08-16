@@ -38,7 +38,6 @@ from sugar4.graphics.palettemenu import PaletteMenuBox
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model.session import get_session_manager
 
-
 _ICON_NAME = 'battery'
 
 _STATUS_CHARGING = 0
@@ -87,10 +86,10 @@ class DeviceView(TrayIcon):
         current_level = self._model.props.level
         xo_color = self._color
         badge_name = None
-        self.show()
+        self.set_visible(True)
 
         if not self._model.props.present:
-            self.hide()
+            self.set_visible(False)
             status = _STATUS_NOT_PRESENT
 
         elif self._model.props.charging:
@@ -128,22 +127,22 @@ class BatteryPalette(Palette):
 
         self._progress_widget = PaletteMenuBox()
         self.set_content(self._progress_widget)
-        self._progress_widget.show()
 
         inner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         inner_box.set_spacing(style.DEFAULT_PADDING)
         self._progress_widget.append_item(inner_box, vertical_padding=0)
-        inner_box.show()
 
         self._progress_bar = Gtk.ProgressBar()
         self._progress_bar.set_size_request(
             style.zoom(style.GRID_CELL_SIZE * 4), -1)
-        inner_box.pack_start(self._progress_bar, True, True, 0)
-        self._progress_bar.show()
+        self._progress_bar.set_hexpand(True)
+        self._progress_bar.set_vexpand(True)
+        inner_box.append(self._progress_bar)
 
         self._status_label = Gtk.Label()
-        inner_box.pack_start(self._status_label, True, True, 0)
-        self._status_label.show()
+        self._status_label.set_hexpand(True)
+        self._status_label.set_vexpand(True)
+        inner_box.append(self._status_label)
 
     def set_info(self, percentage, seconds, status):
         self._level = percentage
@@ -305,14 +304,11 @@ class DeviceModel(GObject.GObject):
 
 
 def setup(tray):
-    bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)
-    up_proxy = bus.get_object('org.freedesktop.UPower',
-                              '/org/freedesktop/UPower')
-    upower = dbus.Interface(up_proxy, 'org.freedesktop.UPower')
-
-    for device_path in upower.EnumerateDevices():
-        device = bus.get_object('org.freedesktop.UPower', device_path)
-        device_prop_iface = dbus.Interface(device, dbus.PROPERTIES_IFACE)
-        device_type = device_prop_iface.Get(_UP_DEVICE_IFACE, 'Type')
-        if device_type == _UP_TYPE_BATTERY:
-            tray.add_device(DeviceView(device_path))
+    try:
+        client = UPowerGlib.Client.new_full(None)
+        devices = client.get_devices()
+        for device in devices:
+            if device.kind == UPowerGlib.DeviceKind.BATTERY:
+                tray.add_device(DeviceView(device.get_object_path()))
+    except Exception as e:
+        logging.warning("Could not setup battery device: %s", e)

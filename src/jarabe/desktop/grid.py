@@ -1,4 +1,4 @@
-# Copyright (C) 2007 Red Hat, Inc.
+﻿# Copyright (C) 2007 Red Hat, Inc.
 # Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
@@ -20,8 +20,9 @@ from gi.repository import GObject
 from gi.repository import Gdk
 from gi.repository import GLib
 
+import gi
+gi.require_version('SugarExt', '2.0')
 from gi.repository import SugarExt
-
 
 _PLACE_TRIALS = 20
 _MAX_WEIGHT = 255
@@ -29,14 +30,19 @@ _REFRESH_RATE = 200
 _MAX_COLLISIONS_PER_REFRESH = 20
 
 
-class Grid(SugarExt.Grid):
+class GridWeight(SugarExt.Grid):
+    def __init__(self):
+        GObject.GObject.__init__(self)
+
+
+class Grid(GridWeight):
     __gsignals__ = {
         'child-changed': (GObject.SignalFlags.RUN_FIRST, None,
                           ([GObject.TYPE_PYOBJECT])),
     }
 
     def __init__(self, width, height):
-        GObject.GObject.__init__(self)
+        GridWeight.__init__(self)
 
         self._children = []
         self._child_rects = {}
@@ -193,12 +199,22 @@ class Grid(SugarExt.Grid):
 
         return True
 
+    def _intersect_rects(self, rect1, rect2):
+        x = max(rect1.x, rect2.x)
+        y = max(rect1.y, rect2.y)
+        w = min(rect1.x + rect1.width, rect2.x + rect2.width) - x
+        h = min(rect1.y + rect1.height, rect2.y + rect2.height) - y
+        intersection = Gdk.Rectangle()
+        if w > 0 and h > 0:
+            intersection.x, intersection.y, intersection.width, intersection.height = x, y, w, h
+            return True, intersection
+        return False, intersection
+
     def _detect_collisions(self, child):
         collision_found = False
         child_rect = self._child_rects[child]
         for c in self._children:
-            intersects_, intersection = Gdk.rectangle_intersect(
-                child_rect, self._child_rects[c])
+            intersects_, intersection = self._intersect_rects(child_rect, self._child_rects[c])
             if c != child and intersection.width > 0:
                 collision_found = True
                 if (c not in self._locked_children and

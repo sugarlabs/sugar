@@ -1,4 +1,4 @@
-# Copyright (C) 2008 Tomeu Vizoso
+﻿# Copyright (C) 2008 Tomeu Vizoso
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,7 +41,6 @@ from jarabe.util.telepathy import connection_watcher
 from jarabe.model import telepathyclient
 from jarabe.model import neighborhood
 
-
 FT_STATE_NONE = 0
 FT_STATE_PENDING = 1
 FT_STATE_ACCEPTED = 2
@@ -57,14 +56,13 @@ FT_REASON_LOCAL_ERROR = 4
 FT_REASON_LOCAL_ERROR = 5
 FT_REASON_REMOTE_ERROR = 6
 
-
 new_file_transfer = dispatch.Signal()
 
 
 class BaseFileTransfer(GObject.GObject):
 
     def __init__(self, connection):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._connection = connection
         self._state = FT_STATE_NONE
         self._transferred_bytes = 0
@@ -80,11 +78,11 @@ class BaseFileTransfer(GObject.GObject):
 
     def set_channel(self, channel):
         self.channel = channel
-        self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
+        self._state_changed_hid = self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
             'FileTransferStateChanged', self.__state_changed_cb)
-        self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
+        self._transferred_bytes_changed_hid = self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
             'TransferredBytesChanged', self.__transferred_bytes_changed_cb)
-        self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
+        self._initial_offset_defined_hid = self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
             'InitialOffsetDefined', self.__initial_offset_defined_cb)
 
         channel_properties = self.channel[dbus.PROPERTIES_IFACE]
@@ -130,6 +128,18 @@ class BaseFileTransfer(GObject.GObject):
         return self._state
 
     state = GObject.Property(type=int, getter=_get_state, setter=_set_state)
+
+    def do_dispose(self):
+        if getattr(self, '_state_changed_hid', None) is not None:
+            self._state_changed_hid.remove()
+            self._state_changed_hid = None
+        if getattr(self, '_transferred_bytes_changed_hid', None) is not None:
+            self._transferred_bytes_changed_hid.remove()
+            self._transferred_bytes_changed_hid = None
+        if getattr(self, '_initial_offset_defined_hid', None) is not None:
+            self._initial_offset_defined_hid.remove()
+            self._initial_offset_defined_hid = None
+        GObject.GObject.do_dispose(self)
 
     def cancel(self):
         self.channel[CHANNEL].Close()
@@ -287,12 +297,15 @@ def _new_channels_cb(connection, channels):
                                                           object_path, props)
             new_file_transfer.send(None, file_transfer=incoming_file_transfer)
 
+_connection_handlers = {}
+
 
 def _monitor_connection(connection):
     logging.debug('connection added %r', connection)
-    connection[CONNECTION_INTERFACE_REQUESTS].connect_to_signal(
+    handler = connection[CONNECTION_INTERFACE_REQUESTS].connect_to_signal(
         'NewChannels',
         lambda channels: _new_channels_cb(connection, channels))
+    _connection_handlers[id(connection)] = handler
 
 
 def _connection_added_cb(conn_watcher, connection):
@@ -301,6 +314,9 @@ def _connection_added_cb(conn_watcher, connection):
 
 def _connection_removed_cb(conn_watcher, connection):
     logging.debug('connection removed %r', connection)
+    handler = _connection_handlers.pop(id(connection), None)
+    if handler is not None:
+        handler.remove()
 
 
 def _got_dispatch_operation_cb(**kwargs):
@@ -359,7 +375,6 @@ def file_transfer_available():
                 return True
 
         return False
-
 
 if __name__ == '__main__':
     import tempfile

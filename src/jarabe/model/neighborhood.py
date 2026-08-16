@@ -1,4 +1,4 @@
-# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
+﻿# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@ from gi.repository import GObject
 from gi.repository import Gio
 import dbus
 from dbus import PROPERTIES_IFACE
+import gi
+gi.require_version('TelepathyGLib', '0.12')
 from gi.repository import TelepathyGLib
 ACCOUNT = TelepathyGLib.IFACE_ACCOUNT
 ACCOUNT_MANAGER = TelepathyGLib.IFACE_ACCOUNT_MANAGER
@@ -52,7 +54,6 @@ from sugar4.profile import get_profile
 from jarabe.model.buddy import BuddyModel, get_owner_instance
 from jarabe.model import bundleregistry
 from jarabe.model import shell
-
 
 ACCOUNT_MANAGER_SERVICE = 'org.freedesktop.Telepathy.AccountManager'
 ACCOUNT_MANAGER_PATH = '/org/freedesktop/Telepathy/AccountManager'
@@ -87,7 +88,7 @@ class ActivityModel(GObject.GObject):
     }
 
     def __init__(self, activity_id, room_handle):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self.activity_id = activity_id
         self.room_handle = room_handle
@@ -188,7 +189,7 @@ class _Account(GObject.GObject):
     }
 
     def __init__(self, account_path):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self.object_path = account_path
 
@@ -754,7 +755,7 @@ class Neighborhood(GObject.GObject):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._buddies = {None: get_owner_instance()}
         self._activities = {}
@@ -781,10 +782,12 @@ class Neighborhood(GObject.GObject):
     def __got_accounts_cb(self, account_paths):
         self._link_local_account = \
             self._ensure_link_local_account(account_paths)
-        self._connect_to_account(self._link_local_account)
+        if self._link_local_account:
+            self._connect_to_account(self._link_local_account)
 
         self._server_account = self._ensure_server_account(account_paths)
-        self._connect_to_account(self._server_account)
+        if self._server_account:
+            self._connect_to_account(self._server_account)
 
     def __error_handler_cb(self, error):
         raise RuntimeError(error)
@@ -806,12 +809,12 @@ class Neighborhood(GObject.GObject):
 
     def __account_connected_cb(self, account):
         logging.debug('__account_connected_cb %s', account.object_path)
-        if account == self._server_account:
+        if account == self._server_account and self._link_local_account:
             self._link_local_account.disable()
 
     def __account_disconnected_cb(self, account):
         logging.debug('__account_disconnected_cb %s', account.object_path)
-        if account == self._server_account:
+        if account == self._server_account and self._link_local_account:
             self._link_local_account.enable()
 
     def _get_published_name(self):
@@ -822,8 +825,9 @@ class Neighborhood(GObject.GObject):
         the room name, the published name and the host name.
 
         """
+        pubkey = get_profile().pubkey or ''
         public_key_hash = sha1(
-            get_profile().pubkey.encode('utf-8')).hexdigest()
+            pubkey.encode('utf-8')).hexdigest()
         return public_key_hash[:8]
 
     def _ensure_link_local_account(self, account_paths):
@@ -852,13 +856,18 @@ class Neighborhood(GObject.GObject):
             ACCOUNT + '.ConnectAutomatically': True,
         }
 
+
         bus = dbus.Bus()
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
         account_manager = dbus.Interface(obj, ACCOUNT_MANAGER)
-        account_path = account_manager.CreateAccount('salut', 'local-xmpp',
-                                                     'salut', params,
-                                                     properties)
-        return _Account(account_path)
+        try:
+            account_path = account_manager.CreateAccount('salut', 'local-xmpp',
+                                                         'salut', params,
+                                                         properties)
+            return _Account(account_path)
+        except Exception as e:
+            logging.error("Failed to create Salut account: %s", e)
+            return None
 
     def _ensure_server_account(self, account_paths):
         for account_path in account_paths:
@@ -872,7 +881,7 @@ class Neighborhood(GObject.GObject):
 
         nick = self._settings_user.get_string('nick')
         server = self._settings_collaboration.get_string('jabber-server')
-        key_hash = get_profile().privkey_hash
+        key_hash = get_profile().privkey_hash or ''
 
         params = {
             'account': self._get_jabber_account_id(),
@@ -892,22 +901,30 @@ class Neighborhood(GObject.GObject):
             ACCOUNT + '.ConnectAutomatically': True,
         }
 
+
         bus = dbus.Bus()
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
         account_manager = dbus.Interface(obj, ACCOUNT_MANAGER)
-        account_path = account_manager.CreateAccount('gabble', 'jabber',
-                                                     'jabber', params,
-                                                     properties)
-        return _Account(account_path)
+        try:
+            account_path = account_manager.CreateAccount('gabble', 'jabber',
+                                                         'jabber', params,
+                                                         properties)
+            return _Account(account_path)
+        except Exception as e:
+            logging.error("Failed to create Gabble account: %s", e)
+            return None
 
     def _get_jabber_account_id(self):
+        pubkey = get_profile().pubkey or ''
         public_key_hash = sha1(
-            get_profile().pubkey.encode('utf-8')).hexdigest()
+            pubkey.encode('utf-8')).hexdigest()
         server = self._settings_collaboration.get_string('jabber-server')
         return '%s@%s' % (public_key_hash, server)
 
     def __jabber_server_changed_cb(self, settings, key):
         logging.debug('__jabber_server_changed_cb')
+        if not self._server_account:
+            return
 
         bus = dbus.Bus()
         account = bus.get_object(ACCOUNT_MANAGER_SERVICE,
@@ -931,24 +948,28 @@ class Neighborhood(GObject.GObject):
         nick = settings.get_string('nick')
 
         bus = dbus.Bus()
-        server_obj = bus.get_object(ACCOUNT_MANAGER_SERVICE,
-                                    self._server_account.object_path)
-        server_obj.Set(ACCOUNT, 'Nickname', nick,
-                       dbus_interface=PROPERTIES_IFACE)
-
-        link_local_obj = bus.get_object(ACCOUNT_MANAGER_SERVICE,
-                                        self._link_local_account.object_path)
-        link_local_obj.Set(ACCOUNT, 'Nickname', nick,
+        if self._server_account:
+            server_obj = bus.get_object(ACCOUNT_MANAGER_SERVICE,
+                                        self._server_account.object_path)
+            server_obj.Set(ACCOUNT, 'Nickname', nick,
                            dbus_interface=PROPERTIES_IFACE)
-        params_needing_reconnect = link_local_obj.UpdateParameters(
-            {'nickname': nick, 'published-name': self._get_published_name()},
-            dbus.Array([], 's'), dbus_interface=ACCOUNT)
-        if params_needing_reconnect:
-            link_local_obj.Reconnect()
+
+        if self._link_local_account:
+            link_local_obj = bus.get_object(ACCOUNT_MANAGER_SERVICE,
+                                            self._link_local_account.object_path)
+            link_local_obj.Set(ACCOUNT, 'Nickname', nick,
+                               dbus_interface=PROPERTIES_IFACE)
+            params_needing_reconnect = link_local_obj.UpdateParameters(
+                {'nickname': nick, 'published-name': self._get_published_name()},
+                dbus.Array([], 's'), dbus_interface=ACCOUNT)
+            if params_needing_reconnect:
+                link_local_obj.Reconnect()
 
         self._update_jid()
 
     def _update_jid(self):
+        if not self._link_local_account:
+            return
         bus = dbus.Bus()
         account = bus.get_object(ACCOUNT_MANAGER_SERVICE,
                                  self._link_local_account.object_path)

@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2013 One Laptop per Child
+﻿# Copyright (C) 2008-2013 One Laptop per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 
 """
 A simple HTTP-based file-like object that supports seek() via the HTTP
@@ -48,7 +47,8 @@ class _HttpRangeFileObject(object):
         getattr(downloader, method)(**kwargs)
 
         while not self._complete:
-            Gtk.main_iteration()
+            from gi.repository import GLib
+            GLib.MainContext.default().iteration(may_block=True)
 
         if isinstance(self._result, Exception):
             raise self._result

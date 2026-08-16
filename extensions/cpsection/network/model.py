@@ -1,4 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
+﻿# Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2014 Sugar Labs, Frederick Grose
 #
 # This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,6 @@ from gi.repository import Gio
 from gi.repository import NM
 
 from jarabe.model import network
-
 
 KEYWORDS = ['network', 'jabber', 'radio', 'server', 'social', 'help']
 
@@ -133,6 +132,5 @@ def set_publish_information(value):
     settings = Gio.Settings.new('org.sugarlabs.collaboration')
     settings.set_boolean('publish-gadget', value)
     return 0
-
 
 nm_client = NM.Client()

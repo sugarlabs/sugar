@@ -1,4 +1,4 @@
-# Copyright (c) 2013 Walter Bender
+﻿# Copyright (c) 2013 Walter Bender
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -56,13 +56,13 @@ class MockSharedJournalEntry(account.SharedJournalEntry):
 class ShareMenu(MenuItem):
     def __init__(self, metadata):
         MenuItem.__init__(self, text_label=ACCOUNT_NAME)
-        self.show()
+        self.set_visible(True)
 
 
 class RefreshMenu(MenuItem):
     def __init__(self):
         MenuItem.__init__(self, text_label=ACCOUNT_NAME)
-        self.show()
+        self.set_visible(True)
 
     def set_metadata(self, metadata):
         return

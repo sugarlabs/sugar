@@ -1,4 +1,4 @@
-# Copyright (C) 2010, Walter Bender, Sugar Labs
+﻿# Copyright (C) 2010, Walter Bender, Sugar Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 
 from gettext import gettext as _
 import os
@@ -52,7 +51,9 @@ class DeviceView(TrayIcon):
         TrayIcon.__init__(self, icon_name=icon_name, xo_color=color)
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
-        self.connect('button-release-event', self.__button_release_event_cb)
+        click_controller = Gtk.GestureClick()
+        click_controller.connect('released', self.__button_release_event_cb)
+        self.add_controller(click_controller)
 
     def create_palette(self):
         """ Create a palette for this icon; called by the Sugar framework
@@ -61,11 +62,11 @@ class DeviceView(TrayIcon):
         self.palette.set_group_id('frame')
         return self.palette
 
-    def __button_release_event_cb(self, widget, event):
+    def __button_release_event_cb(self, gesture, n_press, x, y):
         """ Callback for button release event; used to invoke touchpad-mode
         change. """
         self.palette.toggle_mode()
-        return True
+        gesture.set_state(Gtk.EventSequenceState.CLAIMED)
 
 
 class ResourcePalette(Palette):
@@ -81,10 +82,9 @@ class ResourcePalette(Palette):
         self.set_content(vbox)
 
         self._status_text = Gtk.Label()
-        vbox.pack_start(self._status_text, True, True, style.DEFAULT_PADDING)
-        self._status_text.show()
-
-        vbox.show()
+        self._status_text.set_margin_top(style.DEFAULT_PADDING)
+        self._status_text.set_margin_bottom(style.DEFAULT_PADDING)
+        vbox.append(self._status_text)
 
         self._mode = _read_touchpad_mode()
         self._update()

@@ -17,13 +17,19 @@ import logging
 from urllib.parse import urlparse
 import hashlib
 
-from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GLib
 
 from jarabe.frame.framewindow import FrameWindow
 from jarabe.frame.clipboardtray import ClipboardTray
 
-from jarabe.frame import clipboard
+import jarabe.frame.clipboard as clipboard
+
+# Clipboard target names that carry no data content.
+_SKIP_TARGETS = frozenset([
+    'TIMESTAMP', 'TARGETS', 'MULTIPLE', 'SAVE_TARGETS',
+    'DELETE', 'INSERT_SELECTION', 'INSERT_PROPERTY',
+])
 
 
 class ClipboardPanelWindow(FrameWindow):
@@ -33,63 +39,118 @@ class ClipboardPanelWindow(FrameWindow):
 
         self._frame = frame
 
-        # Listening for new clipboard objects
-        # NOTE: we need to keep a reference to Gdk.Clipboard in order to keep
-        # listening to it.
-        self._clipboard = Gtk.Display.get_default().get_clipboard()
+        # Listening for new clipboard objects.
+        self._clipboard = Gdk.Display.get_default().get_clipboard()
         self._clipboard.connect('changed', self._owner_change_cb)
 
         self._clipboard_tray = ClipboardTray()
-        self._clipboard_tray.show()
+        self._clipboard_tray.set_visible(True)
         self.append(self._clipboard_tray)
 
-        # Receiving dnd drops
-        self.drag_dest_set(0, [], 0)
-        self.connect('drag-motion', self._clipboard_tray.drag_motion_cb)
-        self.connect('drag-leave', self._clipboard_tray.drag_leave_cb)
-        self.connect('drag-drop', self._clipboard_tray.drag_drop_cb)
-        self.connect('drag-data-received',
-                     self._clipboard_tray.drag_data_received_cb)
-
-    def _owner_change_cb(self, clipboard):
+    def _owner_change_cb(self, cb):
         logging.debug('owner_change_cb')
 
         if self._clipboard_tray.owns_clipboard():
             return
 
-        cb_service = clipboard.get_instance()
-
-        content = clipboard.get_content()
-
-        if not content:
-            return
-
-        formats = content.ref_formats()
-
-        if formats.is_empty():
+        formats = cb.get_formats()
+        if formats is None:
             return
 
         mime_types = formats.get_mime_types()
-        content_is_uri = False
-        for mime_type in mime_types:
-            if mime_type == 'text/uri-list':
-                content_is_uri = True
-                mt = mime_type
-
-        if content_is_uri:
-            uri = content.get_value()
-            filename = uri[len('file://'):].strip()
-            md5 = self._md5_for_file(filename)
-            data_hash = hash(md5)
-        else:
-            data_hash = hash(content.get_value())
-
-        key = cb_service.add_object(name="", data_hash=data_hash)
-        if key is None:
+        if not mime_types:
             return
-        cb_service.set_object_percent(key, percent=0)
-        self._add_content(key, content, mt)
-        cb_service.set_object_percent(key, percent=100)
+
+        # Filter out internal/control targets.
+        targets = [t for t in mime_types if t not in _SKIP_TARGETS]
+        if not targets:
+            return
+
+        cb_service = clipboard.get_instance()
+        
+        # Read all targets asynchronously; track how many are still pending.
+        state = {'pending': len(targets), 'key': None, 'data_hash': None, 'cancelled': False}
+        for mime_type in targets:
+            cb.read_async(
+                [mime_type],
+                GLib.PRIORITY_DEFAULT,
+                None,
+                self._read_mime_cb,
+                (cb_service, mime_type, state))
+
+    # ------------------------------------------------------------------
+    # Async reading chain
+    # ------------------------------------------------------------------
+
+    def _read_mime_cb(self, cb, result, user_data):
+        cb_service, mime_type, state = user_data
+        try:
+            stream, _ = cb.read_finish(result)
+            if stream:
+                stream.read_bytes_async(
+                    65536,
+                    GLib.PRIORITY_DEFAULT,
+                    None,
+                    self._read_bytes_cb,
+                    (cb_service, mime_type, state, stream))
+                return
+        except Exception as e:
+            logging.debug('Could not read clipboard mime %s: %s', mime_type, e)
+
+        # Count this target as done even on failure.
+        self._check_complete(cb_service, state)
+
+    def _read_bytes_cb(self, stream, result, user_data):
+        cb_service, mime_type, state, _ = user_data
+        try:
+            raw = stream.read_bytes_finish(result)
+            data = raw.get_data() if raw else None
+            if data and not state['cancelled']:
+                on_disk = False
+                if mime_type == 'text/uri-list':
+                    # Extract first URI and compute data hash
+                    text = data.decode('utf-8', errors='replace')
+                    uris = [u.strip() for u in text.splitlines()
+                            if u.strip() and not u.strip().startswith('#')]
+                    if uris:
+                        uri = uris[0]
+                        scheme = urlparse(uri).scheme
+                        on_disk = (scheme == 'file')
+                        if on_disk and state['data_hash'] is None:
+                            filename = urlparse(uri).path
+                            state['data_hash'] = hash(
+                                self._md5_for_file(filename))
+                        data = uri
+                else:
+                    if state['data_hash'] is None:
+                        state['data_hash'] = hash(data)
+                    # Decode text/* to str; keep binary as bytes.
+                    if mime_type.startswith('text/'):
+                        try:
+                            data = data.decode('utf-8', errors='replace')
+                        except Exception:
+                            pass
+                            
+                if state['key'] is None:
+                    # Create the clipboard object now that we have a hash
+                    state['key'] = cb_service.add_object(name='', data_hash=state['data_hash'])
+                    if state['key'] is None:
+                        state['cancelled'] = True
+                    else:
+                        cb_service.set_object_percent(state['key'], percent=0)
+                
+                if not state['cancelled']:
+                    cb_service.add_object_format(
+                        state['key'], mime_type, data, on_disk=on_disk)
+        except Exception as e:
+            logging.debug('Error reading bytes for %s: %s', mime_type, e)
+
+        self._check_complete(cb_service, state)
+
+    def _check_complete(self, cb_service, state):
+        state['pending'] -= 1
+        if state['pending'] <= 0 and state['key'] is not None and not state['cancelled']:
+            cb_service.set_object_percent(state['key'], percent=100)
 
     def _md5_for_file(self, file_name):
         '''Calculate md5 for file data
@@ -98,37 +159,13 @@ class ClipboardPanelWindow(FrameWindow):
         '''
         block_size = 8192
         md5 = hashlib.md5()
-        f = open(file_name, 'r')
-        while True:
-            data = f.read(block_size)
-            if not data:
-                break
-            md5.update(data)
-        f.close()
+        try:
+            with open(file_name, 'rb') as f:
+                while True:
+                    data = f.read(block_size)
+                    if not data:
+                        break
+                    md5.update(data)
+        except OSError as e:
+            logging.warning('md5_for_file failed for %s: %s', file_name, e)
         return md5.digest()
-
-    def _add_content(self, key, content, mime_type):
-        result, value = content.get_value()
-        if not result:
-            logging.warning('no data for content %s.',
-                            mime_type)
-            return
-
-        logging.debug('adding type ' + mime_type + '.')
-        cb_service = clipboard.get_instance()
-        if mime_type == 'text/uri-list':
-            uri = content.get_value()
-
-            scheme, netloc_, path_, parameters_, query_, fragment_ = \
-                urlparse(uri)
-            on_disk = (scheme == 'file')
-
-            cb_service.add_object_format(key,
-                                         mime_type,
-                                         uri,
-                                         on_disk)
-        else:
-            cb_service.add_object_format(key,
-                                         mime_type,
-                                         content.get_value(),
-                                         on_disk=False)

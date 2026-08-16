@@ -1,4 +1,4 @@
-# Copyright (C) 2007, One Laptop Per Child
+﻿# Copyright (C) 2007, One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ import urllib.parse
 import os
 import logging
 from gi.repository import Gio
+from gi.repository import GLib
 
 from gi.repository import Gtk
 
@@ -30,7 +31,7 @@ from sugar4.datastore import datastore
 from sugar4 import mime
 from sugar4 import env
 from sugar4 import profile
-from sugar4.activity.i18n import pgettext
+from gettext import pgettext
 
 from jarabe.frame import clipboard
 from jarabe.journal import misc
@@ -45,6 +46,13 @@ class ClipboardMenu(Palette):
         self._cb_object = cb_object
 
         self.set_group_id('frame')
+        
+        self.action_group = Gio.SimpleActionGroup.new()
+        self.menu.insert_action_group('clip', self.action_group)
+        
+        open_action = Gio.SimpleAction.new('open-activity', GLib.VariantType('s'))
+        open_action.connect('activate', self._on_open_activity_activated)
+        self.action_group.add_action(open_action)
 
         cb_service = clipboard.get_instance()
         cb_service.connect('object-state-changed',
@@ -52,14 +60,14 @@ class ClipboardMenu(Palette):
 
         self._remove_item = MenuItem(pgettext('Clipboard', 'Remove'),
                                      'list-remove')
-        self._remove_item.connect('activate', self._remove_item_activate_cb)
+        self._remove_item.connect('clicked', self._remove_item_activate_cb)
         self.menu.append(self._remove_item)
-        self._remove_item.show()
+        self._remove_item.set_visible(True)
 
         self._open_item = MenuItem(_('Open'), 'zoom-activity')
-        self._open_item.connect('activate', self._open_item_activate_cb)
+        self._open_item.connect('clicked', self._open_item_activate_cb)
         self.menu.append(self._open_item)
-        self._open_item.show()
+        self._open_item.set_visible(True)
 
         self._journal_item = MenuItem(_('Keep'))
         color = profile.get_color()
@@ -68,26 +76,25 @@ class ClipboardMenu(Palette):
                     xo_color=color)
         self._journal_item.set_image(icon)
 
-        self._journal_item.connect('activate', self._journal_item_activate_cb)
+        self._journal_item.connect('clicked', self._journal_item_activate_cb)
         self.menu.append(self._journal_item)
-        self._journal_item.show()
+        self._journal_item.set_visible(True)
 
         self._update()
 
     def _update_open_submenu(self):
         activities = self._get_activities()
         logging.debug('_update_open_submenu: %r', activities)
-        child = self._open_item.get_child()
         if activities is None or len(activities) <= 1:
-            child.set_text(_('Open'))
+            self._open_item.set_text(_('Open'))
             if self._open_item.get_submenu() is not None:
                 self._open_item.set_submenu(None)
             return
 
-        child.set_text(_('Open with'))
+        self._open_item.set_text(_('Open with'))
+            
         submenu = Gio.Menu.new()
         self._open_item.set_submenu(submenu)
-        submenu.show()
 
         for service_name in activities:
             registry = bundleregistry.get_registry()
@@ -96,11 +103,9 @@ class ClipboardMenu(Palette):
             if not activity_info:
                 logging.warning('Activity %s is unknown.', service_name)
 
-            item = Gio.MenuItem(activity_info.get_name())
-            item.connect('activate', self._open_submenu_item_activate_cb,
-                         service_name)
+            item = Gio.MenuItem.new(activity_info.get_name(), 'clip.open-activity')
+            item.set_action_and_target_value('clip.open-activity', GLib.Variant('s', service_name))
             submenu.append_item(item)
-            item.show()
 
     def _update_items_visibility(self):
         activities = self._get_activities()
@@ -153,6 +158,10 @@ class ClipboardMenu(Palette):
         misc.resume(jobject.metadata, self._get_activities()[0])
         jobject.destroy()
 
+    def _on_open_activity_activated(self, action, parameter):
+        service_name = parameter.get_string()
+        self._open_submenu_item_activate_cb(None, service_name)
+
     def _open_submenu_item_activate_cb(self, menu_item, service_name):
         logging.debug('_open_submenu_item_activate_cb')
         percent = self._cb_object.get_percent()
@@ -176,11 +185,9 @@ class ClipboardMenu(Palette):
         f, file_path = tempfile.mkstemp(dir=tmp_dir)
 
         try:
-            if not is_pixbuf:
-                os.write(f, data)
-            else:
-                _type = self._cb_object.get_mime_type().split('/').pop()
-                data.savev(file_path, _type, [], [])
+            if hasattr(data, 'get_data'):
+                data = data.get_data()
+            os.write(f, data)
         finally:
             os.close(f)
         return file_path

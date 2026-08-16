@@ -1,4 +1,4 @@
-# Copyright (C) 2007, One Laptop Per Child
+﻿# Copyright (C) 2007, One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,6 +17,9 @@ import logging
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gio
 
 from sugar4.graphics import tray
 from sugar4.graphics import style
@@ -25,49 +28,55 @@ from jarabe.frame import clipboard
 from jarabe.frame.clipboardicon import ClipboardIcon
 
 
-class ContextMap(object):
-    """Maps a drag context to the clipboard object involved in the dragging."""
-
-    def __init__(self):
-        self._context_map = {}
-
-    def add_context(self, context, object_id, data_types):
-        """Establishes the mapping. data_types will serve us for reference-
-        counting this mapping.
-        """
-        self._context_map[context] = [object_id, data_types]
-
-    def get_object_id(self, context):
-        """Retrieves the object_id associated with context.
-        Will release the association when this function was called as many
-        times as the number of data_types that this clipboard object contains.
-        """
-        [object_id, data_types_left] = self._context_map[context]
-
-        data_types_left = data_types_left - 1
-        if data_types_left == 0:
-            del self._context_map[context]
-        else:
-            self._context_map[context] = [object_id, data_types_left]
-
-        return object_id
-
-    def has_context(self, context):
-        return context in self._context_map
+def _get_screen_height():
+    display = Gdk.Display.get_default()
+    if display:
+        monitors = display.get_monitors()
+        if monitors and monitors.get_n_items() > 0:
+            return monitors.get_item(0).get_geometry().height
+    return 768
 
 
 class ClipboardTray(tray.VTray):
 
-    MAX_ITEMS = Gdk.Screen.height() // style.GRID_CELL_SIZE - 2
+    MAX_ITEMS = _get_screen_height() // style.GRID_CELL_SIZE - 2
 
     def __init__(self):
         tray.VTray.__init__(self, align=tray.ALIGN_TO_END)
         self._icons = {}
-        self._context_map = ContextMap()
 
         cb_service = clipboard.get_instance()
-        cb_service.connect('object-added', self._object_added_cb)
-        cb_service.connect('object-deleted', self._object_deleted_cb)
+        self._object_added_hid = cb_service.connect('object-added', self._object_added_cb)
+        self._object_deleted_hid = cb_service.connect('object-deleted', self._object_deleted_cb)
+
+        builder = Gdk.ContentFormatsBuilder.new()
+        builder.add_mime_type('journal-object-id')
+        builder.add_mime_type('text/uri-list')
+        builder.add_mime_type('text/plain')
+        builder.add_mime_type('text/html')
+        builder.add_mime_type('image/png')
+        builder.add_mime_type('image/jpeg')
+        builder.add_mime_type('image/gif')
+        builder.add_mime_type('image/svg+xml')
+        builder.add_gtype(GObject.TYPE_STRING)
+        formats = builder.to_formats()
+        
+        self._drop_target = Gtk.DropTargetAsync.new(formats, actions=Gdk.DragAction.COPY | Gdk.DragAction.MOVE)
+        self._drop_target.connect('drop', self._on_drop_async_cb)
+        self.add_controller(self._drop_target)
+
+    def do_dispose(self):
+        cb_service = clipboard.get_instance()
+        if hasattr(self, '_object_added_hid'):
+            cb_service.disconnect(self._object_added_hid)
+            del self._object_added_hid
+        if hasattr(self, '_object_deleted_hid'):
+            cb_service.disconnect(self._object_deleted_hid)
+            del self._object_deleted_hid
+        if getattr(self, '_drop_target', None) is not None:
+            self.remove_controller(self._drop_target)
+            self._drop_target = None
+        super().do_dispose()
 
     def owns_clipboard(self):
         for icon in list(self._icons.values()):
@@ -75,125 +84,119 @@ class ClipboardTray(tray.VTray):
                 return True
         return False
 
-    def _add_selection(self, object_id, selection):
-        if not selection.get_data():
-            return
-
-        selection_data = selection.get_data()
-
-        selection_type_atom = selection.get_data_type()
-        selection_type = selection_type_atom.name()
-
-        logging.debug('ClipboardTray: adding type %r', selection_type)
-
-        cb_service = clipboard.get_instance()
-        if selection_type == 'text/uri-list':
-            uris = selection.get_uris()
-            if len(uris) > 1:
-                raise NotImplementedError('Multiple uris in text/uri-list'
-                                          ' still not supported.')
-
-            cb_service.add_object_format(object_id,
-                                         selection_type,
-                                         uris[0],
-                                         on_disk=True)
-        else:
-            cb_service.add_object_format(object_id,
-                                         selection_type,
-                                         selection_data,
-                                         on_disk=False)
-
     def _object_added_cb(self, cb_service, cb_object):
+        group = None
         if self._icons:
             group = list(self._icons.values())[0]
-        else:
-            group = None
 
         icon = ClipboardIcon(cb_object, group)
         self.add_item(icon)
-        icon.show()
+        icon.set_visible(True)
         self._icons[cb_object.get_id()] = icon
 
-        objects_to_delete = self.get_children()[:-self.MAX_ITEMS]
-        for icon in objects_to_delete:
-            logging.debug('ClipboardTray: deleting surplus object')
-            cb_service = clipboard.get_instance()
-            cb_service.delete_object(icon.get_object_id())
+        # Enforce MAX_ITEMS
+        children = []
+        child = self.get_first_child()
+        while child:
+            children.append(child)
+            child = child.get_next_sibling()
+
+        if len(children) > self.MAX_ITEMS:
+            objects_to_delete = children[:-self.MAX_ITEMS]
+            for icon_to_delete in objects_to_delete:
+                logging.debug('ClipboardTray: deleting surplus object')
+                cb_service = clipboard.get_instance()
+                cb_service.delete_object(icon_to_delete.get_object_id())
 
         logging.debug('ClipboardTray: %r was added', cb_object.get_id())
 
     def _object_deleted_cb(self, cb_service, object_id):
-        icon = self._icons[object_id]
-        self.remove_item(icon)
-        del self._icons[object_id]
-        # select the last available icon
-        if self._icons:
-            last_icon = self.get_children()[-1]
-            last_icon.props.active = True
+        icon = self._icons.get(object_id)
+        if icon:
+            self.remove_item(icon)
+            del self._icons[object_id]
+            
+            # select the last available icon if the deleted one was active
+            if icon.props.active and self._icons:
+                children = []
+                child = self.get_first_child()
+                while child:
+                    children.append(child)
+                    child = child.get_next_sibling()
+                if children:
+                    last_icon = children[-1]
+                    if hasattr(last_icon, 'set_active'):
+                        last_icon.set_active(True)
 
         logging.debug('ClipboardTray: %r was deleted', object_id)
 
-    def drag_motion_cb(self, widget, context, x, y, time):
-        logging.debug('ClipboardTray._drag_motion_cb')
-
-        if self._internal_drag(context):
-            Gdk.drag_status(context, Gdk.DragAction.MOVE, time)
-        else:
-            Gdk.drag_status(context, Gdk.DragAction.COPY, time)
-            self.props.drag_active = True
-
-        return True
-
-    def drag_leave_cb(self, widget, context, time):
-        self.props.drag_active = False
-
-    def drag_drop_cb(self, widget, context, x, y, time):
-        logging.debug('ClipboardTray._drag_drop_cb')
-
-        if self._internal_drag(context):
-            # TODO: We should move the object within the clipboard here
-            if not self._context_map.has_context(context):
-                Gdk.drop_finish(context, False, Gtk.get_current_event_time())
+    def _on_drop_async_cb(self, target, drop, x, y):
+        logging.debug('ClipboardTray._on_drop_async_cb')
+        formats = drop.get_formats()
+        mime_types = formats.get_mime_types()
+        if not mime_types:
             return False
-
+            
+        skip_targets = frozenset(['TIMESTAMP', 'TARGETS', 'MULTIPLE', 'SAVE_TARGETS', 'DELETE', 'INSERT_SELECTION', 'INSERT_PROPERTY'])
+        valid_targets = [t for t in mime_types if t not in skip_targets]
+        if not valid_targets:
+            return False
+            
         cb_service = clipboard.get_instance()
         object_id = cb_service.add_object(name="")
-
-        context_targets = context.list_targets()
-        self._context_map.add_context(context, object_id, len(context_targets))
-
-        for target in context_targets:
-            if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
-                widget.drag_get_data(context, target, time)
-
-        cb_service.set_object_percent(object_id, percent=100)
-
+        cb_service.set_object_percent(object_id, percent=0)
+        
+        state = {'pending': len(valid_targets), 'object_id': object_id}
+        for mime_type in valid_targets:
+            drop.read_async([mime_type], GLib.PRIORITY_DEFAULT, None, self._on_read_raw_cb, (mime_type, state))
         return True
 
-    def drag_data_received_cb(self, widget, context, x, y, selection,
-                              targetType, time):
-        logging.debug('ClipboardTray: got data for target %r',
-                      selection.get_target())
-
-        object_id = self._context_map.get_object_id(context)
+    def _on_read_raw_cb(self, drop, result, user_data):
+        mime_type, state = user_data
         try:
-            if selection is None:
-                logging.warn('ClipboardTray: empty selection for target %s',
-                             selection.get_target())
-            else:
-                self._add_selection(object_id, selection)
+            stream, out_mime = drop.read_finish(result)
+            if stream:
+                stream.read_bytes_async(65536, GLib.PRIORITY_DEFAULT, None, self._on_bytes_read_cb, (stream, mime_type, state))
+                return
+        except Exception as e:
+            logging.error("Failed to read raw drop: %s", e)
+        self._check_complete(state)
 
-        finally:
-            # If it's the last target to be processed, finish
-            # the dnd transaction
-            if not self._context_map.has_context(context):
-                Gdk.drop_finish(context, True, Gtk.get_current_event_time())
+    def _on_bytes_read_cb(self, stream, result, user_data):
+        stream, mime_type, state = user_data
+        try:
+            bytes_data = stream.read_bytes_finish(result)
+            data = bytes_data.get_data() if bytes_data else None
+            if data:
+                cb_service = clipboard.get_instance()
+                
+                if mime_type == 'text/uri-list':
+                    try:
+                        text = data.decode('utf-8').strip()
+                        lines = [line.strip() for line in text.splitlines() if line.strip() and not line.startswith('#')]
+                        if lines:
+                            uri = lines[0]
+                            f = Gio.File.new_for_uri(uri)
+                            path = f.get_path()
+                            if path:
+                                cb_service.add_object_format(state['object_id'], mime_type, path, on_disk=True)
+                                self._check_complete(state)
+                                return
+                    except Exception:
+                        pass
 
-    def _internal_drag(self, context):
-        source_widget = Gtk.drag_get_source_widget(context)
-        if source_widget is None:
-            return False
-        view_ancestor = source_widget.get_ancestor(Gtk.Viewport)
-        if view_ancestor is self._viewport:
-            return True
-        return False
+                if mime_type.startswith('text/') or mime_type == 'journal-object-id':
+                    try:
+                        data = data.decode('utf-8')
+                    except Exception:
+                        pass
+                cb_service.add_object_format(state['object_id'], mime_type, data, on_disk=False)
+        except Exception as e:
+            logging.error("Failed to read dropped bytes: %s", e)
+        self._check_complete(state)
+        
+    def _check_complete(self, state):
+        state['pending'] -= 1
+        if state['pending'] <= 0:
+            cb_service = clipboard.get_instance()
+            cb_service.set_object_percent(state['object_id'], percent=100)

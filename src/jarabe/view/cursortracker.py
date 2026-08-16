@@ -1,4 +1,4 @@
-# Copyright (C) 2012 One Laptop Per Child
+﻿# Copyright (C) 2012 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,11 @@ import logging
 
 from gi.repository import Gdk
 
-from gi.repository import SugarExt
+try:
+    #from gi.repository import SugarExt
+    SugarExt = None
+except ImportError:
+    SugarExt = None
 
 _instance = None
 
@@ -37,11 +41,13 @@ def setup():
 
     display = Gdk.Display.get_default()
     seat = display.get_default_seat()
-    devices = seat.get_slaves(Gdk.SeatCapabilities.TOUCH)
-    if len(devices) > 0:
-        logging.debug('Cursor Tracker: found touchscreen, '
-                      'will track input.')
-        _instance = SugarExt.CursorTracker()
+    if seat:
+        devices = seat.get_devices(Gdk.SeatCapabilities.TOUCH)
+        if len(devices) > 0:
+            logging.debug('Cursor Tracker: found touchscreen, '
+                          'will track input.')
+            if SugarExt is not None:
+                _instance = SugarExt.CursorTracker()
 
     if not _instance:
         logging.debug('Cursor Tracker: no touchscreen available, '

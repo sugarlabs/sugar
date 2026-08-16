@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
+import argparse
 import os
-import sys
 
 from sugar4.bundle.activitybundle import ActivityBundle
 
@@ -8,21 +8,22 @@ from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
 
-def cmd_help():
-    print('Usage: sugar-install-bundle activitybundle.xo [...] \n\n\
-    Install activity bundles\n')
+def main():
+    parser = argparse.ArgumentParser(description="Install activity bundles")
+    parser.add_argument("bundles", nargs="+", metavar="activitybundle.xo",
+                        help="Activity bundles to install")
+    args = parser.parse_args()
+
+    for name in args.bundles:
+        bundle = ActivityBundle(name)
+        path = bundle.install()
+
+        # make sure that the BundleRegistry will add this bundle
+        # by triggering a GFileMonitor ATTRIBUTE_CHANGED event.
+        os.utime(path, None)
+
+        print("%s: '%s' installed." % (parser.prog, name))
 
 
-if len(sys.argv) < 2:
-    cmd_help()
-    sys.exit(2)
-
-for name in sys.argv[1:]:
-    bundle = ActivityBundle(name)
-    path = bundle.install()
-
-    # make sure that the BundleRegistry will add this bundle
-    # by triggering a GFileMonitor ATTRIBUTE_CHANGED event.
-    os.utime(path, None)
-
-    print("%s: '%s' installed." % (sys.argv[0], name))
+if __name__ == '__main__':
+    main()

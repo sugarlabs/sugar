@@ -1,4 +1,4 @@
-# Copyright (C) 2008, Red Hat, Inc.
+﻿# Copyright (C) 2008, Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,13 +16,11 @@
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
-#from gi.repository import SugarExt
-import dbus
 import os
 import logging
+import dbus
 
 from jarabe.model import shell
-
 
 _session_manager = None
 
@@ -43,7 +41,7 @@ class SessionManager(GObject.GObject):
     MAX_SHUTDOWN_TRIES = 10
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         #address = SugarExt.xsmp_init()
         #os.environ['SESSION_MANAGER'] = address
@@ -54,15 +52,14 @@ class SessionManager(GObject.GObject):
         self._shutdown_tries = 0
         self._logout_mode = None
 
-    #def start(self):
-        #self.session.start()
-        #self.session.connect('shutdown-completed',
-        #                     self.__shutdown_completed_cb)
-
     def initiate_shutdown(self, logout_mode):
         self._logout_mode = logout_mode
         self.shutdown_signal.emit()
-        #self.session.initiate_shutdown()
+        for activity in self._shell_model:
+            activity.stop()
+        self._shutdown_tries = 0
+        if self._try_shutdown():
+            GLib.timeout_add_seconds(self.SHUTDOWN_TIMEOUT, self._try_shutdown)
 
     def cancel_shutdown(self):
         #self.session.cancel_shutdown()
@@ -72,7 +69,7 @@ class SessionManager(GObject.GObject):
     def __shutdown_completed_cb(self, session):
         if self._logout_mode is not None:
             if self._try_shutdown():
-                GLib.timeout_add(self.SHUTDOWN_TIMEOUT, self._try_shutdown)
+                GLib.timeout_add_seconds(self.SHUTDOWN_TIMEOUT, self._try_shutdown)
 
     def _try_shutdown(self):
         if len(self._shell_model) > 0:
@@ -96,41 +93,40 @@ class SessionManager(GObject.GObject):
 
     def shutdown_completed(self):
         if self._logout_mode != self.MODE_LOGOUT:
-            bus = dbus.SystemBus()
-            if have_systemd():
-                try:
-                    proxy = bus.get_object('org.freedesktop.login1',
-                                           '/org/freedesktop/login1')
-                    pm = dbus.Interface(proxy,
-                                        'org.freedesktop.login1.Manager')
+            try:
+                bus = dbus.SystemBus()
+                if have_systemd():
+                    try:
+                        proxy = bus.get_object('org.freedesktop.login1',
+                                               '/org/freedesktop/login1')
+                        pm = dbus.Interface(proxy,
+                                            'org.freedesktop.login1.Manager')
 
-                    if self._logout_mode == self.MODE_SHUTDOWN:
-                        pm.PowerOff(False)
-                    elif self._logout_mode == self.MODE_REBOOT:
-                        pm.Reboot(True)
-                except:
-                    logging.exception('Can not stop sugar')
-                    #self.session.cancel_shutdown()
-                    return
-            else:
-                CONSOLEKIT_DBUS_PATH = '/org/freedesktop/ConsoleKit/Manager'
-                try:
-                    proxy = bus.get_object('org.freedesktop.ConsoleKit',
-                                           CONSOLEKIT_DBUS_PATH)
-                    pm = dbus.Interface(proxy,
-                                        'org.freedesktop.ConsoleKit.Manager')
+                        if self._logout_mode == self.MODE_SHUTDOWN:
+                            pm.PowerOff(False)
+                        elif self._logout_mode == self.MODE_REBOOT:
+                            pm.Reboot(False)
+                    except dbus.DBusException:
+                        logging.exception('Can not stop sugar via systemd')
+                else:
+                    CONSOLEKIT_DBUS_PATH = '/org/freedesktop/ConsoleKit/Manager'
+                    try:
+                        proxy = bus.get_object('org.freedesktop.ConsoleKit',
+                                               CONSOLEKIT_DBUS_PATH)
+                        pm = dbus.Interface(proxy,
+                                            'org.freedesktop.ConsoleKit.Manager')
 
-                    if self._logout_mode == self.MODE_SHUTDOWN:
-                        pm.Stop()
-                    elif self._logout_mode == self.MODE_REBOOT:
-                        pm.Restart()
-                except:
-                    logging.exception('Can not stop sugar')
-                    #self.session.cancel_shutdown()
-                    return
+                        if self._logout_mode == self.MODE_SHUTDOWN:
+                            pm.Stop()
+                        elif self._logout_mode == self.MODE_REBOOT:
+                            pm.Restart()
+                    except dbus.DBusException:
+                        logging.exception('Can not stop sugar via ConsoleKit')
+            except dbus.DBusException:
+                logging.exception('Can not connect to SystemBus for shutdown')
 
-        #SugarExt.xsmp_shutdown()
-        Gtk.main_quit()
+        # Always quit the shell model to ensure we exit
+        self._shell_model.quit()
 
 
 def get_session_manager():

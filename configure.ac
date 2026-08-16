@@ -1,6 +1,6 @@
 AC_INIT([Sugar],[0.121],[],[sugar])
 
-AC_PREREQ([2.59])
+AC_PREREQ([2.72])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([configure.ac])
@@ -25,7 +25,7 @@ AC_SUBST([GETTEXT_PACKAGE])
 AM_GLIB_GNU_GETTEXT
 
 AC_ARG_ENABLE(update-mimedb,
-   AC_HELP_STRING([--disable-update-mimedb],
+   AS_HELP_STRING([--disable-update-mimedb],
                    [disable the update-mime-database after install [default=no]]),,
     enable_update_mimedb=yes)
 AM_CONDITIONAL(ENABLE_UPDATE_MIMEDB, test x$enable_update_mimedb = xyes)

@@ -19,7 +19,6 @@ import logging
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
-#from gi.repository import Wnck
 
 from sugar4.graphics import style
 from sugar4.graphics.toolbutton import ToolButton
@@ -28,10 +27,15 @@ from sugar4.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
 from jarabe.journal.listview import BaseListView
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.journaltoolbox import MainToolbox
-from jarabe.journal.volumestoolbar import VolumesToolbar
 from jarabe.model import bundleregistry
 
 from jarabe.journal.iconview import IconView
+
+# Inject CSS for modal background
+provider = Gtk.CssProvider()
+css = b".modal-bg { background-color: %s; }" % style.COLOR_BLACK.get_html().encode('utf-8')
+provider.load_from_data(css)
+Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 
 class ObjectChooser(Gtk.Window):
@@ -44,93 +48,110 @@ class ObjectChooser(Gtk.Window):
 
     def __init__(self, parent=None, what_filter='', filter_type=None,
                  show_preview=False):
-        Gtk.Window.__init__(self)
-        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
+        super().__init__()
         self.set_decorated(False)
-        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
-        self.set_border_width(style.LINE_WIDTH)
-        self.set_has_resize_grip(False)
+        self.set_modal(True)
 
         self._selected_object_id = None
         self._show_preview = show_preview
 
-        self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
-        self.connect('visibility-notify-event',
-                     self.__visibility_notify_event_cb)
-        self.connect('delete-event', self.__delete_event_cb)
-        self.connect('key-press-event', self.__key_press_event_cb)
+        key_controller = Gtk.EventControllerKey()
+        key_controller.connect('key-pressed', self.__key_press_event_cb)
+        self.add_controller(key_controller)
 
         if parent is None:
             logging.warning('ObjectChooser: No parent window specified')
+            # Fall back to main sugar window as transient parent
+            from jarabe.model import shell as _shell
+            shell_model = _shell.get_model()
+            if shell_model and shell_model.get_active_window():
+                self.set_transient_for(shell_model.get_active_window())
         else:
-            self.connect('realize', self.__realize_cb, parent)
-
-            #screen = Wnck.Screen.get_default()
-            #screen.connect('window-closed', self.__window_closed_cb, parent)
+            self.set_transient_for(parent)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(vbox)
-        vbox.show()
+        vbox.add_css_class('modal-bg')
+        # Margin instead of border_width
+        vbox.set_margin_start(style.LINE_WIDTH)
+        vbox.set_margin_end(style.LINE_WIDTH)
+        vbox.set_margin_top(style.LINE_WIDTH)
+        vbox.set_margin_bottom(style.LINE_WIDTH)
+
+        self.set_child(vbox)
+        vbox.set_visible(True)
 
         title_box = TitleBox(what_filter, filter_type)
-        title_box.connect('volume-changed', self.__volume_changed_cb)
         title_box.close_button.connect('clicked',
                                        self.__close_button_clicked_cb)
         title_box.set_size_request(-1, style.GRID_CELL_SIZE)
-        vbox.pack_start(title_box, False, True, 0)
-        title_box.show()
+        vbox.append(title_box)
+        title_box.set_visible(True)
 
         separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
-        vbox.pack_start(separator, False, True, 0)
-        separator.show()
+        vbox.append(separator)
+        separator.set_visible(True)
 
         self._toolbar = MainToolbox(default_what_filter=what_filter,
                                     default_filter_type=filter_type)
         self._toolbar.connect('query-changed', self.__query_changed_cb)
         self._toolbar.set_size_request(-1, style.GRID_CELL_SIZE)
-        vbox.pack_start(self._toolbar, False, True, 0)
-        self._toolbar.show()
+        vbox.append(self._toolbar)
+        self._toolbar.set_visible(True)
 
         if not self._show_preview:
             self._list_view = ChooserListView(self._toolbar)
             self._list_view.connect('entry-activated',
                                     self.__entry_activated_cb)
             self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
-            vbox.pack_start(self._list_view, True, True, 0)
-            self._list_view.show()
+            self._list_view.set_vexpand(True)
+            vbox.append(self._list_view)
+            self._list_view.set_visible(True)
         else:
             self._icon_view = IconView(self._toolbar)
             self._icon_view.connect('entry-activated',
                                     self.__entry_activated_cb)
             self._icon_view.connect('clear-clicked', self.__clear_clicked_cb)
-            vbox.pack_start(self._icon_view, True, True, 0)
-            self._icon_view.show()
+            self._icon_view.set_vexpand(True)
+            vbox.append(self._icon_view)
+            self._icon_view.set_visible(True)
 
-        width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 2
-        height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
-        self.set_size_request(width, height)
+        display = Gdk.Display.get_default()
+        screen_width, screen_height = 800, 600
+        if display:
+            monitors = display.get_monitors()
+            if monitors and monitors.get_n_items() > 0:
+                geo = monitors.get_item(0).get_geometry()
+                screen_width = geo.width - style.GRID_CELL_SIZE * 2
+                screen_height = geo.height - style.GRID_CELL_SIZE * 2
+        self.set_default_size(screen_width, screen_height)
 
         self._toolbar.update_filters('/', what_filter, filter_type)
 
-    def __realize_cb(self, chooser, parent):
-        self.get_window().set_transient_for(parent)
-        # TODO: Should we disconnect the signal here?
+        self.set_focus(self._toolbar.search_entry)
+        self.connect('unmap', self.__visibility_notify_event_cb)
+        self.connect('map', self.__map_cb)
+        self.connect('close-request', self.__close_request_cb)
+        self.connect('realize', self.__realize_cb)
+        self.connect('unrealize', self.__unrealize_cb)
 
-    def __window_closed_cb(self, screen, window, parent):
-        if window.get_xid() == parent.get_xid():
-            self.destroy()
+    def __realize_cb(self, widget):
+        from jarabe.model import shell as _shell
+        _shell.get_model().push_modal()
+
+    def __unrealize_cb(self, widget):
+        from jarabe.model import shell as _shell
+        _shell.get_model().pop_modal()
 
     def __entry_activated_cb(self, list_view, uid):
         self._selected_object_id = uid
         self.emit('response', Gtk.ResponseType.ACCEPT)
 
-    def __delete_event_cb(self, chooser, event):
-        self.emit('response', Gtk.ResponseType.DELETE_EVENT)
-
-    def __key_press_event_cb(self, widget, event):
-        keyname = Gdk.keyval_name(event.keyval)
+    def __key_press_event_cb(self, controller, keyval, keycode, state):
+        keyname = Gdk.keyval_name(keyval)
         if keyname == 'Escape':
             self.emit('response', Gtk.ResponseType.DELETE_EVENT)
+            return True
+        return False
 
     def __close_button_clicked_cb(self, button):
         self.emit('response', Gtk.ResponseType.DELETE_EVENT)
@@ -144,27 +165,35 @@ class ObjectChooser(Gtk.Window):
         else:
             self._icon_view.update_with_query(query)
 
-    def __volume_changed_cb(self, volume_toolbar, mount_point):
-        logging.debug('Selected volume: %r.', mount_point)
-        self._toolbar.set_mount_point(mount_point)
 
-    def __visibility_notify_event_cb(self, window, event):
+    def __visibility_notify_event_cb(self, widget):
         logging.debug('visibility_notify_event_cb %r', self)
-        visible = event.get_state() == Gdk.VisibilityState.FULLY_OBSCURED
+        visible = self.get_mapped()
         if not self._show_preview:
             self._list_view.set_is_visible(visible)
         else:
             self._icon_view.set_is_visible(visible)
 
+    def __map_cb(self, widget):
+        if not self._show_preview:
+            self._list_view.set_is_visible(True)
+        else:
+            self._icon_view.set_is_visible(True)
+
+    def __close_request_cb(self, window):
+        self.emit('response', Gtk.ResponseType.DELETE_EVENT)
+        return True
+
     def __clear_clicked_cb(self, list_view):
         self._toolbar.clear_query()
 
 
-class TitleBox(VolumesToolbar):
+class TitleBox(Gtk.Box):
     __gtype_name__ = 'TitleBox'
 
     def __init__(self, what_filter='', filter_type=None):
-        VolumesToolbar.__init__(self)
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL)
+        self._children = []
 
         label = Gtk.Label()
         title = _('Choose an object')
@@ -176,23 +205,22 @@ class TitleBox(VolumesToolbar):
                     bundle.get_name()
 
         label.set_markup('<b>%s</b>' % title)
-        label.set_alignment(0, 0.5)
+        label.set_halign(Gtk.Align.START)
+        label.set_valign(Gtk.Align.CENTER)
         self._add_widget(label, expand=True)
 
         self.close_button = ToolButton(icon_name='dialog-cancel')
         self.close_button.set_tooltip(_('Close'))
-        self.insert(self.close_button, -1)
-        self.close_button.show()
+        self._add_widget(self.close_button)
+        self.close_button.set_visible(True)
 
     def _add_widget(self, widget, expand=False):
-        tool_item = Gtk.ToolItem()
-        tool_item.set_expand(expand)
+        if expand:
+            widget.set_hexpand(True)
 
-        tool_item.add(widget)
-        widget.show()
-
-        self.insert(tool_item, -1)
-        tool_item.show()
+        self.append(widget)
+        self._children.append(widget)
+        widget.set_visible(True)
 
 
 class ChooserListView(BaseListView):
@@ -209,9 +237,10 @@ class ChooserListView(BaseListView):
         self._toolbar = toolbar
 
         self.tree_view.props.hover_selection = True
-
-        self.tree_view.connect('button-release-event',
-                               self.__button_release_event_cb)
+        
+        click_controller = Gtk.GestureClick()
+        click_controller.connect('released', self.__button_release_event_cb)
+        self.tree_view.add_controller(click_controller)
 
     def _can_clear_query(self):
         return self._toolbar.is_filter_changed()
@@ -223,16 +252,13 @@ class ChooserListView(BaseListView):
         # We don't want show the palette in the object chooser
         pass
 
-    def __button_release_event_cb(self, tree_view, event):
-        if event.window != tree_view.get_bin_window():
-            return False
-
-        pos = tree_view.get_path_at_pos(int(event.x), int(event.y))
+    def __button_release_event_cb(self, gesture, n_press, x, y):
+        pos = self.tree_view.get_path_at_pos(int(x), int(y))
         if pos is None:
             return False
 
         path, column_, x_, y_ = pos
-        uid = tree_view.get_model()[path][ListModel.COLUMN_UID]
+        uid = self.tree_view.get_model()[path][ListModel.COLUMN_UID]
         self.emit('entry-activated', uid)
 
         return False

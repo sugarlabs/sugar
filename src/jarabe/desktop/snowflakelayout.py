@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,48 +17,33 @@ import math
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+import gi
+gi.require_version('Gsk', '4.0')
+gi.require_version('Graphene', '1.0')
+from gi.repository import Gsk, Graphene
 
 from sugar4.graphics import style
-
 
 _BASE_DISTANCE = style.zoom(25)
 _CHILDREN_FACTOR = style.zoom(3)
 
 
-class SnowflakeLayout(Gtk.Container):
+class SnowflakeLayout(Gtk.Widget):
     __gtype_name__ = 'SugarSnowflakeLayout'
 
     def __init__(self):
-        Gtk.Container.__init__(self)
-        self.set_has_window(False)
+        super().__init__()
         self._nflakes = 0
         self._children = {}
 
-    def do_realize(self):
-        self.set_realized(True)
-        self.set_window(self.get_parent_window())
+    def do_dispose(self):
         for child in list(self._children.keys()):
-            child.set_parent_window(self.get_parent_window())
-        self.queue_resize()
+            child.unparent()
+        self._children.clear()
+        self._nflakes = 0
 
-    def do_add(self, child):
-        if child.get_realized():
-            child.set_parent_window(self.get_parent_window())
+    def add(self, child):
         child.set_parent(self)
-
-    def do_forall(self, include_internals, callback):
-        for child in list(self._children.keys()):
-            callback(child)
-
-    def do_remove(self, child):
-        child.unparent()
-
-    def add_icon(self, child, center=False):
-        if not center:
-            self._nflakes += 1
-
-        self._children[child] = center
-        self.add(child)
 
     def remove(self, child):
         if child not in self._children:
@@ -68,44 +53,40 @@ class SnowflakeLayout(Gtk.Container):
             self._nflakes -= 1
 
         del self._children[child]
-        self.remove(child)
+        child.unparent()
 
-    def do_get_preferred_size(self):
+    def add_icon(self, child, center=False):
+        if not center:
+            self._nflakes += 1
+
+        self._children[child] = center
+        self.add(child)
+
+    def _child_size(self, child):
+        _, nat_w, _, _ = child.measure(Gtk.Orientation.HORIZONTAL, -1)
+        _, nat_h, _, _ = child.measure(Gtk.Orientation.VERTICAL, -1)
+        return nat_w, nat_h
+
+    def do_measure(self, orientation, for_size):
         size = self._calculate_size()
-        requisition = Gtk.Requisition()
-        requisition.width = size
-        requisition.height = size
-        return (requisition, requisition)
+        return (size, size, -1, -1)
 
-    def do_get_preferred_width(self):
-        size = self._calculate_size()
-        return (size, size)
-
-    def do_get_preferred_height(self):
-        size = self._calculate_size()
-        return (size, size)
-
-    def do_size_allocate(self, allocation):
-        self.set_allocation(allocation)
-
+    def do_size_allocate(self, width, height, baseline):
         r = self._get_radius()
         index = 0
 
         for child, centered in list(self._children.items()):
-            child_request = child.size_request()
-            child_width, child_height = \
-                child_request.width, child_request.height
+            child_width, child_height = self._child_size(child)
+            
             rect = Gdk.Rectangle()
-            rect.x = 0
-            rect.y = 0
             rect.width = child_width
             rect.height = child_height
 
-            width = allocation.width - child_width
-            height = allocation.height - child_height
+            w = width - child_width
+            h = height - child_height
             if centered:
-                rect.x = allocation.x + width / 2
-                rect.y = allocation.y + height / 2
+                rect.x = w / 2
+                rect.y = h / 2
             else:
                 angle = 2 * math.pi * index / self._nflakes
 
@@ -115,30 +96,30 @@ class SnowflakeLayout(Gtk.Container):
                 dx = math.cos(angle) * r
                 dy = math.sin(angle) * r
 
-                rect.x = int(allocation.x + width / 2 + dx)
-                rect.y = int(allocation.y + height / 2 + dy)
+                rect.x = int(w / 2 + dx)
+                rect.y = int(h / 2 + dy)
 
                 index += 1
 
-            child.size_allocate(rect)
+            transform = Gsk.Transform.new().translate(Graphene.Point().init(rect.x, rect.y))
+            child.allocate(rect.width, rect.height, -1, transform)
 
     def _get_radius(self):
         radius = int(_BASE_DISTANCE + _CHILDREN_FACTOR * self._nflakes)
         for child, centered in list(self._children.items()):
             if centered:
-                child_request = child.size_request()
-                child_width, child_height = \
-                    child_request.width, child_request.height
+                child_width, child_height = self._child_size(child)
                 radius += max(child_width, child_height) / 2
-
         return radius
 
     def _calculate_size(self):
         thickness = 0
         for child in list(self._children.keys()):
-            child_request = child.size_request()
-            child_width, child_height = \
-                child_request.width, child_request.height
+            child_width, child_height = self._child_size(child)
             thickness = max(thickness, max(child_width, child_height))
 
         return self._get_radius() * 2 + thickness
+
+    def do_snapshot(self, snapshot):
+        for child in list(self._children.keys()):
+            self.snapshot_child(child, snapshot)
