@@ -70,6 +70,7 @@ from jarabe.view import keyhandler
 from jarabe.view import gesturehandler
 from jarabe.view import cursortracker
 from jarabe.journal import journalactivity
+from jarabe.journal import reflectiontrigger
 from jarabe.model import notifications
 from jarabe.model import filetransfer
 from jarabe.view import launcher
@@ -119,6 +120,7 @@ def setup_cursortracker_cb():
 def setup_journal_cb():
     logging.debug('STARTUP: setup_journal_cb')
     journalactivity.start()
+    reflectiontrigger.start()
 
 
 def setup_notification_service_cb():
