@@ -438,9 +438,16 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         return _('No date')
 
     def _create_buddy_list(self):
-
+        # No orphan heading: the label appears only when somebody
+        # actually worked on this together with the child.
         vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
+
+        buddies = []
+        if self._metadata.get('buddies'):
+            buddies = list(json.loads(self._metadata['buddies']).values())
+        if not buddies:
+            return vbox
 
         text = Gtk.Label()
         text.set_markup('<span foreground="%s">%s</span>' % (
@@ -449,10 +456,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         halign.add(text)
         vbox.pack_start(halign, False, False, 0)
 
-        if self._metadata.get('buddies'):
-            buddies = list(json.loads(self._metadata['buddies']).values())
-            vbox.pack_start(BuddyList(buddies), False, False, 0)
-            return vbox
+        vbox.pack_start(BuddyList(buddies), False, False, 0)
         return vbox
 
     def _create_scrollable(self, widget, label=None):
