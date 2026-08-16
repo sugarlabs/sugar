@@ -54,7 +54,6 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     COLUMN_BUDDY_1 = 9
     COLUMN_BUDDY_2 = 10
     COLUMN_BUDDY_3 = 11
-    COLUMN_SELECT = 12
 
     _COLUMN_TYPES = {
         COLUMN_UID: str,
@@ -69,7 +68,6 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         COLUMN_BUDDY_1: object,
         COLUMN_BUDDY_3: object,
         COLUMN_BUDDY_2: object,
-        COLUMN_SELECT: bool,
     }
 
     _PAGE_SIZE = 10
