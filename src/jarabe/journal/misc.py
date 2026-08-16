@@ -118,6 +118,11 @@ def get_icon_name(metadata):
     return file_name
 
 
+def get_sitting_key(metadata):
+    """Key identifying which sitting an entry belongs to."""
+    return metadata.get('activity', '') or get_icon_name(metadata)
+
+
 def get_date(metadata):
     """ Convert from a string in iso format to a more human-like format. """
     if 'timestamp' in metadata:
