@@ -51,7 +51,6 @@ from jarabe.journal import model
 from jarabe.journal.journalwindow import JournalWindow
 from jarabe.journal.bundlelauncher import launch_bundle, get_bundle
 from jarabe.journal import journalwindow
-from jarabe.journal.listmodel import ListModel
 
 from jarabe.model import session, shell
 
