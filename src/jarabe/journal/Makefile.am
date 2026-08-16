@@ -23,6 +23,7 @@ sugar_PYTHON =				\
 	timeline.py			\
 	palettes.py			\
 	joglyph.py			\
+	momentcard.py			\
 	reflectguard.py			\
 	reflection.py			\
 	reflectstyle.py			\
