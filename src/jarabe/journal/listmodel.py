@@ -163,18 +163,17 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         metadata = self._result_set.read()
         metadata.update(self._updated_entries.get(metadata['uid'], {}))
 
-        self._last_requested_index = index
-        self._cached_row = []
-        self._cached_row.append(metadata['uid'])
-        self._cached_row.append(metadata.get('keep', '0') == '1')
-        self._cached_row.append(misc.get_icon_name(metadata))
+        row = []
+        row.append(metadata['uid'])
+        row.append(metadata.get('keep', '0') == '1')
+        row.append(misc.get_icon_name(metadata))
 
         if misc.is_activity_bundle(metadata):
             xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                           style.COLOR_TRANSPARENT.get_svg()))
         else:
             xo_color = misc.get_icon_color(metadata)
-        self._cached_row.append(xo_color)
+        row.append(xo_color)
 
         title_value = metadata.get('title', _('Untitled'))
         if not isinstance(title_value, str):
@@ -184,7 +183,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
                             metadata['uid'], title_value)
             title_value = _('Untitled')
         title = GObject.markup_escape_text(title_value)
-        self._cached_row.append('<b>%s</b>' % (title, ))
+        row.append('<b>%s</b>' % (title, ))
 
         try:
             timestamp = float(metadata.get('timestamp', 0))
@@ -192,27 +191,27 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
             timestamp_content = _('Unknown')
         else:
             timestamp_content = util.timestamp_to_elapsed_string(timestamp)
-        self._cached_row.append(timestamp_content)
+        row.append(timestamp_content)
 
         try:
             creation_time = float(metadata.get('creation_time'))
         except (TypeError, ValueError):
-            self._cached_row.append(_('Unknown'))
+            row.append(_('Unknown'))
         else:
-            self._cached_row.append(
+            row.append(
                 util.timestamp_to_elapsed_string(float(creation_time)))
 
         try:
             size = int(metadata.get('filesize'))
         except (TypeError, ValueError):
             size = None
-        self._cached_row.append(util.format_size(size))
+        row.append(util.format_size(size))
 
         try:
             progress = int(float(metadata.get('progress', 100)))
         except (TypeError, ValueError):
             progress = 100
-        self._cached_row.append(progress)
+        row.append(progress)
 
         buddies = []
         if metadata.get('buddies'):
@@ -235,11 +234,13 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
                     logging.warning('Malformed buddies for %r: %s',
                                     metadata['uid'], exception)
                 else:
-                    self._cached_row.append([nick, XoColor(color)])
+                    row.append([nick, XoColor(color)])
                     continue
 
-            self._cached_row.append(None)
+            row.append(None)
 
+        self._cached_row = row
+        self._last_requested_index = index
         return self._cached_row[column]
 
     def do_iter_nth_child(self, parent_iter, n):
