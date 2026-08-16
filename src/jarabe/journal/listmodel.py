@@ -139,6 +139,9 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         if column == ListModel.COLUMN_TITLE:
             metadata['title'] = value
         self._updated_entries[metadata['uid']] = metadata
+        # The edit must survive a re-read of this same row: the row
+        # cache was primed by the read that preceded this write.
+        self._last_requested_index = None
         if self._updated_callback is not None:
             model.updated.disconnect(self._updated_callback)
         model.write(metadata, update_mtime=False,
