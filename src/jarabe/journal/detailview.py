@@ -40,11 +40,6 @@ class DetailView(Gtk.VBox):
 
         Gtk.VBox.__init__(self)
 
-        back_bar = BackBar()
-        back_bar.connect('button-release-event',
-                         self.__back_bar_release_event_cb)
-        self.pack_start(back_bar, False, True, 0)
-
         self.show_all()
 
     def _fav_icon_activated_cb(self, fav_icon):
@@ -52,9 +47,9 @@ class DetailView(Gtk.VBox):
         self._expanded_entry.set_keep(keep)
         fav_icon.props.keep = keep
 
-    def __back_bar_release_event_cb(self, back_bar, event):
-        self.emit('go-back-clicked')
-        return False
+    def set_rail_shown(self, shown):
+        if self._expanded_entry is not None:
+            self._expanded_entry.set_rail_shown(shown)
 
     def _update_view(self):
         if self._expanded_entry is None:
@@ -67,6 +62,10 @@ class DetailView(Gtk.VBox):
         logging.debug('DetailView.refresh')
         self._metadata = model.get(self._metadata['uid'])
         self._update_view()
+
+    def reveal_reflection(self):
+        if self._expanded_entry is not None:
+            self._expanded_entry.reveal_reflection()
 
     def get_metadata(self):
         return self._metadata
