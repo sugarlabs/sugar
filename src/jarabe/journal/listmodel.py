@@ -27,6 +27,7 @@ from sugar3 import util
 
 from jarabe.journal import model
 from jarabe.journal import misc
+from jarabe.journal import timeline
 
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
@@ -78,6 +79,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._last_requested_index = None
         self._temp_drag_file_uid = None
         self._cached_row = None
+        self._row_facts = {}
         self._query = query
         self._all_ids = []
         t = time.time()
@@ -139,9 +141,10 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         if column == ListModel.COLUMN_TITLE:
             metadata['title'] = value
         self._updated_entries[metadata['uid']] = metadata
-        # The edit must survive a re-read of this same row: the row
-        # cache was primed by the read that preceded this write.
+        # The edit must survive a re-read of this same row: both row
+        # caches were primed by the read that preceded this write.
         self._last_requested_index = None
+        self._row_facts.pop(index, None)
         if self._updated_callback is not None:
             model.updated.disconnect(self._updated_callback)
         model.write(metadata, update_mtime=False,
@@ -150,6 +153,35 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     def __reconnect_updates_cb(self, metadata, filepath, uid):
         if self._updated_callback is not None:
             model.updated.connect(self._updated_callback)
+
+    def get_row_facts(self, index):
+        facts = self._row_facts.get(index)
+        if facts is not None:
+            return facts
+        if self.view_is_resizing or index >= self._result_set.length:
+            return None
+        self._result_set.seek(index)
+        metadata = self._result_set.read()
+        metadata.update(self._updated_entries.get(metadata['uid'], {}))
+        return self._remember_row_facts(index, metadata)
+
+    def get_row_metadata(self, index):
+        if self.view_is_resizing or index >= self._result_set.length:
+            return None
+        self._result_set.seek(index)
+        metadata = self._result_set.read()
+        metadata.update(self._updated_entries.get(metadata['uid'], {}))
+        return dict(metadata)
+
+    def _remember_row_facts(self, index, metadata):
+        timestamp = timeline.safe_timestamp(metadata.get('timestamp', 0))
+        # sugar-datastore backfills creation_time = timestamp on create/update.
+        creation_time = timeline.safe_timestamp(
+            metadata.get('creation_time', timestamp), default=timestamp)
+        facts = (metadata['uid'], timestamp, misc.get_sitting_key(metadata),
+                 creation_time)
+        self._row_facts[index] = facts
+        return facts
 
     def do_get_value(self, iterator, column):
         if self.view_is_resizing:
@@ -165,6 +197,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._result_set.seek(index)
         metadata = self._result_set.read()
         metadata.update(self._updated_entries.get(metadata['uid'], {}))
+        facts = self._remember_row_facts(index, metadata)
 
         row = []
         row.append(metadata['uid'])
@@ -188,21 +221,24 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         title = GObject.markup_escape_text(title_value)
         row.append('<b>%s</b>' % (title, ))
 
-        try:
-            timestamp = float(metadata.get('timestamp', 0))
-        except (TypeError, ValueError):
-            timestamp_content = _('Unknown')
-        else:
+        # A bare float() lets 'nan' and 'inf' through as truthy;
+        # util.timestamp_to_elapsed_string raises ValueError on
+        # both, since int() can't convert a float NaN to an
+        # integer. A falsy timestamp shows the same "no date"
+        # string as expandedentry.py's _format_date, instead of a
+        # false elapsed time.
+        timestamp = facts[1]
+        if timestamp:
             timestamp_content = util.timestamp_to_elapsed_string(timestamp)
+        else:
+            timestamp_content = _('No date')
         row.append(timestamp_content)
 
-        try:
-            creation_time = float(metadata.get('creation_time'))
-        except (TypeError, ValueError):
-            row.append(_('Unknown'))
+        creation_time = facts[3]
+        if creation_time:
+            row.append(util.timestamp_to_elapsed_string(creation_time))
         else:
-            row.append(
-                util.timestamp_to_elapsed_string(float(creation_time)))
+            row.append(_('No date'))
 
         try:
             size = int(metadata.get('filesize'))
