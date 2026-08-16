@@ -5,6 +5,7 @@ sugar_PYTHON =				\
 	bundlelauncher.py		\
 	detailview.py			\
 	expandedentry.py		\
+	gridview.py			\
 	iconview.py			\
 	iconmodel.py			\
 	journalactivity.py		\
