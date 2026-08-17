@@ -364,6 +364,10 @@ class JournalActivity(JournalWindow):
 
         self._detail_toolbox = DetailToolbox(self)
         self._detail_toolbox.connect('volume-error', self.volume_error_cb)
+        self._detail_toolbox.connect('back-clicked',
+                                     self.__go_back_clicked_cb)
+        self._detail_toolbox.connect('rail-toggled',
+                                     self.__rail_toggled_cb)
 
         self._detail_view = DetailView(self)
         self._detail_view.connect('go-back-clicked', self.__go_back_clicked_cb)
@@ -505,6 +509,9 @@ class JournalActivity(JournalWindow):
     def __go_back_clicked_cb(self, detail_view):
         self.show_main_view()
 
+    def __rail_toggled_cb(self, toolbox, shown):
+        self._detail_view.set_rail_shown(shown)
+
     def __view_mode_changed_cb(self, toolbar, grid_active):
         self._carry_selection_between_views(grid_active)
         self._grid_view_active = grid_active
@@ -593,11 +600,16 @@ class JournalActivity(JournalWindow):
         self.set_canvas(self._secondary_view)
         self._secondary_view.show()
 
-    def show_object(self, object_id):
+    def show_object(self, object_id, reveal_reflection=False):
         metadata = model.get(object_id)
         if metadata is None:
             return False
         self._show_secondary_view(object_id)
+        if reveal_reflection:
+            self._detail_toolbox.sync_rail_toggle(True)
+            # Landing from Jo's invite: the promise was the talk, so
+            # the page opens scrolled to it, not to the top.
+            self._detail_view.reveal_reflection()
         return True
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
