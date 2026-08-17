@@ -1071,9 +1071,15 @@ class ReflectionView(Gtk.EventBox):
         turns = []
         if self._session is not None:
             turns = list(self._session.get('turns', []))
+        description = self._metadata.get('description', '')
+        if reflection.people_kept_in_description(
+                self._metadata.get('reflections', ''), description):
+            # An older talk's starred answer names someone in the
+            # room, and the description carries it verbatim.
+            description = ''
         args = (self._metadata.get('uid', ''), self._generation,
                 self._activity_id(), self._metadata.get('title', ''),
-                self._metadata.get('description', ''), turns,
+                description, turns,
                 reflection.get_next_steps(self._metadata), self._data,
                 self._artifact_visible, self._opener_hint)
         thread = threading.Thread(target=self.__request_worker, args=args)

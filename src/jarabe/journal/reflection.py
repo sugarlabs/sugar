@@ -13,13 +13,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import configparser
 import json
 import logging
 import os
 import random
 import re
+import socket
 import time
 import unicodedata
+import urllib.error
+import urllib.parse
+import urllib.request
 import uuid
 from gettext import gettext as _
 
@@ -296,6 +301,31 @@ def unkeep_from_description(description, text):
             del lines[i]
             return '\n'.join(lines)
     return description
+
+
+def people_kept_in_description(raw, description):
+    """Whether an answer to a people question - from any session the
+    record holds, not only the open one - is kept in this description.
+    A starred answer names someone in the room, so its description
+    cannot ride a request.
+    """
+    if not description:
+        return False
+    for session in loads(raw).get('sessions', []):
+        turns = session.get('turns')
+        if not isinstance(turns, list):
+            continue
+        people = False
+        for turn in turns:
+            if not isinstance(turn, dict):
+                continue
+            role = turn.get('role')
+            if role == ROLE_JO:
+                people = _people_turn(turn) or bool(turn.get('local'))
+            if people and role == ROLE_CHILD and \
+                    has_kept_line(description, turn.get('text', '')):
+                return True
+    return False
 
 
 # Activities grouped into the five categories the offline floor asks
@@ -640,6 +670,50 @@ def _collect_used(turn, used):
         used.add(turn['text'])
 
 
+# A server is something a school opts into: until somebody ticks the
+# switch, Jo asks from the floor and nothing leaves the laptop.
+DEFAULT_ENABLED = False
+
+DEFAULT_CONFIG_PATH = os.path.expanduser('~/.sugar/default/reflection.conf')
+
+_CONFIG_SECTION = 'reflection'
+_ENV_URL = 'SUGAR_AI_URL'
+_ENV_API_KEY = 'SUGAR_AI_KEY'
+_ENV_ENABLED = 'SUGAR_AI_REFLECTION_ENABLED'
+
+
+def read_config(path=DEFAULT_CONFIG_PATH):
+    """Read the reflection endpoint's url, api_key and enabled flag."""
+    config = {'url': '', 'api_key': '', 'enabled': DEFAULT_ENABLED}
+
+    parser = configparser.ConfigParser(interpolation=None)
+    try:
+        parser.read([path])
+    except (configparser.Error, OSError, ValueError):
+        logging.exception('Error reading reflection config %r', path)
+    else:
+        if parser.has_option(_CONFIG_SECTION, 'url'):
+            config['url'] = parser.get(_CONFIG_SECTION, 'url')
+        if parser.has_option(_CONFIG_SECTION, 'api_key'):
+            config['api_key'] = parser.get(_CONFIG_SECTION, 'api_key')
+        if parser.has_option(_CONFIG_SECTION, 'enabled'):
+            try:
+                config['enabled'] = parser.getboolean(_CONFIG_SECTION,
+                                                      'enabled')
+            except ValueError:
+                logging.warning('Invalid enabled value in %r', path)
+
+    if os.environ.get(_ENV_URL):
+        config['url'] = os.environ[_ENV_URL]
+    if os.environ.get(_ENV_API_KEY):
+        config['api_key'] = os.environ[_ENV_API_KEY]
+    if os.environ.get(_ENV_ENABLED):
+        config['enabled'] = os.environ[_ENV_ENABLED].strip().lower() in \
+            ('1', 'true', 'yes', 'on')
+
+    return config
+
+
 # Jo introduces itself once, on whichever surface the child meets
 # first. That fact lives here, not in any entry's metadata.
 STATE_PATH = os.path.expanduser('~/.sugar/default/reflection-state.json')
@@ -673,7 +747,152 @@ def mark_state(key, path=STATE_PATH):
         logging.exception('Error writing reflection state %r', path)
 
 
+READ_TIMEOUT = 30
+
+# A reply is one question: past this the body is no shape we can use,
+# and reading it on would spend the laptop's memory to throw it away.
+_MAX_RESPONSE_BYTES = 64 * 1024
+
+_PROBE_TIMEOUT = 5
+
+_CHAT_PATH = '/reflect/chat'
+
+
+class ReflectionOffline(Exception):
+    """No network, or the reflect endpoint was unreachable."""
+
+
+class ReflectionTimeout(Exception):
+    """The reflect endpoint did not answer within READ_TIMEOUT."""
+
+
+class ReflectionHTTPError(Exception):
+    """The reflect endpoint answered with a non-2xx status."""
+
+    def __init__(self, status, reason):
+        Exception.__init__(self, '%s %s' % (status, reason))
+        self.status = status
+        self.reason = reason
+
+
+class ReflectionBadResponse(Exception):
+    """The response body was not the expected shape."""
+
+
+def _probe_address(url):
+    """Host and port to knock on for a configured url, or None when
+    the url is not one we could post to at all.
+    """
+    try:
+        parts = urllib.parse.urlsplit(url)
+        port = parts.port or (443 if parts.scheme == 'https' else 80)
+    except ValueError:
+        return None
+    if not parts.hostname:
+        return None
+    return parts.hostname, port
+
+
+def is_online(url):
+    """Cheap knock on the configured server's own host. It answers
+    reachable, never fast: a slow endpoint still passes here, which is
+    what keeps an outage off READ_TIMEOUT.
+    """
+    address = _probe_address(url)
+    if address is None:
+        return False
+    try:
+        probe = socket.create_connection(address, timeout=_PROBE_TIMEOUT)
+        probe.close()
+        return True
+    except OSError:
+        return False
+
+
+def _post_json(url, api_key, payload):
+    """POST payload as JSON; raises only Reflection* errors. Connect
+    and read share one socket timeout - plain urllib cannot split
+    them - so is_online() keeps an outage off READ_TIMEOUT.
+    """
+    try:
+        request = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode('utf-8'),
+            headers={
+                'Content-Type': 'application/json',
+                'X-API-Key': api_key,
+            },
+            method='POST')
+        with urllib.request.urlopen(request, timeout=READ_TIMEOUT) as resp:
+            raw = resp.read(_MAX_RESPONSE_BYTES + 1)
+    except urllib.error.HTTPError as e:
+        raise ReflectionHTTPError(e.code, e.reason)
+    except socket.timeout:
+        raise ReflectionTimeout()
+    except urllib.error.URLError as e:
+        if isinstance(e.reason, socket.timeout):
+            raise ReflectionTimeout()
+        raise ReflectionOffline()
+    except ValueError:
+        # An address with no scheme never gets a socket; unreachable
+        # is the honest reading of it.
+        raise ReflectionOffline()
+
+    if len(raw) > _MAX_RESPONSE_BYTES:
+        raise ReflectionBadResponse('response was over %d bytes'
+                                    % _MAX_RESPONSE_BYTES)
+
+    try:
+        return json.loads(raw.decode('utf-8'))
+    except (ValueError, UnicodeDecodeError):
+        raise ReflectionBadResponse('response was not valid JSON')
+
+
 STATUS_OK = 'ok'
+
+
+# The wire roles are the server schema's; the storage roles stay
+# jo/child so metadata never depends on another project's naming.
+_WIRE_ROLE = {ROLE_JO: 'assistant', ROLE_CHILD: 'user'}
+
+
+def _build_payload(title, description, activity_id, turns,
+                   next_steps=None):
+    """The whitelisted body for /reflect/chat - never the reflections
+    blob, a preview, or the full metadata dict. A people question and
+    its answers stay off the wire: they name someone in the room. The
+    child can star such an answer into the description, so a starred
+    one among these turns empties it here, and
+    people_kept_in_description() covers the sessions already stored.
+    """
+    wire_turns = []
+    people = False
+    starred_people = False
+    for turn in turns:
+        if not isinstance(turn, dict):
+            continue
+        role = turn.get('role')
+        if role == ROLE_JO:
+            people = _people_turn(turn) or bool(turn.get('local'))
+        if people:
+            if role == ROLE_CHILD and \
+                    has_kept_line(description, turn.get('text', '')):
+                starred_people = True
+            continue
+        wire_role = _WIRE_ROLE.get(role)
+        if wire_role is None:
+            continue
+        wire_turns.append({'role': wire_role,
+                           'content': turn.get('text', '')})
+    payload = {
+        'title': title,
+        'description': '' if starred_people else description,
+        'activity_id': activity_id,
+        'turns': wire_turns,
+    }
+    if next_steps:
+        payload['previous_next_steps'] = next_steps
+    return payload
 
 
 def _result(object_id, generation, status, turn=None,
@@ -797,16 +1016,66 @@ def _floor_result(object_id, generation, activity_id, conversation, turns,
 
 
 def request_turn(object_id, generation, activity_id, title, description,
-                 turns, next_steps=None, conversation=None,
+                 turns, next_steps=None, config=None, conversation=None,
                  artifact_visible=False, opener=None):
-    """Compose Jo's next turn from the floor bank.
-
-    The result carries (object_id, generation), so a caller with
-    several requests in flight can place a late reply. A dry bank
-    comes back as STATUS_OK with turn None: Jo has nothing new to
-    open with and stays silent. title, description and next_steps
-    are unused here; the server layer consumes them.
+    """Ask the reflect endpoint for Jo's next turn. The result carries
+    (object_id, generation), so a caller with several requests in
+    flight can place a late reply. Every road away lands on the floor.
     """
-    return _floor_result(object_id, generation, activity_id,
-                         conversation, turns, artifact_visible,
-                         opener=opener)
+    if config is None:
+        config = read_config()
+
+    if not config['enabled'] or not config['api_key'] or not config['url']:
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+
+    if not is_online(config['url']):
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+
+    payload = _build_payload(title, description, activity_id, turns,
+                             next_steps)
+    url = config['url'].rstrip('/') + _CHAT_PATH
+
+    try:
+        body = _post_json(url, config['api_key'], payload)
+    except ReflectionOffline:
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+    except ReflectionTimeout:
+        logging.warning('Reflection server timed out; floor answers')
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+    except ReflectionHTTPError as e:
+        logging.warning('Reflection server error %s %s; floor answers',
+                        e.status, e.reason)
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+    except ReflectionBadResponse as e:
+        logging.warning('Reflection server reply unusable (%s); '
+                        'floor answers', e)
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+
+    question = body.get('question') if isinstance(body, dict) else None
+    if not isinstance(question, str) or not question.strip():
+        logging.warning('Reflection server reply missing question; '
+                        'floor answers')
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+
+    if not turn_acceptable(question):
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+
+    return _result(object_id, generation, STATUS_OK,
+                   turn={'role': ROLE_JO, 'text': question.strip()},
+                   should_continue=bool(body.get('should_continue', True)))
