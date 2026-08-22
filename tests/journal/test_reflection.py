@@ -379,18 +379,32 @@ class TestPayload(unittest.TestCase):
     # --- Payload whitelist ---
 
     def test_build_payload_matches_server_schema(self):
-        turns = [{'role': 'jo', 'text': 'Hi'},
+        turns = [{'role': 'jo', 'text': 'Hi', 'kind': 'question',
+                  'open': True, 'engagement': 'engaged'},
                  {'role': 'child', 'text': 'A rocket'}]
         payload = reflection._build_payload(
             'My Title', 'a description', 'org.laptop.TurtleArtActivity',
             turns)
         self.assertEqual(set(payload.keys()), {
-            'title', 'description', 'activity_id', 'turns'})
+            'title', 'description', 'activity_id', 'records'})
         self.assertEqual(
             payload['activity_id'], 'org.laptop.TurtleArtActivity')
-        self.assertEqual(payload['turns'], [
-            {'role': 'assistant', 'content': 'Hi'},
-            {'role': 'user', 'content': 'A rocket'}])
+        self.assertEqual(payload['records'], [
+            {'type': 'engine_turn', 'by': 'engine', 'kind': 'question',
+             'text': 'Hi',
+             'flags': {'open': True, 'simplified': False,
+                       'people_adjacent': False},
+             'engagement': 'engaged'},
+            {'type': 'child_turn', 'by': 'host', 'text': 'A rocket'}])
+
+    def test_a_stored_turn_without_typed_fields_becomes_a_question(self):
+        # Floor questions and turns stored before the typed fields
+        # existed are what the child saw; the engine counts them.
+        payload = reflection._build_payload(
+            'T', 'd', 'x', [{'role': 'jo', 'text': 'What broke?'}])
+        record = payload['records'][0]
+        self.assertEqual(record['kind'], 'question')
+        self.assertEqual(record['engagement'], 'engaged')
 
     def test_build_payload_never_carries_forbidden_keys(self):
         payload = reflection._build_payload('T', 'd', 'x', [])
@@ -558,7 +572,12 @@ class TestHttpClient(unittest.TestCase):
         p = mock.patch.object(reflection, 'is_online', lambda url: True)
         p.start()
         self.addCleanup(p.stop)
-        body = json.dumps({'question': 'What was tricky?'}).encode('utf-8')
+        body = json.dumps({'record': {
+            'type': 'engine_turn', 'by': 'engine', 'kind': 'question',
+            'text': 'What was tricky?',
+            'flags': {'open': True, 'simplified': False,
+                      'people_adjacent': False},
+            'engagement': 'engaged'}}).encode('utf-8')
         p = mock.patch.object(
             reflection.urllib.request, 'urlopen', fake_urlopen(body))
         p.start()
@@ -571,9 +590,53 @@ class TestHttpClient(unittest.TestCase):
         self.assertEqual(result, {
             'object_id': 'obj-1', 'generation': 3,
             'status': reflection.STATUS_OK,
-            'turn': {'role': 'jo', 'text': 'What was tricky?'},
+            'turn': {'role': 'jo', 'text': 'What was tricky?',
+                     'kind': 'question', 'engagement': 'engaged',
+                     'open': True},
             'should_continue': True,
         })
+
+    def test_request_turn_session_end_closes_with_the_typed_answer(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+        body = json.dumps({'record': {
+            'type': 'session_end', 'by': 'engine', 'reason': 'child_done',
+            'next_step': 'teach my dog to paint',
+            'asked': True}}).encode('utf-8')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(body))
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-1', 3, 'x', 't', 'd', [], config=VALID_CONFIG)
+
+        self.assertIsNone(result['turn'])
+        self.assertFalse(result['should_continue'])
+        self.assertEqual(result['end'], {
+            'reason': 'child_done',
+            'next_step': 'teach my dog to paint', 'asked': True})
+
+    def test_request_turn_engine_floor_lands_on_the_local_bank(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+        body = json.dumps({'record': {
+            'type': 'engine_turn', 'by': 'engine', 'kind': 'floor_request',
+            'text': None,
+            'flags': {'open': False, 'simplified': False,
+                      'people_adjacent': False},
+            'engagement': 'engaged'}}).encode('utf-8')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(body))
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-9', 2, 'x', 't', 'd', [], config=VALID_CONFIG)
+        self.assertEqual(
+            result['turn']['text'], reflection.DEFAULT_FLOOR_BANK[0])
 
     def test_request_turn_timeout(self):
         p = mock.patch.object(reflection, 'is_online', lambda url: True)
@@ -760,12 +823,18 @@ class TestHttpClient(unittest.TestCase):
         self.assertEqual(result['status'], reflection.STATUS_OK)
         self.assertIsNone(result['turn'])
 
-    def test_request_turn_carries_should_continue_false(self):
+    def test_request_turn_only_a_typed_end_stops_the_session(self):
+        # The old wire let a truthy flag beside a question stop the
+        # talk; on the typed wire only a session_end record does.
         p = mock.patch.object(reflection, 'is_online', lambda url: True)
         p.start()
         self.addCleanup(p.stop)
-        body = json.dumps({'question': 'One last thought?',
-                           'should_continue': False}).encode('utf-8')
+        body = json.dumps({'record': {
+            'type': 'engine_turn', 'by': 'engine', 'kind': 'wrap_offer',
+            'text': 'Keep going or stop here?',
+            'flags': {'open': False, 'simplified': False,
+                      'people_adjacent': False},
+            'engagement': 'engaged'}}).encode('utf-8')
         p = mock.patch.object(
             reflection.urllib.request, 'urlopen', fake_urlopen(body))
         p.start()
@@ -773,8 +842,8 @@ class TestHttpClient(unittest.TestCase):
 
         result = reflection.request_turn(
             'obj-13', 1, 'x', 't', 'd', [], config=VALID_CONFIG)
-        self.assertIs(result['should_continue'], False)
-        self.assertEqual(result['turn']['text'], 'One last thought?')
+        self.assertIs(result['should_continue'], True)
+        self.assertEqual(result['turn']['kind'], 'wrap_offer')
 
     def test_request_turn_should_continue_defaults_true(self):
         p = mock.patch.object(reflection, 'is_online', lambda url: True)
@@ -1117,7 +1186,7 @@ class TestQuestionBanks(unittest.TestCase):
             {'role': 'jo', 'text': 'What will you try next time?'},
             {'role': 'child', 'text': 'a beam'}]
         payload = reflection._build_payload('t', 'd', 'a', turns)
-        contents = [t['content'] for t in payload['turns']]
+        contents = [t.get('text', '') for t in payload['records']]
         self.assertNotIn('Ana says it needs a beam', contents)
         self.assertNotIn('she liked the roof', contents)
         self.assertNotIn(reflection.NEARBY_MIDFLOW, contents)
@@ -1217,7 +1286,7 @@ class TestPeerQuestions(unittest.TestCase):
             {'role': 'jo', 'text': 'What will you try next time?'},
             {'role': 'child', 'text': 'a beam'}]
         payload = reflection._build_payload('t', 'd', 'a', turns)
-        contents = [t['content'] for t in payload['turns']]
+        contents = [t.get('text', '') for t in payload['records']]
         self.assertNotIn(voiced, contents)
         self.assertNotIn('I will tell Ana about the beam', contents)
         self.assertIn('the roof', contents)
@@ -1405,7 +1474,7 @@ class TestQuestionIds(unittest.TestCase):
             {'role': 'child', 'text': 'Maya likes the wing'},
         ]
         payload = reflection._build_payload('t', 'd', 'x', turns)
-        self.assertEqual(payload['turns'], [])
+        self.assertEqual(payload['records'], [])
 
 
 class TestTitledOpener(unittest.TestCase):
@@ -1444,7 +1513,7 @@ class TestTitledOpener(unittest.TestCase):
         reflection.add_turn(session, reflection.ROLE_CHILD, 'more stars')
         payload = reflection._build_payload(
             't', 'd', 'x', session['turns'])
-        contents = [t['content'] for t in payload['turns']]
+        contents = [t.get('text', '') for t in payload['records']]
         self.assertNotIn('it is about my dad', contents)
         self.assertIn('more stars', contents)
 
@@ -1518,44 +1587,30 @@ class TestServerMemory(unittest.TestCase):
 
     # --- memory is the server's alone ---
 
-    def test_floor_questions_never_produce_a_note(self):
+    def test_a_typed_end_produces_the_note(self):
         session = reflection.new_session('creative_spiral')
-        reflection.add_turn(session, reflection.ROLE_JO,
-                            reflection.FLOOR_BANK['creative'][1])
-        reflection.add_turn(session, reflection.ROLE_CHILD, 'more stars')
-        self.assertEqual(reflection.extract_next_steps(session), '')
-
-    def test_a_server_forward_question_produces_one(self):
-        session = reflection.new_session('creative_spiral')
-        reflection.add_turn(session, reflection.ROLE_JO,
-                            'What will you try tomorrow?')
-        reflection.add_turn(session, reflection.ROLE_CHILD, 'more stars')
-        self.assertEqual(reflection.extract_next_steps(session), 'more stars')
-
-    def test_people_answers_never_ride_a_request(self):
-        session = reflection.new_session('creative_spiral')
-        reflection.add_turn(session, reflection.ROLE_JO,
-                            reflection.NEARBY_MIDFLOW)
-        reflection.add_turn(session, reflection.ROLE_CHILD,
-                            'Ana would try a beam next')
-        self.assertEqual(reflection.extract_next_steps(session), '')
+        session['end'] = {'reason': 'child_done',
+                          'next_step': 'more stars', 'asked': True}
+        self.assertEqual(
+            reflection.resolve_next_steps(session, 'old'), 'more stars')
 
     def test_a_giant_answer_is_clipped_at_the_write(self):
         session = reflection.new_session('creative_spiral')
-        reflection.add_turn(session, reflection.ROLE_JO,
-                            'What will you try tomorrow?')
-        reflection.add_turn(session, reflection.ROLE_CHILD, 'wing ' * 200)
-        note = reflection.extract_next_steps(session)
+        session['end'] = {'reason': 'child_done',
+                          'next_step': 'wing ' * 200, 'asked': True}
+        note = reflection.resolve_next_steps(session, '')
         self.assertLessEqual(len(note), 121)
 
-    def test_resolve_replaces_or_keeps(self):
+    def test_a_session_with_no_end_keeps_the_note(self):
         session = reflection.new_session('creative_spiral')
         self.assertEqual(reflection.resolve_next_steps(session, 'old'), 'old')
         reflection.add_turn(session, reflection.ROLE_JO,
                             'What will you try tomorrow?')
         reflection.add_turn(session, reflection.ROLE_CHILD, 'a moon')
+        # No typed end means no server close: the engine owns the
+        # note now, and nothing here re-derives it from text.
         self.assertEqual(
-            reflection.resolve_next_steps(session, 'old'), 'a moon')
+            reflection.resolve_next_steps(session, 'old'), 'old')
 
     def test_payload_carries_the_previous_note_online(self):
         payload = reflection._build_payload(
@@ -1569,20 +1624,10 @@ class TestSeverePassFixes(unittest.TestCase):
 
     # --- the severe pass's catches, pinned ---
 
-    def test_marker_needs_a_word_boundary(self):
-        for q in ('What country is your story set in?',
-                  'What did the poetry sound like?',
-                  'Was it a willow tree or an oak?'):
-            session = reflection.new_session('creative_spiral')
-            reflection.add_turn(session, reflection.ROLE_JO, q)
-            reflection.add_turn(session, reflection.ROLE_CHILD, 'a secret')
-            self.assertEqual(reflection.extract_next_steps(session), '', q)
-
-    def test_a_server_session_retires_an_unrenewed_note(self):
+    def test_a_closed_session_retires_an_unrenewed_note(self):
         session = reflection.new_session('creative_spiral')
-        reflection.add_turn(session, reflection.ROLE_JO,
-                            'What was the best part?')
-        reflection.add_turn(session, reflection.ROLE_CHILD, 'the sky')
+        session['end'] = {'reason': 'disengaged',
+                          'next_step': None, 'asked': False}
         self.assertEqual(
             reflection.resolve_next_steps(session, 'old note'), '')
 
@@ -1593,16 +1638,6 @@ class TestSeverePassFixes(unittest.TestCase):
         reflection.add_turn(session, reflection.ROLE_CHILD, 'the sky')
         self.assertEqual(reflection.resolve_next_steps(
             session, 'old note'), 'old note')
-
-    def test_the_intro_is_never_a_server_question(self):
-        session = reflection.new_session('creative_spiral')
-        reflection.add_turn(session, reflection.ROLE_JO,
-                            reflection.INTRO_LINE)
-        reflection.add_turn(session, reflection.ROLE_CHILD,
-                            'I will try a dragon')
-        self.assertEqual(reflection.extract_next_steps(session), '')
-        self.assertEqual(
-            reflection.resolve_next_steps(session, 'kept'), 'kept')
 
     def test_a_corrupt_session_element_is_dropped(self):
         raw = json.dumps({'version': 1, 'sessions': ['corrupt', {
@@ -1702,7 +1737,8 @@ class TestReviewPassFixes(unittest.TestCase):
                  {'role': 'child', 'text': 'a rocket'}]
         payload = reflection._build_payload('t', 'd', 'a', turns)
         self.assertEqual(
-            payload['turns'], [{'role': 'user', 'content': 'a rocket'}])
+            payload['records'],
+            [{'type': 'child_turn', 'by': 'host', 'text': 'a rocket'}])
 
     def test_a_starred_people_answer_empties_the_description(self):
         answer = 'Ana says it needs a beam'
@@ -1711,7 +1747,7 @@ class TestReviewPassFixes(unittest.TestCase):
         description = reflection.keep_in_description('My tower.', answer)
         payload = reflection._build_payload('t', description, 'a', turns)
         self.assertEqual(payload['description'], '')
-        self.assertEqual(payload['turns'], [])
+        self.assertEqual(payload['records'], [])
 
     def test_an_unstarred_people_answer_leaves_the_description(self):
         turns = [{'role': 'jo', 'text': reflection.NEARBY_MIDFLOW},

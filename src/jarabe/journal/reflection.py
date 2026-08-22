@@ -184,14 +184,18 @@ def kept_lines(raw, description, limit=2):
     return lines
 
 
-def add_turn(session, role, text, peer=False, q=None, local=False):
+def add_turn(session, role, text, peer=False, q=None, local=False,
+             typed=None):
     """Append a turn to a session and return it. peer marks a Jo turn
     voicing another child's comment, and rides the stored turn so
     later sessions still read it as a people question. q is the
     scripted question's stable id, stamped from the text or passed in
     when a composed line stands in for a script slot. local marks a Jo
     turn whose text must never reach the wire, and latches the child's
-    answer off the wire with it.
+    answer off the wire with it. typed carries the engine's stamped
+    fields for a server turn (kind, engagement, and the flags), so
+    the next request rebuilds the engine's record exactly instead of
+    re-deriving anything from text.
     """
     if role not in (ROLE_JO, ROLE_CHILD):
         raise ValueError('Unknown role: %r' % (role,))
@@ -205,6 +209,12 @@ def add_turn(session, role, text, peer=False, q=None, local=False):
             turn['q'] = q
         if local:
             turn['local'] = True
+        if typed:
+            turn['kind'] = typed.get('kind', 'question')
+            turn['engagement'] = typed.get('engagement', 'engaged')
+            for name in ('open', 'simplified', 'people_adjacent'):
+                if typed.get(name):
+                    turn[name] = True
     session.setdefault('turns', []).append(turn)
     return session
 
@@ -215,6 +225,11 @@ def _asks_about_people(text):
 
 
 def _people_turn(turn):
+    if turn.get('people_adjacent'):
+        # The engine stamps its own turns; the sniffing below only
+        # ever covers floor questions and turns stored before the
+        # stamp existed.
+        return True
     if turn.get('peer'):
         return True
     qid = turn.get('q')
@@ -223,64 +238,30 @@ def _people_turn(turn):
     return _asks_about_people(turn.get('text', ''))
 
 
-# Memory is the server's alone. When the AI asked something
-# forward-looking and the child answered, that answer rides the next
-# request as previous_next_steps for the server to weave in - Jo
-# herself never quotes it. Floor questions carry a 'q' stamp, so an
-# offline talk can never produce one; the marker sniff below only
-# ever reads the server's own question text.
-_FORWARD_RE = re.compile(
-    r'\b(next|would|will|if you|try|wish|want)\b')
-
-
-def _asked_about_people(turns, index):
-    """Whether the Jo question the index-th turn answers - walking
-    back over the child's consecutive lines - was about people.
-    """
-    j = index - 1
-    while j >= 0 and turns[j].get('role') != ROLE_JO:
-        j -= 1
-    return j >= 0 and _people_turn(turns[j])
-
-
-def extract_next_steps(session):
-    """The child's answer to a server-asked forward question, or ''.
-    """
-    turns = session.get('turns', [])
-    for i in range(len(turns) - 1, -1, -1):
-        turn = turns[i]
-        if turn.get('role') != ROLE_CHILD:
-            continue
-        if _asked_about_people(turns, i):
-            # An answer about who was there tends to carry a peer's
-            # name; it must never persist or ride a request.
-            continue
-        if i > 0 and turns[i - 1].get('role') == ROLE_JO:
-            prev = turns[i - 1]
-            if prev.get('q') is not None or prev.get('peer'):
-                continue
-            if _FORWARD_RE.search(prev.get('text', '').lower()):
-                # Clipped at the write so a paste cannot grow the
-                # metadata property without bound.
-                return clip_line(turn.get('text', ''), 120)
-    return ''
+# Memory is the server's alone. The engine types the child's
+# forward answer now: a session_end carries next_step (the child's
+# words, verbatim, or null) and asked. The old marker regex that
+# sniffed which question was forward-looking is gone with the wire
+# that needed it.
 
 
 def resolve_next_steps(session, previous):
     """What metadata['next_steps'] should hold after this session.
 
-    A fresh answer replaces the note. A server session that renewed
-    nothing retires it - carrying it further would be nagging. An
-    offline session leaves it alone: the floor never saw it.
+    A fresh answer replaces the note. A server session that closed
+    with nothing retires it - carrying it further would be nagging.
+    An offline session never closes server-side and leaves it alone:
+    the floor never saw it.
     """
-    fresh = extract_next_steps(session)
-    if fresh:
-        return fresh
-    for turn in session.get('turns', []):
-        if turn.get('role') == ROLE_JO and turn.get('q') is None and \
-                not turn.get('peer'):
-            return ''
-    return previous or ''
+    end = session.get('end')
+    if not isinstance(end, dict):
+        return previous or ''
+    step = end.get('next_step')
+    if isinstance(step, str) and step.strip():
+        # Clipped at the write so a paste cannot grow the metadata
+        # property without bound.
+        return clip_line(step, 120)
+    return ''
 
 
 def get_next_steps(metadata):
@@ -851,9 +832,27 @@ def _post_json(url, api_key, payload):
 STATUS_OK = 'ok'
 
 
-# The wire roles are the server schema's; the storage roles stay
-# jo/child so metadata never depends on another project's naming.
-_WIRE_ROLE = {ROLE_JO: 'assistant', ROLE_CHILD: 'user'}
+# The wire carries the engine's own trace records (engine spec,
+# section 1); the storage roles stay jo/child so metadata never
+# depends on another project's naming. Server turns are stored with
+# their typed fields and rebuild exactly; a floor question or a turn
+# stored before the typed fields existed becomes a plain engine
+# question - that is what the child saw, and the engine's budgets
+# should count it.
+
+
+def _engine_turn_record(turn):
+    return {
+        'type': 'engine_turn', 'by': 'engine',
+        'kind': turn.get('kind', 'question'),
+        'text': turn.get('text', ''),
+        'flags': {
+            'open': bool(turn.get('open')),
+            'simplified': bool(turn.get('simplified')),
+            'people_adjacent': _people_turn(turn),
+        },
+        'engagement': turn.get('engagement', 'engaged'),
+    }
 
 
 def _build_payload(title, description, activity_id, turns,
@@ -865,7 +864,7 @@ def _build_payload(title, description, activity_id, turns,
     one among these turns empties it here, and
     people_kept_in_description() covers the sessions already stored.
     """
-    wire_turns = []
+    records = []
     people = False
     starred_people = False
     for turn in turns:
@@ -879,16 +878,16 @@ def _build_payload(title, description, activity_id, turns,
                     has_kept_line(description, turn.get('text', '')):
                 starred_people = True
             continue
-        wire_role = _WIRE_ROLE.get(role)
-        if wire_role is None:
-            continue
-        wire_turns.append({'role': wire_role,
-                           'content': turn.get('text', '')})
+        if role == ROLE_JO:
+            records.append(_engine_turn_record(turn))
+        elif role == ROLE_CHILD:
+            records.append({'type': 'child_turn', 'by': 'host',
+                            'text': turn.get('text', '')})
     payload = {
         'title': title,
         'description': '' if starred_people else description,
         'activity_id': activity_id,
-        'turns': wire_turns,
+        'records': records,
     }
     if next_steps:
         payload['previous_next_steps'] = next_steps
@@ -896,10 +895,13 @@ def _build_payload(title, description, activity_id, turns,
 
 
 def _result(object_id, generation, status, turn=None,
-            should_continue=True):
-    return {'object_id': object_id, 'generation': generation,
-            'status': status, 'turn': turn,
-            'should_continue': should_continue}
+            should_continue=True, end=None):
+    result = {'object_id': object_id, 'generation': generation,
+              'status': status, 'turn': turn,
+              'should_continue': should_continue}
+    if end is not None:
+        result['end'] = end
+    return result
 
 
 # The nearby follow-up is only honest after real time away - no
@@ -1063,19 +1065,57 @@ def request_turn(object_id, generation, activity_id, title, description,
                              conversation, turns, artifact_visible,
                              opener=opener)
 
-    question = body.get('question') if isinstance(body, dict) else None
-    if not isinstance(question, str) or not question.strip():
-        logging.warning('Reflection server reply missing question; '
+    record = body.get('record') if isinstance(body, dict) else None
+    rtype = record.get('type') if isinstance(record, dict) else None
+
+    if rtype == 'session_end':
+        return _result(object_id, generation, STATUS_OK,
+                       should_continue=False,
+                       end={'reason': record.get('reason'),
+                            'next_step': record.get('next_step'),
+                            'asked': bool(record.get('asked'))})
+
+    if rtype != 'engine_turn':
+        logging.warning('Reflection server reply carried no turn; '
                         'floor answers')
         return _floor_result(object_id, generation, activity_id,
                              conversation, turns, artifact_visible,
                              opener=opener)
 
-    if not turn_acceptable(question):
+    if record.get('kind') == 'floor_request':
+        # The engine could not produce a usable turn and says so in
+        # the open; the local floor bank answers, same as an outage.
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+
+    text = record.get('text')
+    # The engine guards its own turns (single question, its own
+    # length cap); this is a transport-sanity bound, not a second
+    # shape judge - the old one is retired with the free-text wire.
+    if not isinstance(text, str) or not text.strip() or \
+            len(text) > 200 or '\n' in text:
+        logging.warning('Reflection server turn unusable; '
+                        'floor answers')
         return _floor_result(object_id, generation, activity_id,
                              conversation, turns, artifact_visible,
                              opener=opener)
 
     return _result(object_id, generation, STATUS_OK,
-                   turn={'role': ROLE_JO, 'text': question.strip()},
-                   should_continue=bool(body.get('should_continue', True)))
+                   turn=_turn_from_record(record),
+                   should_continue=True)
+
+
+def _turn_from_record(record):
+    """A stored jo turn from one engine_turn record. The typed fields
+    ride the stored turn so the next request rebuilds this record
+    exactly - never re-derived from the text.
+    """
+    turn = {'role': ROLE_JO, 'text': record['text'].strip(),
+            'kind': record.get('kind', 'question'),
+            'engagement': record.get('engagement', 'engaged')}
+    flags = record.get('flags') or {}
+    for name in ('open', 'simplified', 'people_adjacent'):
+        if flags.get(name):
+            turn[name] = True
+    return turn

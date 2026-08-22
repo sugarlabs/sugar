@@ -1117,11 +1117,14 @@ class ReflectionView(Gtk.EventBox):
         # The engine floors every server death itself, so a result is
         # always STATUS_OK: a turn to speak, or silence.
         turn = result['turn']
+        end = result.get('end')
         if turn is not None:
             self._ensure_session()
+            typed = turn if turn.get('kind') else None
             reflection.add_turn(self._session, reflection.ROLE_JO,
                                 turn['text'], q=turn.get('q'),
-                                local=bool(turn.get('local')))
+                                local=bool(turn.get('local')),
+                                typed=typed)
             self._set_now(turn['text'])
             self._persist()
             self._scroll_to_newest()
@@ -1129,6 +1132,14 @@ class ReflectionView(Gtk.EventBox):
                 self._set_input_active(True)
             else:
                 self._enter_session_over()
+        elif end is not None:
+            # The engine closed the session with a typed end; the
+            # child's forward answer (or its absence) persists from
+            # it, and the talk rests here for next time.
+            self._ensure_session()
+            self._session['end'] = end
+            self._persist()
+            self._enter_session_over()
         elif self._session is not None:
             nudge = None
             if result['should_continue']:
