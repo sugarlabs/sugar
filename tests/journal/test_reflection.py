@@ -413,6 +413,87 @@ class TestPayload(unittest.TestCase):
             self.assertNotIn(forbidden, payload)
 
 
+class TestWorkContext(unittest.TestCase):
+
+    @staticmethod
+    def _metadata(moments=(), snaps=(), **extra):
+        metadata = {'reflections': json.dumps(
+            {'version': 1, 'sessions': [], 'moments': list(moments)})}
+        for seq, data in snaps:
+            metadata['moment-snap-%d' % seq] = data
+        metadata.update(extra)
+        return metadata
+
+    def test_full_entry_packs_every_field(self):
+        import base64
+        metadata = self._metadata(
+            moments=[{'caption': 'the jump worked', 'mark': 'proud',
+                      'ts': 1, 'snap_seq': 0},
+                     {'caption': '', 'mark': None, 'ts': 2,
+                      'snap_seq': 1}],
+            snaps=[(0, 'QUFBQQ=='), (1, 'QkJCQg==')],
+            preview=b'png-bytes', tags='dragon maze',
+            **{'spent-times': '120,60,bad'})
+        context = reflection.build_work_context(metadata)
+        self.assertEqual(context['spent_seconds'], 180)
+        self.assertEqual(context['tags'], ['dragon', 'maze'])
+        self.assertEqual(context['preview'], {
+            'mime': 'image/png',
+            'data': base64.b64encode(b'png-bytes').decode('ascii')})
+        self.assertEqual(context['images'], [
+            {'mime': 'image/jpeg', 'data': 'QUFBQQ==',
+             'caption': 'the jump worked'},
+            {'mime': 'image/jpeg', 'data': 'QkJCQg=='}])
+
+    def test_bare_entry_packs_nothing(self):
+        self.assertEqual(reflection.build_work_context({}), {})
+        payload = reflection._build_payload('T', 'd', 'x', [],
+                                            work_context={})
+        self.assertNotIn('work_context', payload)
+
+    def test_payload_carries_the_context_it_is_given(self):
+        context = {'tags': ['dragon']}
+        payload = reflection._build_payload('T', 'd', 'x', [],
+                                            work_context=context)
+        self.assertEqual(payload['work_context'], context)
+
+    def test_marks_never_travel(self):
+        context = reflection.build_work_context(self._metadata(
+            moments=[{'caption': 'hi', 'mark': 'proud', 'ts': 1,
+                      'snap_seq': 0}],
+            snaps=[(0, 'QQ==')]))
+        self.assertNotIn('mark', json.dumps(context))
+
+    def test_snapless_moment_is_skipped(self):
+        context = reflection.build_work_context(self._metadata(
+            moments=[{'caption': 'gone', 'ts': 1, 'snap_seq': 7}]))
+        self.assertNotIn('images', context)
+
+    def test_tags_clip_to_the_far_ceiling(self):
+        context = reflection.build_work_context(
+            {'tags': ' '.join('t%d' % i + 'x' * 100 for i in range(20))})
+        self.assertEqual(len(context['tags']), 16)
+        for tag in context['tags']:
+            self.assertLessEqual(len(tag), 60)
+
+    def test_budget_drops_oldest_snaps_and_keeps_story_order(self):
+        metadata = self._metadata(
+            moments=[{'caption': 'old', 'ts': 1, 'snap_seq': 0},
+                     {'caption': 'mid', 'ts': 2, 'snap_seq': 1},
+                     {'caption': 'new', 'ts': 3, 'snap_seq': 2}],
+            snaps=[(0, 'A' * 40), (1, 'B' * 40), (2, 'C' * 40)])
+        with mock.patch.object(reflection, '_CONTEXT_BUDGET', 100):
+            context = reflection.build_work_context(metadata)
+        self.assertEqual([i['caption'] for i in context['images']],
+                         ['mid', 'new'])
+
+    def test_malformed_reflections_and_junk_never_crash(self):
+        context = reflection.build_work_context({
+            'reflections': 'not json', 'preview': 'not-bytes',
+            'tags': None, 'spent-times': None})
+        self.assertEqual(context, {})
+
+
 class TestConfig(unittest.TestCase):
 
     # --- Config ---

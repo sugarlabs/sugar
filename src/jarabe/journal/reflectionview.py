@@ -1081,19 +1081,21 @@ class ReflectionView(Gtk.EventBox):
                 self._activity_id(), self._metadata.get('title', ''),
                 description, turns,
                 reflection.get_next_steps(self._metadata), self._data,
-                self._artifact_visible, self._opener_hint)
+                self._artifact_visible, self._opener_hint,
+                reflection.build_work_context(self._metadata))
         thread = threading.Thread(target=self.__request_worker, args=args)
         thread.daemon = True
         thread.start()
 
     def __request_worker(self, object_id, generation, activity_id, title,
                          description, turns, next_steps, conversation,
-                         artifact_visible, opener):
+                         artifact_visible, opener, work_context):
         try:
             result = reflection.request_turn(
                 object_id, generation, activity_id, title, description,
                 turns, next_steps=next_steps, conversation=conversation,
-                artifact_visible=artifact_visible, opener=opener)
+                artifact_visible=artifact_visible, opener=opener,
+                work_context=work_context)
         except Exception:
             # The rail must never stay wedged in "thinking": a dying
             # worker still reports, as Jo quietly bowing out.

@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import configparser
+import base64
 import json
 import logging
 import os
@@ -855,13 +856,82 @@ def _engine_turn_record(turn):
     }
 
 
+# Mirrors of the engine's decode ceilings (its spec, section 1), so a
+# packed context is never refused whole at the far end. The tag and
+# caption clips lose almost nothing; an oversized snap is skipped.
+_CONTEXT_MAX_TAGS = 16
+_CONTEXT_MAX_TAG_CHARS = 60
+_CONTEXT_MAX_CAPTION_CHARS = 120
+_CONTEXT_MAX_IMAGE_B64 = 8 * 1024 * 1024 * 4 // 3
+# The server refuses a work_context bigger than 6 MB of JSON; staying
+# a megabyte under leaves room for the rest of the payload.
+_CONTEXT_BUDGET = 5 * 1024 * 1024
+
+
+def build_work_context(metadata):
+    """Pack the entry's own context for the wire: the preview, the
+    moment snaps with the child's line on each, tags, and time spent.
+    Everything here is optional - an entry with none of it returns {}
+    and the payload reads as before. Marks never travel: the far side
+    knows pictures and the child's words, not moments.
+    """
+    context = {}
+
+    spent = 0
+    for part in str(metadata.get('spent-times') or '').split(','):
+        try:
+            spent += int(part)
+        except ValueError:
+            continue
+    if spent > 0:
+        context['spent_seconds'] = spent
+
+    tags = str(metadata.get('tags') or '').split()
+    if tags:
+        context['tags'] = [tag[:_CONTEXT_MAX_TAG_CHARS]
+                           for tag in tags[:_CONTEXT_MAX_TAGS]]
+
+    budget = _CONTEXT_BUDGET
+    preview = metadata.get('preview')
+    if isinstance(preview, (bytes, bytearray)) and len(preview):
+        data = base64.b64encode(bytes(preview)).decode('ascii')
+        if len(data) <= budget:
+            context['preview'] = {'mime': 'image/png', 'data': data}
+            budget -= len(data)
+
+    images = []
+    for moment in loads(metadata.get('reflections', '')).get('moments', []):
+        if not isinstance(moment, dict):
+            continue
+        snap = metadata.get('%s%s' % (SNAP_KEY_PREFIX,
+                                      moment.get('snap_seq')))
+        if isinstance(snap, (bytes, bytearray)):
+            snap = bytes(snap).decode('ascii', errors='replace')
+        if not isinstance(snap, str) or not snap or \
+                len(snap) > _CONTEXT_MAX_IMAGE_B64:
+            continue
+        image = {'mime': 'image/jpeg', 'data': snap}
+        caption = moment.get('caption')
+        if isinstance(caption, str) and caption.strip():
+            image['caption'] = caption[:_CONTEXT_MAX_CAPTION_CHARS]
+        images.append(image)
+    while images and sum(len(i['data']) for i in images) > budget:
+        # Oldest snap goes first; what stays is still in story order.
+        images.pop(0)
+    if images:
+        context['images'] = images
+
+    return context
+
+
 def _build_payload(title, description, activity_id, turns,
-                   next_steps=None):
+                   next_steps=None, work_context=None):
     """The whitelisted body for /reflect/chat - never the reflections
-    blob, a preview, or the full metadata dict. A people question and
-    its answers stay off the wire: they name someone in the room. The
-    child can star such an answer into the description, so a starred
-    one among these turns empties it here, and
+    blob or the full metadata dict; the entry's context crosses only
+    as what build_work_context() deliberately packs. A people question
+    and its answers stay off the wire: they name someone in the room.
+    The child can star such an answer into the description, so a
+    starred one among these turns empties it here, and
     people_kept_in_description() covers the sessions already stored.
     """
     records = []
@@ -891,6 +961,8 @@ def _build_payload(title, description, activity_id, turns,
     }
     if next_steps:
         payload['previous_next_steps'] = next_steps
+    if work_context:
+        payload['work_context'] = work_context
     return payload
 
 
@@ -1019,7 +1091,7 @@ def _floor_result(object_id, generation, activity_id, conversation, turns,
 
 def request_turn(object_id, generation, activity_id, title, description,
                  turns, next_steps=None, config=None, conversation=None,
-                 artifact_visible=False, opener=None):
+                 artifact_visible=False, opener=None, work_context=None):
     """Ask the reflect endpoint for Jo's next turn. The result carries
     (object_id, generation), so a caller with several requests in
     flight can place a late reply. Every road away lands on the floor.
@@ -1038,7 +1110,7 @@ def request_turn(object_id, generation, activity_id, title, description,
                              opener=opener)
 
     payload = _build_payload(title, description, activity_id, turns,
-                             next_steps)
+                             next_steps, work_context=work_context)
     url = config['url'].rstrip('/') + _CHAT_PATH
 
     try:
