@@ -5,6 +5,8 @@ extensions/cpsection/aboutme/view.py
 extensions/cpsection/aboutcomputer/__init__.py
 extensions/cpsection/aboutcomputer/model.py
 extensions/cpsection/aboutcomputer/view.py
+extensions/cpsection/ai/__init__.py
+extensions/cpsection/ai/view.py
 extensions/cpsection/background/__init__.py
 extensions/cpsection/background/view.py
 extensions/cpsection/datetime/__init__.py

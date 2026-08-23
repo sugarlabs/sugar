@@ -13,13 +13,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import configparser
+import base64
 import json
 import logging
 import os
 import random
 import re
+import socket
 import time
 import unicodedata
+import urllib.error
+import urllib.parse
+import urllib.request
 import uuid
 from gettext import gettext as _
 
@@ -179,14 +185,18 @@ def kept_lines(raw, description, limit=2):
     return lines
 
 
-def add_turn(session, role, text, peer=False, q=None, local=False):
+def add_turn(session, role, text, peer=False, q=None, local=False,
+             typed=None):
     """Append a turn to a session and return it. peer marks a Jo turn
     voicing another child's comment, and rides the stored turn so
     later sessions still read it as a people question. q is the
     scripted question's stable id, stamped from the text or passed in
     when a composed line stands in for a script slot. local marks a Jo
     turn whose text must never reach the wire, and latches the child's
-    answer off the wire with it.
+    answer off the wire with it. typed carries the engine's stamped
+    fields for a server turn (kind, engagement, and the flags), so
+    the next request rebuilds the engine's record exactly instead of
+    re-deriving anything from text.
     """
     if role not in (ROLE_JO, ROLE_CHILD):
         raise ValueError('Unknown role: %r' % (role,))
@@ -200,6 +210,12 @@ def add_turn(session, role, text, peer=False, q=None, local=False):
             turn['q'] = q
         if local:
             turn['local'] = True
+        if typed:
+            turn['kind'] = typed.get('kind', 'question')
+            turn['engagement'] = typed.get('engagement', 'engaged')
+            for name in ('open', 'simplified', 'people_adjacent'):
+                if typed.get(name):
+                    turn[name] = True
     session.setdefault('turns', []).append(turn)
     return session
 
@@ -210,6 +226,11 @@ def _asks_about_people(text):
 
 
 def _people_turn(turn):
+    if turn.get('people_adjacent'):
+        # The engine stamps its own turns; the sniffing below only
+        # ever covers floor questions and turns stored before the
+        # stamp existed.
+        return True
     if turn.get('peer'):
         return True
     qid = turn.get('q')
@@ -218,64 +239,30 @@ def _people_turn(turn):
     return _asks_about_people(turn.get('text', ''))
 
 
-# Memory is the server's alone. When the AI asked something
-# forward-looking and the child answered, that answer rides the next
-# request as previous_next_steps for the server to weave in - Jo
-# herself never quotes it. Floor questions carry a 'q' stamp, so an
-# offline talk can never produce one; the marker sniff below only
-# ever reads the server's own question text.
-_FORWARD_RE = re.compile(
-    r'\b(next|would|will|if you|try|wish|want)\b')
-
-
-def _asked_about_people(turns, index):
-    """Whether the Jo question the index-th turn answers - walking
-    back over the child's consecutive lines - was about people.
-    """
-    j = index - 1
-    while j >= 0 and turns[j].get('role') != ROLE_JO:
-        j -= 1
-    return j >= 0 and _people_turn(turns[j])
-
-
-def extract_next_steps(session):
-    """The child's answer to a server-asked forward question, or ''.
-    """
-    turns = session.get('turns', [])
-    for i in range(len(turns) - 1, -1, -1):
-        turn = turns[i]
-        if turn.get('role') != ROLE_CHILD:
-            continue
-        if _asked_about_people(turns, i):
-            # An answer about who was there tends to carry a peer's
-            # name; it must never persist or ride a request.
-            continue
-        if i > 0 and turns[i - 1].get('role') == ROLE_JO:
-            prev = turns[i - 1]
-            if prev.get('q') is not None or prev.get('peer'):
-                continue
-            if _FORWARD_RE.search(prev.get('text', '').lower()):
-                # Clipped at the write so a paste cannot grow the
-                # metadata property without bound.
-                return clip_line(turn.get('text', ''), 120)
-    return ''
+# Memory is the server's alone. The engine types the child's
+# forward answer now: a session_end carries next_step (the child's
+# words, verbatim, or null) and asked. The old marker regex that
+# sniffed which question was forward-looking is gone with the wire
+# that needed it.
 
 
 def resolve_next_steps(session, previous):
     """What metadata['next_steps'] should hold after this session.
 
-    A fresh answer replaces the note. A server session that renewed
-    nothing retires it - carrying it further would be nagging. An
-    offline session leaves it alone: the floor never saw it.
+    A fresh answer replaces the note. A server session that closed
+    with nothing retires it - carrying it further would be nagging.
+    An offline session never closes server-side and leaves it alone:
+    the floor never saw it.
     """
-    fresh = extract_next_steps(session)
-    if fresh:
-        return fresh
-    for turn in session.get('turns', []):
-        if turn.get('role') == ROLE_JO and turn.get('q') is None and \
-                not turn.get('peer'):
-            return ''
-    return previous or ''
+    end = session.get('end')
+    if not isinstance(end, dict):
+        return previous or ''
+    step = end.get('next_step')
+    if isinstance(step, str) and step.strip():
+        # Clipped at the write so a paste cannot grow the metadata
+        # property without bound.
+        return clip_line(step, 120)
+    return ''
 
 
 def get_next_steps(metadata):
@@ -296,6 +283,31 @@ def unkeep_from_description(description, text):
             del lines[i]
             return '\n'.join(lines)
     return description
+
+
+def people_kept_in_description(raw, description):
+    """Whether an answer to a people question - from any session the
+    record holds, not only the open one - is kept in this description.
+    A starred answer names someone in the room, so its description
+    cannot ride a request.
+    """
+    if not description:
+        return False
+    for session in loads(raw).get('sessions', []):
+        turns = session.get('turns')
+        if not isinstance(turns, list):
+            continue
+        people = False
+        for turn in turns:
+            if not isinstance(turn, dict):
+                continue
+            role = turn.get('role')
+            if role == ROLE_JO:
+                people = _people_turn(turn) or bool(turn.get('local'))
+            if people and role == ROLE_CHILD and \
+                    has_kept_line(description, turn.get('text', '')):
+                return True
+    return False
 
 
 # Activities grouped into the five categories the offline floor asks
@@ -640,6 +652,50 @@ def _collect_used(turn, used):
         used.add(turn['text'])
 
 
+# A server is something a school opts into: until somebody ticks the
+# switch, Jo asks from the floor and nothing leaves the laptop.
+DEFAULT_ENABLED = False
+
+DEFAULT_CONFIG_PATH = os.path.expanduser('~/.sugar/default/reflection.conf')
+
+_CONFIG_SECTION = 'reflection'
+_ENV_URL = 'SUGAR_AI_URL'
+_ENV_API_KEY = 'SUGAR_AI_KEY'
+_ENV_ENABLED = 'SUGAR_AI_REFLECTION_ENABLED'
+
+
+def read_config(path=DEFAULT_CONFIG_PATH):
+    """Read the reflection endpoint's url, api_key and enabled flag."""
+    config = {'url': '', 'api_key': '', 'enabled': DEFAULT_ENABLED}
+
+    parser = configparser.ConfigParser(interpolation=None)
+    try:
+        parser.read([path])
+    except (configparser.Error, OSError, ValueError):
+        logging.exception('Error reading reflection config %r', path)
+    else:
+        if parser.has_option(_CONFIG_SECTION, 'url'):
+            config['url'] = parser.get(_CONFIG_SECTION, 'url')
+        if parser.has_option(_CONFIG_SECTION, 'api_key'):
+            config['api_key'] = parser.get(_CONFIG_SECTION, 'api_key')
+        if parser.has_option(_CONFIG_SECTION, 'enabled'):
+            try:
+                config['enabled'] = parser.getboolean(_CONFIG_SECTION,
+                                                      'enabled')
+            except ValueError:
+                logging.warning('Invalid enabled value in %r', path)
+
+    if os.environ.get(_ENV_URL):
+        config['url'] = os.environ[_ENV_URL]
+    if os.environ.get(_ENV_API_KEY):
+        config['api_key'] = os.environ[_ENV_API_KEY]
+    if os.environ.get(_ENV_ENABLED):
+        config['enabled'] = os.environ[_ENV_ENABLED].strip().lower() in \
+            ('1', 'true', 'yes', 'on')
+
+    return config
+
+
 # Jo introduces itself once, on whichever surface the child meets
 # first. That fact lives here, not in any entry's metadata.
 STATE_PATH = os.path.expanduser('~/.sugar/default/reflection-state.json')
@@ -673,14 +729,251 @@ def mark_state(key, path=STATE_PATH):
         logging.exception('Error writing reflection state %r', path)
 
 
+READ_TIMEOUT = 30
+
+# A reply is one question: past this the body is no shape we can use,
+# and reading it on would spend the laptop's memory to throw it away.
+_MAX_RESPONSE_BYTES = 64 * 1024
+
+_PROBE_TIMEOUT = 5
+
+_CHAT_PATH = '/reflect/chat'
+
+
+class ReflectionOffline(Exception):
+    """No network, or the reflect endpoint was unreachable."""
+
+
+class ReflectionTimeout(Exception):
+    """The reflect endpoint did not answer within READ_TIMEOUT."""
+
+
+class ReflectionHTTPError(Exception):
+    """The reflect endpoint answered with a non-2xx status."""
+
+    def __init__(self, status, reason):
+        Exception.__init__(self, '%s %s' % (status, reason))
+        self.status = status
+        self.reason = reason
+
+
+class ReflectionBadResponse(Exception):
+    """The response body was not the expected shape."""
+
+
+def _probe_address(url):
+    """Host and port to knock on for a configured url, or None when
+    the url is not one we could post to at all.
+    """
+    try:
+        parts = urllib.parse.urlsplit(url)
+        port = parts.port or (443 if parts.scheme == 'https' else 80)
+    except ValueError:
+        return None
+    if not parts.hostname:
+        return None
+    return parts.hostname, port
+
+
+def is_online(url):
+    """Cheap knock on the configured server's own host. It answers
+    reachable, never fast: a slow endpoint still passes here, which is
+    what keeps an outage off READ_TIMEOUT.
+    """
+    address = _probe_address(url)
+    if address is None:
+        return False
+    try:
+        probe = socket.create_connection(address, timeout=_PROBE_TIMEOUT)
+        probe.close()
+        return True
+    except OSError:
+        return False
+
+
+def _post_json(url, api_key, payload):
+    """POST payload as JSON; raises only Reflection* errors. Connect
+    and read share one socket timeout - plain urllib cannot split
+    them - so is_online() keeps an outage off READ_TIMEOUT.
+    """
+    try:
+        request = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode('utf-8'),
+            headers={
+                'Content-Type': 'application/json',
+                'X-API-Key': api_key,
+            },
+            method='POST')
+        with urllib.request.urlopen(request, timeout=READ_TIMEOUT) as resp:
+            raw = resp.read(_MAX_RESPONSE_BYTES + 1)
+    except urllib.error.HTTPError as e:
+        raise ReflectionHTTPError(e.code, e.reason)
+    except socket.timeout:
+        raise ReflectionTimeout()
+    except urllib.error.URLError as e:
+        if isinstance(e.reason, socket.timeout):
+            raise ReflectionTimeout()
+        raise ReflectionOffline()
+    except ValueError:
+        # An address with no scheme never gets a socket; unreachable
+        # is the honest reading of it.
+        raise ReflectionOffline()
+
+    if len(raw) > _MAX_RESPONSE_BYTES:
+        raise ReflectionBadResponse('response was over %d bytes'
+                                    % _MAX_RESPONSE_BYTES)
+
+    try:
+        return json.loads(raw.decode('utf-8'))
+    except (ValueError, UnicodeDecodeError):
+        raise ReflectionBadResponse('response was not valid JSON')
+
+
 STATUS_OK = 'ok'
 
 
+# The wire carries the engine's own trace records (engine spec,
+# section 1); the storage roles stay jo/child so metadata never
+# depends on another project's naming. Server turns are stored with
+# their typed fields and rebuild exactly; a floor question or a turn
+# stored before the typed fields existed becomes a plain engine
+# question - that is what the child saw, and the engine's budgets
+# should count it.
+
+
+def _engine_turn_record(turn):
+    return {
+        'type': 'engine_turn', 'by': 'engine',
+        'kind': turn.get('kind', 'question'),
+        'text': turn.get('text', ''),
+        'flags': {
+            'open': bool(turn.get('open')),
+            'simplified': bool(turn.get('simplified')),
+            'people_adjacent': _people_turn(turn),
+        },
+        'engagement': turn.get('engagement', 'engaged'),
+    }
+
+
+# Mirrors of the engine's decode ceilings (its spec, section 1), so a
+# packed context is never refused whole at the far end. The tag and
+# caption clips lose almost nothing; an oversized snap is skipped.
+_CONTEXT_MAX_TAGS = 16
+_CONTEXT_MAX_TAG_CHARS = 60
+_CONTEXT_MAX_CAPTION_CHARS = 120
+_CONTEXT_MAX_IMAGE_B64 = 8 * 1024 * 1024 * 4 // 3
+# The server refuses a work_context bigger than 6 MB of JSON; staying
+# a megabyte under leaves room for the rest of the payload.
+_CONTEXT_BUDGET = 5 * 1024 * 1024
+
+
+def build_work_context(metadata):
+    """Pack the entry's own context for the wire: the preview, the
+    moment snaps with the child's line on each, tags, and time spent.
+    Everything here is optional - an entry with none of it returns {}
+    and the payload reads as before. Marks never travel: the far side
+    knows pictures and the child's words, not moments.
+    """
+    context = {}
+
+    spent = 0
+    for part in str(metadata.get('spent-times') or '').split(','):
+        try:
+            spent += int(part)
+        except ValueError:
+            continue
+    if spent > 0:
+        context['spent_seconds'] = spent
+
+    tags = str(metadata.get('tags') or '').split()
+    if tags:
+        context['tags'] = [tag[:_CONTEXT_MAX_TAG_CHARS]
+                           for tag in tags[:_CONTEXT_MAX_TAGS]]
+
+    budget = _CONTEXT_BUDGET
+    preview = metadata.get('preview')
+    if isinstance(preview, (bytes, bytearray)) and len(preview):
+        data = base64.b64encode(bytes(preview)).decode('ascii')
+        if len(data) <= budget:
+            context['preview'] = {'mime': 'image/png', 'data': data}
+            budget -= len(data)
+
+    images = []
+    for moment in loads(metadata.get('reflections', '')).get('moments', []):
+        if not isinstance(moment, dict):
+            continue
+        snap = metadata.get('%s%s' % (SNAP_KEY_PREFIX,
+                                      moment.get('snap_seq')))
+        if isinstance(snap, (bytes, bytearray)):
+            snap = bytes(snap).decode('ascii', errors='replace')
+        if not isinstance(snap, str) or not snap or \
+                len(snap) > _CONTEXT_MAX_IMAGE_B64:
+            continue
+        image = {'mime': 'image/jpeg', 'data': snap}
+        caption = moment.get('caption')
+        if isinstance(caption, str) and caption.strip():
+            image['caption'] = caption[:_CONTEXT_MAX_CAPTION_CHARS]
+        images.append(image)
+    while images and sum(len(i['data']) for i in images) > budget:
+        # Oldest snap goes first; what stays is still in story order.
+        images.pop(0)
+    if images:
+        context['images'] = images
+
+    return context
+
+
+def _build_payload(title, description, activity_id, turns,
+                   next_steps=None, work_context=None):
+    """The whitelisted body for /reflect/chat - never the reflections
+    blob or the full metadata dict; the entry's context crosses only
+    as what build_work_context() deliberately packs. A people question
+    and its answers stay off the wire: they name someone in the room.
+    The child can star such an answer into the description, so a
+    starred one among these turns empties it here, and
+    people_kept_in_description() covers the sessions already stored.
+    """
+    records = []
+    people = False
+    starred_people = False
+    for turn in turns:
+        if not isinstance(turn, dict):
+            continue
+        role = turn.get('role')
+        if role == ROLE_JO:
+            people = _people_turn(turn) or bool(turn.get('local'))
+        if people:
+            if role == ROLE_CHILD and \
+                    has_kept_line(description, turn.get('text', '')):
+                starred_people = True
+            continue
+        if role == ROLE_JO:
+            records.append(_engine_turn_record(turn))
+        elif role == ROLE_CHILD:
+            records.append({'type': 'child_turn', 'by': 'host',
+                            'text': turn.get('text', '')})
+    payload = {
+        'title': title,
+        'description': '' if starred_people else description,
+        'activity_id': activity_id,
+        'records': records,
+    }
+    if next_steps:
+        payload['previous_next_steps'] = next_steps
+    if work_context:
+        payload['work_context'] = work_context
+    return payload
+
+
 def _result(object_id, generation, status, turn=None,
-            should_continue=True):
-    return {'object_id': object_id, 'generation': generation,
-            'status': status, 'turn': turn,
-            'should_continue': should_continue}
+            should_continue=True, end=None):
+    result = {'object_id': object_id, 'generation': generation,
+              'status': status, 'turn': turn,
+              'should_continue': should_continue}
+    if end is not None:
+        result['end'] = end
+    return result
 
 
 # The nearby follow-up is only honest after real time away - no
@@ -797,16 +1090,104 @@ def _floor_result(object_id, generation, activity_id, conversation, turns,
 
 
 def request_turn(object_id, generation, activity_id, title, description,
-                 turns, next_steps=None, conversation=None,
-                 artifact_visible=False, opener=None):
-    """Compose Jo's next turn from the floor bank.
-
-    The result carries (object_id, generation), so a caller with
-    several requests in flight can place a late reply. A dry bank
-    comes back as STATUS_OK with turn None: Jo has nothing new to
-    open with and stays silent. title, description and next_steps
-    are unused here; the server layer consumes them.
+                 turns, next_steps=None, config=None, conversation=None,
+                 artifact_visible=False, opener=None, work_context=None):
+    """Ask the reflect endpoint for Jo's next turn. The result carries
+    (object_id, generation), so a caller with several requests in
+    flight can place a late reply. Every road away lands on the floor.
     """
-    return _floor_result(object_id, generation, activity_id,
-                         conversation, turns, artifact_visible,
-                         opener=opener)
+    if config is None:
+        config = read_config()
+
+    if not config['enabled'] or not config['api_key'] or not config['url']:
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+
+    if not is_online(config['url']):
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+
+    payload = _build_payload(title, description, activity_id, turns,
+                             next_steps, work_context=work_context)
+    url = config['url'].rstrip('/') + _CHAT_PATH
+
+    try:
+        body = _post_json(url, config['api_key'], payload)
+    except ReflectionOffline:
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+    except ReflectionTimeout:
+        logging.warning('Reflection server timed out; floor answers')
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+    except ReflectionHTTPError as e:
+        logging.warning('Reflection server error %s %s; floor answers',
+                        e.status, e.reason)
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+    except ReflectionBadResponse as e:
+        logging.warning('Reflection server reply unusable (%s); '
+                        'floor answers', e)
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+
+    record = body.get('record') if isinstance(body, dict) else None
+    rtype = record.get('type') if isinstance(record, dict) else None
+
+    if rtype == 'session_end':
+        return _result(object_id, generation, STATUS_OK,
+                       should_continue=False,
+                       end={'reason': record.get('reason'),
+                            'next_step': record.get('next_step'),
+                            'asked': bool(record.get('asked'))})
+
+    if rtype != 'engine_turn':
+        logging.warning('Reflection server reply carried no turn; '
+                        'floor answers')
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+
+    if record.get('kind') == 'floor_request':
+        # The engine could not produce a usable turn and says so in
+        # the open; the local floor bank answers, same as an outage.
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+
+    text = record.get('text')
+    # The engine guards its own turns (single question, its own
+    # length cap); this is a transport-sanity bound, not a second
+    # shape judge - the old one is retired with the free-text wire.
+    if not isinstance(text, str) or not text.strip() or \
+            len(text) > 200 or '\n' in text:
+        logging.warning('Reflection server turn unusable; '
+                        'floor answers')
+        return _floor_result(object_id, generation, activity_id,
+                             conversation, turns, artifact_visible,
+                             opener=opener)
+
+    return _result(object_id, generation, STATUS_OK,
+                   turn=_turn_from_record(record),
+                   should_continue=True)
+
+
+def _turn_from_record(record):
+    """A stored jo turn from one engine_turn record. The typed fields
+    ride the stored turn so the next request rebuilds this record
+    exactly - never re-derived from the text.
+    """
+    turn = {'role': ROLE_JO, 'text': record['text'].strip(),
+            'kind': record.get('kind', 'question'),
+            'engagement': record.get('engagement', 'engaged')}
+    flags = record.get('flags') or {}
+    for name in ('open', 'simplified', 'people_adjacent'):
+        if flags.get(name):
+            turn[name] = True
+    return turn

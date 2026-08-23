@@ -40,6 +40,7 @@ data/icons/Makefile
 data/Makefile
 extensions/cpsection/aboutcomputer/Makefile
 extensions/cpsection/aboutme/Makefile
+extensions/cpsection/ai/Makefile
 extensions/cpsection/background/Makefile
 extensions/cpsection/backup/Makefile
 extensions/cpsection/backup/backends/Makefile
