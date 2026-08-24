@@ -185,6 +185,7 @@ class _Account(GObject.GObject):
                                      None, ([object, object])),
         'connected': (GObject.SignalFlags.RUN_FIRST, None, ([])),
         'disconnected': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'connection-changed': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, account_path):
@@ -193,6 +194,8 @@ class _Account(GObject.GObject):
         self.object_path = account_path
 
         self._connection = None
+        self.conn_ready = False
+        self._interfaces_ready = False
         self._buddy_handles = {}
         self._activity_handles = {}
         self._self_handle = None
@@ -204,8 +207,17 @@ class _Account(GObject.GObject):
 
         self._start_listening()
 
+    def _set_conn_ready(self, ready):
+        if ready == self.conn_ready:
+            return
+        self.conn_ready = ready
+        self.emit('connection-changed')
+
     def _close_connection(self):
         self._connection = None
+        self._interfaces_ready = False
+        self._self_handle = None
+        self._set_conn_ready(False)
         if self._home_changed_hid is not None:
             model = shell.get_model()
             model.disconnect(self._home_changed_hid)
@@ -271,7 +283,9 @@ class _Account(GObject.GObject):
 
         self._connection = {}
         self._object_path = connection_path
-        self.conn_ready = False
+        self._interfaces_ready = False
+        self._self_handle = None
+        self._set_conn_ready(False)
         self.conn_proxy = dbus.Bus().get_object(
             connection_name, connection_path)
         self._connection[PROPERTIES_IFACE] = dbus.Interface(
@@ -300,11 +314,11 @@ class _Account(GObject.GObject):
         for interface in interfaces:
             self._connection[interface] = dbus.Interface(
                 self.conn_proxy, interface)
-        self.conn_ready = True
+        self._interfaces_ready = True
         self.__connection_ready_cb(self._connection)
 
     def __connection_ready_cb(self, connection):
-        if not self.conn_ready:
+        if not self._interfaces_ready:
             return
 
         logging.debug('_Account.__connection_ready_cb %r',
@@ -339,6 +353,8 @@ class _Account(GObject.GObject):
                     'Connection.GetSelfHandle'))
             self.emit('connected')
         else:
+            self._self_handle = None
+            self._set_conn_ready(False)
             for contact_handle, contact_id in list(
                     self._buddy_handles.items()):
                 if contact_id is not None:
@@ -360,6 +376,10 @@ class _Account(GObject.GObject):
 
     def __get_self_handle_cb(self, self_handle):
         self._self_handle = self_handle
+        # We have the interfaces and our own handle now, which is all a
+        # caller needs off this connection, so say ready here. the
+        # channel setup below can raise.
+        self._set_conn_ready(True)
 
         if CONNECTION_INTERFACE_CONTACT_CAPABILITIES in self._connection:
             interface = CONNECTION_INTERFACE_CONTACT_CAPABILITIES
@@ -751,6 +771,8 @@ class Neighborhood(GObject.GObject):
                         ([object])),
         'buddy-removed': (GObject.SignalFlags.RUN_FIRST, None,
                           ([object])),
+        'link-local-connection-changed': (GObject.SignalFlags.RUN_FIRST,
+                                          None, ([])),
     }
 
     def __init__(self):
@@ -803,6 +825,12 @@ class Neighborhood(GObject.GObject):
                         self.__current_activity_updated_cb)
         account.connect('connected', self.__account_connected_cb)
         account.connect('disconnected', self.__account_disconnected_cb)
+        account.connect('connection-changed',
+                        self.__account_connection_changed_cb)
+
+    def __account_connection_changed_cb(self, account):
+        if account == self._link_local_account:
+            self.emit('link-local-connection-changed')
 
     def __account_connected_cb(self, account):
         logging.debug('__account_connected_cb %s', account.object_path)
@@ -1142,6 +1170,40 @@ class Neighborhood(GObject.GObject):
 
     def get_activities(self):
         return list(self._activities.values())
+
+    def get_link_local_connection(self):
+        """The salut connection's interface proxies, used to advertise
+        shared entries. None until the account connects and
+        GetInterfaces has replied, since BuddyInfo only turns up then.
+        """
+        account = self._link_local_account
+        if account is None or not account.conn_ready:
+            return None
+        return account._connection
+
+    def get_link_local_handle(self, buddy):
+        """A buddy's contact handle on the salut connection, or None.
+
+        A handle from the jabber account names somebody else over
+        here, so only salut's own buddies get one.
+        """
+        account = self._link_local_account
+        if buddy is None or account is None or not account.conn_ready:
+            return None
+        if buddy.is_owner() or buddy.props.account != account.object_path:
+            return None
+        return buddy.props.handle
+
+    def get_link_local_self_handle(self):
+        """The salut account's own contact handle, once known.
+
+        Same readiness check as the connection, since a handle from a
+        connection that has gone away names nobody.
+        """
+        account = self._link_local_account
+        if account is None or not account.conn_ready:
+            return None
+        return account._self_handle
 
 
 def get_model():
