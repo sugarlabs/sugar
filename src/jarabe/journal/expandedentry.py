@@ -385,6 +385,11 @@ def _trim_letterbox(pixbuf):
 
         def bar(x, y):
             offset = y * stride + x * channels
+            # Treat a fully transparent margin as letterbox too -
+            # previews saved with alpha pad the short sides with
+            # nothing instead of a solid color.
+            if channels == 4 and pixels[offset + 3] == 0:
+                return True
             return all(abs(pixels[offset + i] - target[i]) <= 8
                        for i in range(3))
 
@@ -411,6 +416,11 @@ def _trim_letterbox(pixbuf):
         while right > width * 2 // 3 and col_is_bar(right - 1):
             right -= 1
         if top == 0 and left == 0 and bottom == height and right == width:
+            return pixbuf
+        if right - left <= 0 or bottom - top <= 0:
+            # Nothing left to frame, so return the pixbuf whole. A
+            # zero-size cut fails below the Python level, past what
+            # the except around this call could catch.
             return pixbuf
         return pixbuf.new_subpixbuf(left, top, right - left, bottom - top)
     except Exception:
