@@ -44,6 +44,7 @@ from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal import journalwindow
+from jarabe.journal import reflectguard
 from jarabe.journal import reflection
 from jarabe.journal.momentcard import SNAP_KEY, draw_mark, \
     draw_star, FoldGlyph
@@ -129,6 +130,15 @@ def _ensure_css():
         .journal-when {
             font-family: %(font_clear)s;
             font-size: %(z15)dpx; color: %(ink_soft)s;
+        }
+        .journal-shared-chip {
+            font-family: %(font_clear)s;
+            font-weight: 700; font-size: %(z13)dpx;
+            color: %(stroke)s;
+            background-color: %(card)s;
+            border: %(z2)dpx solid %(stroke)s;
+            border-radius: %(z999)dpx;
+            padding: %(z3)dpx %(z12)dpx;
         }
         .journal-lead-label {
             font-family: %(font_clear)s;
@@ -616,6 +626,10 @@ class _MountFace(Gtk.DrawingArea):
         self.connect('button-release-event',
                      lambda w, e: self.emit('tapped'))
         self.connect('draw', self.__draw_cb)
+
+    def set_corner_color(self, stroke):
+        self._corner = _blend_to_white(stroke, 0.30)
+        self.queue_draw()
 
     def set_pixbuf(self, pixbuf):
         self._pixbuf = pixbuf
@@ -1267,6 +1281,13 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             'toggled', self._keep_icon_toggled_cb)
         row.pack_start(self._keep_icon, False, False, 0)
 
+        # TRANS: small badge on an entry that is shared with friends
+        self._shared_chip = Gtk.Label(label=_('Friends can look'))
+        self._shared_chip.get_style_context().add_class(
+            'journal-shared-chip')
+        self._shared_chip.set_no_show_all(True)
+        row.pack_start(self._shared_chip, False, False, 0)
+
         self._date = Gtk.Label()
         self._date.get_style_context().add_class('journal-when')
         self._date.set_margin_end(style.zoom(12))
@@ -1365,6 +1386,8 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         self._keep_icon.set_active(int(metadata.get('keep', 0)) == 1)
         self._keep_icon.handler_unblock(self._keep_sid)
 
+        self._shared_chip.set_visible(metadata.get('shared', '0') == '1')
+
         self._icon = self._create_icon()
         _replace_child(self._icon_box, self._icon)
 
@@ -1373,7 +1396,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         # under the child's cursor.
         if first_look or not self.in_focus:
             self._title.set_text(metadata.get('title', _('Untitled')))
-        self._title.set_editable(model.is_editable(metadata))
+        self._title.set_editable(self._entry_editable())
 
         self._refresh_page()
 
@@ -1382,15 +1405,25 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         _replace_child(self._buddy_list, self._create_buddy_list(),
                        style.DEFAULT_SPACING)
 
+        self._attach_reflection(metadata)
+
+    def _attach_reflection(self, metadata):
         self._reflection.set_metadata(metadata)
         GLib.idle_add(self._reflection.focus_entry)
+
+    def _none_kept(self):
+        none = Gtk.Label(label=_('nothing kept here yet'))
+        none.get_style_context().add_class('journal-none')
+        return none
+
+    def _entry_editable(self):
+        return model.is_editable(self._metadata)
 
     def _refresh_page(self):
         """Everything below the title that follows the metadata:
         mount, staging, description zones, tags, moments, comments.
         """
-        metadata = self._metadata
-        editable = model.is_editable(metadata)
+        editable = self._entry_editable()
         moments = self._moments()
         if self._staged_seq is not None and \
                 not any(m.get('snap_seq') == self._staged_seq
@@ -1477,9 +1510,9 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             self._metadata.get('reflections', ''),
             self._metadata.get('description', ''), limit=2)
         if not kepts:
-            none = Gtk.Label(label=_('nothing kept here yet'))
-            none.get_style_context().add_class('journal-none')
-            self._words_face.pack_start(none, False, False, 0)
+            none = self._none_kept()
+            if none is not None:
+                self._words_face.pack_start(none, False, False, 0)
         for position, line in enumerate(kepts):
             quote = Gtk.Label(label='“%s”' % line)
             quote.set_line_wrap(True)
@@ -1694,7 +1727,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             tags.remove(tag)
             self._metadata['tags'] = ' '.join(tags)
             self._write_entry()
-        self._refresh_tags(model.is_editable(self._metadata))
+        self._refresh_tags(self._entry_editable())
 
     def _tag_add_cb(self, button):
         entry = Gtk.Entry()
@@ -1736,7 +1769,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
                         self._write_entry()
                     else:
                         already_here = value
-            self._refresh_tags(model.is_editable(self._metadata))
+            self._refresh_tags(self._entry_editable())
             if already_here is not None:
                 sticker = self._tag_stickers.get(already_here)
                 if sticker is not None:
@@ -2012,6 +2045,12 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
     def _comments_changed_cb(self, event, comments):
         self._metadata['comments'] = comments
+        # The child may have deleted a comment. Tell the guard so it
+        # stops holding anything no longer on this list, instead of
+        # writing it back in later.
+        uid = self._metadata.get('uid')
+        if uid:
+            reflectguard.get_guard().note_comments_pruned(uid, comments)
         self._write_entry()
 
     def _reflections_changed_cb(self, view, reflections, next_steps):
@@ -2034,7 +2073,7 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
     def _update_entry(self, needs_update=False):
         self.in_focus = False
-        if not model.is_editable(self._metadata):
+        if not self._entry_editable():
             return
 
         old_title = self._metadata.get('title', None)
