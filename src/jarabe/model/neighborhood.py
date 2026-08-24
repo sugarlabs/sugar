@@ -65,6 +65,28 @@ CONNECTION_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
     'org.laptop.Telepathy.ActivityProperties'
 
+# Shared Journal entries go over the activity wire with this type. an
+# older shell doesn't know it, and drops the advert as an unknown
+# bundle.
+JOURNAL_ENTRY_TYPE = 'org.sugarlabs.JournalEntry'
+
+
+def parse_entry_tags(tags):
+    """Split a shared entry's 'tags' property into uid, bundle_id and
+    mime_type. The last two come back empty if the entry has no such tag.
+    """
+    parts = str(tags or '').split()
+    uid = parts[0] if parts else ''
+    bundle_id = ''
+    mime_type = ''
+    for token in parts[1:]:
+        if '/' in token:
+            mime_type = mime_type or token
+        else:
+            bundle_id = bundle_id or token
+    return uid, bundle_id, mime_type
+
+
 _QUERY_DBUS_TIMEOUT = 200
 """
 Time in seconds to wait when querying contact properties. Some jabber servers
@@ -91,6 +113,10 @@ class ActivityModel(GObject.GObject):
 
         self.activity_id = activity_id
         self.room_handle = room_handle
+        self.entry_uid = None
+        self.entry_mime = ''
+        self._owner = None
+        self._owner_known = False
         self._bundle = None
         self._color = None
         self._private = True
@@ -135,13 +161,28 @@ class ActivityModel(GObject.GObject):
     def get_buddies(self):
         return self._buddies
 
+    def get_owner(self):
+        return self._owner
+
+    owner = GObject.Property(type=object, getter=get_owner)
+
     def add_buddy(self, buddy):
+        # We hear about the room from somebody's activity list, so that
+        # buddy gets here first and anyone later is only a visitor.
+        # claim the slot once and never reuse it.
+        if not self._owner_known:
+            self._owner_known = True
+            self._owner = buddy
+            self.notify('owner')
         self._buddies.append(buddy)
         self.notify('buddies')
         self.emit('buddy-added', buddy)
 
     def remove_buddy(self, buddy):
         self._buddies.remove(buddy)
+        if buddy is self._owner:
+            self._owner = None
+            self.notify('owner')
         self.notify('buddies')
         self.emit('buddy-removed', buddy)
 
@@ -1064,10 +1105,23 @@ class Neighborhood(GObject.GObject):
         self._activities[activity_id] = activity
 
     def __activity_updated_cb(self, account, activity_id, properties):
-        logging.debug('__activity_updated_cb %r %r', activity_id, properties)
+        # Key names only. the values would put every peer's entry
+        # titles in the log.
+        logging.debug('__activity_updated_cb %r %r', activity_id,
+                      sorted(properties.keys()))
         if activity_id not in self._activities:
             logging.debug('__activity_updated_cb Unknown activity with '
                           'activity_id %r', activity_id)
+            return
+
+        if properties.get('type') == JOURNAL_ENTRY_TYPE:
+            self._update_shared_entry(activity_id, properties)
+            return
+
+        if 'type' not in properties:
+            # A half published room has no type yet. we'll get the
+            # properties signal again once it does.
+            logging.debug('__activity_updated_cb typeless %r', activity_id)
             return
 
         registry = bundleregistry.get_registry()
@@ -1091,6 +1145,27 @@ class Neighborhood(GObject.GObject):
                                                   activity.props.color)
             self.emit('activity-added', activity)
 
+    def _update_shared_entry(self, activity_id, properties):
+        # A shared entry never goes into the shell model, there's
+        # nothing to launch, just a page to look at.
+        activity = self._activities[activity_id]
+        is_new = activity.props.name is None
+        tags_uid, bundle_id, mime_type = \
+            parse_entry_tags(properties.get('tags', ''))
+        activity.entry_uid = str(properties.get('uid', '') or tags_uid)
+        if mime_type:
+            activity.entry_mime = mime_type
+        if bundle_id:
+            registry = bundleregistry.get_registry()
+            activity.props.bundle = registry.get_bundle(bundle_id)
+        color = properties.get('color')
+        if color:
+            activity.props.color = XoColor(str(color))
+        activity.props.name = str(properties.get('name', '') or '')
+        activity.props.private = bool(properties.get('private', False))
+        if is_new:
+            self.emit('activity-added', activity)
+
     def __activity_removed_cb(self, account, activity_id):
         logging.debug('__activity_removed_cb %r', activity_id)
         if activity_id not in self._activities:
@@ -1099,6 +1174,9 @@ class Neighborhood(GObject.GObject):
             return
         activity = self._activities[activity_id]
         del self._activities[activity_id]
+        if activity.entry_uid is not None:
+            self.emit('activity-removed', activity)
+            return
         self._shell_model.remove_shared_activity(activity_id)
 
         if activity.props.bundle is not None:
@@ -1114,6 +1192,11 @@ class Neighborhood(GObject.GObject):
         if activity_id and activity_id not in self._activities:
             logging.debug('__current_activity_updated_cb Unknown activity with'
                           ' id %s', activity_id)
+            activity_id = ''
+        elif activity_id and \
+                self._activities[activity_id].entry_uid is not None:
+            # Nobody is ever "in" a shared entry, whatever the peer
+            # announces.
             activity_id = ''
 
         buddy = self._buddies[contact_id]
