@@ -51,6 +51,7 @@ from jarabe.journal import model
 from jarabe.journal.palettes import CopyMenuBuilder
 from jarabe.journal.palettes import BatchOperator
 from jarabe.journal import journalwindow
+from jarabe.journal import reflectguard
 from jarabe.journal.reflectionview import ReflectionView
 from jarabe.webservice import accountsmanager
 
@@ -601,6 +602,13 @@ class DetailToolbox(ToolbarBox):
         self.toolbar.insert(stretch, -1)
         stretch.show()
 
+        self._share_toggle = ToggleToolButton('zoom-neighborhood')
+        # TRANS: tooltip of the toggle that shares an entry with friends
+        self._share_toggle.set_tooltip(_('Share with the neighborhood'))
+        self._share_toggle.connect('toggled', self.__share_toggled_cb)
+        self.toolbar.insert(self._share_toggle, -1)
+        self._share_toggle.show()
+
         self._rail_toggle = ToggleToolButton('reflectjo')
         self._rail_toggle.set_active(True)
         self._rail_toggle.set_tooltip(_('Show or hide the talk'))
@@ -610,6 +618,38 @@ class DetailToolbox(ToolbarBox):
 
     def __rail_toggled_cb(self, button):
         self.emit('rail-toggled', button.get_active())
+
+    def __share_toggled_cb(self, button):
+        if self._metadata is None:
+            return
+        # Our dict is from when the entry was opened, and the datastore
+        # overwrites every key we hand it, so writing this one back
+        # would roll the entry to how it looked then. re-read first.
+        try:
+            metadata = model.get(self._metadata['uid'])
+        except Exception:
+            logging.exception('could not re-read the entry to share it')
+            button.handler_block_by_func(self.__share_toggled_cb)
+            button.set_active(not button.get_active())
+            button.handler_unblock_by_func(self.__share_toggled_cb)
+            return
+        value = '1' if button.get_active() else '0'
+        metadata['shared'] = value
+        model.write(metadata, update_mtime=False)
+        # An activity that's already running will save back the metadata
+        # it loaded and wipe this flag. the guard puts it back.
+        reflectguard.get_guard().note_shared(metadata['uid'], value)
+
+    def sync_share_toggle(self, metadata):
+        editable = metadata.get('mountpoint', '/') == '/'
+        self._share_toggle.set_sensitive(editable)
+        shared = editable and metadata.get('shared', '0') == '1'
+        if self._share_toggle.get_active() != shared:
+            self._share_toggle.handler_block_by_func(
+                self.__share_toggled_cb)
+            self._share_toggle.set_active(shared)
+            self._share_toggle.handler_unblock_by_func(
+                self.__share_toggled_cb)
 
     def sync_rail_toggle(self, shown):
         if self._rail_toggle.get_active() != shown:
@@ -621,6 +661,7 @@ class DetailToolbox(ToolbarBox):
     def set_metadata(self, metadata):
         self._metadata = metadata
         self.sync_rail_toggle(not ReflectionView.rail_shut())
+        self.sync_share_toggle(metadata)
         self._refresh_copy_palette()
         self._refresh_duplicate_palette()
         self._refresh_refresh_palette()

@@ -186,10 +186,13 @@ def kept_lines(raw, description, limit=2):
 
 
 def add_turn(session, role, text, peer=False, q=None, local=False,
-             typed=None):
+             offer=False, typed=None):
     """Append a turn to a session and return it. peer marks a Jo turn
     voicing another child's comment, and rides the stored turn so
-    later sessions still read it as a people question. q is the
+    later sessions still read it as a people question. offer marks
+    the shorter mention that only points at a comment - it has no
+    question of its own, so nothing should ever re-present it as one.
+    q is the
     scripted question's stable id, stamped from the text or passed in
     when a composed line stands in for a script slot. local marks a Jo
     turn whose text must never reach the wire, and latches the child's
@@ -203,6 +206,8 @@ def add_turn(session, role, text, peer=False, q=None, local=False,
     turn = {'role': role, 'text': text}
     if peer:
         turn['peer'] = True
+    if offer:
+        turn['offer'] = True
     if role == ROLE_JO:
         if q is None:
             q = _QUESTION_ID.get(text)
@@ -447,6 +452,16 @@ PEER_QUESTION_OPENER = _('%(who)s saw this and asks: “%(question)s”')
 # TRANS: the same line for a comment that carries no name.
 PEER_QUESTION_ANON = _('Someone saw this and asks: “%(question)s”')
 
+# Jo mentions that a comment is waiting but doesn't quote it. The
+# child decides whether to hear it, by pressing a chip. Jo shouldn't
+# butt into a conversation between kids.
+# TRANS: %(who)s is the commenter's name.
+PEER_OFFER_OPENER = _('%(who)s left you a question in the comments.')
+# TRANS: the same mention for a comment that carries no name.
+PEER_OFFER_ANON = _('Someone left you a question in the comments.')
+# TRANS: the chip a child presses to hear the peer's question.
+PEER_OFFER_CHIP = _('What did they ask?')
+
 # A name longer than any real name is not a name; the line it would
 # build could evict the child's whole saved talk.
 PEER_NAME_LIMIT = 40
@@ -587,6 +602,14 @@ def _plain_text(text):
                for ch in text)
 
 
+def _peer_name(comment):
+    who = comment.get('from')
+    who = who.strip() if isinstance(who, str) else ''
+    if len(who) > PEER_NAME_LIMIT or not _plain_text(who):
+        return ''
+    return who
+
+
 def compose_peer_question(comment):
     message = comment.get('message')
     if not isinstance(message, str):
@@ -594,21 +617,43 @@ def compose_peer_question(comment):
     message = message.strip()
     if not turn_acceptable(message) or not _plain_text(message):
         return None
-    who = comment.get('from')
-    who = who.strip() if isinstance(who, str) else ''
-    if len(who) > PEER_NAME_LIMIT or not _plain_text(who):
-        who = ''
+    message = quoted_child_text(message, TURN_TEXT_LIMIT)
+    who = _peer_name(comment)
     if who:
-        return PEER_QUESTION_OPENER % {'who': who, 'question': message}
+        return PEER_QUESTION_OPENER % {
+            'who': quoted_child_text(who, PEER_NAME_LIMIT),
+            'question': message}
     return PEER_QUESTION_ANON % {'question': message}
 
 
-def peer_question(comments_raw, spoken=()):
+def peer_offer(comments_raw, spoken=()):
+    """Find the first unheard comment and return its mention paired
+    with the question it stands for. Voicing the question is what
+    marks the comment spoken, not the mention - the mention only
+    names a person, so if it marked the comment spoken too, two
+    friends' comments (or two anonymous ones) could collide on that
+    one line and bury each other.
+    """
     for comment in parse_comments(comments_raw):
-        text = compose_peer_question(comment)
-        if text is not None and text not in spoken:
-            return text
+        question = compose_peer_question(comment)
+        if question is None or question in spoken:
+            continue
+        who = _peer_name(comment)
+        if who:
+            mention = PEER_OFFER_OPENER % {
+                'who': quoted_child_text(who, PEER_NAME_LIMIT)}
+        else:
+            mention = PEER_OFFER_ANON
+        return mention, question
     return None
+
+
+def peer_question_stands(comments_raw, question):
+    """Whether an offered question still has a comment behind it."""
+    if not question:
+        return False
+    return any(compose_peer_question(comment) == question
+               for comment in parse_comments(comments_raw))
 
 
 def jo_texts(conversation, turns=()):
@@ -1031,9 +1076,14 @@ def hanging_question(data):
     last = turns[-1]
     if last.get('role') != ROLE_JO:
         return None
+    if last.get('offer'):
+        # The mention doesn't carry a question, so don't treat it as
+        # one waiting for an answer.
+        return None
     text = (last.get('text') or '').strip()
-    # A voiced peer question ends on its closing quote.
-    if not text.rstrip('”').endswith(_QUESTION_ENDS):
+    # A voiced peer question ends on its closing quote. The isolating
+    # mark that fences the quoted words sits just inside that quote.
+    if not text.rstrip('”\u2069').endswith(_QUESTION_ENDS):
         return None
     return text
 
@@ -1051,10 +1101,13 @@ _QUESTION_ENDS = ('?', '？', '؟', '\u037e', '\u055e', '\u1367')
 _SENTENCE_MARKS = '.!?。！？؟\u0964\u06d4\u0589\u1362'
 
 
+TURN_TEXT_LIMIT = 140
+
+
 def turn_acceptable(text):
     """Whether a server turn is shaped like Jo: short, one question."""
     text = text.strip()
-    if not text or len(text) > 140 or '\n' in text:
+    if not text or len(text) > TURN_TEXT_LIMIT or '\n' in text:
         return False
     if not text.endswith(_QUESTION_ENDS):
         return False

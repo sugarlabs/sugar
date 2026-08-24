@@ -1311,6 +1311,15 @@ def _comment(who, message):
             'icon': 'computer-xo', 'icon-color': '#FF2B34,#005FE4'}
 
 
+def _isolated(text):
+    return '⁨%s⁩' % text
+
+
+def _question(raw, spoken=()):
+    pair = reflection.peer_offer(raw, spoken=spoken)
+    return None if pair is None else pair[1]
+
+
 class TestPeerQuestions(unittest.TestCase):
 
     # --- peer questions: the comments box reaches the talk ---
@@ -1318,42 +1327,43 @@ class TestPeerQuestions(unittest.TestCase):
     def test_peer_question_voices_a_question_shaped_comment(self):
         raw = json.dumps(
             [_comment('Ana', 'How did you make the roof stay up?')])
-        text = reflection.peer_question(raw)
+        text = _question(raw)
         self.assertEqual(text, reflection.PEER_QUESTION_OPENER % {
-            'who': 'Ana', 'question': 'How did you make the roof stay up?'})
+            'who': _isolated('Ana'),
+            'question': _isolated('How did you make the roof stay up?')})
 
     def test_peer_question_skips_judgements_for_the_next_question(self):
         raw = json.dumps([_comment('Ana', 'this is bad'),
                           _comment('Ben', 'What does the red button do?')])
-        text = reflection.peer_question(raw)
+        text = _question(raw)
         self.assertIn('What does the red button do?', text)
         self.assertNotIn('bad', text)
 
     def test_peer_question_is_voiced_once(self):
         raw = json.dumps([_comment('Ana', 'What is it made of?')])
-        first = reflection.peer_question(raw)
+        first = _question(raw)
         self.assertIsNotNone(first)
-        self.assertIsNone(reflection.peer_question(raw, spoken={first}))
+        self.assertIsNone(_question(raw, spoken={first}))
 
     def test_peer_question_moves_to_the_next_unvoiced_comment(self):
         raw = json.dumps([_comment('Ana', 'What is it made of?'),
                           _comment('Ben', 'Why is it green?')])
-        first = reflection.peer_question(raw)
-        second = reflection.peer_question(raw, spoken={first})
+        first = _question(raw)
+        second = _question(raw, spoken={first})
         self.assertIn('Why is it green?', second)
 
     def test_peer_question_anonymous_without_from(self):
         raw = json.dumps([{'message': 'Why is it green?'}])
-        text = reflection.peer_question(raw)
+        text = _question(raw)
         self.assertEqual(text, reflection.PEER_QUESTION_ANON % {
-            'question': 'Why is it green?'})
+            'question': _isolated('Why is it green?')})
 
     def test_peer_question_tolerates_garbage(self):
-        self.assertIsNone(reflection.peer_question(''))
-        self.assertIsNone(reflection.peer_question('not json'))
-        self.assertIsNone(reflection.peer_question('{"a": 1}'))
-        self.assertIsNone(reflection.peer_question(json.dumps(['x', 3])))
-        self.assertIsNone(reflection.peer_question(
+        self.assertIsNone(_question(''))
+        self.assertIsNone(_question('not json'))
+        self.assertIsNone(_question('{"a": 1}'))
+        self.assertIsNone(_question(json.dumps(['x', 3])))
+        self.assertIsNone(_question(
             json.dumps([{'from': 'Ana'}])))
 
     def test_peer_turns_and_their_answers_stay_off_the_wire(self):
@@ -1392,35 +1402,118 @@ class TestPeerQuestions(unittest.TestCase):
         self.assertEqual(texts, {'old line', 'new line'})
 
     def test_peer_question_tolerates_wrong_typed_values(self):
-        self.assertIsNone(reflection.peer_question(
+        self.assertIsNone(_question(
             json.dumps([{'from': 'Ana', 'message': 5}])))
-        self.assertIsNone(reflection.peer_question(
+        self.assertIsNone(_question(
             json.dumps([{'from': 'Ana', 'message': {'x': 1}}])))
-        text = reflection.peer_question(
+        text = _question(
             json.dumps([{'from': 7, 'message': 'What is it?'}]))
         self.assertEqual(text, reflection.PEER_QUESTION_ANON % {
-            'question': 'What is it?'})
+            'question': _isolated('What is it?')})
+
+    def test_peer_offer_pairs_the_mention_with_the_question(self):
+        offer, question = reflection.peer_offer(
+            json.dumps([{'from': 'Ana', 'message': 'How does it fly?'}]))
+        self.assertEqual(offer, reflection.PEER_OFFER_OPENER % {
+            'who': _isolated('Ana')})
+        self.assertEqual(question, reflection.PEER_QUESTION_OPENER % {
+            'who': _isolated('Ana'),
+            'question': _isolated('How does it fly?')})
+        self.assertNotIn('How does it fly?', offer)
+
+    def test_peer_offer_mentions_anonymously_without_a_name(self):
+        offer, question = reflection.peer_offer(
+            json.dumps([{'from': 'A' * 200, 'message': 'What is it?'}]))
+        self.assertEqual(offer, reflection.PEER_OFFER_ANON)
+        self.assertNotIn('A' * 200, question)
+
+    def test_peer_offer_retires_on_the_voiced_question(self):
+        raw = json.dumps([{'from': 'Ana', 'message': 'What is it?'}])
+        _offer, question = reflection.peer_offer(raw)
+        self.assertIsNone(reflection.peer_offer(raw, spoken={question}))
+
+    def test_peer_offer_outlives_its_own_mention(self):
+        raw = json.dumps([{'from': 'Ana', 'message': 'What is it?'}])
+        offer, question = reflection.peer_offer(raw)
+        again = reflection.peer_offer(raw, spoken={offer})
+        self.assertEqual(again, (offer, question))
+
+    def test_peer_offer_reaches_a_second_comment_from_one_friend(self):
+        raw = json.dumps([_comment('Ana', 'What is it made of?'),
+                          _comment('Ana', 'Why is it green?')])
+        first, question = reflection.peer_offer(raw)
+        second = reflection.peer_offer(raw, spoken={first, question})
+        self.assertIsNotNone(second)
+        self.assertIn('Why is it green?', second[1])
+
+    def test_peer_offer_reaches_a_second_anonymous_comment(self):
+        raw = json.dumps([{'message': 'What is it made of?'},
+                          {'message': 'Why is it green?'}])
+        first, question = reflection.peer_offer(raw)
+        self.assertEqual(first, reflection.PEER_OFFER_ANON)
+        second = reflection.peer_offer(raw, spoken={first, question})
+        self.assertIsNotNone(second)
+        self.assertIn('Why is it green?', second[1])
+
+    def test_peer_offer_skips_junk_comments(self):
+        self.assertIsNone(reflection.peer_offer(
+            json.dumps([{'from': 'Ana', 'message': 'nice'}])))
+        self.assertIsNone(reflection.peer_offer('not json'))
+
+    def test_peer_offer_line_never_hangs(self):
+        offer, _question = reflection.peer_offer(
+            json.dumps([{'from': 'Ana', 'message': 'What is it?'}]))
+        data = reflection.empty_conversation()
+        session = reflection.new_session('creative')
+        reflection.add_turn(session, reflection.ROLE_JO, offer, peer=True,
+                            offer=True)
+        data['sessions'].append(session)
+        self.assertIsNone(reflection.hanging_question(data))
+
+    def test_peer_offer_never_hangs_when_it_reads_as_a_question(self):
+        data = reflection.empty_conversation()
+        session = reflection.new_session('creative')
+        reflection.add_turn(session, reflection.ROLE_JO,
+                            'Ana left you a question. Want to hear it?',
+                            peer=True, offer=True)
+        data['sessions'].append(session)
+        self.assertIsNone(reflection.hanging_question(data))
+
+    def test_peer_lines_isolate_the_name_and_the_words(self):
+        raw = json.dumps([_comment('שרה', 'How does it fly?')])
+        question = _question(raw)
+        self.assertIn('⁨שרה⁩', question)
+        self.assertIn('⁨How does it fly?⁩', question)
+        offer, _ = reflection.peer_offer(raw)
+        self.assertIn('⁨שרה⁩', offer)
+
+    def test_peer_question_stands_only_while_its_comment_does(self):
+        raw = json.dumps([_comment('Ana', 'What is it made of?')])
+        _offer, question = reflection.peer_offer(raw)
+        self.assertTrue(reflection.peer_question_stands(raw, question))
+        self.assertFalse(reflection.peer_question_stands('[]', question))
+        self.assertFalse(reflection.peer_question_stands(raw, None))
 
     def test_peer_question_drops_an_unwearable_name(self):
         long_name = 'A' * 200
-        text = reflection.peer_question(
+        text = _question(
             json.dumps([{'from': long_name, 'message': 'What is it?'}]))
         self.assertEqual(text, reflection.PEER_QUESTION_ANON % {
-            'question': 'What is it?'})
+            'question': _isolated('What is it?')})
         self.assertNotIn(long_name, text)
-        sneaky = reflection.peer_question(
+        sneaky = _question(
             json.dumps([{'from': 'Ana\nBen', 'message': 'What is it?'}]))
         self.assertEqual(sneaky, reflection.PEER_QUESTION_ANON % {
-            'question': 'What is it?'})
+            'question': _isolated('What is it?')})
 
     def test_peer_question_rejects_control_and_format_characters(self):
-        self.assertIsNone(reflection.peer_question(
+        self.assertIsNone(_question(
             json.dumps([{'from': 'Ana',
                          'message': 'line one\rline two?'}])))
-        self.assertIsNone(reflection.peer_question(
+        self.assertIsNone(_question(
             json.dumps([{'from': 'Ana',
                          'message': '‮evil?'}])))
-        self.assertIsNone(reflection.peer_question(
+        self.assertIsNone(_question(
             json.dumps([{'from': 'Ana',
                          'message': 'one two?'}])))
 
@@ -1453,8 +1546,10 @@ class TestConversationSync(unittest.TestCase):
         self.assertIsNone(reflection.hanging_question(data))
 
     def test_hanging_question_catches_a_voiced_peer_question(self):
-        voiced = reflection.PEER_QUESTION_OPENER % {
-            'who': 'Ana', 'question': 'How did you make the rockit fly?'}
+        # use the real producer so the text carries its isolating marks;
+        # a hand-built copy would not have them
+        voiced = _question(json.dumps(
+            [_comment('Ana', 'How did you make the rockit fly?')]))
         data = reflection.empty_conversation()
         session = reflection.new_session('creative')
         reflection.add_turn(session, reflection.ROLE_JO, voiced, peer=True)

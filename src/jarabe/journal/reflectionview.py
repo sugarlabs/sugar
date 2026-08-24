@@ -607,6 +607,7 @@ class ReflectionView(Gtk.EventBox):
         self._session_over = False
         self._opener_hint = None
         self._now_turn = None
+        self._peer_question = None
         self._turn_rows = []
         self._fold_revealer = None
         self._fold_open = False
@@ -667,12 +668,20 @@ class ReflectionView(Gtk.EventBox):
         self._chips_row.set_max_children_per_line(4)
         self._chips_row.set_column_spacing(style.zoom(10))
         self._chips_row.set_row_spacing(style.zoom(10))
+        self._starter_chips = []
         for chip_text in STARTER_CHIPS:
             chip = Gtk.Button(label=chip_text)
             chip.set_relief(Gtk.ReliefStyle.NONE)
             chip.get_style_context().add_class('reflection-chip')
             chip.connect('clicked', self.__chip_clicked_cb, chip_text)
             self._chips_row.add(chip)
+            self._starter_chips.append(chip.get_parent())
+        self._peer_chip = Gtk.Button(label=reflection.PEER_OFFER_CHIP)
+        self._peer_chip.set_relief(Gtk.ReliefStyle.NONE)
+        self._peer_chip.get_style_context().add_class('reflection-chip')
+        self._peer_chip.connect('clicked', self.__peer_chip_clicked_cb)
+        self._chips_row.add(self._peer_chip)
+        self._peer_chip.get_parent().set_no_show_all(True)
         for child in self._chips_row.get_children():
             child.set_can_focus(False)
         foot.pack_start(self._chips_row, False, False, 0)
@@ -752,6 +761,13 @@ class ReflectionView(Gtk.EventBox):
                 if turns and all(t.get('role') == reflection.ROLE_JO
                                  for t in turns):
                     pending = dict(turns[-1])
+        # The friend's question only lives in memory, behind its chip
+        # - it isn't saved anywhere. It stays good across a reload for
+        # as long as the comment it came from is still there.
+        pending_peer = None
+        if same_entry and reflection.peer_question_stands(
+                metadata.get('comments', ''), self._peer_question):
+            pending_peer = self._peer_question
 
         self._metadata = metadata
         self._known_raw = raw
@@ -762,6 +778,8 @@ class ReflectionView(Gtk.EventBox):
         self._session = None
         self._now_row = None
         self._now_turn = None
+        self._peer_question = None
+        self._set_peer_chip_visible(False)
         # New talk belongs only in the Journal's own store.
         self._editable = metadata.get('mountpoint', '/') == '/'
         self._data = reflection.loads(raw)
@@ -775,7 +793,12 @@ class ReflectionView(Gtk.EventBox):
         self._quiet_label.hide()
         if self._editable:
             self._input_row.show()
+            for wrapper in self._starter_chips:
+                wrapper.show()
             self._chips_row.show()
+            if pending_peer is not None:
+                self._peer_question = pending_peer
+                self._set_peer_chip_visible(True)
         else:
             # Read-only: no input, no chips, Jo asks nothing new. An
             # entry from another mount gets its own line instead -
@@ -826,11 +849,14 @@ class ReflectionView(Gtk.EventBox):
             self._set_input_active(True)
             self._scroll_to_newest()
             return
-        peer = reflection.peer_question(
+        pair = reflection.peer_offer(
             self._metadata.get('comments', ''),
             reflection.jo_texts(self._data))
-        if peer is not None:
-            self._speak(peer, peer=True)
+        if pair is not None:
+            offer, question = pair
+            self._peer_question = question
+            self._speak(offer, peer=True, offer=True)
+            self._set_peer_chip_visible(True)
             return
         used = reflection.used_floor_questions(self._data)
         together = reflection.together_question(self._metadata, used)
@@ -916,10 +942,10 @@ class ReflectionView(Gtk.EventBox):
                 self._session, next_steps)
         self.emit('reflections-changed', raw, next_steps)
 
-    def _speak(self, text, peer=False):
+    def _speak(self, text, peer=False, offer=False):
         self._ensure_session()
         reflection.add_turn(self._session, reflection.ROLE_JO, text,
-                            peer=peer)
+                            peer=peer, offer=offer)
         self._set_now(text)
         self._persist()
         self._set_input_active(True)
@@ -1162,7 +1188,7 @@ class ReflectionView(Gtk.EventBox):
         # The line never closes - words left now rest here for next time.
         self._session_over = True
         self._set_now(over=True)
-        self._chips_row.hide()
+        self._retire_starter_chips()
         self._set_input_active(True)
         self._quiet_label.set_text(SESSION_OVER_LINE)
         self._quiet_label.show()
@@ -1181,7 +1207,7 @@ class ReflectionView(Gtk.EventBox):
         # Nothing left to ask and no server to ask for more.
         self._session_over = True
         self._set_now(over=True)
-        self._chips_row.hide()
+        self._retire_starter_chips()
         self._set_input_active(True)
         self._quiet_label.set_text(QUIET_LINE)
         self._quiet_label.show()
@@ -1207,14 +1233,15 @@ class ReflectionView(Gtk.EventBox):
             reflection.add_turn(
                 self._session, reflection.ROLE_JO,
                 carried.get('text', ''), peer=bool(carried.get('peer')),
-                q=carried.get('q'), local=bool(carried.get('local')))
+                q=carried.get('q'), local=bool(carried.get('local')),
+                offer=bool(carried.get('offer')))
         self._now_turn = None
         reflection.add_turn(self._session, reflection.ROLE_CHILD, text)
         self._set_now()
         self._add_child_row(text)
         self._answers_this_session += 1
         if self._answers_this_session >= CHIPS_HIDE_AFTER:
-            self._chips_row.hide()
+            self._retire_starter_chips()
         self._persist()
         self._request_next_turn()
 
@@ -1229,6 +1256,43 @@ class ReflectionView(Gtk.EventBox):
         self._entry.set_text(text)
         self._entry.grab_focus()
         self._entry.set_position(-1)
+
+    def _set_peer_chip_visible(self, visible):
+        wrapper = self._peer_chip.get_parent()
+        if visible:
+            wrapper.set_no_show_all(False)
+            wrapper.show_all()
+            self._chips_row.show()
+        else:
+            wrapper.hide()
+            wrapper.set_no_show_all(True)
+
+    def _retire_starter_chips(self):
+        """Hide the starter chips. A friend's question waiting behind
+        its own chip isn't a starter, so it stays visible.
+        """
+        for wrapper in self._starter_chips:
+            wrapper.hide()
+        if self._peer_question is None:
+            self._chips_row.hide()
+
+    def __peer_chip_clicked_cb(self, button):
+        question = self._peer_question
+        self._peer_question = None
+        self._set_peer_chip_visible(False)
+        if not any(chip.get_visible() for chip in self._starter_chips):
+            self._chips_row.hide()
+        if question is None:
+            return
+        if self._session_over:
+            # Reopen the session for the friend's question. Left
+            # closed, it would swallow the question and the child's
+            # answer would have nowhere to go.
+            self._session = None
+            self._session_over = False
+            self._answers_this_session = 0
+            self._quiet_label.hide()
+        self._speak(question, peer=True)
 
     def __star_toggled_cb(self, button, text):
         self.emit('keep-toggled', text, button.get_active())

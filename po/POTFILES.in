@@ -88,6 +88,7 @@ src/jarabe/journal/iconview.py
 src/jarabe/journal/projectview.py
 src/jarabe/journal/gridview.py
 src/jarabe/journal/timeline.py
+src/jarabe/journal/peerview.py
 src/jarabe/model/desktop.py
 src/jarabe/model/network.py
 src/jarabe/model/screenshot.py
