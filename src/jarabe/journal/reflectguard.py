@@ -17,14 +17,15 @@
 
 The datastore's update() prunes any metadata key a writer does not
 send, and a running activity saves with the metadata it loaded at
-resume - erasing a moment, snapshot or session written here
-mid-session. The last written state is held in shell memory and put
-back the instant an update wipes it from the entry.
+resume - erasing a moment, snapshot, session, delivered comment or
+share flag written here mid-session. The last written state is held
+and put back the instant an update wipes it from the entry.
 
 The guard retires if the datastore ever merges updates instead of
 deleting omitted keys.
 """
 
+import json
 import logging
 import time
 
@@ -39,6 +40,17 @@ SNAP_KEY = reflection.SNAP_KEY_PREFIX + '%d'
 # Past a couple dozen, the oldest moment is dropped with its snapshot key.
 MAX_MOMENTS = 24
 
+MAX_COMMENTS = 24
+
+
+def comment_identity(comment):
+    """Compare comments by this (from, message) pair rather than the
+    whole dict. A writer that only adds a ctime or an icon to a
+    comment hasn't actually written a different comment.
+    """
+    return (comment.get('from'), comment.get('message'))
+
+
 # How long a write's expected model.updated echo stays credited.
 # Past this, a stale echo could swallow the next real clobber.
 ECHO_TTL = 30
@@ -49,6 +61,7 @@ class ReflectionsGuard(object):
         self._entries = {}
         self._warned_sidless = False
         model.updated.connect(self.__updated_cb)
+        model.deleted.connect(self.__deleted_cb)
 
     def note_moments(self, uid, moments, snaps):
         """The canonical post-write state for an entry's moments and
@@ -63,10 +76,39 @@ class ReflectionsGuard(object):
         """
         self.__replace(uid, sessions=sessions)
 
-    def __replace(self, uid, moments=None, snaps=None, sessions=None):
+    def note_delivered_comment(self, uid, comment):
+        held = self._entries.get(uid)
+        comments = list(held['comments']) if held is not None else []
+        identity = comment_identity(comment)
+        if identity not in comments:
+            comments.append(identity)
+        del comments[:-MAX_COMMENTS]
+        self.__replace(uid, comments=comments)
+
+    def note_comments_pruned(self, uid, comments_raw):
+        """The child's own comment list wins here. If they deleted a
+        comment, it drops out of the hold too, instead of getting
+        written back in.
+        """
+        if uid not in self._entries:
+            return
+        current = {comment_identity(c)
+                   for c in reflection.parse_comments(comments_raw)}
+        kept = [c for c in self._entries[uid]['comments'] if c in current]
+        self.__replace(uid, comments=kept)
+
+    def note_shared(self, uid, value):
+        """The canonical share flag, either '1' or '0'. Only the
+        share toggle writes this key, so whatever we're holding
+        always overrides a write from anything else.
+        """
+        self.__replace(uid, shared=value)
+
+    def __replace(self, uid, moments=None, snaps=None, sessions=None,
+                  comments=None, shared=None):
         held = self._entries.setdefault(uid, {
-            'moments': [], 'snaps': {}, 'sessions': [],
-            'echoes': 0, 'echo_born': 0.0, 'pending': False,
+            'moments': [], 'snaps': {}, 'sessions': [], 'comments': [],
+            'shared': None, 'echoes': 0, 'echo_born': 0.0, 'pending': False,
         })
         if moments is not None:
             held['moments'] = list(moments)
@@ -74,6 +116,10 @@ class ReflectionsGuard(object):
             held['snaps'] = dict(snaps)
         if sessions is not None:
             held['sessions'] = self.__hold_sessions(sessions)
+        if comments is not None:
+            held['comments'] = list(comments)
+        if shared is not None:
+            held['shared'] = shared
         held['echoes'] += 1
         held['echo_born'] = time.monotonic()
 
@@ -92,6 +138,9 @@ class ReflectionsGuard(object):
                 copy['turns'] = list(copy['turns'])
             held.append(copy)
         return held
+
+    def __deleted_cb(self, sender, object_id=None, **kwargs):
+        self._entries.pop(object_id, None)
 
     def __updated_cb(self, sender, object_id=None, **kwargs):
         held = self._entries.get(object_id)
@@ -124,7 +173,14 @@ class ReflectionsGuard(object):
         lost_sessions = [
             s for s in held['sessions']
             if reflection.find_session(data, s.get('sid')) is None]
-        if not lost and not lost_snaps and not lost_sessions:
+        comments = reflection.parse_comments(metadata.get('comments', ''))
+        present = {comment_identity(c) for c in comments}
+        lost_comments = [c for c in held['comments'] if c not in present]
+        held_shared = held['shared']
+        shared_now = metadata.get('shared', '0')
+        lost_shared = held_shared is not None and shared_now != held_shared
+        if not lost and not lost_snaps and not lost_sessions \
+                and not lost_comments and not lost_shared:
             return False
 
         merged = sorted(current + lost, key=lambda m: m.get('ts', 0))
@@ -141,12 +197,19 @@ class ReflectionsGuard(object):
             data['sessions'] = sorted(
                 data.get('sessions', []), key=lambda s: s.get('ts', 0))
 
+        if lost_comments:
+            comments += [{'from': who, 'message': said}
+                         for who, said in lost_comments]
+            metadata['comments'] = json.dumps(comments)
+
         metadata['reflections'] = reflection.dumps(data)
         for key in lost_snaps:
             metadata[key] = held['snaps'][key]
         for seq in evicted:
             if seq is not None:
                 metadata.pop(SNAP_KEY % seq, None)
+        if lost_shared:
+            metadata['shared'] = held['shared']
         try:
             model.write(metadata, update_mtime=False)
         except Exception:
@@ -166,7 +229,7 @@ class ReflectionsGuard(object):
         kept_sessions = [s for s in written['sessions']
                          if s.get('sid') in held_sids]
         self.__replace(uid, moments=written['moments'], snaps=kept_snaps,
-                       sessions=kept_sessions)
+                       sessions=kept_sessions, comments=held['comments'])
         return False
 
 

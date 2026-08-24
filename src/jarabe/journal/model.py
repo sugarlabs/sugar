@@ -712,6 +712,8 @@ def copy(metadata, mount_point, ready_callback=None):
 
     metadata['mountpoint'] = mount_point
     del metadata['uid']
+    # A copy is a new entry, so don't carry the original's sharing over
+    metadata.pop('shared', None)
 
     write(metadata, file_path, transfer_ownership=False,
           ready_callback=ready_callback)
