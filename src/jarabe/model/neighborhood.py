@@ -544,6 +544,17 @@ class _Account(GObject.GObject):
     def _update_buddy_activities(self, buddy_handle, activities):
         logging.debug('_Account._update_buddy_activities')
 
+        if buddy_handle != self._self_handle and \
+                buddy_handle not in self._buddy_handles:
+            # ActivitiesChanged can arrive before the contact round
+            # trip is done. half processing it records the pairing and
+            # then trips over the missing name, and the buddy stays
+            # wedged out of their activities for good. the contact
+            # turning up re-queries GetActivities anyway, so drop it.
+            logging.debug('_update_buddy_activities before contact %r',
+                          buddy_handle)
+            return
+
         if buddy_handle not in self._activities_per_buddy:
             self._activities_per_buddy[buddy_handle] = set()
 
