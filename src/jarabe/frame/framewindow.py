@@ -21,11 +21,7 @@ import gi
 gi.require_version('Gsk', '4.0')
 from gi.repository import Gsk
 
-try:
-    gi.require_version('Gtk4LayerShell', '1.0')
-    from gi.repository import Gtk4LayerShell
-except ValueError:
-    Gtk4LayerShell = None
+
 
 from sugar4.graphics import style
 
@@ -171,7 +167,7 @@ class FrameWindow(Gtk.Revealer):
 
         super().__init__(
             transition_type=transition,
-            transition_duration=500,
+            transition_duration=250,
             reveal_child=False,
         )
 

@@ -11,8 +11,6 @@ sugar_DATA =                        \
 	module-network.svg              \
 	module-power.svg                \
 	module-updater.svg		\
-	module-webaccount.svg		\
-	list-add.svg			\
-	list-remove.svg
+	module-webaccount.svg
 
 EXTRA_DIST = $(sugar_DATA)

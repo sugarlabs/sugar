@@ -261,14 +261,46 @@ def setup_theme():
     if 'SUGAR_SCALING' in os.environ:
         if os.environ['SUGAR_SCALING'] == '100':
             sugar_theme = 'sugar-100'
-    gtk_settings.set_property('gtk-theme-name', sugar_theme)
+    # gtk-theme-name is deprecated in GTK4 and ignored on Wayland/Casilda.
+    # GTK_THEME env variable in run_sugar.sh handles the theme name correctly.
     gtk_settings.set_property('gtk-icon-theme-name', 'sugar')
     gtk_settings.set_property('gtk-cursor-blink-timeout', 3)
     gtk_settings.set_property('gtk-overlay-scrolling', False)
 
+    # GTK4 / Wayland fix: when Casilda compositor connects (~2 sec after start),
+    # the Wayland display replaces the initial display and any CssProvider added
+    # via add_provider_for_display() on the old display is lost → colors fade.
+    #
+    # Solution: write Sugar CSS import to ~/.config/gtk-4.0/gtk.css which GTK4
+    # loads automatically at PRIORITY_USER (800) on EVERY display — including
+    # after Wayland reconnects. Nothing can override PRIORITY_USER.
+    css_path = '/usr/share/themes/%s/gtk-4.0/gtk.css' % sugar_theme
+    if os.path.exists(css_path):
+        user_css_dir = os.path.expanduser('~/.config/gtk-4.0')
+        os.makedirs(user_css_dir, exist_ok=True)
+        user_css_file = os.path.join(user_css_dir, 'gtk.css')
+        try:
+            with open(user_css_file, 'w') as f:
+                f.write('/* Sugar GTK4 theme — auto-written by jarabe/main.py */\n')
+                f.write('@import url("%s");\n' % css_path)
+            logging.debug('Sugar GTK4 theme pinned at user priority: %s', user_css_file)
+        except OSError as e:
+            logging.warning('Could not write user CSS: %s', e)
+
+        # Also load via provider for the current display (belt-and-suspenders).
+        provider = Gtk.CssProvider()
+        provider.load_from_path(css_path)
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    else:
+        logging.warning('Sugar GTK4 theme not found at %s', css_path)
+
     icons_path = os.path.join(config.data_path, 'icons')
     Gtk.IconTheme.get_for_display(
         Gdk.Display.get_default()).add_search_path(icons_path)
+
 
 
 def _setup_main_window(shell_instance):
