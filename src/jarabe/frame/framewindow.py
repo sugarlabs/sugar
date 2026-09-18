@@ -21,8 +21,6 @@ import gi
 gi.require_version('Gsk', '4.0')
 from gi.repository import Gsk
 
-
-
 from sugar4.graphics import style
 
 
