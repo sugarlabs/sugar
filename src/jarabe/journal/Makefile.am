@@ -19,4 +19,5 @@ sugar_PYTHON =				\
 	objectchooser.py		\
 	projectview.py			\
 	palettes.py			\
+	queryhelpers.py			\
 	volumestoolbar.py

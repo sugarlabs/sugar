@@ -27,6 +27,7 @@ from sugar3 import util
 
 from jarabe.journal import model
 from jarabe.journal import misc
+from jarabe.journal.queryhelpers import normalize_uid
 
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
@@ -294,19 +295,20 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         return False
 
     def set_selected(self, uid, value):
+        uid = normalize_uid(uid)
         if value:
             self._selected.append(uid)
         else:
             self._selected.remove(uid)
 
     def is_selected(self, uid):
-        return uid in self._selected
+        return normalize_uid(uid) in self._selected
 
     def get_selected_items(self):
         return self._selected
 
     def restore_selection(self, selected):
-        self._selected = selected
+        self._selected = [normalize_uid(uid) for uid in selected]
 
     def select_all(self):
         self._selected = self._all_ids[:]

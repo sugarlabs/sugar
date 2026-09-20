@@ -36,6 +36,10 @@ from sugar3 import dispatch
 from sugar3 import mime
 from sugar3 import util
 
+from jarabe.journal.queryhelpers import apply_prefix_wildcards
+from jarabe.journal.queryhelpers import normalize_uid
+from jarabe.journal.queryhelpers import query_for_find_ids
+
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
@@ -207,18 +211,7 @@ class DatastoreResultSet(BaseResultSet):
     """
 
     def __init__(self, query, page_size):
-
-        if query.get('query', '') and not query['query'].startswith('"'):
-            query_text = ''
-            words = query['query'].split(' ')
-            for word in words:
-                if word:
-                    if query_text:
-                        query_text += ' '
-                    query_text += word + '*'
-
-            query['query'] = query_text
-
+        apply_prefix_wildcards(query)
         BaseResultSet.__init__(self, query, page_size)
 
     def find(self, query):
@@ -231,9 +224,11 @@ class DatastoreResultSet(BaseResultSet):
         return entries, total_count
 
     def find_ids(self, query):
-        copy = query.copy()
-        copy.pop('mountpoints', '/')
-        return _call_datastore('find_ids', copy)
+        # Callers pass the original Journal query. Prefix wildcards are
+        # applied to self._query in __init__, so Select All must use that
+        # processed query to match the visible list.
+        ids = _call_datastore('find_ids', query_for_find_ids(self._query))
+        return [normalize_uid(uid) for uid in ids]
 
 
 class InplaceResultSet(BaseResultSet):
@@ -330,7 +325,7 @@ class InplaceResultSet(BaseResultSet):
 
         ids = []
         for file_path, stat, mtime_, size_, metadata in self._file_list:
-            ids.append(file_path)
+            ids.append(normalize_uid(file_path))
         return ids
 
     def _scan(self):
