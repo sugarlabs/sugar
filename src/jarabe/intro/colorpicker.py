@@ -14,29 +14,29 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk
-from gi.repository import Gdk
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
 
 
-class ColorPicker(Gtk.EventBox):
+class ColorPicker(Gtk.Box):
 
     def __init__(self):
-        Gtk.EventBox.__init__(self)
+        Gtk.Box.__init__(self)
         self._xo_color = None
 
         self._xo = Icon(pixel_size=style.XLARGE_ICON_SIZE,
                         icon_name='computer-xo')
         self._set_random_colors()
-        self.connect('button-press-event', self._button_press_cb)
-        self.add(self._xo)
-        self._xo.show()
+        click_gesture = Gtk.GestureClick()
+        click_gesture.set_button(1)
+        click_gesture.connect('pressed', self._on_pressed_cb)
+        self.add_controller(click_gesture)
+        self.append(self._xo)
 
-    def _button_press_cb(self, widget, event):
-        if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:
-            self._set_random_colors()
+    def _on_pressed_cb(self, gesture, n_press, x, y):
+        self._set_random_colors()
 
     def get_color(self):
         return self._xo_color
