@@ -1,4 +1,4 @@
-# Copyright (C) 2014, Sugar Labs
+﻿# Copyright (C) 2014, Sugar Labs
 # Copyright (C) 2014, Walter Bender
 #
 # This program is free software: you can redistribute it and/or modify
@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from gi.repository import Gtk
 from gi.repository import Gio
 from gi.repository import GObject
@@ -22,7 +21,6 @@ from gi.repository import GObject
 from sugar4.graphics.icon import EventIcon
 from sugar4.graphics import style
 from sugar4.graphics.xocolor import XoColor
-
 
 GENDERS = ['female', 'male']
 
@@ -45,7 +43,7 @@ class GenderPicker(Gtk.Grid):
     gender_changed_signal = GObject.Signal('gender-changed', arg_types=([str]))
 
     def __init__(self):
-        Gtk.Grid.__init__(self)
+        super().__init__()
         self.set_row_spacing(style.DEFAULT_SPACING)
         self.set_column_spacing(style.DEFAULT_SPACING)
 
@@ -60,7 +58,7 @@ class GenderPicker(Gtk.Grid):
             self._buttons[-1].connect('activate',
                                       self._button_activate_cb, i)
             self.attach(self._buttons[-1], i * 2, 0, 1, 1)
-            self._buttons[-1].show()
+            self._buttons[-1].set_visible(True)
 
         self.reset_button = EventIcon(pixel_size=style.SMALL_ICON_SIZE,
                                       icon_name='entry-cancel')
@@ -68,7 +66,7 @@ class GenderPicker(Gtk.Grid):
                                   self._reset_button_activate_cb)
         self.attach(self.reset_button, 1, 0, 1, 1)
         self.reset_button.xo_color = XoColor('#010101,#a0a0a0')
-        self.reset_button.show()
+        self.reset_button.set_visible(True)
 
     def _reset_button_activate_cb(self, widget):
         self._set_gender('')

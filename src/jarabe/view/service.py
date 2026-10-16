@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,11 +18,9 @@
 
 import dbus
 from dbus import service
-from gi.repository import Gtk
 
 from jarabe.model import shell
 from jarabe.model import bundleregistry
-
 
 _DBUS_SERVICE = 'org.laptop.Shell'
 _DBUS_SHELL_IFACE = 'org.laptop.Shell'
@@ -72,8 +70,8 @@ class UIService(service.Object):
         """
         activity = self._shell_model.get_activity_by_id(activity_id)
 
-        if activity is not None and activity.get_window() is not None:
-            activity.get_window().activate(Gtk.get_current_event_time())
+        if activity is not None:
+            self._shell_model.activate_activity(activity)
             return self._shell_model.get_launcher(activity_id) is None
 
         return False

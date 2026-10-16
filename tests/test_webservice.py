@@ -1,4 +1,4 @@
-# Copyright (C) 2013, Walter Bender
+﻿# Copyright (C) 2013, Walter Bender
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,9 @@ import os
 import sys
 import unittest
 
-from gi.repository import Gtk
+import gi
+gi.require_version('Gtk', '4.0')
+from gi.repository import GLib, Gdk, Gtk
 
 from jarabe import config
 from jarabe.webservice.account import Account
@@ -47,7 +49,7 @@ class TestWebAccounts(unittest.TestCase):
         self.assertTrue(found_mock_account)
 
     def test_icon_theme(self):
-        icon_theme = Gtk.IconTheme.get_default()
+        icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
         icon_search_path = icon_theme.get_search_path()
         icon_path = os.path.join(web_extension_dir, ACCOUNT_NAME, 'icons')
         self.assertTrue(icon_path in icon_search_path)

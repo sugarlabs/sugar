@@ -1,4 +1,4 @@
-# Copyright (C) 2012 Agustin Zubiaga <aguz@sugarlabs.org>
+﻿# Copyright (C) 2012 Agustin Zubiaga <aguz@sugarlabs.org>
 # Copyright (C) 2013 Sugar Labs
 #
 # This program is free software: you can redistribute it and/or modify
@@ -42,7 +42,6 @@ def get_background_image_path():
     settings = Gio.Settings.new(BACKGROUND_DIR)
     return settings.get_string(BACKGROUND_IMAGE_PATH_KEY)
 
-
 PREVIOUS_BACKGROUND_IMAGE_PATH = get_background_image_path()
 
 
@@ -66,7 +65,6 @@ def get_background_alpha_level():
         elif alpha > 1.0:
             alpha = 1.0
     return alpha
-
 
 PREVIOUS_BACKGROUND_ALPHA_LEVEL = get_background_alpha_level()
 

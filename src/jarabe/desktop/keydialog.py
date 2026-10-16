@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 One Laptop per Child
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,13 +18,12 @@ import hashlib
 from gettext import gettext as _
 
 from gi.repository import Gtk
-from gi.repository import Gdk
+
 
 import dbus
 
-from sugar4.graphics import style
-from jarabe.model import network
 
+from jarabe.model import network
 
 IW_AUTH_ALG_OPEN_SYSTEM = 'open'
 IW_AUTH_ALG_SHARED_KEY = 'shared'
@@ -64,8 +63,9 @@ def hash_passphrase(passphrase):
     elif len(passphrase) < 64:
         while len(passphrase) < 64:
             passphrase += passphrase[:64 - len(passphrase)]
-    passphrase = hashlib.md5(passphrase).digest()
-    return string_to_hex(passphrase)[:26]
+    # Use hexdigest() directly: digest() returns raw bytes that are not
+    # guaranteed to be valid UTF-8, causing UnicodeDecodeError in Python 3.
+    return hashlib.md5(passphrase.encode('utf-8')).hexdigest()[:26]
 
 
 class CanceledKeyRequestError(dbus.DBusException):
@@ -78,7 +78,8 @@ class CanceledKeyRequestError(dbus.DBusException):
 class KeyDialog(Gtk.Dialog):
 
     def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
-        Gtk.Dialog.__init__(self, flags=Gtk.DialogFlags.MODAL)
+        super().__init__()
+        self.set_modal(True)
         self.set_title('Wireless Key Required')
 
         self._response = response
@@ -89,30 +90,38 @@ class KeyDialog(Gtk.Dialog):
         self._rsn_flags = rsn_flags
         self._dev_caps = dev_caps
 
+        # Set spacing once for all children in the content area
+        self.get_content_area().set_spacing(6)
+
         display_name = network.ssid_to_display_name(ssid)
         label = Gtk.Label(label=_("A wireless encryption key is required for\n"
                                   " the wireless network '%s'.")
                           % (display_name, ))
-        self.vbox.pack_start(label, True, True, 0)
+        label.set_hexpand(True)
+        label.set_vexpand(True)
+        self.get_content_area().append(label)
+        label.set_visible(True)
 
-        self.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                         Gtk.STOCK_OK, Gtk.ResponseType.OK)
+        self.add_button(_("Cancel"), Gtk.ResponseType.CANCEL)
+        self.add_button(_("OK"), Gtk.ResponseType.OK)
         self.set_default_response(Gtk.ResponseType.OK)
 
     def add_key_entry(self):
         self._entry = Gtk.Entry(visibility=True)
         self._entry.connect('changed', self._update_response_sensitivity)
         self._entry.connect('activate', self.__entry_activate_cb)
-        self.vbox.pack_start(self._entry, True, True, 0)
-        self.vbox.set_spacing(6)
+        self._entry.set_hexpand(True)
+        self._entry.set_vexpand(True)
+        self.get_content_area().append(self._entry)
+        self._entry.set_visible(True)
 
-        button = Gtk.CheckButton(_("Show Password"))
-        button.props.draw_indicator = True
-        button.props.active = self._entry.get_visibility()
+        button = Gtk.CheckButton(label=_("Show Password"))
+        button.set_active(self._entry.get_visibility())
         button.connect("toggled", self.__button_toggled_cb)
-        self.vbox.pack_start(button, True, True, 0)
-
-        self.vbox.show_all()
+        button.set_hexpand(True)
+        button.set_vexpand(True)
+        self.get_content_area().append(button)
+        button.set_visible(True)
 
         self._update_response_sensitivity()
         self._entry.grab_focus()
@@ -137,68 +146,84 @@ class WEPKeyDialog(KeyDialog):
                            dev_caps, response)
 
         # WEP key type
-        self.key_store = Gtk.ListStore(str, int)
-        self.key_store.append(['Passphrase (128-bit)', WEP_PASSPHRASE])
-        self.key_store.append(['Hex (40/128-bit)', WEP_HEX])
-        self.key_store.append(['ASCII (40/128-bit)', WEP_ASCII])
-
-        self.key_combo = Gtk.ComboBox(model=self.key_store)
-        cell = Gtk.CellRendererText()
-        self.key_combo.pack_start(cell, True)
-        self.key_combo.add_attribute(cell, 'text', 0)
-        self.key_combo.set_active(0)
-        self.key_combo.connect('changed', self.__key_combo_changed_cb)
+        self.key_combo = Gtk.DropDown.new_from_strings([
+            _('Passphrase (128-bit)'),
+            _('Hex (40/128-bit)'),
+            _('ASCII (40/128-bit)')
+        ])
+        self.key_combo.connect('notify::selected', self.__key_combo_changed_cb)
+        self.key_combo.set_hexpand(True)
+        self.key_combo.set_vexpand(True)
 
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        hbox.pack_start(Gtk.Label(_('Key Type:')), True, True, 0)
-        hbox.pack_start(self.key_combo, True, True, 0)
-        hbox.show_all()
-        self.vbox.pack_start(hbox, True, True, 0)
+        label1 = Gtk.Label(label=_('Key Type:'))
+        label1.set_hexpand(True)
+        label1.set_vexpand(True)
+        hbox.append(label1)
+        label1.set_visible(True)
+        
+        hbox.append(self.key_combo)
+        self.key_combo.set_visible(True)
+        
+        hbox.set_hexpand(True)
+        hbox.set_vexpand(True)
+        self.get_content_area().append(hbox)
+        hbox.set_visible(True)
 
         # Key entry field
         self.add_key_entry()
 
         # WEP authentication mode
-        self.auth_store = Gtk.ListStore(str, str)
-        self.auth_store.append(['Open System', IW_AUTH_ALG_OPEN_SYSTEM])
-        self.auth_store.append(['Shared Key', IW_AUTH_ALG_SHARED_KEY])
+        self.auth_combo = Gtk.DropDown.new_from_strings([
+            _('Open System'),
+            _('Shared Key')
+        ])
+        self.auth_combo.set_hexpand(True)
+        self.auth_combo.set_vexpand(True)
 
-        self.auth_combo = Gtk.ComboBox(model=self.auth_store)
-        cell = Gtk.CellRendererText()
-        self.auth_combo.pack_start(cell, True)
-        self.auth_combo.add_attribute(cell, 'text', 0)
-        self.auth_combo.set_active(0)
+        hbox2 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        label2 = Gtk.Label(label=_('Authentication Type:'))
+        label2.set_hexpand(True)
+        label2.set_vexpand(True)
+        hbox2.append(label2)
+        label2.set_visible(True)
+        
+        hbox2.append(self.auth_combo)
+        self.auth_combo.set_visible(True)
+        
+        hbox2.set_hexpand(True)
+        hbox2.set_vexpand(True)
+        self.get_content_area().append(hbox2)
+        hbox2.set_visible(True)
 
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        hbox.pack_start(Gtk.Label(_('Authentication Type:')), True, True, 0)
-        hbox.pack_start(self.auth_combo, True, True, 0)
-        hbox.show_all()
-
-        self.vbox.pack_start(hbox, True, True, 0)
-
-    def __key_combo_changed_cb(self, widget):
+    def __key_combo_changed_cb(self, widget, pspec):
         self._update_response_sensitivity()
 
     def _get_security(self):
         key = self._entry.get_text()
 
-        it = self.key_combo.get_active_iter()
-        (key_type, ) = self.key_store.get(it, 1)
+        selected_key = self.key_combo.get_selected()
+        if selected_key == 0:
+            key_type = WEP_PASSPHRASE
+        elif selected_key == 1:
+            key_type = WEP_HEX
+        else:
+            key_type = WEP_ASCII
 
         if key_type == WEP_PASSPHRASE:
             key = hash_passphrase(key)
         elif key_type == WEP_ASCII:
             key = string_to_hex(key)
 
-        it = self.auth_combo.get_active_iter()
-        (auth_alg, ) = self.auth_store.get(it, 1)
+        selected_auth = self.auth_combo.get_selected()
+        auth_alg = IW_AUTH_ALG_OPEN_SYSTEM if selected_auth == 0 else IW_AUTH_ALG_SHARED_KEY
 
         return (key, auth_alg)
 
     def print_security(self):
         (key, auth_alg) = self._get_security()
         print('Key: %s' % key)
-        print('Auth: %d' % auth_alg)
+        print('Auth: %s' % auth_alg)
 
     def create_security(self):
         (key, auth_alg) = self._get_security()
@@ -207,8 +232,14 @@ class WEPKeyDialog(KeyDialog):
 
     def _update_response_sensitivity(self, ignored=None):
         key = self._entry.get_text()
-        it = self.key_combo.get_active_iter()
-        (key_type, ) = self.key_store.get(it, 1)
+        
+        selected_key = self.key_combo.get_selected()
+        if selected_key == 0:
+            key_type = WEP_PASSPHRASE
+        elif selected_key == 1:
+            key_type = WEP_HEX
+        else:
+            key_type = WEP_ASCII
 
         valid = False
         if key_type == WEP_PASSPHRASE:
@@ -233,21 +264,24 @@ class WPAKeyDialog(KeyDialog):
                            dev_caps, response)
         self.add_key_entry()
 
-        self.store = Gtk.ListStore(str)
-        self.store.append([_('WPA & WPA2 Personal')])
-
-        self.combo = Gtk.ComboBox(model=self.store)
-        cell = Gtk.CellRendererText()
-        self.combo.pack_start(cell, True)
-        self.combo.add_attribute(cell, 'text', 0)
-        self.combo.set_active(0)
+        self.combo = Gtk.DropDown.new_from_strings([_('WPA & WPA2 Personal')])
+        self.combo.set_hexpand(True)
+        self.combo.set_vexpand(True)
 
         self.hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.hbox.pack_start(Gtk.Label(_('Wireless Security:')), True, True, 0)
-        self.hbox.pack_start(self.combo, True, True, 0)
-        self.hbox.show_all()
-
-        self.vbox.pack_start(self.hbox, True, True, 0)
+        label = Gtk.Label(label=_('Wireless Security:'))
+        label.set_hexpand(True)
+        label.set_vexpand(True)
+        self.hbox.append(label)
+        label.set_visible(True)
+        
+        self.hbox.append(self.combo)
+        self.combo.set_visible(True)
+        
+        self.hbox.set_hexpand(True)
+        self.hbox.set_vexpand(True)
+        self.get_content_area().append(self.hbox)
+        self.hbox.set_visible(True)
 
     def _get_security(self):
         return self._entry.get_text()
@@ -285,10 +319,7 @@ def create(ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
                                   dev_caps, response)
 
     key_dialog.connect('response', _key_dialog_response_cb)
-    key_dialog.show_all()
-    width, height = key_dialog.get_size()
-    key_dialog.move(Gdk.Screen.width() / 2 - width / 2,
-                    style.GRID_CELL_SIZE * 2)
+    key_dialog.set_visible(True)
 
 
 def _key_dialog_response_cb(key_dialog, response_id):
@@ -298,8 +329,8 @@ def _key_dialog_response_cb(key_dialog, response_id):
         secrets = key_dialog.create_security()
 
     if response_id in [Gtk.ResponseType.CANCEL, Gtk.ResponseType.NONE,
-                       Gtk.ResponseType.DELETE_EVENT]:
-        # key dialog dialog was canceled; send the error back to NM
+                       Gtk.ResponseType.CLOSE, Gtk.ResponseType.DELETE_EVENT]:
+        # key dialog was canceled; send the error back to NM
         response.set_error(CanceledKeyRequestError())
     elif response_id == Gtk.ResponseType.OK:
         if not secrets:
@@ -308,4 +339,4 @@ def _key_dialog_response_cb(key_dialog, response_id):
     else:
         raise RuntimeError('Unhandled key dialog response %d' % response_id)
 
-    key_dialog.destroy()
+    key_dialog.close()

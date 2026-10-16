@@ -1,4 +1,4 @@
-# Copyright (C) 2013, Walter Bender - Raul Gutierrez Segales
+﻿# Copyright (C) 2013, Walter Bender - Raul Gutierrez Segales
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 
 from gettext import gettext as _
 
@@ -54,7 +53,6 @@ class WebServicesConfig(SectionView):
                         fill_color=style.COLOR_TRANSPARENT.get_svg())
 
             grid.attach(icon, 0, 0, 1, 1)
-            icon.show()
 
             label = Gtk.Label()
             label.set_justify(Gtk.Justification.CENTER)
@@ -65,23 +63,25 @@ class WebServicesConfig(SectionView):
                        _('No web services are installed.\n'
                          'Please visit %s for more details.' %
                          'http://wiki.sugarlabs.org/go/WebServices'))))
-            label.show()
             grid.attach(label, 0, 1, 1, 1)
 
-            alignment = Gtk.Alignment.new(0.5, 0.5, 0.1, 0.1)
-            alignment.add(grid)
-            grid.show()
-
-            self.add(alignment)
-            alignment.show()
+            grid.set_halign(Gtk.Align.CENTER)
+            grid.set_valign(Gtk.Align.CENTER)
+            grid.set_hexpand(True)
+            grid.set_vexpand(True)
+            
+            self.append(grid)
             return
 
         grid.set_row_spacing(style.DEFAULT_SPACING * 4)
         grid.set_column_spacing(style.DEFAULT_SPACING * 4)
-        grid.set_border_width(style.DEFAULT_SPACING * 2)
+        grid.set_margin_start(style.DEFAULT_SPACING * 2)
+        grid.set_margin_end(style.DEFAULT_SPACING * 2)
+        grid.set_margin_top(style.DEFAULT_SPACING * 2)
+        grid.set_margin_bottom(style.DEFAULT_SPACING * 2)
         grid.set_column_homogeneous(True)
 
-        width = Gdk.Screen.width() - 2 * style.GRID_CELL_SIZE
+        width = 800 - 2 * style.GRID_CELL_SIZE
         nx = int(width / (style.GRID_CELL_SIZE + style.DEFAULT_SPACING * 4))
 
         self._service_config_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -91,49 +91,46 @@ class WebServicesConfig(SectionView):
         for service in services:
             service_grid = Gtk.Grid()
             icon = CanvasIcon(icon_name=service.get_icon_name())
-            icon.show()
-            service_grid.attach(icon, x, y, 1, 1)
+            service_grid.attach(icon, 0, 0, 1, 1)
 
-            icon.connect('activate', service.config_service_cb, None,
-                         self._service_config_box)
+            gesture = Gtk.GestureClick()
+            gesture.connect('pressed', self._on_service_clicked, service)
+            icon.add_controller(gesture)
 
             label = Gtk.Label()
             label.set_justify(Gtk.Justification.CENTER)
             name = get_service_name(service)
             label.set_markup(name)
-            service_grid.attach(label, x, y + 1, 1, 1)
-            label.show()
+            service_grid.attach(label, 0, 1, 1, 1)
 
             grid.attach(service_grid, x, y, 1, 1)
-            service_grid.show()
 
             x += 1
             if x == nx:
                 x = 0
                 y += 1
 
-        alignment = Gtk.Alignment.new(0.5, 0, 0, 0)
-        alignment.add(grid)
-        grid.show()
+        grid.set_halign(Gtk.Align.CENTER)
+        grid.set_valign(Gtk.Align.START)
 
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        vbox.pack_start(alignment, False, False, 0)
-        alignment.show()
+        vbox.append(grid)
 
         scrolled = Gtk.ScrolledWindow()
-        vbox.pack_start(scrolled, True, True, 0)
+        vbox.append(scrolled)
+        scrolled.set_hexpand(True)
+        scrolled.set_vexpand(True)
 
-        self.add(vbox)
+        self.append(vbox)
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        scrolled.show()
 
         workspace = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        scrolled.add_with_viewport(workspace)
-        workspace.show()
+        scrolled.set_child(workspace)
 
-        workspace.add(self._service_config_box)
-        workspace.show_all()
-        vbox.show()
+        workspace.append(self._service_config_box)
 
     def undo(self):
         pass
+
+    def _on_service_clicked(self, gesture, n_press, x, y, service):
+        service.config_service_cb(gesture.get_widget(), None, self._service_config_box)

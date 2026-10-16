@@ -1,4 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
+﻿# Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,8 +17,7 @@
 from jarabe.view.viewsource import setup_view_source
 from jarabe.model import shell
 
-
-BOUND_KEYS = ['XF86KbdLightOnOff', '<alt><shift>v']
+BOUND_KEYS = ['XF86KbdLightOnOff', '<Alt><Shift>v']
 
 
 def handle_key_press(key):

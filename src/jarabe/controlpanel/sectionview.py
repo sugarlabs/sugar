@@ -1,4 +1,4 @@
-# Copyright (C) 2008, OLPC
+﻿# Copyright (C) 2008, OLPC
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -40,7 +39,8 @@ class SectionView(Gtk.Box):
     _APPLY_TIMEOUT = 1000
 
     def __init__(self):
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
+        self.add_css_class('cpanelsectionview')
         self._is_valid = True
         self._is_cancellable = True
         self._is_deferrable = True
@@ -72,7 +72,3 @@ class SectionView(Gtk.Box):
     def undo(self):
         """Undo here the changes that have been made in this section."""
         pass
-
-
-if hasattr(SectionView, 'set_css_name'):
-    SectionView.set_css_name('cpanelsectionview')

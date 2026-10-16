@@ -1,4 +1,4 @@
-# Copyright (C) 2013 Kalpa Welivitigoda
+﻿# Copyright (C) 2013 Kalpa Welivitigoda
 # Copyright (C) 2015-2016 Sam Parkinson
 # Copyright (C) 2016 James Cameron <quozl@laptop.org>
 #
@@ -18,16 +18,22 @@
 import os
 
 import gi
-gi.require_version('WebKit2', '4.1')
 
-from gi.repository import WebKit2
+try:
+    gi.require_version('WebKit', '6.0')
+    from gi.repository import WebKit
+    WEBKIT_VER = 6
+except (ValueError, ImportError):
+    WebKit = None
+    WEBKIT_VER = 6
+
 from gi.repository import Gio
 
 from sugar4 import env
 
 
 def _get_current_language():
-    locale = os.environ.get('LANG')
+    locale = os.environ.get('LANG', 'en_US.UTF-8')
     return locale.split('.')[0].split('_')[0].lower()
 
 
@@ -36,23 +42,41 @@ class Browser():
     def __init__(self, toolbar):
         self._toolbar = toolbar
 
-        context = WebKit2.WebContext.get_default()
-        cookie_manager = context.get_cookie_manager()
-        cookie_manager.set_persistent_storage(
-            os.path.join(env.get_profile_path(), 'social-help.cookies'),
-            WebKit2.CookiePersistentStorage.SQLITE)
+        if WebKit is None:
+            from gi.repository import Gtk
+            self._webview = Gtk.Label(label="WebKit 6.0 is not installed. Help cannot be displayed.")
+            self._webview.set_visible(True)
+            return
 
-        self._webview = WebKit2.WebView()
-        self._webview.get_context().register_uri_scheme(
-            'help', self.__app_scheme_cb, None)
+        if WEBKIT_VER == 6:
+            context = WebKit.WebContext.get_default()
+            cookie_manager = context.get_cookie_manager()
+            if hasattr(cookie_manager, 'set_persistent_storage'):
+                cookie_manager.set_persistent_storage(
+                    os.path.join(env.get_profile_path(), 'social-help.cookies'),
+                    WebKit.CookiePersistentStorage.SQLITE)
+
+            self._webview = WebKit.WebView()
+            self._webview.get_context().register_uri_scheme(
+                'help', self.__app_scheme_cb, None, None)
+        else:
+            context = WebKit.WebContext.get_default()
+            cookie_manager = context.get_cookie_manager()
+            cookie_manager.set_persistent_storage(
+                os.path.join(env.get_profile_path(), 'social-help.cookies'),
+                WebKit.CookiePersistentStorage.SQLITE)
+
+            self._webview = WebKit.WebView()
+            self._webview.get_context().register_uri_scheme(
+                'help', self.__app_scheme_cb, None)
 
         self._webview.connect('load-changed', self.__load_changed_cb)
         toolbar.update_back_forward(False, False)
         toolbar.connect('back-clicked', self.__back_cb)
         toolbar.connect('forward-clicked', self.__forward_cb)
-        self._webview.show()
+        self._webview.set_visible(True)
 
-    def __app_scheme_cb(self, request, user_data):
+    def __app_scheme_cb(self, request, user_data=None, *args):
         path = request.get_path()
         if path.find('_images') > -1:
             if path.find('/%s/_images/' % _get_current_language()) > -1:
@@ -66,30 +90,34 @@ class Browser():
                        -1, Gio.content_type_guess(path, None)[0])
 
     def __load_changed_cb(self, widget, event):
+        if WebKit is None: return
         self._toolbar.update_back_forward(self._webview.can_go_back(),
                                           self._webview.can_go_forward())
 
     def __back_cb(self, widget):
+        if WebKit is None: return
         self._webview.go_back()
 
     def __forward_cb(self, widget):
+        if WebKit is None: return
         self._webview.go_forward()
 
     def save_state(self):
-        return self._webview.get_session_state()
+        # WebKit 6.0 removed get_session_state()/restore_session_state().
+        # Fall back to simple URL-based state tracking.
+        if WebKit is None:
+            return None
+        uri = self._webview.get_uri()
+        return uri if uri else None
 
     def load_state(self, state, url):
-        if state is None:
-            self._webview.load_uri(url)
-        else:
-            self._webview.restore_session_state(state)
-            # this is what epiphany does:
-            # https://github.com/GNOME/epiphany/blob/
-            # 04e7811c32ba8a2c980a77aac1316b77f0969057/src/ephy-session.c#L280
-            bf_list = self._webview.get_back_forward_list()
-            item = bf_list.get_current_item()
-            if item is not None:
-                self._webview.go_to_back_forward_list_item(item)
+        # WebKit 6.0 removed restore_session_state().
+        # state is now just a URI string (or None).
+        if WebKit is None:
+            return
+        target_url = state if state is not None else url
+        if target_url:
+            self._webview.load_uri(target_url)
 
         self._toolbar.update_back_forward(self._webview.can_go_back(),
                                           self._webview.can_go_forward())

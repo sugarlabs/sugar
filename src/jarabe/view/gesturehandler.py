@@ -13,61 +13,45 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gdk
+import gi
+gi.require_version('SugarExt', '2.0')
 
+from gi.repository import Gdk
 from gi.repository import SugarExt
-from gi.repository import SugarGestures
+
+try:
+    from gi.repository import Gtk
+except ImportError:
+    Gtk = None
 
 from sugar4.graphics import style
+
+import logging
 
 _instance = None
 
 
 class GestureHandler(object):
-    '''Handling gestures to show/hide the frame
-
-    We use SugarExt.GestureGrabber to listen for
-    gestures on the root window. We use a toggle
-    gesture to either hide or show the frame: Swiping
-    from the frame area at the top towards the center
-    does reveal the Frame or hide it.
-    '''
+    '''Handling gestures to show/hide the frame using GTK4 standard event controllers'''
 
     def __init__(self, frame):
         self._frame = frame
+        self._controller = Gtk.GestureSwipe.new()
+        self._controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self._controller.connect('swipe', self.__swipe_cb)
+        
+        # Attach to master window
+        from jarabe.model import shell
+        app = shell.get_model()
+        if app:
+            windows = app.get_windows()
+            if windows:
+                windows[0].add_controller(self._controller)
 
-        #self._gesture_grabber = SugarExt.GestureGrabber()
-        self._controller = []
-
-        screen = Gdk.Screen.get_default()
-        screen.connect('size-changed', self.__size_changed_cb)
-
-        self._add_controller()
-
-    def __size_changed_cb(self, screen):
-        self._add_controller()
-
-    def _add_controller(self):
-        for controller in self._controller:
-            #self._gesture_grabber.remove(controller)
-
-        self._track_gesture_for_area(SugarGestures.SwipeDirectionFlags.DOWN,
-                                     0, 0, Gdk.Screen.width(),
-                                     style.GRID_CELL_SIZE)
-
-    def _track_gesture_for_area(self, directions, x, y, width, height):
-        rectangle = Gdk.Rectangle()
-        rectangle.x = x
-        rectangle.y = y
-        rectangle.width = width
-        rectangle.height = height
-        swipe = SugarGestures.SwipeController(directions=directions)
-        swipe.connect('swipe-ended', self.__swipe_ended_cb)
-        self._gesture_grabber.add(swipe, rectangle)
-        self._controller.append(swipe)
-
-    def __swipe_ended_cb(self, controller, event_direction):
-        self._frame.toggle()
+    def __swipe_cb(self, gesture, velocity_x, velocity_y):
+        # A simple swipe detection: if velocity is high enough, toggle frame
+        if abs(velocity_x) > 500 or abs(velocity_y) > 500:
+            self._frame.toggle()
 
 
 def setup(frame):

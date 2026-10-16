@@ -1,4 +1,4 @@
-# Copyright (C) 2013 Kalpa Welivitigoda
+﻿# Copyright (C) 2013 Kalpa Welivitigoda
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 from jarabe.view.viewhelp import setup_view_help
 from jarabe.model import shell
 
-BOUND_KEYS = ['<alt><shift>h']
+BOUND_KEYS = ['<Alt><Shift>h']
 
 
 def handle_key_press(key):

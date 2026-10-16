@@ -1,4 +1,4 @@
-# Copyright (C) 2015 Martin Abente Lahaye <tch@sugarlabs.org>
+﻿# Copyright (C) 2015 Martin Abente Lahaye <tch@sugarlabs.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@ from gi.repository import GLib
 from gi.repository import Gio
 from gi.repository import GObject
 
-
 _instance = None
 
 
@@ -39,7 +38,7 @@ class Brightness(GObject.GObject):
     changed_signal = GObject.Signal('changed', arg_types=([int]))
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._path = None
         self._helper_path = None
         self._max_brightness = None
@@ -102,7 +101,6 @@ class Brightness(GObject.GObject):
         return False
 
     def set_brightness(self, value):
-        # do not monitor the external change we are about to trigger
         if self._monitor is not None:
             if self._monitor_timeout_id is None:
                 self._monitor.handler_block(self._monitor_changed_hid)
@@ -117,7 +115,6 @@ class Brightness(GObject.GObject):
             self._monitor_timeout_id = GLib.timeout_add(
                 self._MONITOR_RATE * 2, self.__monitor_timeout_cb)
 
-        # do not store every change while is still changing
         if self._save_timeout_id is not None:
             GLib.source_remove(self._save_timeout_id)
         self._save_timeout_id = GLib.timeout_add(

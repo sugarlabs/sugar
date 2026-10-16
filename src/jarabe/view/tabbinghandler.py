@@ -1,4 +1,4 @@
-# Copyright (C) 2008, Benjamin Berg <benjamin@sipsolutions.net>
+﻿# Copyright (C) 2008, Benjamin Berg <benjamin@sipsolutions.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ from gi.repository import Gdk
 
 from jarabe.model import shell
 
-
 _RAISE_DELAY = 250
 
 
@@ -31,61 +30,12 @@ class TabbingHandler(object):
         self._tabbing = False
         self._modifier = modifier
         self._timeout = None
-        self._keyboard = None
-        self._mouse = None
-
-        display = Gdk.Display.get_default()
-        device_manager = display.get_device_manager()
-        devices = device_manager.list_devices(Gdk.DeviceType.MASTER)
-        for device in devices:
-            if device.get_source() == Gdk.InputSource.KEYBOARD:
-                self._keyboard = device
-            if device.get_source() == Gdk.InputSource.MOUSE:
-                self._mouse = device
 
     def _start_tabbing(self, event_time):
         if not self._tabbing:
-            logging.debug('Grabing the input.')
-
-            screen = Gdk.Screen.get_default()
-            window = screen.get_root_window()
-
-            keyboard_grab_result = self._keyboard.grab(
-                window,
-                Gdk.GrabOwnership.WINDOW,
-                False,
-                Gdk.EventMask.KEY_PRESS_MASK |
-                Gdk.EventMask.KEY_RELEASE_MASK,
-                None,
-                event_time)
-
-            mouse_grab_result = self._mouse.grab(
-                window,
-                Gdk.GrabOwnership.WINDOW,
-                False,
-                Gdk.EventMask.BUTTON_PRESS_MASK |
-                Gdk.EventMask.BUTTON_RELEASE_MASK,
-                None,
-                event_time)
-
-            self._tabbing = (keyboard_grab_result == Gdk.GrabStatus.SUCCESS and
-                             mouse_grab_result == Gdk.GrabStatus.SUCCESS)
-
-            # Now test that the modifier is still active to prevent race
-            # conditions. We also test if one of the grabs failed.
-            mask = window.get_device_position(self._mouse)[3]
-            if not self._tabbing or not (mask & self._modifier):
-                logging.debug('Releasing grabs again.')
-
-                # ungrab keyboard/pointer if the grab was successfull.
-                if keyboard_grab_result == Gdk.GrabStatus.SUCCESS:
-                    self._keyboard.ungrab(event_time)
-                if mouse_grab_result == Gdk.GrabStatus.SUCCESS:
-                    self._mouse.ungrab(event_time)
-
-                self._tabbing = False
-            else:
-                self._frame.show()
+            self._tabbing = True
+            
+            self._frame.show()
 
     def __timeout_cb(self, event_time):
         self._activate_current(event_time)
@@ -106,8 +56,8 @@ class TabbingHandler(object):
     def _activate_current(self, event_time):
         home_model = shell.get_model()
         activity = home_model.get_tabbing_activity()
-        if activity and activity.get_window():
-            activity.get_window().activate(event_time)
+        if activity:
+            shell.get_model().activate_activity(activity)
 
     def next_activity(self, event_time):
         if not self._tabbing:
@@ -158,11 +108,9 @@ class TabbingHandler(object):
     def _activate_next_activity(self, event_time):
         next_activity = shell.get_model().get_next_activity()
         if next_activity:
-            next_activity.get_window().activate(event_time)
+            shell.get_model().activate_activity(next_activity)
 
     def stop(self, event_time):
-        self._keyboard.ungrab(event_time)
-        self._mouse.ungrab(event_time)
         self._tabbing = False
 
         self._frame.hide()

@@ -1,4 +1,4 @@
-import os
+﻿import os
 
 from gi.repository import Gio
 

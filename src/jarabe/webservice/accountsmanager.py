@@ -1,4 +1,4 @@
-# Copyright (c) 2013 Walter Bender
+﻿# Copyright (c) 2013 Walter Bender
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -169,8 +169,17 @@ def _load_service_module(path, service_name):
 
 
 def _extend_icon_theme_search_path(path):
-    icon_theme = Gtk.IconTheme.get_default()
-    icon_search_path = icon_theme.get_search_path()
+    from gi.repository import Gdk
+    icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+    
+    # We convert them to paths.
+    icon_search_path = []
+    for p in icon_theme.get_search_path():
+        if hasattr(p, 'get_path'):
+            icon_search_path.append(p.get_path())
+        else:
+            icon_search_path.append(p)
+            
     try:
         icon_path_dirs = os.listdir(path)
     except OSError as e:
@@ -182,7 +191,7 @@ def _extend_icon_theme_search_path(path):
             icon_path = os.path.join(path, file)
             if os.path.isdir(icon_path) and \
                     icon_path not in icon_search_path:
-                icon_theme.append_search_path(icon_path)
+                icon_theme.add_search_path(icon_path)
 
 
 def get_account(service_name):

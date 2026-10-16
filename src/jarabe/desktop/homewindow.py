@@ -35,7 +35,6 @@ from jarabe.model.shell import ShellModel
 from jarabe.model import shell
 from jarabe import config
 
-
 _HOME_PAGE = 0
 _GROUP_PAGE = 1
 _MESH_PAGE = 2
@@ -44,78 +43,96 @@ _TRANSITION_PAGE = 3
 _instance = None
 
 
-class HomeWindow(Gtk.ApplicationWindow):
+def _get_children(box):
+    children = []
+    child = box.get_first_child()
+    while child:
+        children.append(child)
+        child = child.get_next_sibling()
+    return children
+
+
+class HomeWindow(Gtk.Box):
 
     def __init__(self):
         logging.debug('STARTUP: Loading the desktop window')
-        Gtk.ApplicationWindow.__init__(self)
-        self.set_has_resize_grip(False)
-
-        accel_group = Gtk.AccelGroup()
-        self.sugar_accel_group = accel_group
-        self.add_accel_group(accel_group)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
+        self.add_css_class('home-window')
+        self.add_css_class('background')
 
         self._active = False
         self._fully_obscured = True
 
-        screen = self.get_screen()
-        screen.connect('size-changed', self.__screen_size_changed_cb)
-        self.set_default_size(screen.get_width(),
-                              screen.get_height())
+        display = Gdk.Display.get_default()
+        self._monitors = display.get_monitors()
+        self._monitors_hid = self._monitors.connect('items-changed', self.__screen_size_changed_cb)
+        self._monitor_geom_hid = None
+        self._current_monitor = None
+        if self._monitors.get_n_items() > 0:
+            self._current_monitor = self._monitors.get_item(0)
+            self._monitor_geom_hid = self._current_monitor.connect('notify::geometry', self.__screen_size_changed_cb)
+            geom = self._current_monitor.get_geometry()
+            self.set_size_request(geom.width, geom.height)
 
         icons_path = os.path.join(config.data_path, 'icons')
-        Gtk.IconTheme.get_for_screen(screen).append_search_path(icons_path)
+        icon_theme = Gtk.IconTheme.get_for_display(display)
+        icon_theme.add_search_path(icons_path)
 
-        self.__screen_size_changed_cb(None)
-
-        self.realize()
         self._busy_count = 0
         self.busy()
 
-        self.set_type_hint(Gdk.WindowTypeHint.DESKTOP)
-        self.modify_bg(Gtk.StateType.NORMAL,
-                       style.COLOR_WHITE.get_gdk_color())
+        key_controller = Gtk.EventControllerKey.new()
+        key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        key_controller.connect('key-pressed', self.__key_pressed_cb)
+        key_controller.connect('key-released', self.__key_released_cb)
+        self.add_controller(key_controller)
 
-        self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK |
-                        Gdk.EventMask.BUTTON_PRESS_MASK)
-        self.connect('visibility-notify-event',
-                     self._visibility_notify_event_cb)
-        self.connect('map-event', self.__map_event_cb)
-        self.connect('key-press-event', self.__key_press_event_cb)
-        self.connect('key-release-event', self.__key_release_event_cb)
+        focus_controller = Gtk.EventControllerFocus.new()
+        focus_controller.connect('leave', self.__focus_out_event_cb)
+        self.add_controller(focus_controller)
 
         self._box = HomeBackgroundBox()
+        self._box.set_hexpand(True)
 
         self._toolbar = ViewToolbar()
-        self._box.pack_start(self._toolbar, False, True, 0)
-        self._toolbar.show()
+        self._toolbar.add_css_class('toolbar')
+        self._box.append(self._toolbar)
 
         self._alert = None
 
+        self._view_stack = Gtk.Stack()
+        self._view_stack.set_transition_type(Gtk.StackTransitionType.NONE)
+        self._view_stack.set_vexpand(True)
+        self._box.append(self._view_stack)
+
         self._home_box = HomeBox(self._toolbar)
-        self._box.pack_start(self._home_box, True, True, 0)
-        self._home_box.show()
+        self._view_stack.add_named(self._home_box, 'home')
         self._toolbar.show_view_buttons()
 
-        # Loads the Gsettings value for activity 'resume-mode'
         setting = Gio.Settings.new('org.sugarlabs.user')
         self._resume_mode = setting.get_boolean('resume-activity')
         self._home_box.set_resume_mode(self._resume_mode)
 
         self._group_box = GroupBox(self._toolbar)
+        self._view_stack.add_named(self._group_box, 'group')
+        
         self._mesh_box = MeshBox(self._toolbar)
+        self._view_stack.add_named(self._mesh_box, 'mesh')
+        
         self._transition_box = TransitionBox()
+        self._view_stack.add_named(self._transition_box, 'transition')
 
-        self.add(self._box)
-        self._box.show()
+        self._view_stack.set_visible_child_name('home')
+
+        self.append(self._box)
 
         self._transition_box.connect('completed',
                                      self._transition_completed_cb)
 
-        shell.get_model().zoom_level_changed.connect(
+        self._zoom_hid = shell.get_model().zoom_level_changed.connect(
             self.__zoom_level_changed_cb)
 
-        self._alt_timeout_sid = None
+        self._alt_held = False
 
     def add_alert(self, alert):
         self._alert = alert
@@ -128,8 +145,8 @@ class HomeWindow(Gtk.ApplicationWindow):
 
     def _show_alert(self):
         if self._alert:
-            self._box.pack_start(self._alert, False, False, 0)
-            self._box.reorder_child(self._alert, 1)
+            self._box.append(self._alert)
+            self._box.reorder_child_after(self._alert, self._toolbar)
 
     def _hide_alert(self):
         if self._alert:
@@ -143,24 +160,16 @@ class HomeWindow(Gtk.ApplicationWindow):
         elif level == ShellModel.ZOOM_MESH:
             self._mesh_box.suspend()
 
-    def __screen_size_changed_cb(self, screen):
-        screen = Gdk.Screen.get_default()
-        n = screen.get_number()
-        rect = screen.get_monitor_geometry(n)
-        geometry = Gdk.Geometry()
-        geometry.max_width = geometry.base_width = geometry.min_width = \
-            rect.width
-        geometry.max_height = geometry.base_height = geometry.min_height = \
-            rect.height
-        geometry.width_inc = geometry.height_inc = geometry.min_aspect = \
-            geometry.max_aspect = 1
-        hints = Gdk.WindowHints(Gdk.WindowHints.ASPECT |
-                                Gdk.WindowHints.BASE_SIZE |
-                                Gdk.WindowHints.MAX_SIZE |
-                                Gdk.WindowHints.MIN_SIZE)
-        workarea = screen.get_monitor_workarea(n)
-        self.move(workarea.x, workarea.y)
-        self.set_geometry_hints(None, geometry, hints)
+    def __screen_size_changed_cb(self, *args):
+        if self._monitors.get_n_items() > 0:
+            monitor = self._monitors.get_item(0)
+            if self._current_monitor != monitor:
+                if self._current_monitor and self._monitor_geom_hid:
+                    self._current_monitor.disconnect(self._monitor_geom_hid)
+                self._current_monitor = monitor
+                self._monitor_geom_hid = monitor.connect('notify::geometry', self.__screen_size_changed_cb)
+            geom = monitor.get_geometry()
+            self.set_size_request(geom.width, geom.height)
 
     def _activate_view(self, level):
         if level == ShellModel.ZOOM_HOME:
@@ -168,65 +177,50 @@ class HomeWindow(Gtk.ApplicationWindow):
         elif level == ShellModel.ZOOM_MESH:
             self._mesh_box.resume()
 
-    def _visibility_notify_event_cb(self, window, event):
-        fully_obscured = (
-            event.get_state() == Gdk.VisibilityState.FULLY_OBSCURED)
-        if self._fully_obscured == fully_obscured:
-            return
-        self._fully_obscured = fully_obscured
+    def __is_alt(self, keyval, state):
+        # with Shift held, Alt reports as Meta
+        shift = (state & Gdk.ModifierType.SHIFT_MASK) != 0
+        return keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R] or \
+            keyval in [Gdk.KEY_Meta_L, Gdk.KEY_Meta_R] and shift
 
-        if fully_obscured:
-            self._deactivate_view(shell.get_model().zoom_level)
-        else:
-            self._activate_view(shell.get_model().zoom_level)
-
-    def __is_alt(self, event):
-        # When shift is on, <ALT> becomes <META>
-        shift = (event.state & Gdk.ModifierType.SHIFT_MASK) == 1
-        return event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R] or \
-            event.keyval in [Gdk.KEY_Meta_L, Gdk.KEY_Meta_R] and shift
-
-    def __key_press_event_cb(self, window, event):
-        if self.__is_alt(event) and not self._alt_timeout_sid:
+    def __key_pressed_cb(self, controller, keyval, keycode, state):
+        if self.__is_alt(keyval, state) and not getattr(self, '_alt_held', False):
             self._home_box.set_resume_mode(not self._resume_mode)
-            self._alt_timeout_sid = GLib.timeout_add(100,
-                                                     self.__alt_timeout_cb)
+            self._alt_held = True
 
-        if not self._toolbar.search_entry.props.has_focus:
-            self._toolbar.search_entry.grab_focus()
+        _modifier_mask = (Gdk.ModifierType.CONTROL_MASK |
+                          Gdk.ModifierType.ALT_MASK |
+                          Gdk.ModifierType.SUPER_MASK |
+                          Gdk.ModifierType.META_MASK)
+        has_modifier = bool(state & _modifier_mask)
+
+        unicode_char = Gdk.keyval_to_unicode(keyval)
+        is_printable = unicode_char >= 0x20 and unicode_char != 0x7F
+
+        if is_printable and not has_modifier:
+            search_entry = self._toolbar.search_entry
+            if search_entry is None:
+                return False
+
+            has_focus = bool(search_entry.get_state_flags() & Gtk.StateFlags.FOCUS_WITHIN)
+
+            if not has_focus:
+                search_entry.grab_focus()
+
 
         return False
 
-    def __key_release_event_cb(self, window, event):
-        if self.__is_alt(event) and self._alt_timeout_sid:
+    def __key_released_cb(self, controller, keyval, keycode, state):
+        if self.__is_alt(keyval, state) and getattr(self, '_alt_held', False):
             self._home_box.set_resume_mode(self._resume_mode)
-            GLib.source_remove(self._alt_timeout_sid)
-            self._alt_timeout_sid = None
+            self._alt_held = False
 
         return False
 
-    def __alt_timeout_cb(self):
-        display = Gdk.Display.get_default()
-        screen_, x_, y_, modmask = display.get_pointer()
-        if modmask & Gdk.ModifierType.MOD1_MASK:
-            return True
-
-        self._home_box.set_resume_mode(self._resume_mode)
-
-        if self._alt_timeout_sid:
-            GLib.source_remove(self._alt_timeout_sid)
-            self._alt_timeout_sid = None
-
-        return False
-
-    def __map_event_cb(self, widget, event):
-        # have to make the desktop window active
-        # since metacity doesn't make it on startup
-        timestamp = event.get_time()
-        window = self.get_window()
-        if not timestamp:
-            timestamp = Gtk.get_current_event_time()
-        window.focus(timestamp)
+    def __focus_out_event_cb(self, controller):
+        if getattr(self, '_alt_held', False):
+            self._home_box.set_resume_mode(self._resume_mode)
+            self._alt_held = False
 
     def __zoom_level_changed_cb(self, **kwargs):
         old_level = kwargs['old_level']
@@ -238,11 +232,7 @@ class HomeWindow(Gtk.ApplicationWindow):
         if old_level != ShellModel.ZOOM_ACTIVITY and \
            new_level != ShellModel.ZOOM_ACTIVITY:
             self._hide_alert()
-            children = self._box.get_children()
-            if len(children) >= 2:
-                self._box.remove(children[1])
-            self._box.pack_start(self._transition_box, True, True, 0)
-            self._transition_box.show()
+            self._view_stack.set_visible_child_name('transition')
 
             if new_level == ShellModel.ZOOM_HOME:
                 end_size = style.XLARGE_ICON_SIZE
@@ -270,47 +260,57 @@ class HomeWindow(Gtk.ApplicationWindow):
             return
 
         self._hide_alert()
-        children = self._box.get_children()
-        if len(children) >= 2:
-            self._box.remove(children[1])
 
         if level == ShellModel.ZOOM_HOME:
-            self._box.pack_start(self._home_box, True, True, 0)
-            self._home_box.show()
+            self._view_stack.set_visible_child_name('home')
             self._toolbar.clear_query()
             self._toolbar.set_placeholder_text_for_view(_('Home'))
             self._toolbar.show_view_buttons()
+            GLib.idle_add(self._home_box.grab_focus)
         elif level == ShellModel.ZOOM_GROUP:
-            self._box.pack_start(self._group_box, True, True, 0)
-            self._group_box.show()
+            self._view_stack.set_visible_child_name('group')
             self._toolbar.clear_query()
             self._toolbar.set_placeholder_text_for_view(_('Group'))
-            self._toolbar.hide_view_buttons()
+            self._toolbar.show_view_buttons()
+            GLib.idle_add(self._group_box.grab_focus)
         elif level == ShellModel.ZOOM_MESH:
-            self._box.pack_start(self._mesh_box, True, True, 0)
-            self._mesh_box.show()
+            self._view_stack.set_visible_child_name('mesh')
             self._toolbar.clear_query()
             self._toolbar.set_placeholder_text_for_view(_('Neighborhood'))
             self._toolbar.hide_view_buttons()
+            GLib.idle_add(self._mesh_box.grab_focus)
         self._show_alert()
+
+    def do_dispose(self):
+        if hasattr(self, '_zoom_hid'):
+            shell.get_model().zoom_level_changed.disconnect(self._zoom_hid)
+            del self._zoom_hid
+        if hasattr(self, '_monitors_hid') and self._monitors:
+            self._monitors.disconnect(self._monitors_hid)
+            del self._monitors_hid
+        if hasattr(self, '_monitor_geom_hid') and self._monitor_geom_hid and self._current_monitor:
+            self._current_monitor.disconnect(self._monitor_geom_hid)
+            self._monitor_geom_hid = None
+            self._current_monitor = None
+        super().do_dispose()
 
     def get_home_box(self):
         return self._home_box
 
     def busy(self):
         if self._busy_count == 0:
-            self._old_cursor = self.get_window().get_cursor()
-            self._set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+            self._old_cursor = self.get_cursor()
+            self._set_cursor(Gdk.Cursor.new_from_name('wait'))
         self._busy_count += 1
 
     def unbusy(self):
         self._busy_count -= 1
         if self._busy_count == 0:
+            # Restore previous cursor — None means system default (arrow)
             self._set_cursor(self._old_cursor)
 
     def _set_cursor(self, cursor):
-        self.get_window().set_cursor(cursor)
-        Gdk.flush()
+        self.set_cursor(cursor)
 
 
 def get_instance():
@@ -318,3 +318,4 @@ def get_instance():
     if not _instance:
         _instance = HomeWindow()
     return _instance
+

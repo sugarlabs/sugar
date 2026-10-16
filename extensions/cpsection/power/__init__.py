@@ -1,4 +1,4 @@
-# Copyright (C) 2008, OLPC
+﻿# Copyright (C) 2008, OLPC
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,13 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from gettext import gettext as _
 import os
 
 POWERD_FLAG_DIR = '/etc/powerd/flags'
-if os.access(POWERD_FLAG_DIR, os.W_OK):
-    CLASS = 'Power'
+
+
+CLASS = 'Power'
 ICON = 'module-power'
 TITLE = _('Power')
 KEYWORDS = ['automatic', 'power', 'suspend', 'battery']

@@ -1,4 +1,4 @@
-# Copyright (C) 2008, OLPC
+﻿# Copyright (C) 2008, OLPC
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import GLib
@@ -26,6 +25,11 @@ from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
 
+CLASS = 'TimeZone'
+ICON = 'module-date_and_time'
+TITLE = _('Date & Time')
+
+
 class TimeZone(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)
@@ -35,54 +39,57 @@ class TimeZone(SectionView):
         self._zone_sid = 0
         self._cursor_change_handler = None
 
-        self.set_border_width(style.DEFAULT_SPACING * 2)
+        self.set_margin_top(style.DEFAULT_SPACING * 2)
+        self.set_margin_bottom(style.DEFAULT_SPACING * 2)
+        self.set_margin_start(style.DEFAULT_SPACING * 2)
+        self.set_margin_end(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
 
-        self.connect('realize', self.__realize_cb)
+        self.connect('map', self.__map_cb)
 
         self._entry = iconentry.IconEntry()
         self._entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
                                        'entry-search')
         self._entry.add_clear_button()
-        self.pack_start(self._entry, False, False, 0)
-        self._entry.show()
+        self.append(self._entry)
 
         self._scrolled_window = Gtk.ScrolledWindow()
         self._scrolled_window.set_policy(Gtk.PolicyType.NEVER,
                                          Gtk.PolicyType.AUTOMATIC)
-        self._scrolled_window.set_shadow_type(Gtk.ShadowType.IN)
+        self._scrolled_window.set_has_frame(True)
 
         self._store = Gtk.ListStore(GObject.TYPE_STRING)
         zones = model.read_all_timezones()
         for zone in zones:
             self._store.append([zone])
 
-        self._treeview = Gtk.TreeView(self._store)
+        self._treeview = Gtk.TreeView(model=self._store)
         self._treeview.set_search_entry(self._entry)
         self._treeview.set_search_equal_func(self._search, None)
         self._treeview.set_search_column(0)
-        self._scrolled_window.add(self._treeview)
-        self._treeview.show()
+        self._scrolled_window.set_child(self._treeview)
 
-        self._timezone_column = Gtk.TreeViewColumn(_('Timezone'))
+        self._timezone_column = Gtk.TreeViewColumn(title=_('Timezone'))
         self._cell = Gtk.CellRendererText()
         self._timezone_column.pack_start(self._cell, True)
         self._timezone_column.add_attribute(self._cell, 'text', 0)
         self._timezone_column.set_sort_column_id(0)
         self._treeview.append_column(self._timezone_column)
 
-        self.pack_start(self._scrolled_window, True, True, 0)
-        self._scrolled_window.show()
+        self._scrolled_window.set_vexpand(True)
+        self.append(self._scrolled_window)
 
         self._zone_alert_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
-        self.pack_start(self._zone_alert_box, False, False, 0)
+        self.append(self._zone_alert_box)
 
         self._zone_alert = InlineAlert()
-        self._zone_alert_box.pack_start(self._zone_alert, True, True, 0)
+        self._zone_alert.set_hexpand(True)
+        self._zone_alert_box.append(self._zone_alert)
         if 'zone' in self.restart_alerts:
             self._zone_alert.props.msg = self.restart_msg
-            self._zone_alert.show()
-        self._zone_alert_box.show()
+            self._zone_alert.set_visible(True)
+        else:
+            self._zone_alert.set_visible(False)
 
         self.setup()
 
@@ -90,9 +97,10 @@ class TimeZone(SectionView):
         zone = self._model.get_timezone()
         for row in self._store:
             if zone == row[0]:
-                self._treeview.set_cursor(row.path, self._timezone_column,
+                path = self._store.get_path(row.iter)
+                self._treeview.set_cursor(path, self._timezone_column,
                                           False)
-                self._treeview.scroll_to_cell(row.path, self._timezone_column,
+                self._treeview.scroll_to_cell(path, self._timezone_column,
                                               True, 0.5, 0.5)
                 break
 
@@ -103,9 +111,9 @@ class TimeZone(SectionView):
     def undo(self):
         self._treeview.disconnect(self._cursor_change_handler)
         self._model.undo()
-        self._zone_alert.hide()
+        self._zone_alert.set_visible(False)
 
-    def __realize_cb(self, widget):
+    def __map_cb(self, widget):
         self._entry.grab_focus()
 
     def _search(self, model, column, key, iterator, data=None):
@@ -118,20 +126,21 @@ class TimeZone(SectionView):
         list_, row = treeview.get_selection().get_selected()
         if not row:
             return False
-        if self._model.get_timezone() == self._store.get_value(row, 0):
+        timezone_val = self._store.get_value(row, 0)
+        if self._model.get_timezone() == timezone_val:
             return False
 
         if self._zone_sid:
             GLib.source_remove(self._zone_sid)
         self._zone_sid = GLib.timeout_add(self._APPLY_TIMEOUT,
-                                          self.__zone_timeout_cb, row)
+                                          self.__zone_timeout_cb, timezone_val)
         return True
 
-    def __zone_timeout_cb(self, row):
+    def __zone_timeout_cb(self, timezone_val):
         self._zone_sid = 0
-        self._model.set_timezone(self._store.get_value(row, 0))
+        self._model.set_timezone(timezone_val)
         self.restart_alerts.append('zone')
         self.needs_restart = True
         self._zone_alert.props.msg = self.restart_msg
-        self._zone_alert.show()
+        self._zone_alert.set_visible(True)
         return False

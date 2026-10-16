@@ -1,4 +1,4 @@
-# Copyright (C) 2007, Red Hat, Inc.
+﻿# Copyright (C) 2007, Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,21 +21,25 @@ from sugar4.graphics import style
 from sugar4.graphics.xocolor import XoColor
 
 
-class ColorPicker(Gtk.EventBox):
+class ColorPicker(Gtk.Box):
 
     def __init__(self):
-        Gtk.EventBox.__init__(self)
+        super().__init__()
         self._xo_color = None
 
         self._xo = Icon(pixel_size=style.XLARGE_ICON_SIZE,
                         icon_name='computer-xo')
         self._set_random_colors()
-        self.connect('button-press-event', self._button_press_cb)
-        self.add(self._xo)
-        self._xo.show()
+        
+        click = Gtk.GestureClick()
+        click.connect('pressed', self._button_press_cb)
+        self.add_controller(click)
+        
+        self.append(self._xo)
+        self._xo.set_visible(True)
 
-    def _button_press_cb(self, widget, event):
-        if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:
+    def _button_press_cb(self, gesture, n_press, x, y):
+        if gesture.get_current_button() == 1:
             self._set_random_colors()
 
     def get_color(self):

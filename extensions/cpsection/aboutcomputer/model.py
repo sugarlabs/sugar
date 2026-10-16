@@ -1,4 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
+﻿# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ from gi.repository import GLib
 
 from jarabe import config
 from jarabe.model.network import get_wireless_interfaces
-
 
 _OFW_TREE = '/ofw'
 _PROC_TREE = '/proc/device-tree'
@@ -234,7 +233,7 @@ def _read_file(path):
 
 def get_license():
     license_file = os.path.join(config.data_path, 'GPLv3')
-    lang = os.environ['LANG']
+    lang = os.environ.get('LANG', 'en_US.UTF-8')
     if lang.endswith('UTF-8'):
         lang = lang[:-6]
 

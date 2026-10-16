@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@ from sugar4.graphics.icon import CanvasIcon
 
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.util.normalize import normalize_string
-
 
 _FILTERED_ALPHA = 0.33
 
@@ -56,12 +55,12 @@ class BuddyIcon(CanvasIcon):
         palette = self.get_palette()
         self.props.xo_color = self._buddy.get_color()
         if self._filtered:
-            self.alpha = _FILTERED_ALPHA
+            self.set_opacity(_FILTERED_ALPHA)
             if palette is not None:
                 palette.props.icon.props.stroke_color = self.props.stroke_color
                 palette.props.icon.props.fill_color = self.props.fill_color
         else:
-            self.alpha = 1.0
+            self.set_opacity(1.0)
             if palette is not None:
                 palette.props.icon.props.xo_color = self._buddy.get_color()
 

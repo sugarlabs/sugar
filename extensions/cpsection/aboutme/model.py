@@ -1,4 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
+﻿# Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2010-14, Sugar Labs
 # Copyright (C) 2010-14, Walter Bender
 #

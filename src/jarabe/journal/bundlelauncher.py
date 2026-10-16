@@ -45,7 +45,7 @@ def get_bundle(bundle_id=None, object_id=None):
     bundle = bundleregistry.get_registry().get_bundle(bundle_id)
     if bundle is None:
         logging.warning('Activity with the bundle_id %s was not found',
-                        mime_type)
+                        bundle_id)
         return None
     return bundle
 

@@ -1,4 +1,4 @@
-# Copyright (C) 2008 Martin Dengler
+﻿# Copyright (C) 2008 Martin Dengler
 # Copyright (C) 2014 Emil Dudev
 # Copyright (C) 2014 Walter Bender
 # Copyright (C) 2014 Gonzalo Odiard
@@ -98,68 +98,62 @@ class AudioManagerWidget(Gtk.Box):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self._device = device
 
-        self._ok_icon = Icon(icon_name='dialog-ok')
-        self._cancel_icon = Icon(icon_name='dialog-cancel')
+        self._button_icon = Icon(icon_name='dialog-cancel')
 
         icon = Icon(pixel_size=style.SMALL_ICON_SIZE)
         icon.props.icon_name = icon_name
         icon.props.xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                       style.COLOR_BUTTON_GREY.get_svg()))
-        icon.show()
 
-        label = Gtk.Label(text)
-        label.show()
+        label = Gtk.Label(label=text)
 
         grid = Gtk.Grid()
         grid.set_column_spacing(style.DEFAULT_SPACING)
         grid.attach(icon, 0, 0, 1, 1)
         grid.attach(label, 1, 0, 1, 1)
-        grid.show()
 
-        alignment = Gtk.Alignment()
-        alignment.set(0.5, 0, 0, 0)
-        alignment.add(grid)
-        alignment.show()
-
-        self.add(alignment)
+        alignment = Gtk.Box()
+        alignment.set_halign(Gtk.Align.CENTER)
+        alignment.set_valign(Gtk.Align.START)
+        alignment.append(grid)
+        self.append(alignment)
 
         adjustment = Gtk.Adjustment(
             value=device.props.level,
             lower=0,
             upper=100 + sound.VOLUME_STEP,
-            step_incr=sound.VOLUME_STEP,
-            page_incr=sound.VOLUME_STEP,
+            step_increment=sound.VOLUME_STEP,
+            page_increment=sound.VOLUME_STEP,
             page_size=sound.VOLUME_STEP)
         self._adjustment = adjustment
 
-        hscale = Gtk.HScale()
-        hscale.props.draw_value = False
+        hscale = Gtk.Scale(orientation=Gtk.Orientation.HORIZONTAL)
+        hscale.set_draw_value(False)
         hscale.set_adjustment(adjustment)
         hscale.set_digits(0)
         hscale.set_size_request(style.GRID_CELL_SIZE * 4, -1)
-        hscale.show()
 
         button = Gtk.Button()
-        button.props.relief = Gtk.ReliefStyle.NONE
-        button.props.focus_on_click = False
+        button.set_has_frame(False)
+        button.set_focusable(False)
+        button.set_child(self._button_icon)
         button.connect('clicked', self.__muted_clicked_cb)
-        button.show()
         self._button = button
 
         grid = Gtk.Grid()
         grid.set_column_spacing(style.DEFAULT_SPACING)
         grid.attach(hscale, 0, 0, 1, 1)
         grid.attach(button, 1, 0, 1, 1)
-        grid.show()
 
-        alignment = Gtk.Alignment()
-        alignment.set(0.5, 0, 0, 0)
-        alignment.set_padding(0, 0, style.DEFAULT_SPACING,
-                              style.DEFAULT_SPACING)
-        alignment.add(grid)
-        alignment.show()
+        alignment = Gtk.Box()
+        alignment.set_halign(Gtk.Align.CENTER)
+        alignment.set_valign(Gtk.Align.START)
+        alignment.set_margin_bottom(style.DEFAULT_SPACING)
+        alignment.set_margin_start(style.DEFAULT_SPACING)
+        alignment.set_margin_end(style.DEFAULT_SPACING)
+        alignment.append(grid)
 
-        self.add(alignment)
+        self.append(alignment)
 
         self._adjustment_hid = \
             self._adjustment.connect('value-changed',
@@ -172,9 +166,9 @@ class AudioManagerWidget(Gtk.Box):
 
     def update_muted(self):
         if self._device.props.muted:
-            self._button.set_image(self._ok_icon)
+            self._button_icon.props.icon_name = 'dialog-ok'
         else:
-            self._button.set_image(self._cancel_icon)
+            self._button_icon.props.icon_name = 'dialog-cancel'
 
     def __level_adjusted_cb(self, device, data=None):
         value = self._adjustment.props.value
@@ -209,21 +203,17 @@ class AudioPalette(Palette):
         self._capture_manager = AudioManagerWidget(input_text,
                                                    'media-audio-input',
                                                    input_model)
-        self._capture_manager.show()
 
         separator = PaletteMenuItemSeparator()
-        separator.show()
 
         self._speaker_manager = AudioManagerWidget(output_text,
                                                    'speaker-100',
                                                    output_model)
-        self._speaker_manager.show()
 
         self._box = PaletteMenuBox()
         self._box.append_item(self._capture_manager, 0, 0)
         self._box.append_item(separator, 0, 0)
         self._box.append_item(self._speaker_manager, 0, 0)
-        self._box.show()
 
         self.set_content(self._box)
 

@@ -1,4 +1,4 @@
-# Copyright (c) 2013 Walter Bender, Raul Gutierrez Segales
+﻿# Copyright (c) 2013 Walter Bender, Raul Gutierrez Segales
 # Copyright (c) 2013 SugarLabs
 #
 # This program is free software: you can redistribute it and/or modify
@@ -61,7 +61,7 @@ class Account():
         return NotImplemented
 
 
-class SharedJournalEntry():
+class SharedJournalEntry(GObject.GObject):
     ''' SharedJournalEntry is a class used to intermediate between the
     online service and the Sugar UI elements (MenuItems used in the
     Journal UI) for online accounts. It provides stubs for public

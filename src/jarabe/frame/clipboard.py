@@ -1,4 +1,4 @@
-# Copyright (C) 2006, Red Hat, Inc.
+﻿# Copyright (C) 2006, Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,13 +20,11 @@ import urllib.parse
 import tempfile
 
 from gi.repository import GObject
-from gi.repository import Gtk
 from gi.repository import Gdk
 
 from sugar4 import mime
 
 from jarabe.frame.clipboardobject import ClipboardObject, Format
-
 
 _instance = None
 
@@ -35,17 +33,17 @@ class Clipboard(GObject.GObject):
 
     __gsignals__ = {
         'object-added': (GObject.SignalFlags.RUN_FIRST, None,
-                         ([object])),
+                         (object,)),
         'object-deleted': (GObject.SignalFlags.RUN_FIRST, None,
-                           ([GObject.TYPE_INT64])),
+                           (GObject.TYPE_INT64,)),
         'object-selected': (GObject.SignalFlags.RUN_FIRST, None,
-                            ([int])),
+                            (GObject.TYPE_INT64,)),
         'object-state-changed': (GObject.SignalFlags.RUN_FIRST, None,
-                                 ([object])),
+                                 (object,)),
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._objects = {}
         self._next_id = 0
@@ -99,7 +97,7 @@ class Clipboard(GObject.GObject):
         cb_object = self._objects.pop(object_id)
         cb_object.destroy()
         if not self._objects:
-            gtk_clipboard = Gtk.Display.get_default().get_clipboard()
+            gtk_clipboard = Gdk.Display.get_default().get_clipboard()
             gtk_clipboard.set_content(None)
         self.emit('object-deleted', object_id)
         logging.debug('Deleted object with object_id %r', object_id)
@@ -137,7 +135,7 @@ class Clipboard(GObject.GObject):
             elif 'text/unicode' in list(formats.keys()):
                 self.add_object_format(
                     cb_object.get_id(), 'text/plain',
-                    data=formats['UTF8_STRING'].get_data(), on_disk=False)
+                    data=formats['text/unicode'].get_data(), on_disk=False)
 
     def get_object(self, object_id):
         logging.debug('Clipboard.get_object')

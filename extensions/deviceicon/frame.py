@@ -1,4 +1,4 @@
-# Copyright (C) 2012, OLPC
+﻿# Copyright (C) 2012, OLPC
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,6 +15,8 @@
 
 import logging
 from gettext import gettext as _
+
+from gi.repository import Gtk
 
 from sugar4 import profile
 from sugar4.graphics.tray import TrayIcon
@@ -46,7 +48,9 @@ class DeviceView(TrayIcon):
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
 
         self._input_method = Maliit.InputMethod()
-        self.connect('button-release-event', self.__button_release_event_cb)
+        click_controller = Gtk.GestureClick()
+        click_controller.connect('released', self.__button_release_event_cb)
+        self.add_controller(click_controller)
         self.set_palette_invoker(FrameWidgetInvoker(self))
 
     def create_palette(self):
@@ -54,10 +58,10 @@ class DeviceView(TrayIcon):
         palette.set_group_id('frame')
         return palette
 
-    def __button_release_event_cb(self, widget, event):
+    def __button_release_event_cb(self, gesture, n_press, x, y):
         self._input_method.show()
         frame = jarabe.frame.get_view()
-        frame.hide()
+        frame.set_visible(False)
 
 
 def setup(tray):

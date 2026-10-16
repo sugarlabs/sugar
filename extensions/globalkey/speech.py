@@ -1,4 +1,4 @@
-# Copyright (C) 2011 One Laptop Per Child
+﻿# Copyright (C) 2011 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 
 from jarabe.model import speech
 
-BOUND_KEYS = ['<alt><shift>s']
+BOUND_KEYS = ['<Alt><Shift>s']
 
 
 def handle_key_press(key):
