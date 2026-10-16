@@ -180,7 +180,7 @@ class BuddyMenu(Palette):
 
         # show the control panel
         panel = ControlPanel()
-        panel.set_visible(True)
+        panel.present()
 
     def _update_invite_menu(self, activity):
         buddy_activity = self._buddy.props.current_activity

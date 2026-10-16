@@ -455,7 +455,10 @@ class ShellModel(Gtk.Application):
             del self._launchers[activity_id]
 
     def _update_zoom_level(self, window):
-        if isinstance(window, Gtk.Dialog):
+        if isinstance(window, Gtk.Dialog) or \
+                type(window).__name__ in ('ControlPanel', 'SugarControlPanel',
+                                          'ViewSource', 'SugarViewSource', 'ViewHelp') or \
+                window.get_transient_for() is not None:
             return
             
         if window == self._main_window:
@@ -602,9 +605,13 @@ class ShellModel(Gtk.Application):
 
     def _window_added_cb(self, application, window):
         if not isinstance(window, Gtk.Dialog):
-            if type(window).__name__ in ('IntroWindow', 'HomeWindow', 'LaunchWindow'):
+            if type(window).__name__ in ('IntroWindow', 'HomeWindow', 'LaunchWindow',
+                                         'ControlPanel', 'SugarControlPanel',
+                                         'ViewSource', 'SugarViewSource', 'ViewHelp'):
                 return
 
+            if window.get_transient_for() is not None:
+                return
 
             if isinstance(window, Gtk.ApplicationWindow) and \
                     not getattr(window, 'activity_id', None):
@@ -630,6 +637,10 @@ class ShellModel(Gtk.Application):
                         if home_act.get_launch_status() == Activity.LAUNCHING:
                             activity_id = a_id
                             break
+
+            if not activity_id and not service_name:
+                logging.debug('_window_added_cb: ignoring non-activity window %r', window)
+                return
 
             if service_name:
                 registry = get_registry()

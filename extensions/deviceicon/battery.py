@@ -308,7 +308,8 @@ def setup(tray):
         client = UPowerGlib.Client.new_full(None)
         devices = client.get_devices()
         for device in devices:
-            if device.kind == UPowerGlib.DeviceKind.BATTERY:
+            kind = getattr(device.props, 'kind', None) if hasattr(device, 'props') else getattr(device, 'kind', None)
+            if kind == UPowerGlib.DeviceKind.BATTERY:
                 tray.add_device(DeviceView(device.get_object_path()))
     except Exception as e:
         logging.warning("Could not setup battery device: %s", e)

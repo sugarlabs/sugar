@@ -212,14 +212,14 @@ class DisplayPalette(Palette):
 
     def __screenshot_cb(self, palette):
         frame_ = frame.get_view()
-        frame_.set_visible(False)
+        frame_.hide()
         GLib.idle_add(self.__take_screenshot_cb, frame_)
 
     def __take_screenshot_cb(self, frame_):
         if frame_.is_visible():
             return True
         take_screenshot()
-        frame_.set_visible(True)
+        frame_.show()
         return False
 
 

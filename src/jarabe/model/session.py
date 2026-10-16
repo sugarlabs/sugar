@@ -1,4 +1,4 @@
-﻿# Copyright (C) 2008, Red Hat, Inc.
+# Copyright (C) 2008, Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ _session_manager = None
 
 
 def have_systemd():
-    return os.access("/run/systemd/seats", os.F_OK)
+    return os.path.exists('/run/systemd/system')
 
 
 class SessionManager(GObject.GObject):
@@ -93,6 +93,7 @@ class SessionManager(GObject.GObject):
 
     def shutdown_completed(self):
         if self._logout_mode != self.MODE_LOGOUT:
+            shutdown_done = False
             try:
                 bus = dbus.SystemBus()
                 if have_systemd():
@@ -103,11 +104,13 @@ class SessionManager(GObject.GObject):
                                             'org.freedesktop.login1.Manager')
 
                         if self._logout_mode == self.MODE_SHUTDOWN:
-                            pm.PowerOff(False)
+                            pm.PowerOff(True)
+                            shutdown_done = True
                         elif self._logout_mode == self.MODE_REBOOT:
-                            pm.Reboot(False)
-                    except dbus.DBusException:
-                        logging.exception('Can not stop sugar via systemd')
+                            pm.Reboot(True)
+                            shutdown_done = True
+                    except Exception:
+                        logging.exception('Can not stop sugar via systemd D-Bus')
                 else:
                     CONSOLEKIT_DBUS_PATH = '/org/freedesktop/ConsoleKit/Manager'
                     try:
@@ -118,12 +121,24 @@ class SessionManager(GObject.GObject):
 
                         if self._logout_mode == self.MODE_SHUTDOWN:
                             pm.Stop()
+                            shutdown_done = True
                         elif self._logout_mode == self.MODE_REBOOT:
                             pm.Restart()
+                            shutdown_done = True
                     except dbus.DBusException:
                         logging.exception('Can not stop sugar via ConsoleKit')
-            except dbus.DBusException:
+            except Exception:
                 logging.exception('Can not connect to SystemBus for shutdown')
+
+            if not shutdown_done:
+                try:
+                    import subprocess
+                    if self._logout_mode == self.MODE_SHUTDOWN:
+                        subprocess.run(['systemctl', 'poweroff'])
+                    elif self._logout_mode == self.MODE_REBOOT:
+                        subprocess.run(['systemctl', 'reboot'])
+                except Exception:
+                    logging.exception('systemctl fallback failed')
 
         # Always quit the shell model to ensure we exit
         self._shell_model.quit()

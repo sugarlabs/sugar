@@ -31,11 +31,26 @@ from jarabe.model import bundleregistry
 
 from jarabe.journal.iconview import IconView
 
-# Inject CSS for modal background
-provider = Gtk.CssProvider()
-css = b".modal-bg { background-color: %s; }" % style.COLOR_BLACK.get_html().encode('utf-8')
-provider.load_from_data(css)
-Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+# Inject CSS for modal background — deferred to avoid
+# Gdk.Display.get_default() returning None at module import time.
+_objectchooser_css_loaded = False
+
+
+def _ensure_css():
+    global _objectchooser_css_loaded
+    if _objectchooser_css_loaded:
+        return
+    display = Gdk.Display.get_default()
+    if display is None:
+        return
+    provider = Gtk.CssProvider()
+    css = b".modal-bg { background-color: %s; }" % \
+        style.COLOR_BLACK.get_html().encode('utf-8')
+    provider.load_from_data(css)
+    Gtk.StyleContext.add_provider_for_display(
+        display, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+    _objectchooser_css_loaded = True
+
 
 
 class ObjectChooser(Gtk.Window):
@@ -49,6 +64,7 @@ class ObjectChooser(Gtk.Window):
     def __init__(self, parent=None, what_filter='', filter_type=None,
                  show_preview=False):
         super().__init__()
+        _ensure_css()  # Apply CSS now that display is ready
         self.set_decorated(False)
         self.set_modal(True)
 

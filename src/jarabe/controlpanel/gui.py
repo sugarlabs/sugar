@@ -115,6 +115,7 @@ class ControlPanel(Gtk.Window):
         self._vbox.set_visible(True)
 
         self.connect('realize', self.__realize_cb)
+        self.connect('close-request', self.__close_request_window_cb)
         self.connect('destroy', self.__destroy_cb)
 
         self._options = self._get_options()
@@ -135,6 +136,12 @@ class ControlPanel(Gtk.Window):
         # the modal windows counter is updated to disable hot keys - SL#4601
         self._has_modal = True
         shell.get_model().push_modal()
+
+    def __close_request_window_cb(self, window):
+        if getattr(self, '_has_modal', False):
+            self._has_modal = False
+            shell.get_model().pop_modal()
+        return False
 
     def __destroy_cb(self, widget):
         if getattr(self, '_has_modal', False):
@@ -192,6 +199,7 @@ class ControlPanel(Gtk.Window):
         width = sw - offset * 2
         height = sh - offset * 2
         self.set_size_request(width, height)
+        self.set_default_size(width, height)
         if hasattr(self, '_table') and self._table is not None:
             while self._table.get_first_child() is not None:
                 self._table.remove(self._table.get_first_child())

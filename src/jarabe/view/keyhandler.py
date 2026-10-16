@@ -217,9 +217,10 @@ class KeyHandler(object):
         self._frame.hide()
 
         panel = ControlPanel(window_id)
-        activity.push_shell_window(panel)
-        panel.connect('hide', activity.pop_shell_window)
-        panel.set_visible(True)
+        if activity is not None:
+            activity.push_shell_window(panel)
+            panel.connect('close-request', lambda w: activity.pop_shell_window(w) or False)
+        panel.present()
 
     def handle_dump_ui_tree(self, event_time):
         if uitree:

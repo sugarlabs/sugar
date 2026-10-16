@@ -30,6 +30,11 @@ import shutil
 # Disable overlay scrolling before GTK is loaded
 os.environ['GTK_OVERLAY_SCROLLING'] = '0'
 os.environ['LIBOVERLAY_SCROLLBAR'] = '0'
+# Force software rendering for Casilda in software rasterizer or VM environments without DRM GPU
+if 'CASILDA_FORCE_SOFTWARE' not in os.environ and \
+        (os.environ.get('LIBGL_ALWAYS_SOFTWARE') == '1' or not os.path.exists('/dev/dri/card0')):
+    os.environ['CASILDA_FORCE_SOFTWARE'] = '1'
+
 
 import gettext
 from jarabe import config
@@ -288,18 +293,29 @@ def setup_theme():
             logging.warning('Could not write user CSS: %s', e)
 
         # Also load via provider for the current display (belt-and-suspenders).
-        provider = Gtk.CssProvider()
-        provider.load_from_path(css_path)
-        Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(),
-            provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        # Guard: Gdk.Display.get_default() can return None in gdm3 Wayland
+        # session before the display is fully initialized.
+        _display = Gdk.Display.get_default()
+        if _display is not None:
+            provider = Gtk.CssProvider()
+            provider.load_from_path(css_path)
+            Gtk.StyleContext.add_provider_for_display(
+                _display,
+                provider,
+                Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        else:
+            logging.warning('setup_theme: display not ready yet, skipping '
+                            'add_provider_for_display (user CSS already written)')
     else:
         logging.warning('Sugar GTK4 theme not found at %s', css_path)
 
     icons_path = os.path.join(config.data_path, 'icons')
-    Gtk.IconTheme.get_for_display(
-        Gdk.Display.get_default()).add_search_path(icons_path)
+    _display = Gdk.Display.get_default()
+    if _display is not None:
+        Gtk.IconTheme.get_for_display(_display).add_search_path(icons_path)
+    else:
+        logging.warning('setup_theme: display not ready, icon search path '
+                        'not set — will be applied after display opens')
 
 
 
