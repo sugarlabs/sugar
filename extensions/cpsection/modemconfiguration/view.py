@@ -142,10 +142,12 @@ class ModemConfiguration(SectionView):
             self._country_combo.set_active(current_country.idx)
 
             self.provider_combo.set_model(provider_store)
-            self.provider_combo.set_active(current_provider.idx)
+            if current_provider is not None:
+                self.provider_combo.set_active(current_provider.idx)
 
             self.plan_combo.set_model(plan_store)
-            self.plan_combo.set_active(current_plan.idx)
+            if current_plan is not None:
+                self.plan_combo.set_active(current_plan.idx)
 
             self._country_combo.connect("changed", self._country_selected_cb)
             self.provider_combo.connect("changed", self._provider_selected_cb)
@@ -268,7 +270,8 @@ class ModemConfiguration(SectionView):
             store = _create_providers_list_store(providers)
             current = self.service_providers.get_provider()
             self.provider_combo.set_model(store)
-            self.provider_combo.set_active(current.idx)
+            if current is not None:
+                self.provider_combo.set_active(current.idx)
 
     def _provider_selected_cb(self, combo):
         tree_iter = combo.get_active_iter()
@@ -281,7 +284,8 @@ class ModemConfiguration(SectionView):
             store = _create_providers_list_store(plans)
             current = self.service_providers.get_plan()
             self.plan_combo.set_model(store)
-            self.plan_combo.set_active(current.idx)
+            if current is not None:
+                self.plan_combo.set_active(current.idx)
 
     def _plan_selected_cb(self, combo):
         tree_iter = combo.get_active_iter()
@@ -291,7 +295,8 @@ class ModemConfiguration(SectionView):
 
             self.service_providers.set_plan(plan.idx)
             plan = self.service_providers.get_plan()
-            self._username_entry.entry.set_text(plan.username)
-            self._password_entry.entry.set_text(plan.password)
-            self._number_entry.entry.set_text(plan.number)
-            self._apn_entry.entry.set_text(plan.apn)
+            if plan is not None:
+                self._username_entry.entry.set_text(plan.username)
+                self._password_entry.entry.set_text(plan.password)
+                self._number_entry.entry.set_text(plan.number)
+                self._apn_entry.entry.set_text(plan.apn)
