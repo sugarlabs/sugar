@@ -66,10 +66,16 @@ class ClipboardPanelWindow(FrameWindow):
 
         target_is_uri = False
         for target in targets:
-            if target not in ('TIMESTAMP', 'TARGETS',
-                              'MULTIPLE', 'SAVE_TARGETS'):
-                logging.debug('Asking for target %s.', target)
-                if target == 'text/uri-list':
+            target_name = str(target)
+            if target_name not in (
+                'TIMESTAMP',
+                'TARGETS',
+                'MULTIPLE',
+                'SAVE_TARGETS',
+                'NULL'
+            ):
+                logging.debug('Asking for target %s.', target_name)
+                if target_name == 'text/uri-list':
                     target_is_uri = True
 
                 selection = x_clipboard.wait_for_contents(target)
@@ -78,13 +84,15 @@ class ClipboardPanelWindow(FrameWindow):
                     continue
                 cb_selections.append(selection)
 
-        if target_is_uri:
-            uri = selection.get_uris()[0]
+        if target_is_uri and cb_selections:
+            uri = cb_selections[0].get_uris()[0]
             filename = uri[len('file://'):].strip()
             md5 = self._md5_for_file(filename)
             data_hash = hash(md5)
+        elif cb_selections:
+            data_hash = hash(cb_selections[0].get_data())
         else:
-            data_hash = hash(selection.get_data())
+            return
 
         if len(cb_selections) > 0:
             key = cb_service.add_object(name="", data_hash=data_hash)
