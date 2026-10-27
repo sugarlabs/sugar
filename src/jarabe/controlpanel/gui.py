@@ -45,9 +45,14 @@ def _set_css_bg(widget, color):
     else:
         widget.set_css_classes([])
 
-# Inject CSS for backgrounds
-provider = Gtk.CssProvider()
-css = b'''
+def _setup_controlpanel_css(display):
+    """Register ControlPanel CSS with the given display.
+
+    Must be called after a Gdk.Display is available (i.e. from
+    ControlPanel.__init__), never at module import time.
+    """
+    provider = Gtk.CssProvider()
+    css = b'''
 .controlpanel-bg-black { background-color: %s; }
 .controlpanel-bg-white { background-color: %s; }
 .sectionicon-transparent { background-color: transparent; }
@@ -55,10 +60,11 @@ css = b'''
 .toolbar-title { color: white; font-weight: bold; }
 ''' % (style.COLOR_BLACK.get_html().encode('utf-8'),
        style.COLOR_WHITE.get_html().encode('utf-8'))
-provider.load_from_data(css)
-Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(),
-                                          provider,
-                                          Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+    provider.load_from_data(css)
+    Gtk.StyleContext.add_provider_for_display(
+        display,
+        provider,
+        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
 
 class ControlPanel(Gtk.Window):
@@ -67,6 +73,12 @@ class ControlPanel(Gtk.Window):
     def __init__(self, window_id=None):
         self.parent_window_id = window_id
         super().__init__()
+
+        # Register CSS now that a display is guaranteed to be available.
+        # This must not be done at module level because Gdk.Display.get_default()
+        # returns None when the module is imported before the Wayland/X11 display
+        # is connected (e.g. in a standalone GDM3 Wayland session).
+        _setup_controlpanel_css(self.get_display())
 
         self._calculate_max_columns()
         self.set_margin_start(style.LINE_WIDTH)
