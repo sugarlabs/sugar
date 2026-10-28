@@ -1,4 +1,4 @@
-# Copyright (C) 2013, Walter Bender - Raul Gutierrez Segales
+﻿# Copyright (C) 2013, Walter Bender - Raul Gutierrez Segales
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 
 from gi.repository import Gtk
 
@@ -32,13 +31,15 @@ class WebService(WebService):
         return _SERVICE_NAME
 
     def config_service_cb(self, widget, event, container):
-        label = Gtk.Label(_SERVICE_NAME)
+        label = Gtk.Label(label=_SERVICE_NAME)
 
-        for c in container.get_children():
-            container.remove(c)
+        child = container.get_first_child()
+        while child:
+            next_child = child.get_next_sibling()
+            container.remove(child)
+            child = next_child
 
-        container.add(label)
-        container.show_all()
+        container.append(label)
 
 
 def get_service():

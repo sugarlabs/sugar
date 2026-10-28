@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 # Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
 import unittest
 
 from cpsection.aboutme import model
-from jarabe.intro.agepicker import AGES
+from jarabe.intro.agepicker import get_group_labels
 from jarabe.intro.genderpicker import GENDERS
 
 TEST_NICKS = ['Ajay Garg', 'Aleksey Lim',
@@ -44,7 +44,7 @@ TEST_COLORS = [['#FF8F00', '#FF2B34'],
 class TestUserProfile(unittest.TestCase):
     def test_user_gender_age(self):
         for gender in GENDERS:
-            for age in AGES:
+            for age in get_group_labels().AGES:
                 model.set_gender(gender)
                 model.set_age(age)
                 self.assertEqual(model.get_age(), age)

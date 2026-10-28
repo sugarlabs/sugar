@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008 One Laptop Per Child
+﻿# Copyright (C) 2007, 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -60,10 +60,16 @@ def read_all_timezones(fn=_zone_tab):
         timezones.append(tz)
     return timezones
 
+_initial_timezone = None
+
 
 def get_timezone():
+    global _initial_timezone
     settings = Gio.Settings.new('org.sugarlabs.date')
-    return settings.get_string('timezone')
+    tz = settings.get_string('timezone')
+    if _initial_timezone is None:
+        _initial_timezone = tz
+    return tz
 
 
 def print_timezone():
@@ -99,6 +105,11 @@ def set_timezone(timezone):
         raise ValueError(_('Error: timezone does not exist.'))
     return 1
 
+
+def undo():
+    global _initial_timezone
+    if _initial_timezone is not None:
+        set_timezone(_initial_timezone)
 
 # inilialize the docstrings for the timezone
 _initialize()

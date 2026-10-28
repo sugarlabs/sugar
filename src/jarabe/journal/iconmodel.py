@@ -1,4 +1,4 @@
-# Copyright (C) 2013, Gonzalo Odiard
+﻿# Copyright (C) 2013, Gonzalo Odiard
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 
-class IconModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
+class IconModel(GObject.GObject, Gtk.TreeModel):
     __gtype_name__ = 'JournalIconModel'
 
     __gsignals__ = {
@@ -38,15 +38,15 @@ class IconModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     COLUMN_PREVIEW = 2
 
     _COLUMN_TYPES = {
-        COLUMN_UID: str,
-        COLUMN_TITLE: str,
-        COLUMN_PREVIEW: str,
+        COLUMN_UID: GObject.TYPE_STRING,
+        COLUMN_TITLE: GObject.TYPE_STRING,
+        COLUMN_PREVIEW: GObject.TYPE_STRING,
     }
 
     _PAGE_SIZE = 100
 
     def __init__(self, query):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._last_requested_index = None
         self._cached_row = None
@@ -88,7 +88,7 @@ class IconModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
     def do_get_value(self, iterator, column):
         if self.view_is_resizing:
-            return None
+            return ""
 
         index = iterator.user_data
         if index == self._last_requested_index:

@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -56,13 +56,16 @@ class FriendsTray(VTray):
         neighborhood.get_model().connect('activity-added',
                                          self.__neighborhood_activity_added_cb)
 
+        # always display ourselves by default
+        self.add_buddy(get_owner_instance())
+
     def add_buddy(self, buddy):
         if buddy.props.key in self._buddies:
             return
 
         icon = FriendIcon(buddy)
         self.add_item(icon)
-        icon.show()
+        icon.set_visible(True)
 
         self._buddies[buddy.props.key] = icon
 
@@ -74,9 +77,8 @@ class FriendsTray(VTray):
         del self._buddies[buddy.props.key]
 
     def clear(self):
-        for item in self.get_children():
-            self.remove_item(item)
-            item.destroy()
+        for child in self.get_children():
+            self.remove_item(child)
         self._buddies = {}
 
     def __neighborhood_activity_added_cb(self, neighborhood_model,

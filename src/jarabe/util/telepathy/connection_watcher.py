@@ -1,4 +1,4 @@
-# This should eventually land in telepathy-python, so has the same license:
+﻿# This should eventually land in telepathy-python, so has the same license:
 # Copyright (C) 2008 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,6 @@ CONNECTION_INTERFACE_REQUESTS = \
 CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
 CONNECTION_STATUS_DISCONNECTED = TelepathyGLib.ConnectionStatus.DISCONNECTED
 
-
 _instance = None
 
 
@@ -45,7 +44,7 @@ class ConnectionWatcher(GObject.GObject):
     }
 
     def __init__(self, bus=None):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         if bus is None:
             self.bus = dbus.Bus()
@@ -140,7 +139,7 @@ class ConnectionWatcher(GObject.GObject):
     def get_connections(self):
         return list(self._connections.values())
 
-    def __error_handler_cb(exception):
+    def __error_handler_cb(self, exception):
         logging.debug(
             'Exception from asynchronous method call:\n%s' % exception)
 
@@ -150,7 +149,6 @@ def get_instance():
     if _instance is None:
         _instance = ConnectionWatcher()
     return _instance
-
 
 if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
@@ -165,5 +163,6 @@ if __name__ == '__main__':
     watcher.connect('connection-added', connection_added_cb)
     watcher.connect('connection-removed', connection_removed_cb)
 
-    loop = GObject.MainLoop()
+    from gi.repository import GLib
+    loop = GLib.MainLoop()
     loop.run()

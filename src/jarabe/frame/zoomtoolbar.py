@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 Simon Schampijer
 #
 # This program is free software: you can redistribute it and/or modify
@@ -29,14 +29,17 @@ from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
 
 
-class ZoomToolbar(Gtk.Toolbar):
+class ZoomToolbar(Gtk.Box):
+    __gtype_name__ = 'SugarZoomToolbar'
+
     __gsignals__ = {
         'level-clicked': (GObject.SignalFlags.RUN_FIRST, None,
                           ([]))
     }
 
     def __init__(self):
-        Gtk.Toolbar.__init__(self)
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL)
+        self.add_css_class('toolbar')
 
         # we shouldn't be mirrored in RTL locales
         self.set_direction(Gtk.TextDirection.LTR)
@@ -67,29 +70,37 @@ class ZoomToolbar(Gtk.Toolbar):
         shell_model.zoom_level_changed.connect(self.__zoom_level_changed_cb)
 
     def _add_button(self, icon_name, label, accelerator, zoom_level):
-        if self.get_children():
-            group = self.get_children()[0]
-        else:
-            group = None
+        group = self.get_first_child()
 
         button = RadioToolButton(icon_name=icon_name, group=group,
                                  accelerator=accelerator)
-        button.connect('clicked', self.__level_clicked_cb, zoom_level)
-        self.add(button)
-        button.show()
+        button.connect('toggled', self.__level_toggled_cb, zoom_level)
+        self.append(button)
 
-        palette = Palette(GLib.markup_escape_text(label))
-        palette.props.invoker = FrameWidgetInvoker(button)
+        invoker = FrameWidgetInvoker(button)
+        palette = Palette(label)
+        invoker.palette = palette
         palette.set_group_id('frame')
-        button.set_palette(palette)
+        button.set_palette_invoker(invoker)
 
         return button
 
-    def __level_clicked_cb(self, button, level):
+    def __level_toggled_cb(self, button, level):
         if not button.get_active():
             return
 
-        shell.get_model().set_zoom_level(level)
+        model = shell.get_model()
+        if level == shell.ShellModel.ZOOM_ACTIVITY and \
+                model.get_active_activity() is None:
+            # No activity open: show Journal instead of the empty compositor.
+            from jarabe.journal import journalactivity
+            journalactivity.get_journal().show_journal()
+            # Restore the toolbar button to the current zoom level so the
+            # toolbar stays consistent (we didn't change the zoom level).
+            GLib.idle_add(self._set_zoom_level, model.zoom_level)
+        else:
+            model.set_zoom_level(level)
+
         self.emit('level-clicked')
 
     def __zoom_level_changed_cb(self, **kwargs):
@@ -98,12 +109,12 @@ class ZoomToolbar(Gtk.Toolbar):
     def _set_zoom_level(self, new_level):
         logging.debug('new zoom level: %r', new_level)
         if new_level == shell.ShellModel.ZOOM_MESH:
-            self._mesh_button.props.active = True
+            self._mesh_button.set_active(True)
         elif new_level == shell.ShellModel.ZOOM_GROUP:
-            self._groups_button.props.active = True
+            self._groups_button.set_active(True)
         elif new_level == shell.ShellModel.ZOOM_HOME:
-            self._home_button.props.active = True
+            self._home_button.set_active(True)
         elif new_level == shell.ShellModel.ZOOM_ACTIVITY:
-            self._activity_button.props.active = True
+            self._activity_button.set_active(True)
         else:
             raise ValueError('Invalid zoom level: %r' % (new_level))

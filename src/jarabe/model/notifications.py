@@ -1,4 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
+﻿# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ from dbus import service
 from sugar4 import dispatch
 
 from jarabe import config
-
 
 _DBUS_SERVICE = 'org.freedesktop.Notifications'
 _DBUS_IFACE = 'org.freedesktop.Notifications'

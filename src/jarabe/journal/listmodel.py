@@ -1,4 +1,4 @@
-# Copyright (C) 2009, Tomeu Vizoso
+﻿# Copyright (C) 2009, Tomeu Vizoso
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,13 +28,12 @@ from sugar4 import util
 from jarabe.journal import model
 from jarabe.journal import misc
 
-
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 
-class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
+class ListModel(GObject.GObject, Gtk.TreeModel):
     __gtype_name__ = 'JournalListModel'
 
     __gsignals__ = {
@@ -57,29 +56,33 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     COLUMN_SELECT = 12
 
     _COLUMN_TYPES = {
-        COLUMN_UID: str,
-        COLUMN_FAVORITE: bool,
-        COLUMN_ICON: str,
-        COLUMN_ICON_COLOR: object,
-        COLUMN_TITLE: str,
-        COLUMN_TIMESTAMP: str,
-        COLUMN_CREATION_TIME: str,
-        COLUMN_FILESIZE: str,
-        COLUMN_PROGRESS: int,
-        COLUMN_BUDDY_1: object,
-        COLUMN_BUDDY_3: object,
-        COLUMN_BUDDY_2: object,
-        COLUMN_SELECT: bool,
+        COLUMN_UID: GObject.TYPE_STRING,
+        COLUMN_FAVORITE: GObject.TYPE_BOOLEAN,
+        COLUMN_ICON: GObject.TYPE_STRING,
+        COLUMN_ICON_COLOR: GObject.TYPE_PYOBJECT,
+        COLUMN_TITLE: GObject.TYPE_STRING,
+        COLUMN_TIMESTAMP: GObject.TYPE_STRING,
+        COLUMN_CREATION_TIME: GObject.TYPE_STRING,
+        COLUMN_FILESIZE: GObject.TYPE_STRING,
+        COLUMN_PROGRESS: GObject.TYPE_INT,
+        COLUMN_BUDDY_1: GObject.TYPE_PYOBJECT,
+        COLUMN_BUDDY_2: GObject.TYPE_PYOBJECT,
+        COLUMN_BUDDY_3: GObject.TYPE_PYOBJECT,
+        COLUMN_SELECT: GObject.TYPE_BOOLEAN,
     }
+
+    _dummy_xo_color = None
+    _dummy_buddy = []
 
     _PAGE_SIZE = 10
 
     def __init__(self, query):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._last_requested_index = None
         self._temp_drag_file_uid = None
         self._cached_row = None
+        self._pyobject_cache = {}
         self._query = query
         self._all_ids = []
         t = time.time()
@@ -152,6 +155,19 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
     def do_get_value(self, iterator, column):
         if self.view_is_resizing:
+            t = ListModel._COLUMN_TYPES[column]
+            if t == GObject.TYPE_STRING:
+                return ""
+            elif t == GObject.TYPE_BOOLEAN:
+                return False
+            elif t == GObject.TYPE_INT:
+                return 0
+            elif t == GObject.TYPE_PYOBJECT:
+                if column == ListModel.COLUMN_ICON_COLOR:
+                    if ListModel._dummy_xo_color is None:
+                        ListModel._dummy_xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(), style.COLOR_TRANSPARENT.get_svg()))
+                    return ListModel._dummy_xo_color
+                return ListModel._dummy_buddy
             return None
 
         index = iterator.user_data
@@ -167,6 +183,9 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
         self._last_requested_index = index
         self._cached_row = []
+        self._pyobject_cache[index] = self._cached_row
+        if len(self._pyobject_cache) > 200:
+            self._pyobject_cache.clear()
         self._cached_row.append(metadata['uid'])
         self._cached_row.append(metadata.get('keep', '0') == '1')
         self._cached_row.append(misc.get_icon_name(metadata))
@@ -234,7 +253,9 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
                     self._cached_row.append([nick, XoColor(color)])
                     continue
 
-            self._cached_row.append(None)
+            self._cached_row.append(ListModel._dummy_buddy)
+
+        self._cached_row.append(self.is_selected(metadata['uid']))
 
         return self._cached_row[column]
 
@@ -270,28 +291,6 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
     def do_iter_parent(self, iterator):
         return (False, Gtk.TreeIter())
-
-    def do_drag_data_get(self, path, selection):
-        uid = self[path][ListModel.COLUMN_UID]
-        target_atom = selection.get_target()
-        target_name = target_atom.name()
-        if target_name == 'text/uri-list':
-            # Only get a new temp path if we have a new file, the frame
-            # requests a path many times and if we give it a new path it
-            # ends up with a broken path
-            if uid != self._temp_drag_file_uid:
-                # Get hold of a reference so the temp file doesn't get deleted
-                self._temp_drag_file_path = model.get_file(uid)
-                self._temp_drag_file_uid = uid
-            logging.debug('putting %r in selection', self._temp_drag_file_path)
-            selection.set(target_atom, 8, self._temp_drag_file_path)
-            return True
-        if target_name == 'journal-object-id':
-            # uid is unicode but Gtk.SelectionData.set() needs str
-            selection.set(target_atom, 8, str(uid))
-            return True
-
-        return False
 
     def set_selected(self, uid, value):
         if value:

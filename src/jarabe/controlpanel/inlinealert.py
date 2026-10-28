@@ -13,10 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-from gi.repository import Gtk
 from gi.repository import GObject
-
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import Pango
 from sugar4.graphics import style
 from sugar4.graphics.icon import Icon
 
@@ -51,20 +51,21 @@ class InlineAlert(Gtk.Box):
         self._msg_label = Gtk.Label()
         self._msg_label.set_max_width_chars(150)
         self._msg_label.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
-        self._msg_label.set_alignment(0, 0.5)
-        self._msg_label.modify_fg(Gtk.StateType.NORMAL,
-                                  style.COLOR_SELECTION_GREY.get_gdk_color())
+        self._msg_label.set_halign(Gtk.Align.START)
+        self._msg_label.set_valign(Gtk.Align.CENTER)
+        self._msg_label.add_css_class('inline-alert-label')
 
-        Gtk.Box.__init__(self, orientation=Gtk.Orientation.HORIZONTAL, **kwargs)
+        super().__init__(orientation=Gtk.Orientation.HORIZONTAL, **kwargs)
 
         self.set_spacing(style.DEFAULT_SPACING)
-        self.modify_bg(Gtk.StateType.NORMAL,
-                       style.COLOR_WHITE.get_gdk_color())
+        
+        self.add_css_class('sugar-inline-alert')
 
-        self.pack_start(self._icon, False, False, 0)
-        self.pack_start(self._msg_label, False, False, 0)
-        self._msg_label.show()
-        self._icon.show()
+        self.append(self._icon)
+        self.append(self._msg_label)
+        self._msg_label.set_visible(True)
+        self._icon.set_visible(True)
+        self.set_visible(True)
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'msg':

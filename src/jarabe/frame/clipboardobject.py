@@ -1,4 +1,4 @@
-# Copyright (C) 2007, One Laptop Per Child
+﻿# Copyright (C) 2007, One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ import logging
 import urllib.parse
 from gi.repository import Gio
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 from gettext import gettext as _
 from sugar4 import mime
@@ -59,21 +60,16 @@ class ClipboardObject(object):
                 return generic_type.icon
 
         icons = Gio.content_type_get_icon(mime_type)
-        icon_name = None
         if icons is not None:
-            icon_theme = Gtk.IconTheme.get_default()
-            for icon_name in icons.props.names:
-                icon_info = (
-                    icon_theme.lookup_icon(icon_name,
-                                           Gtk.IconSize.LARGE_TOOLBAR, 0))
-                if icon_info is not None:
-                    del icon_info
+            icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+            for icon_name in icons.get_names():
+                if icon_theme.has_icon(icon_name):
                     return icon_name
 
         return 'application-octet-stream'
 
     def get_preview(self):
-        for mime_type in ['UTF8_STRING']:
+        for mime_type in ['UTF8_STRING', 'text/plain']:
             if mime_type in self._formats:
                 return self._formats[mime_type].get_data()
         return ''

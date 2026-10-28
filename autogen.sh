@@ -12,4 +12,4 @@ intltoolize --force
 autoreconf -i
 
 cd "$olddir"
-"$srcdir/configure" --enable-maintainer-mode "$@" --disable-python-byte-compile
+"$srcdir/configure" --enable-maintainer-mode "$@"

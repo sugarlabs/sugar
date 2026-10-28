@@ -1,4 +1,4 @@
-# Copyright (c) 2013 Gonzalo Odiard
+﻿# Copyright (c) 2013 Gonzalo Odiard
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@ from jarabe import config
 sys.path.append(config.ext_path)
 
 BACKENDS_MODULE = 'cpsection.backup.backends'
-
 
 OPERATION_BACKUP = 'backup'
 OPERATION_RESTORE = 'restore'

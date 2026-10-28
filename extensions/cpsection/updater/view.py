@@ -1,4 +1,4 @@
-# Copyright (C) 2008, One Laptop Per Child
+﻿# Copyright (C) 2008, One Laptop Per Child
 # Copyright (C) 2009, Tomeu Vizoso
 #
 # This program is free software: you can redistribute it and/or modify
@@ -14,13 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from gettext import gettext as _
 from gettext import ngettext
 import locale
 import logging
 
-from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gtk
 
 from sugar4.graphics import style
@@ -49,28 +48,28 @@ class ActivityUpdater(SectionView):
                                                 self.__finished_cb)
 
         self.set_spacing(style.DEFAULT_SPACING)
-        self.set_border_width(style.DEFAULT_SPACING * 2)
+        self.set_margin_start(style.DEFAULT_SPACING * 2)
+        self.set_margin_end(style.DEFAULT_SPACING * 2)
+        self.set_margin_top(style.DEFAULT_SPACING * 2)
+        self.set_margin_bottom(style.DEFAULT_SPACING * 2)
 
         self._top_label = Gtk.Label()
-        self._top_label.set_line_wrap(True)
+        self._top_label.set_wrap(True)
         self._top_label.set_justify(Gtk.Justification.LEFT)
         self._top_label.props.xalign = 0
-        self.pack_start(self._top_label, False, True, 0)
-        self._top_label.show()
+        self.append(self._top_label)
 
         separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
-        self.pack_start(separator, False, True, 0)
-        separator.show()
+        self.append(separator)
 
         self._bottom_label = Gtk.Label()
-        self._bottom_label.set_line_wrap(True)
+        self._bottom_label.set_wrap(True)
         self._bottom_label.set_justify(Gtk.Justification.LEFT)
         self._bottom_label.props.xalign = 0
         self._bottom_label.set_markup(
             _('Software updates correct errors, eliminate security '
               'vulnerabilities, and provide new features.'))
-        self.pack_start(self._bottom_label, False, True, 0)
-        self._bottom_label.show()
+        self.append(self._bottom_label)
 
         self._update_box = None
         self._progress_pane = None
@@ -82,7 +81,7 @@ class ActivityUpdater(SectionView):
                        updater.STATE_UPDATING):
             self._switch_to_progress_pane()
             self._progress_pane.set_message(_('Update in progress...'))
-        self.connect('destroy', self.__destroy_cb)
+        self.connect('unrealize', self.__destroy_cb)
 
     def __destroy_cb(self, widget):
         self._model.disconnect(self._id_progresss)
@@ -92,10 +91,10 @@ class ActivityUpdater(SectionView):
         self._model.clean()
 
     def _switch_to_update_box(self, updates):
-        if self._update_box in self.get_children():
+        if self._update_box and self._update_box.get_parent() == self:
             return
 
-        if self._progress_pane in self.get_children():
+        if self._progress_pane and self._progress_pane.get_parent() == self:
             self.remove(self._progress_pane)
             self._progress_pane = None
 
@@ -108,11 +107,12 @@ class ActivityUpdater(SectionView):
                 'clicked',
                 self.__install_button_clicked_cb)
 
-        self.pack_start(self._update_box, expand=True, fill=True, padding=0)
-        self._update_box.show()
+        self.append(self._update_box)
+        self._update_box.set_hexpand(True)
+        self._update_box.set_vexpand(True)
 
     def _switch_to_progress_pane(self):
-        if self._progress_pane in self.get_children():
+        if self._progress_pane and self._progress_pane.get_parent() == self:
             return
 
         if self._model.get_state() == updater.STATE_CHECKING:
@@ -121,7 +121,7 @@ class ActivityUpdater(SectionView):
             top_message = _('Installing updates...')
         self._top_label.set_markup('<big>%s</big>' % top_message)
 
-        if self._update_box in self.get_children():
+        if self._update_box and self._update_box.get_parent() == self:
             self.remove(self._update_box)
             self._update_box = None
 
@@ -131,16 +131,15 @@ class ActivityUpdater(SectionView):
                 'clicked',
                 self.__cancel_button_clicked_cb)
 
-        self.pack_start(
-            self._progress_pane, expand=True, fill=False, padding=0)
-        self._progress_pane.show()
+        self.append(self._progress_pane)
+        self._progress_pane.set_hexpand(True)
 
     def _clear_center(self):
-        if self._progress_pane in self.get_children():
+        if self._progress_pane and self._progress_pane.get_parent() == self:
             self.remove(self._progress_pane)
             self._progress_pane = None
 
-        if self._update_box in self.get_children():
+        if self._update_box and self._update_box.get_parent() == self:
             self.remove(self._update_box)
             self._update_box = None
 
@@ -169,7 +168,7 @@ class ActivityUpdater(SectionView):
                                    'You can install %s updates',
                                    available_updates)
             top_message = top_message % available_updates
-            top_message = GObject.markup_escape_text(top_message)
+            top_message = GLib.markup_escape_text(top_message)
 
         self._top_label.set_markup('<big>%s</big>' % top_message)
 
@@ -206,7 +205,7 @@ class ActivityUpdater(SectionView):
         top_message = ngettext('%s update was installed',
                                '%s updates were installed', num_installed)
         top_message = top_message % num_installed
-        top_message = GObject.markup_escape_text(top_message)
+        top_message = GLib.markup_escape_text(top_message)
         self._top_label.set_markup('<big>%s</big>' % top_message)
         self._clear_center()
 
@@ -221,28 +220,33 @@ class ProgressPane(Gtk.Box):
     def __init__(self):
         Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.set_spacing(style.DEFAULT_PADDING)
-        self.set_border_width(style.DEFAULT_SPACING * 2)
+        self.set_margin_start(style.DEFAULT_SPACING * 2)
+        self.set_margin_end(style.DEFAULT_SPACING * 2)
+        self.set_margin_top(style.DEFAULT_SPACING * 2)
+        self.set_margin_bottom(style.DEFAULT_SPACING * 2)
 
         self._progress = Gtk.ProgressBar()
-        self.pack_start(self._progress, True, True, 0)
-        self._progress.show()
+        self.append(self._progress)
+        self._progress.set_hexpand(True)
+        self._progress.set_vexpand(True)
 
         self._label = Gtk.Label()
-        self._label.set_line_wrap(True)
+        self._label.set_wrap(True)
         self._label.set_property('xalign', 0.5)
-        self._label.modify_fg(Gtk.StateType.NORMAL,
-                              style.COLOR_BUTTON_GREY.get_gdk_color())
-        self.pack_start(self._label, True, True, 0)
-        self._label.show()
 
-        alignment_box = Gtk.Alignment.new(xalign=0.5, yalign=0.5,
-                                          xscale=0, yscale=0)
-        self.pack_start(alignment_box, True, True, 0)
-        alignment_box.show()
+        self.append(self._label)
+        self._label.set_hexpand(True)
+        self._label.set_vexpand(True)
 
-        self.cancel_button = Gtk.Button(stock=Gtk.STOCK_CANCEL)
-        alignment_box.add(self.cancel_button)
-        self.cancel_button.show()
+        alignment_box = Gtk.Box()
+        alignment_box.set_halign(Gtk.Align.CENTER)
+        alignment_box.set_valign(Gtk.Align.CENTER)
+        self.append(alignment_box)
+        alignment_box.set_hexpand(True)
+        alignment_box.set_vexpand(True)
+
+        self.cancel_button = Gtk.Button(label=_('Cancel'))
+        alignment_box.append(self.cancel_button)
 
     def set_message(self, message):
         self._label.set_text(message)
@@ -261,36 +265,35 @@ class UpdateBox(Gtk.Box):
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_policy(
             Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        self.pack_start(scrolled_window, True, True, 0)
-        scrolled_window.show()
+        self.append(scrolled_window)
+        scrolled_window.set_hexpand(True)
+        scrolled_window.set_vexpand(True)
 
         self._update_list = UpdateList(updates)
         self._update_list.props.model.connect('row-changed',
                                               self.__row_changed_cb)
-        scrolled_window.add(self._update_list)
-        self._update_list.show()
+        scrolled_window.set_child(self._update_list)
 
         bottom_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         bottom_box.set_spacing(style.DEFAULT_SPACING)
-        self.pack_start(bottom_box, False, True, 0)
-        bottom_box.show()
+        self.append(bottom_box)
 
         self._size_label = Gtk.Label()
         self._size_label.props.xalign = 0
         self._size_label.set_justify(Gtk.Justification.LEFT)
-        bottom_box.pack_start(self._size_label, True, True, 0)
-        self._size_label.show()
+        bottom_box.append(self._size_label)
+        self._size_label.set_hexpand(True)
+        self._size_label.set_vexpand(True)
 
-        self.refresh_button = Gtk.Button(stock=Gtk.STOCK_REFRESH)
-        bottom_box.pack_start(self.refresh_button, False, True, 0)
-        self.refresh_button.show()
+        self.refresh_button = Gtk.Button(label=_('Refresh'))
+        bottom_box.append(self.refresh_button)
 
-        self.install_button = Gtk.Button(_('Install selected'))
-        self.install_button.props.image = Icon(
-            icon_name='emblem-downloads',
-            pixel_size=style.SMALL_ICON_SIZE)
-        bottom_box.pack_start(self.install_button, False, True, 0)
-        self.install_button.show()
+        self.install_button = Gtk.Button()
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
+        box.append(Icon(icon_name='emblem-downloads', pixel_size=style.SMALL_ICON_SIZE))
+        box.append(Gtk.Label(label=_('Install selected')))
+        self.install_button.set_child(box)
+        bottom_box.append(self.install_button)
 
         self._update_total_size_label()
 
@@ -326,7 +329,7 @@ class UpdateList(Gtk.TreeView):
 
     def __init__(self, updates):
         list_model = UpdateListModel(updates)
-        Gtk.TreeView.__init__(self, list_model)
+        Gtk.TreeView.__init__(self, model=list_model)
 
         self.set_reorderable(False)
         self.set_enable_search(False)
@@ -335,7 +338,6 @@ class UpdateList(Gtk.TreeView):
         toggle_renderer = Gtk.CellRendererToggle()
         toggle_renderer.props.activatable = True
         toggle_renderer.props.xpad = style.DEFAULT_PADDING
-        toggle_renderer.props.indicator_size = style.zoom(26)
         toggle_renderer.connect('toggled', self.__toggled_cb)
 
         toggle_column = Gtk.TreeViewColumn()

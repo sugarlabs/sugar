@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008 One Laptop Per Child
+﻿# Copyright (C) 2007, 2008 One Laptop Per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -242,7 +242,6 @@ LANGUAGES = {
 }
 
 
-
 def read_all_languages():
     fdp = subprocess.Popen(['locale', '-av'], stdout=subprocess.PIPE)
     lines = fdp.stdout.read().decode('utf-8', 'ignore').split('\n')
@@ -270,7 +269,7 @@ def read_all_languages():
                 else:
                     territory = title.split()[-1]
             if locale_str.endswith('utf8') and len(lang):
-                locales.append((LANGUAGES[lang], territory, locale_str))
+                locales.append((LANGUAGES.get(lang, lang), territory, locale_str))
 
     locales.sort()
     return locales
@@ -389,10 +388,13 @@ def set_languages(languages):
 def set_languages_list(languages):
     """Set the system language using a list of preferred languages"""
     colon = ':'
+    languages = [lang for lang in languages if lang is not None]
+    if not languages:
+        return
     language_env = colon.join(languages)
+
     lang_env = languages[0].strip('\n')
     _write_i18n(lang_env, language_env)
-
 
 # inilialize the docstrings for the language
 _initialize()

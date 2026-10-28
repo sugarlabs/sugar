@@ -32,7 +32,7 @@ from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar4.graphics.icon import Icon
 from sugar4.graphics import style
 from sugar4.graphics.xocolor import XoColor
-from sugar4.activity.i18n import pgettext
+from gettext import pgettext
 
 from jarabe.model import shell
 from jarabe.view.viewsource import setup_view_source
@@ -97,58 +97,56 @@ class CurrentActivityPalette(BasePalette):
         self.menu_box = PaletteMenuBox()
 
         menu_item = PaletteMenuItem(_('Resume'), 'activity-start')
-        menu_item.connect('activate', self.__resume_activate_cb)
+        menu_item.connect('item-activated', self.__resume_activate_cb)
         self.menu_box.append_item(menu_item)
-        menu_item.show()
+        menu_item.set_visible(True)
 
         # TODO: share-with, keep
 
         menu_item = PaletteMenuItem(_('View Source'), 'view-source')
-        menu_item.connect('activate', self.__view_source__cb)
+        menu_item.connect('item-activated', self.__view_source__cb)
         menu_item.set_accelerator('Shift+Alt+V')
         self.menu_box.append_item(menu_item)
-        menu_item.show()
+        menu_item.set_visible(True)
 
         if should_show_view_help(self._home_activity):
             menu_item = PaletteMenuItem(_('View Help'), 'toolbar-help')
-            menu_item.connect('activate', self.__view_help__cb)
+            menu_item.connect('item-activated', self.__view_help__cb)
             menu_item.set_accelerator('Shift+Alt+H')
             self.menu_box.append_item(menu_item)
-            menu_item.show()
+            menu_item.set_visible(True)
 
         # avoid circular importing reference
         from jarabe.frame.notification import NotificationBox
 
         menu_item = NotificationBox(self._home_activity.get_activity_id())
-        self.menu_box.append_item(menu_item, 0, 0)
+        self.menu_box.append_item(menu_item)
 
         separator = PaletteMenuItemSeparator()
-        menu_item.add(separator)
-        menu_item.reorder_child(separator, 0)
-        separator.show()
+        menu_item.prepend(separator)
+        separator.set_visible(True)
 
         separator = PaletteMenuItemSeparator()
         self.menu_box.append_item(separator)
-        separator.show()
+        separator.set_visible(True)
 
         menu_item = PaletteMenuItem(_('Stop'), 'activity-stop')
-        menu_item.connect('activate', self.__stop_activate_cb)
+        menu_item.connect('item-activated', self.__stop_activate_cb)
         self.menu_box.append_item(menu_item)
-        menu_item.show()
+        menu_item.set_visible(True)
 
         self.set_content(self.menu_box)
-        self.menu_box.show()
+        self.menu_box.set_visible(True)
 
     def __resume_activate_cb(self, menu_item):
-        self._home_activity.get_window().activate(Gtk.get_current_event_time())
+        shell.get_model().activate_activity(self._home_activity)
         self.emit('done')
 
     def __view_source__cb(self, menu_item):
         setup_view_source(self._home_activity)
         shell_model = shell.get_model()
         if self._home_activity is not shell_model.get_active_activity():
-            self._home_activity.get_window().activate(
-                Gtk.get_current_event_time())
+            shell_model.activate_activity(self._home_activity)
         self.emit('done')
 
     def __view_help__cb(self, menu_item):
@@ -165,8 +163,9 @@ class CurrentActivityPalette(BasePalette):
     def __kill_cb(self, pid, sig):
         try:
             os.kill(pid, sig)
-        finally:
-            return False
+        except (OSError, ProcessLookupError):
+            pass
+        return False
 
 
 class ActivityPalette(Palette):
@@ -189,11 +188,11 @@ class ActivityPalette(Palette):
         menu_item = PaletteMenuItem(text_label=_('Start new'),
                                     file_name=activity_info.get_icon(),
                                     xo_color=xo_color)
-        menu_item.connect('activate', self.__start_activate_cb)
-        self.menu_box.pack_end(menu_item, True, True, 0)
-        menu_item.show()
+        menu_item.connect('item-activated', self.__start_activate_cb)
+        self.menu_box.append_item(menu_item)
+        menu_item.set_visible(True)
         self.set_content(self.menu_box)
-        self.menu_box.show_all()
+        self.menu_box.set_visible(True)
 
         # TODO: start-with
 
@@ -209,48 +208,51 @@ class JournalPalette(BasePalette):
         self._free_space_label = None
 
         BasePalette.__init__(self, home_activity)
-        self._label.set_accel(Gdk.KEY_F5, 0)
 
     def setup_palette(self):
-        self.set_primary_text(self._home_activity.get_title())
+        self.set_primary_text(self._home_activity.get_title(), accel_path='F5')
 
         box = PaletteMenuBox()
         self.set_content(box)
-        box.show()
+        box.set_visible(True)
 
         menu_item = PaletteMenuItem(_('Show contents'))
         icon = Icon(file=self._home_activity.get_icon_path(),
                     pixel_size=style.SMALL_ICON_SIZE,
                     xo_color=self._home_activity.get_icon_color())
-        menu_item.set_image(icon)
-        icon.show()
+        
+        menu_item.set_icon_widget(icon)
+        icon.set_visible(True)
 
-        menu_item.connect('activate', self.__open_activate_cb)
+        menu_item.connect('item-activated', self.__open_activate_cb)
         box.append_item(menu_item)
-        menu_item.show()
+        menu_item.set_visible(True)
 
         separator = PaletteMenuItemSeparator()
         box.append_item(separator)
-        separator.show()
+        separator.set_visible(True)
 
         inner_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         inner_box.set_spacing(style.DEFAULT_PADDING)
         box.append_item(inner_box, vertical_padding=0)
-        inner_box.show()
+        inner_box.set_visible(True)
 
         self._progress_bar = Gtk.ProgressBar()
-        inner_box.add(self._progress_bar)
-        self._progress_bar.show()
+        self._progress_bar.set_hexpand(True)
+        inner_box.append(self._progress_bar)
+        self._progress_bar.set_visible(True)
 
         self._free_space_label = Gtk.Label()
-        self._free_space_label.set_alignment(0.5, 0.5)
-        inner_box.add(self._free_space_label)
-        self._free_space_label.show()
+        self._free_space_label.set_halign(Gtk.Align.CENTER)
+        self._free_space_label.set_valign(Gtk.Align.CENTER)
+        self._free_space_label.set_hexpand(True)
+        inner_box.append(self._free_space_label)
+        self._free_space_label.set_visible(True)
 
         self.connect('popup', self.__popup_cb)
 
     def __open_activate_cb(self, menu_item):
-        self._home_activity.get_window().activate(Gtk.get_current_event_time())
+        shell.get_model().activate_activity(self._home_activity)
 
     def __popup_cb(self, palette):
         stat = os.statvfs(env.get_profile_path())
@@ -273,42 +275,50 @@ class VolumePalette(Palette):
 
         self.content_box = PaletteMenuBox()
         self.set_content(self.content_box)
-        self.content_box.show()
+        self.content_box.set_visible(True)
 
         menu_item = PaletteMenuItem(pgettext('Volume', 'Remove'))
 
         icon = Icon(icon_name='media-eject', pixel_size=style.SMALL_ICON_SIZE)
-        menu_item.set_image(icon)
-        icon.show()
+        menu_item.set_icon_widget(icon)
+        icon.set_visible(True)
 
-        menu_item.connect('activate', self.__unmount_activate_cb)
+        menu_item.connect('item-activated', self.__unmount_activate_cb)
         self.content_box.append_item(menu_item)
-        menu_item.show()
+        menu_item.set_visible(True)
 
         separator = PaletteMenuItemSeparator()
         self.content_box.append_item(separator)
-        separator.show()
+        separator.set_visible(True)
 
         free_space_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         free_space_box.set_spacing(style.DEFAULT_PADDING)
-        self.content_box.append_item(free_space_box, vertical_padding=0)
-        free_space_box.show()
+        self.content_box.append_item(free_space_box)
+        free_space_box.set_visible(True)
 
         self._progress_bar = Gtk.ProgressBar()
-        free_space_box.pack_start(self._progress_bar, True, True, 0)
-        self._progress_bar.show()
+        self._progress_bar.set_hexpand(True)
+        free_space_box.append(self._progress_bar)
+        self._progress_bar.set_visible(True)
 
         self._free_space_label = Gtk.Label()
-        self._free_space_label.set_alignment(0.5, 0.5)
-        free_space_box.pack_start(self._free_space_label, True, True, 0)
-        self._free_space_label.show()
+        self._free_space_label.set_halign(Gtk.Align.CENTER)
+        self._free_space_label.set_valign(Gtk.Align.CENTER)
+        self._free_space_label.set_hexpand(True)
+        free_space_box.append(self._free_space_label)
+        self._free_space_label.set_visible(True)
 
         self.connect('popup', self.__popup_cb)
 
     def __unmount_activate_cb(self, menu_item):
         flags = 0
+        master_window = None
+        app = shell.get_model()
+        if app and app.get_windows():
+            master_window = app.get_windows()[0]
+        
         mount_operation = Gtk.MountOperation(
-            parent=self.content_box.get_toplevel())
+            parent=master_window)
         cancellable = None
         user_data = None
         self._mount.unmount_with_operation(flags, mount_operation, cancellable,

@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+﻿# -*- encoding: utf-8 -*-
 # Copyright (C) 2009 Paraguay Educa, Martin Abente
 # Copyright (C) 2013 Miguel González
 #
@@ -17,7 +17,7 @@
 
 import logging
 import locale
-from xml.etree.cElementTree import ElementTree
+from xml.etree.ElementTree import ElementTree
 from gettext import gettext as _
 
 import dbus
@@ -25,7 +25,6 @@ from gi.repository import GLib
 from gi.repository import Gio
 
 from jarabe.model import network
-
 
 PROVIDERS_PATH = "/usr/share/mobile-broadband-provider-info/"\
                  "serviceproviders.xml"
@@ -206,8 +205,7 @@ class CountryCodeParser(object):
         try:
             return self._data[country_code]
         except KeyError:
-            raise KeyError('Not found country name for code "%s"'
-                           % country_code)
+            return country_code  # Fallback to code if name not found
 
 
 class ServiceProvidersParser(object):

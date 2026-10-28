@@ -20,6 +20,9 @@ import sys
 import dbus
 import argparse
 
+import gi
+gi.require_version('Gtk', '4.0')
+
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
@@ -72,8 +75,8 @@ def _get_interpreter(exec_file):
         if not abs_path:
             return exec_file
 
-    f = open(abs_path)
-    line = f.readline(100)
+    with open(abs_path) as f:
+        line = f.readline(100)
     if line.startswith('#!'):
         cmds = line[2:].strip().split(' ')
         cmds.append(abs_path)
@@ -92,5 +95,10 @@ if args.debug:
     cmd_args.extend(_get_interpreter(act_args.pop(0)))
     cmd_args.extend(act_args)
 
+env = activityfactory.get_environment(activity)
+if 'WAYLAND_DISPLAY' in os.environ:
+    env['WAYLAND_DISPLAY'] = os.environ['WAYLAND_DISPLAY']
+    env['GDK_BACKEND'] = 'wayland'
+
 os.chdir(str(activity.get_path()))
-os.execvpe(cmd_args[0], cmd_args, activityfactory.get_environment(activity))
+os.execvpe(cmd_args[0], cmd_args, env)

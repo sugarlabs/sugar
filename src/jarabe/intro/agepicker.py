@@ -1,4 +1,4 @@
-# Copyright (C) 2014, Sugar Labs
+﻿# Copyright (C) 2014, Sugar Labs
 # Copyright (C) 2014, Walter Bender
 #
 # This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -34,6 +33,18 @@ from sugar4.graphics.xocolor import XoColor
 from jarabe.intro.genderpicker import GENDERS
 
 _group_labels = None
+_settings = None
+
+
+def _get_settings():
+    global _settings
+
+    if _settings is None:
+        _settings = Gio.Settings.new('org.sugarlabs.user')
+
+    return _settings
+
+
 _SECONDS_PER_YEAR = 365 * 24 * 60 * 60.
 _DEFAULT_PROMPT = _('Select grade:')
 _DEFAULT_LABELS = [_('Preschool'), _('Kindergarten'), _('1st Grade'),
@@ -87,7 +98,7 @@ def group_label_to_age(label):
 def load_age():
     group_labels = get_group_labels()
 
-    settings = Gio.Settings.new('org.sugarlabs.user')
+    settings = _get_settings()
     birth_timestamp = settings.get_int('birth-timestamp')
 
     if birth_timestamp == 0:
@@ -109,29 +120,36 @@ def load_age():
 
 def save_age(age):
     birth_timestamp = calculate_birth_timestamp(age)
-    settings = Gio.Settings.new('org.sugarlabs.user')
-    settings.set_int('birth-timestamp', birth_timestamp)
+    settings = _get_settings()
 
-    # Record the label so we know it was set
-    settings.set_string('group-label', age_to_group_label(age))
+    if settings.get_int('birth-timestamp') != birth_timestamp:
+        settings.set_int('birth-timestamp', birth_timestamp)
+
+    group_label = age_to_group_label(age)
+    if settings.get_string('group-label') != group_label:
+        settings.set_string('group-label', group_label)
 
 
 class GroupLabels():
-    GROUP_LABEL = []
+    GROUP_LABEL = _DEFAULT_PROMPT
     AGES = []
     LABELS = []
     ICONS = []
 
     def __init__(self):
-        f = open(os.environ['SUGAR_GROUP_LABELS'], 'r')
-        json_data = f.read()
-        f.close()
-        group_labels = json.loads(json_data)
-        self.GROUP_LABEL = group_labels['group-label']
-        for item in group_labels['group-items']:
-            self.ICONS.append([item['female-icon'], item['male-icon']])
-            self.LABELS.append(_(item['label']))
-            self.AGES.append(item['age'])
+        labels_path = os.environ.get('SUGAR_GROUP_LABELS', '/etc/sugar/group-labels')
+        try:
+            f = open(labels_path, 'r')
+            json_data = f.read()
+            f.close()
+            group_labels = json.loads(json_data)
+            self.GROUP_LABEL = group_labels.get('group-label', _DEFAULT_PROMPT)
+            for item in group_labels.get('group-items', []):
+                self.ICONS.append([item['female-icon'], item['male-icon']])
+                self.LABELS.append(_(item['label']))
+                self.AGES.append(item['age'])
+        except Exception:
+            self.GROUP_LABEL = _DEFAULT_PROMPT
 
 
 def get_group_labels():
@@ -146,27 +164,17 @@ def get_group_labels():
 class Picker(Gtk.Grid):
 
     def __init__(self, icon, label):
-        Gtk.Grid.__init__(self)
+        super().__init__()
 
         self._button = EventIcon(pixel_size=style.LARGE_ICON_SIZE,
                                  icon_name=icon)
         self.attach(self._button, 0, 0, 1, 1)
-        self._button.hide()
+        self._button.set_visible(True)
 
-        self._label = Gtk.Label(label.replace(' ', '\n'))
+        self._label = Gtk.Label(label=label.replace(' ', '\n'))
         self._label.props.justify = Gtk.Justification.CENTER
         self.attach(self._label, 0, 1, 1, 1)
-        self._label.hide()
-
-    def show_all(self):
-        self._button.show()
-        self._label.show()
-        self.show()
-
-    def hide_all(self):
-        self._button.hide()
-        self._label.hide()
-        self.hide()
+        self._label.set_visible(True)
 
     def connect(self, callback, arg):
         self._button.connect('activate', callback, arg)
@@ -178,12 +186,21 @@ class Picker(Gtk.Grid):
         self._button.set_icon_name(icon)
 
 
+def _get_screen_width():
+    display = Gdk.Display.get_default()
+    if display:
+        monitors = display.get_monitors()
+        if monitors and monitors.get_n_items() > 0:
+            return monitors.get_item(0).get_geometry().width
+    return 1024
+
+
 class AgePicker(Gtk.Grid):
 
     age_changed_signal = GObject.Signal('age-changed', arg_types=([int]))
 
     def __init__(self, gender, page=None):
-        Gtk.Grid.__init__(self)
+        super().__init__()
 
         self.set_row_spacing(style.DEFAULT_SPACING)
         self.set_column_spacing(style.DEFAULT_SPACING)
@@ -203,7 +220,7 @@ class AgePicker(Gtk.Grid):
         gender_index = GENDERS.index(self._gender)
         age_index = age_to_index(self._age)
 
-        width = Gdk.Screen.width()
+        width = _get_screen_width()
 
         num_ages = len(self._group_labels.AGES)
         for i in range(num_ages):
@@ -213,17 +230,17 @@ class AgePicker(Gtk.Grid):
             self._pickers[i].connect(self._button_activate_cb, i)
 
         self._fixed = Gtk.Fixed()
-        fixed_size = width - 4 * style.GRID_CELL_SIZE
+        fixed_size = max(1, width - 4 * style.GRID_CELL_SIZE)
         self._fixed.set_size_request(fixed_size, -1)
         self.attach(self._fixed, 0, 0, 1, 1)
-        self._fixed.show()
+        self._fixed.set_visible(True)
 
         self._age_adj = Gtk.Adjustment(value=age_index, lower=0,
-                                       upper=num_ages - 1, step_incr=1,
-                                       page_incr=3, page_size=0)
+                                       upper=num_ages - 1, step_increment=1,
+                                       page_increment=3, page_size=0)
         self._age_adj.connect('value-changed', self.__age_adj_changed_cb)
 
-        self._age_slider = Gtk.HScale()
+        self._age_slider = Gtk.Scale(orientation=Gtk.Orientation.HORIZONTAL)
         self._age_slider.set_draw_value(False)
         self._age_slider.set_adjustment(self._age_adj)
         self.attach(self._age_slider, 0, 1, 1, 1)
@@ -233,14 +250,18 @@ class AgePicker(Gtk.Grid):
 
         self._configure(width)
 
-        Gdk.Screen.get_default().connect('size-changed', self._configure_cb)
+        display = Gdk.Display.get_default()
+        if display:
+            monitors = display.get_monitors()
+            if monitors and monitors.get_n_items() > 0:
+                monitors.get_item(0).connect('notify::geometry', self._configure_cb)
 
-    def _configure_cb(self, event=None):
-        width = Gdk.Screen.width()
+    def _configure_cb(self, event=None, pspec=None):
+        width = _get_screen_width()
         self._configure(width)
 
     def _configure(self, width):
-        fixed_size = width - 4 * style.GRID_CELL_SIZE
+        fixed_size = max(1, width - 4 * style.GRID_CELL_SIZE)
         self._fixed.set_size_request(fixed_size, -1)
 
         num_ages = len(self._group_labels.AGES)
@@ -251,10 +272,10 @@ class AgePicker(Gtk.Grid):
 
         if num_ages + 2 < width / style.LARGE_ICON_SIZE:
             for i in range(num_ages):
-                self._pickers[i].show_all()
-            self._age_slider.hide()
+                self._pickers[i].set_visible(True)
+            self._age_slider.set_visible(False)
         else:
-            self._age_slider.show()
+            self._age_slider.set_visible(True)
             value = self._age_adj.get_value()
             self._set_age_picker(int(value + 0.5))
 
@@ -264,9 +285,9 @@ class AgePicker(Gtk.Grid):
     def _set_age_picker(self, age_index):
         for i in range(len(self._group_labels.AGES)):
             if i == age_index:
-                self._pickers[i].show_all()
+                self._pickers[i].set_visible(True)
             else:
-                self._pickers[i].hide_all()
+                self._pickers[i].set_visible(False)
         self._do_selected(age_index)
 
     def __age_adj_changed_cb(self, widget):

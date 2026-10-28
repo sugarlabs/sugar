@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2013 One Laptop per Child
+﻿# Copyright (C) 2008-2013 One Laptop per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 
 """
 Activity information microformat parser.
@@ -356,7 +355,7 @@ class MetadataLookup(GObject.GObject):
     }
 
     def __init__(self, url):
-        GObject.GObject.__init__(self)
+        super().__init__()
         self._url = url
         self._icon_file_name = None
         self._size = None
@@ -436,14 +435,14 @@ class MetadataLookup(GObject.GObject):
             if filename not in self._namelist:
                 continue
             cp = ConfigParser()
-            cp.readfp(StringIO(self._zf.read(filename)))
+            cp.read_string(self._zf.read(filename).decode('utf-8'))
             return cp.get('Activity', 'name')
         return None
 
     def _activity_info_lookup(self, parameter):
         filename = os.path.join(self._prefix, 'activity', 'activity.info')
         cp = ConfigParser()
-        cp.readfp(StringIO(self._zf.read(filename)))
+        cp.read_string(self._zf.read(filename).decode('utf-8'))
         if cp.has_option('Activity', parameter):
             return cp.get('Activity', parameter)
         return ''
@@ -451,7 +450,7 @@ class MetadataLookup(GObject.GObject):
     def _library_info_lookup(self, parameter):
         filename = os.path.join(self._prefix, 'library', 'library.info')
         cp = ConfigParser()
-        cp.readfp(StringIO(self._zf.read(filename)))
+        cp.read_string(self._zf.read(filename).decode('utf-8'))
         if cp.has_option('Library', parameter):
             return cp.get('Library', parameter)
         return ''

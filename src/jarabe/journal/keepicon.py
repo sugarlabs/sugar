@@ -1,4 +1,4 @@
-# Copyright (C) 2006, Red Hat, Inc.
+﻿# Copyright (C) 2006, Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,35 +24,32 @@ class KeepIcon(Gtk.ToggleButton):
     __gtype_name__ = 'SugarKeepIcon'
 
     def __init__(self):
-        Gtk.ToggleButton.__init__(self)
-        self.set_relief(Gtk.ReliefStyle.NONE)
-        self.set_focus_on_click(False)
+        super().__init__()
+        self.props.has_frame = False
+        self.props.focusable = False
 
         self._icon = Icon(icon_name='emblem-favorite',
                           pixel_size=style.SMALL_ICON_SIZE)
-        self.set_image(self._icon)
+        self.set_child(self._icon)
         self.connect('toggled', self.__toggled_cb)
-        self.connect('button-press-event', self.__button_press_event_cb)
-        self.connect('button-release-event', self.__button_release_event_cb)
+
+        click = Gtk.GestureClick()
+        click.connect('pressed', self.__button_press_event_cb)
+        click.connect('released', self.__button_release_event_cb)
+        self.add_controller(click)
 
         self._xo_color = profile.get_color()
 
-    def do_get_preferred_width(self):
-        return 0, style.GRID_CELL_SIZE
+        self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
 
-    def do_get_preferred_height(self):
-        return 0, style.GRID_CELL_SIZE
-
-    def __button_press_event_cb(self, widget, event):
+    def __button_press_event_cb(self, gesture, n_press, x, y):
         # We need to use a custom CSS class because in togglebuttons
         # the 'active' class doesn't only match the button press, they
         # can be left in the active state.
-        style_context = self.get_style_context()
-        style_context.add_class('toggle-press')
+        self.add_css_class('toggle-press')
 
-    def __button_release_event_cb(self, widget, event):
-        style_context = self.get_style_context()
-        style_context.remove_class('toggle-press')
+    def __button_release_event_cb(self, gesture, n_press, x, y):
+        self.remove_css_class('toggle-press')
 
     def __toggled_cb(self, widget):
         if self.get_active():
@@ -60,7 +57,6 @@ class KeepIcon(Gtk.ToggleButton):
         else:
             self._icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
-
 
 if hasattr(KeepIcon, 'set_css_name'):
     KeepIcon.set_css_name('canvasicon')

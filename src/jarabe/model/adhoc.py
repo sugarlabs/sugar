@@ -1,4 +1,4 @@
-# Copyright (C) 2010 One Laptop per Child
+﻿# Copyright (C) 2010 One Laptop per Child
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ from gi.repository import GObject
 from jarabe.model import network
 from jarabe.model.network import Settings
 from jarabe.model.network import IP4Config
-
 
 _adhoc_manager_instance = None
 
@@ -57,7 +56,7 @@ class AdHocManager(GObject.GObject):
     _CHANNEL_11 = 11
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        super().__init__()
 
         self._bus = dbus.SystemBus()
         self._device = None

@@ -1,4 +1,4 @@
-# Copyright (C) 2013, Walter Bender
+﻿# Copyright (C) 2013, Walter Bender
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
 import os
 import sys
 
+import gi
+gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
@@ -32,7 +34,6 @@ class JournalMock(JournalWindow):
     def get_mount_point(self):
         return '/'
 
-
 tests_dir = os.getcwd()
 extension_dir = os.path.join(tests_dir, 'extensions')
 
@@ -43,12 +44,13 @@ sys.path.append(config.ext_path)
 window = Gtk.Window()
 
 toolbox = DetailToolbox(JournalMock())
-toolbox.show()
+toolbox.set_visible(True)
 
-window.add(toolbox)
-window.show()
+window.set_child(toolbox)
+window.present()
 
 toolbox.set_metadata({'mountpoint': '/', 'uid': '', 'title': 'mock'})
 toolbox._copy.palette.popup(immediate=True)
 
-Gtk.main()
+import GLib
+GLib.MainLoop().run()

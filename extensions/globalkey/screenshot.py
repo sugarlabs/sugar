@@ -1,4 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
+﻿# Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Simon Schampijer, James Zaki
 #
 # This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
 
 from jarabe.model.screenshot import take_screenshot
 
-BOUND_KEYS = ['<alt>1', 'Print']
+BOUND_KEYS = ['<Alt>1', 'Print']
 
 
 def handle_key_press(key):

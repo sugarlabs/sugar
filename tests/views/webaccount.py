@@ -16,6 +16,8 @@
 import os
 import sys
 
+import gi
+gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk
 
 from jarabe import config
@@ -32,15 +34,16 @@ config.ext_path = extension_dir
 sys.path.append(config.ext_path)
 
 window = Gtk.Window()
-box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-box.show()
-window.add(box)
+box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+box.set_visible(True)
+window.set_child(box)
 
 services = accountsmanager.get_webaccount_services()
 for service in services:
     if service.get_icon_name() == ACCOUNT_NAME:
         service.config_service_cb(None, None, box)
 
-window.show()
+window.present()
 
-Gtk.main()
+import GLib
+GLib.MainLoop().run()

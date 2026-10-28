@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,8 @@ import logging
 from gi.repository import GObject
 import dbus
 
+import gi
+gi.require_version('TelepathyGLib', '0.12')
 from gi.repository import TelepathyGLib
 CONNECTION = TelepathyGLib.IFACE_CONNECTION
 CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
@@ -26,7 +28,6 @@ CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
 from sugar4 import profile
 
 from jarabe.util.telepathy import connection_watcher
-
 
 CONNECTION_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 
@@ -43,7 +44,7 @@ class BaseBuddyModel(GObject.GObject):
         self._tags = None
         self._current_activity = None
 
-        GObject.GObject.__init__(self, **kwargs)
+        super().__init__(**kwargs)
 
     def get_nick(self):
         return self._nick
@@ -108,7 +109,7 @@ class OwnerBuddyModel(BaseBuddyModel):
         self.connect('notify::color', self.__property_changed_cb)
 
         bus = dbus.SessionBus()
-        bus.add_signal_receiver(
+        self._name_owner_changed_handler = bus.add_signal_receiver(
             self.__name_owner_changed_cb,
             signal_name='NameOwnerChanged',
             dbus_interface='org.freedesktop.DBus')
@@ -182,6 +183,12 @@ class OwnerBuddyModel(BaseBuddyModel):
 
     def is_owner(self):
         return True
+
+    def do_dispose(self):
+        if getattr(self, '_name_owner_changed_handler', None) is not None:
+            self._name_owner_changed_handler.remove()
+            self._name_owner_changed_handler = None
+        super().do_dispose()
 
 
 def get_owner_instance():

@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+﻿# Copyright (C) 2006-2007 Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,13 +37,12 @@ class GroupBox(ViewContainer):
         # Round off icon size to an even number to ensure that the icon
         owner_icon = BuddyIcon(get_owner_instance(),
                                style.LARGE_ICON_SIZE & ~1)
-        ViewContainer.__init__(self, layout, owner_icon)
-        self.set_can_focus(False)
+        super().__init__(layout, owner_icon)
+        self.set_focusable(False)
 
         self._query = ''
         toolbar.connect('query-changed', self._toolbar_query_changed_cb)
-        toolbar.search_entry.connect('icon-press',
-                                     self.__clear_icon_pressed_cb)
+
         self._friends = {}
 
         friends_model = friends.get_model()
@@ -58,7 +57,6 @@ class GroupBox(ViewContainer):
         icon = FriendView(buddy_info)
         self.add(icon)
         self._friends[buddy_info.get_key()] = icon
-        icon.show()
 
     def _friend_added_cb(self, data_model, buddy_info):
         self.add_friend(buddy_info)
@@ -67,7 +65,6 @@ class GroupBox(ViewContainer):
         icon = self._friends[key]
         self.remove(icon)
         del self._friends[key]
-        icon.destroy()
 
     def _toolbar_query_changed_cb(self, toolbar, query):
         self._query = normalize_string(query)
@@ -75,5 +72,5 @@ class GroupBox(ViewContainer):
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
 
-    def __clear_icon_pressed_cb(self, entry, icon_pos, event):
+    def __clear_icon_pressed_cb(self, entry, icon_pos):
         self.grab_focus()

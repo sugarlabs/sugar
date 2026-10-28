@@ -16,8 +16,10 @@
 
 from gettext import gettext as _
 
-from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import GObject
+from gi.repository import Pango
+from gi.repository import Gdk
 from gi.repository import Gio
 
 from jarabe.journal.expandedentry import TextView
@@ -35,38 +37,45 @@ _SERVICE_PATH = '/org/laptop/Activity'
 _SERVICE_INTERFACE = 'org.laptop.Activity'
 
 
-class ProjectView(Gtk.EventBox, BaseExpandedEntry):
+class ProjectView(Gtk.Box, BaseExpandedEntry):
 
     __gsignals__ = {
         'go-back-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, **kwargs):
-        Gtk.EventBox.__init__(self)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, **kwargs)
         BaseExpandedEntry.__init__(self)
         self.project_metadata = None
         self._service = None
         self._activity_id = None
         self._project = None
-        self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
+        
+        self.add_css_class('project-view-bg')
 
         self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.add(self._vbox)
+        self.append(self._vbox)
 
         back_bar = BackBar()
-        back_bar.connect('button-release-event',
-                         self.__back_bar_release_event_cb)
-        self._vbox.pack_start(back_bar, False, True, 0)
+        click = Gtk.GestureClick()
+        click.connect('released', self.__back_bar_release_event_cb)
+        back_bar.add_controller(click)
+        self._vbox.append(back_bar)
 
         header = self.create_header()
-        self._vbox.pack_start(header, False, False, style.DEFAULT_SPACING * 2)
-        header.show()
+        header.set_margin_bottom(style.DEFAULT_SPACING * 2)
+        self._vbox.append(header)
+        header.set_visible(True)
 
         description_box, self._description = self._create_description()
-        self._vbox.pack_start(description_box, False, True,
-                              style.DEFAULT_SPACING / 3)
+        description_box.set_vexpand(True)
+        description_box.set_margin_bottom(int(style.DEFAULT_SPACING / 3))
+        self._vbox.append(description_box)
 
-        self._title.connect('focus-out-event', self._title_focus_out_event_cb)
+        # Gtk.Entry doesn't have focus-out-event, we use Gtk.EventControllerFocus
+        focus_controller = Gtk.EventControllerFocus()
+        focus_controller.connect('leave', self._title_focus_out_event_cb)
+        self._title.add_controller(focus_controller)
 
         settings = Gio.Settings.new('org.sugarlabs.user')
         icon_color = settings.get_string('color')
@@ -74,7 +83,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         self._icon = Icon(icon_name='project-box',
                           pixel_size=style.MEDIUM_ICON_SIZE)
         self._icon.xo_color = XoColor(icon_color)
-        self._icon_box.pack_start(self._icon, False, False, 0)
+        self._icon_box.append(self._icon)
 
     def get_vbox(self):
         return self._vbox
@@ -89,7 +98,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
     def get_mount_point(self):
         return '/'
 
-    def __back_bar_release_event_cb(self, back_bar, event):
+    def __back_bar_release_event_cb(self, gesture, n_press, x, y):
         self.emit('go-back-clicked')
         return False
 
@@ -97,19 +106,20 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         self.project_metadata = project_metadata
 
         description = project_metadata.get('description', '')
-        self._description.get_buffer().set_text(description)
+        self._description.get_buffer().set_text(description, len(description))
         self._title.set_text(project_metadata.get('title', ''))
 
-    def _title_focus_out_event_cb(self, entry, event):
+    def _title_focus_out_event_cb(self, controller):
         self._update_entry()
 
     def _create_description(self):
         widget = TextView()
-        widget.connect('focus-out-event',
-                       self._description_tags_focus_out_event_cb)
+        focus_controller = Gtk.EventControllerFocus()
+        focus_controller.connect('leave', self._description_tags_focus_out_event_cb)
+        widget.add_controller(focus_controller)
         return self._create_scrollable(widget, label=_('Description:')), widget
 
-    def _description_tags_focus_out_event_cb(self, text_view, event):
+    def _description_tags_focus_out_event_cb(self, controller):
         self._update_entry()
 
     def _update_entry(self):
@@ -117,7 +127,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         bounds = self._description.get_buffer().get_bounds()
         old_description = self.project_metadata.get('description', None)
         new_description = self._description.get_buffer().get_text(
-            bounds[0], bounds[1], include_hidden_chars=False)
+            bounds[0], bounds[1], False)
 
         if old_description != new_description:
             self.project_metadata['description'] = new_description
@@ -132,22 +142,24 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
 
     def _create_scrollable(self, widget, label=None):
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        vbox.props.spacing = style.DEFAULT_SPACING
+        vbox.set_spacing(style.DEFAULT_SPACING)
 
         if label is not None:
             text = Gtk.Label()
             text.set_markup('<span foreground="%s">%s</span>' % (
                 style.COLOR_BUTTON_GREY.get_html(), label))
 
-            halign = Gtk.Alignment.new(0, 0, 0, 0)
-            halign.add(text)
-            vbox.pack_start(halign, False, False, 0)
+            halign = Gtk.Box()
+            halign.set_halign(Gtk.Align.START)
+            halign.append(text)
+            vbox.append(halign)
 
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
                                    Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        scrolled_window.add(widget)
-        vbox.pack_start(scrolled_window, True, True, 0)
+        scrolled_window.set_has_frame(True)
+        scrolled_window.set_child(widget)
+        scrolled_window.set_vexpand(True)
+        vbox.append(scrolled_window)
 
         return vbox
