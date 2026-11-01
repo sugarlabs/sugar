@@ -22,32 +22,32 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3 import profile
-from sugar3.graphics import style
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.icon import get_surface
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.toolbutton import ToolButton
+from sugar4 import profile
+from sugar4.graphics import style
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.icon import get_surface
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar4.graphics.toolbutton import ToolButton
 
 from jarabe.model import notifications
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 
-class NotificationBox(Gtk.VBox):
+class NotificationBox(Gtk.Box):
 
     LINES = 3
     MAX_ENTRIES = 3
     ELLIPSIS_AND_BREAKS = 6
 
     def __init__(self, name):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self._name = name
 
-        self._notifications_box = Gtk.VBox()
+        self._notifications_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self._notifications_box.show()
 
         self._scrolled_window = Gtk.ScrolledWindow()

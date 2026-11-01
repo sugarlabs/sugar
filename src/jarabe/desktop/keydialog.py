@@ -22,7 +22,7 @@ from gi.repository import Gdk
 
 import dbus
 
-from sugar3.graphics import style
+from sugar4.graphics import style
 from jarabe.model import network
 
 
@@ -149,7 +149,7 @@ class WEPKeyDialog(KeyDialog):
         self.key_combo.set_active(0)
         self.key_combo.connect('changed', self.__key_combo_changed_cb)
 
-        hbox = Gtk.HBox()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         hbox.pack_start(Gtk.Label(_('Key Type:')), True, True, 0)
         hbox.pack_start(self.key_combo, True, True, 0)
         hbox.show_all()
@@ -169,7 +169,7 @@ class WEPKeyDialog(KeyDialog):
         self.auth_combo.add_attribute(cell, 'text', 0)
         self.auth_combo.set_active(0)
 
-        hbox = Gtk.HBox()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         hbox.pack_start(Gtk.Label(_('Authentication Type:')), True, True, 0)
         hbox.pack_start(self.auth_combo, True, True, 0)
         hbox.show_all()
@@ -242,7 +242,7 @@ class WPAKeyDialog(KeyDialog):
         self.combo.add_attribute(cell, 'text', 0)
         self.combo.set_active(0)
 
-        self.hbox = Gtk.HBox()
+        self.hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.hbox.pack_start(Gtk.Label(_('Wireless Security:')), True, True, 0)
         self.hbox.pack_start(self.combo, True, True, 0)
         self.hbox.show_all()

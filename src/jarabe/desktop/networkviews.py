@@ -24,14 +24,14 @@ import dbus
 
 from gi.repository import Gtk
 
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics import xocolor
-from sugar3.graphics import style
-from sugar3.graphics.icon import get_icon_state
-from sugar3.graphics import palette
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3 import profile
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics import xocolor
+from sugar4.graphics import style
+from sugar4.graphics.icon import get_icon_state
+from sugar4.graphics import palette
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4 import profile
 
 from jarabe.view.pulsingicon import EventPulsingIcon
 from jarabe.desktop import keydialog
@@ -124,7 +124,7 @@ class WirelessNetworkView(EventPulsingIcon):
         p = palette.Palette(primary_text=self._display_name,
                             icon=self._palette_icon)
 
-        self.menu_box = Gtk.VBox()
+        self.menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         self._connect_item = PaletteMenuItem(_('Connect'))
         icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='dialog-ok')
@@ -527,7 +527,7 @@ class SugarAdhocView(EventPulsingIcon):
         palette_ = palette.Palette(_('Ad-hoc Network %d') % (self._channel, ),
                                    icon=self._palette_icon)
 
-        self.menu_box = Gtk.VBox()
+        self.menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         self._connect_item = PaletteMenuItem(_('Connect'))
         icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='dialog-ok')
@@ -671,7 +671,7 @@ class OlpcMeshView(EventPulsingIcon):
     def _create_palette(self):
         _palette = palette.Palette(_('Mesh Network %d') % (self._channel, ))
 
-        self.menu_box = Gtk.VBox()
+        self.menu_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         self._connect_item = PaletteMenuItem(_('Connect'))
         icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='dialog-ok')

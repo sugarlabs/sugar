@@ -17,13 +17,13 @@ from gettext import gettext as _
 
 from gi.repository import Gtk
 
-from sugar3 import profile
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuBox
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar4 import profile
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.tray import TrayIcon
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.palettemenu import PaletteMenuBox
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import speech

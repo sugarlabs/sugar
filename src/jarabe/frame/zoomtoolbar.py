@@ -21,9 +21,9 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from sugar3.graphics import style
-from sugar3.graphics.palette import Palette
-from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar4.graphics import style
+from sugar4.graphics.palette import Palette
+from sugar4.graphics.radiotoolbutton import RadioToolButton
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell

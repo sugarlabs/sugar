@@ -16,7 +16,7 @@
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3.graphics import style
+from sugar4.graphics import style
 
 
 class FrameContainer(Gtk.Bin):
@@ -32,9 +32,9 @@ class FrameContainer(Gtk.Bin):
         self._position = position
 
         if self.is_vertical():
-            box = Gtk.VBox()
+            box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         else:
-            box = Gtk.HBox()
+            box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.add(box)
         box.show()
 

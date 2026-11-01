@@ -19,11 +19,11 @@ import logging
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import Wnck
+#from gi.repository import Wnck
 
-from sugar3.graphics import style
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
+from sugar4.graphics import style
+from sugar4.graphics.toolbutton import ToolButton
+from sugar4.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
 
 from jarabe.journal.listview import BaseListView
 from jarabe.journal.listmodel import ListModel
@@ -65,10 +65,10 @@ class ObjectChooser(Gtk.Window):
         else:
             self.connect('realize', self.__realize_cb, parent)
 
-            screen = Wnck.Screen.get_default()
-            screen.connect('window-closed', self.__window_closed_cb, parent)
+            #screen = Wnck.Screen.get_default()
+            #screen.connect('window-closed', self.__window_closed_cb, parent)
 
-        vbox = Gtk.VBox()
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(vbox)
         vbox.show()
 
@@ -80,7 +80,7 @@ class ObjectChooser(Gtk.Window):
         vbox.pack_start(title_box, False, True, 0)
         title_box.show()
 
-        separator = Gtk.HSeparator()
+        separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         vbox.pack_start(separator, False, True, 0)
         separator.show()
 

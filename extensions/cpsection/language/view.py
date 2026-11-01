@@ -23,10 +23,10 @@ from gi.repository import Gdk
 from gi.repository import GLib
 import gettext
 
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
 
-from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItem
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
@@ -98,7 +98,7 @@ class Language(SectionView):
         self._table.show()
         scrolled.add_with_viewport(self._table)
 
-        self._lang_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._lang_alert_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=style.DEFAULT_SPACING)
         self.pack_start(self._lang_alert_box, False, True, 0)
 
         self._lang_alert = InlineAlert()

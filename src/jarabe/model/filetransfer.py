@@ -34,8 +34,8 @@ CHANNEL_TYPE_FILE_TRANSFER = TelepathyGLib.IFACE_CHANNEL_TYPE_FILE_TRANSFER
 CONNECTION = TelepathyGLib.IFACE_CONNECTION
 CONNECTION_STATUS_CONNECTED = TelepathyGLib.ConnectionStatus.CONNECTED
 
-from sugar3.presence import presenceservice
-from sugar3 import dispatch
+from sugar4.presence import presenceservice
+from sugar4 import dispatch
 
 from jarabe.util.telepathy import connection_watcher
 from jarabe.model import telepathyclient

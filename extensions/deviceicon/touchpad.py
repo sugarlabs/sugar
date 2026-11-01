@@ -21,10 +21,10 @@ from gi.repository import Gtk
 
 import logging
 
-from sugar3 import profile
-from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.palette import Palette
-from sugar3.graphics import style
+from sugar4 import profile
+from sugar4.graphics.tray import TrayIcon
+from sugar4.graphics.palette import Palette
+from sugar4.graphics import style
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
@@ -77,7 +77,7 @@ class ResourcePalette(Palette):
 
         self._icon = icon
 
-        vbox = Gtk.VBox()
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.set_content(vbox)
 
         self._status_text = Gtk.Label()

@@ -26,11 +26,11 @@ from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import GLib
 
-from sugar3 import env
-from sugar3 import profile
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.xocolor import XoColor
+from sugar4 import env
+from sugar4 import profile
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.xocolor import XoColor
 
 from jarabe.intro import agepicker
 from jarabe.intro import colorpicker
@@ -88,13 +88,13 @@ def create_profile(user_profile):
     logging.debug("User keypair generated")
 
 
-class _Page(Gtk.VBox):
+class _Page(Gtk.Box):
     __gproperties__ = {
         'valid': (bool, None, None, False, GObject.ParamFlags.READABLE),
     }
 
     def __init__(self):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.valid = False
 
     def set_valid(self, valid):
@@ -249,7 +249,7 @@ class _AgePage(_Page):
         return self._ap.get_age()
 
 
-class _IntroBox(Gtk.VBox):
+class _IntroBox(Gtk.Box):
     done_signal = GObject.Signal('done', arg_types=([object]))
 
     PAGES = ["NAME", "COLOR", "GENDER", "AGE"]
@@ -258,7 +258,7 @@ class _IntroBox(Gtk.VBox):
     PAGE_LAST = len(PAGES) - 1
 
     def __init__(self, start_on_age_page):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.set_border_width(style.zoom(30))
 
         self._page = 0

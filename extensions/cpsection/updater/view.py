@@ -23,8 +23,8 @@ import logging
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon, CellRendererIcon
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon, CellRendererIcon
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.model.update import updater
@@ -58,7 +58,7 @@ class ActivityUpdater(SectionView):
         self.pack_start(self._top_label, False, True, 0)
         self._top_label.show()
 
-        separator = Gtk.HSeparator()
+        separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         self.pack_start(separator, False, True, 0)
         separator.show()
 
@@ -214,12 +214,12 @@ class ActivityUpdater(SectionView):
         self._model.cancel()
 
 
-class ProgressPane(Gtk.VBox):
+class ProgressPane(Gtk.Box):
     """Container which replaces the `ActivityPane` during refresh or
     install."""
 
     def __init__(self):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
         self.set_spacing(style.DEFAULT_PADDING)
         self.set_border_width(style.DEFAULT_SPACING * 2)
 
@@ -251,10 +251,10 @@ class ProgressPane(Gtk.VBox):
         self._progress.props.fraction = fraction
 
 
-class UpdateBox(Gtk.VBox):
+class UpdateBox(Gtk.Box):
 
     def __init__(self, updates):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
         self.set_spacing(style.DEFAULT_PADDING)
 
@@ -270,7 +270,7 @@ class UpdateBox(Gtk.VBox):
         scrolled_window.add(self._update_list)
         self._update_list.show()
 
-        bottom_box = Gtk.HBox()
+        bottom_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         bottom_box.set_spacing(style.DEFAULT_SPACING)
         self.pack_start(bottom_box, False, True, 0)
         bottom_box.show()

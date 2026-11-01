@@ -23,8 +23,8 @@ from gi.repository import Gdk
 from jarabe.webservice.accountsmanager import get_webaccount_services
 from jarabe.controlpanel.sectionview import SectionView
 
-from sugar3.graphics.icon import CanvasIcon, Icon
-from sugar3.graphics import style
+from sugar4.graphics.icon import CanvasIcon, Icon
+from sugar4.graphics import style
 
 
 def get_service_name(service):
@@ -84,7 +84,7 @@ class WebServicesConfig(SectionView):
         width = Gdk.Screen.width() - 2 * style.GRID_CELL_SIZE
         nx = int(width / (style.GRID_CELL_SIZE + style.DEFAULT_SPACING * 4))
 
-        self._service_config_box = Gtk.VBox()
+        self._service_config_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
         x = 0
         y = 0
@@ -116,7 +116,7 @@ class WebServicesConfig(SectionView):
         alignment.add(grid)
         grid.show()
 
-        vbox = Gtk.VBox()
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         vbox.pack_start(alignment, False, False, 0)
         alignment.show()
 
@@ -127,7 +127,7 @@ class WebServicesConfig(SectionView):
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scrolled.show()
 
-        workspace = Gtk.VBox()
+        workspace = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         scrolled.add_with_viewport(workspace)
         workspace.show()
 

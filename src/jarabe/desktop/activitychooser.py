@@ -22,10 +22,10 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
 
-from sugar3.activity import activityfactory
-from sugar3.graphics import iconentry
-from sugar3.graphics import style
-from sugar3.graphics.toolbutton import ToolButton
+from sugar4.activity import activityfactory
+from sugar4.graphics import iconentry
+from sugar4.graphics import style
+from sugar4.graphics.toolbutton import ToolButton
 
 from jarabe.model import shell
 from jarabe.desktop.activitieslist import ActivitiesList
