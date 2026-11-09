@@ -13,17 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sugar3.speech import SpeechManager
-
-
 _speech_manager = None
 
 
 def get_speech_manager():
     global _speech_manager
 
-    if _speech_manager is None:
-        _speech_manager = SpeechManager()
-        if not _speech_manager.enabled():
-            _speech_manager = None
     return _speech_manager
