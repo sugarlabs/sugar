@@ -302,6 +302,12 @@ class Toolbar(Gtk.Toolbar):
         self.insert(self._forward_button, -1)
         self._forward_button.show()
 
+        self._add_separator(False)
+        self._loading_spinner = Gtk.Spinner()
+        self._loading_spinner.set_tooltip_text(_('Loading...'))
+        self._add_widget(self._loading_spinner)
+        self.set_loading(False)
+
         title = _('Help: %s') % activity_name
         self._label = Gtk.Label()
         self._label.set_markup('<b>%s</b>' % title)
@@ -343,6 +349,14 @@ class Toolbar(Gtk.Toolbar):
     def update_back_forward(self, can_go_back, can_go_forward):
         self._back_button.props.sensitive = can_go_back
         self._forward_button.props.sensitive = can_go_forward
+
+    def set_loading(self, loading):
+        if loading:
+            self._loading_spinner.show()
+            self._loading_spinner.start()
+        else:
+            self._loading_spinner.stop()
+            self._loading_spinner.hide()
 
     def __back_clicked_cb(self, button):
         self.emit('back-clicked')
