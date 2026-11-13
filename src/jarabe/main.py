@@ -27,6 +27,7 @@ import os
 import sys
 import subprocess
 import shutil
+import signal
 
 # Disable overlay scrolling before GTK is loaded
 os.environ['GTK_OVERLAY_SCROLLING'] = '0'
@@ -340,6 +341,12 @@ def _check_group_label():
     return intro.check_group_label()
 
 
+def _sigterm_handler(signum, frame):
+    """Handle SIGTERM and SIGHUP signals to exit cleanly."""
+    logging.info('Received signal %s, shutting down...', signum)
+    Gtk.main_quit()
+
+
 def main():
     Gst.init(sys.argv)
 
@@ -369,6 +376,10 @@ def main():
         _start_intro(start_on_age_page=True)
     else:
         _begin_desktop_startup()
+
+    # Register signal handlers for clean shutdown
+    signal.signal(signal.SIGTERM, _sigterm_handler)
+    signal.signal(signal.SIGHUP, _sigterm_handler)
 
     try:
         Gtk.main()
