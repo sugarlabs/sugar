@@ -30,11 +30,11 @@ from sugar3 import env
 
 _session = None
 
-SOUP_STATUS_CANCELLED = 1
+CHUNK_SIZE = 64 * 1024
 
 
 def soup_status_is_successful(status):
-    return status >= 200 and status < 300
+    return 200 <= status < 300
 
 
 def get_soup_session():
@@ -65,10 +65,14 @@ class Downloader(GObject.GObject):
         GObject.GObject.__init__(self)
         self._uri = GLib.Uri.parse(url, GLib.UriFlags.NONE)
         self._session = session or get_soup_session()
-        self._pending_buffers = []
+        self._chunks = []
         self._downloaded_size = 0
         self._total_size = 0
         self._cancelling = False
+        self._cancellable = Gio.Cancellable()
+        self._input_stream = None
+        self._completed = False
+        self._error = None
         self._status_code = None
         self._output_file = None
         self._output_stream = None
@@ -76,21 +80,19 @@ class Downloader(GObject.GObject):
         self._request_headers = request_headers
 
     def _setup_message(self, method="GET"):
-        self._message = Soup.Message.new(method=method, uri=self._uri)
-        self._message.connect('got-body-data', self._got_body_data_cb)
-        self._message.connect('got-headers', self._headers_cb, None)
+        self._message = Soup.Message.new_from_uri(method, self._uri)
+
         if self._request_headers is not None:
-            for header_key in list(self._request_headers.keys()):
+            for header_key in self._request_headers:
                 self._message.get_request_headers().append(
                     header_key, self._request_headers[header_key])
-
 
     def download_to_temp(self):
         """
         Download the contents of the provided URL to temporary file storage.
-        Use .get_local_file_path() to find the location of where the file
-        is saved. Upon completion, a successful download is indicated by a
-        result of None in the complete signal parameters.
+        Use get_local_file_path() to find the location of the saved file.
+        Upon completion, a successful download is indicated by a result of
+        None in the complete signal parameters.
         """
         url = self._uri.to_string()
         temp_file_path = self._get_temp_file_path(url)
@@ -101,13 +103,15 @@ class Downloader(GObject.GObject):
 
     def download_chunked(self):
         """
-        Download the contents of the provided URL into memory. The download
-        is done in chunks, and each chunk is emitted over the 'got-chunk'
-        signal. Upon completion, a successful download is indicated by a
-        reuslt of None in the complete signal parameters.
+        Download the contents of the provided URL into memory.
+        The download is done in chunks, and each chunk is emitted over the
+        got-chunk signal. Upon completion, a successful download is indicated
+        by a result of None in the complete signal parameters.
         """
         self._setup_message()
-        self._session.send_async(self._message, 0, None, self._message_cb, None)
+        self._session.send_async(
+            self._message, GLib.PRIORITY_DEFAULT,
+            self._cancellable, self._message_cb, None)
 
     def download(self, start=None, end=None):
         """
@@ -118,90 +122,144 @@ class Downloader(GObject.GObject):
         partial read of the remote data.
         """
         self._setup_message()
+
         if start is not None:
             self._message.get_request_headers().set_range(start, end)
-        self._session.send_async(self._message, 0, None, self._message_cb, None)
+
+        self._session.send_async(
+            self._message, GLib.PRIORITY_DEFAULT,
+            self._cancellable, self._message_cb, None)
 
     def get_size(self):
         """
         Perform a HTTP HEAD request to find the size of the remote content.
-        The size is returned in the result parameter of the 'complete' signal.
+        The size is returned in the result parameter of the complete signal.
         """
         self._setup_message("HEAD")
-        self._session.send_async(self._message, 0, None, self._message_cb, None)
+        self._session.send_async(
+            self._message, GLib.PRIORITY_DEFAULT,
+            self._cancellable, self._message_cb, None)
 
-    def _message_cb(self, session, message, user_data):
-        self._status_code = message.get_status()
-        self._check_if_finished()
+    def _message_cb(self, session, result, user_data):
+        try:
+            self._input_stream = session.send_finish(result)
+        except GLib.Error as error:
+            self._error = error
+            self._status_code = self._message.get_status()
+            self._complete()
+            return
+
+        self._status_code = self._message.get_status()
+
+        if not soup_status_is_successful(self._status_code):
+            self._complete()
+            return
+
+        self._total_size = (
+            self._message.get_response_headers().get_content_length())
+
+        if self._message.get_method() == "HEAD":
+            self._complete()
+            return
+
+        self._read_next_chunk()
 
     def cancel(self):
         self._cancelling = True
-        self._session.cancel_message(self._message, SOUP_STATUS_CANCELLED)
-
-    def _headers_cb(self, message, user_data):
-        if soup_status_is_successful(message.get_status()):
-            self._total_size = message.get_response_headers().get_content_length()
-
-    def _got_body_data_cb(self, message, chunk_size):
-        if self._cancelling or \
-                not soup_status_is_successful(message.get_status()):
-            return
-
-        data = Gio.InputStream.read_bytes(chunk_size, None)
-        self.emit('got-chunk', data)
-        if self._output_stream:
-            self._pending_buffers.append(data)
-            self._write_next_buffer()
+        self._cancellable.cancel()
 
     def __write_async_cb(self, output_stream, result, user_data):
-        count = output_stream.write_bytes_finish(result)
+        try:
+            success, count = output_stream.write_all_finish(result)
+        except GLib.Error as error:
+            self._error = error
+            self._complete()
+            return
+
+        if not success:
+            self._error = IOError("Failed to write downloaded data")
+            self._complete()
+            return
 
         self._downloaded_size += count
+        self._emit_progress()
+        self._read_next_chunk()
+
+    def _read_next_chunk(self):
+        if self._completed:
+            return
+
+        self._input_stream.read_bytes_async(
+            CHUNK_SIZE,
+            GLib.PRIORITY_DEFAULT,
+            self._cancellable,
+            self._read_async_cb,
+            None)
+
+    def _read_async_cb(self, input_stream, result, user_data):
+        try:
+            data = input_stream.read_bytes_finish(result)
+        except GLib.Error as error:
+            self._error = error
+            self._complete()
+            return
+
+        if data.get_size() == 0:
+            self._complete()
+            return
+
+        self.emit('got-chunk', data)
+
+        if self._output_stream:
+            self._output_stream.write_all_async(
+                data.get_data(),
+                GLib.PRIORITY_LOW,
+                self._cancellable,
+                self.__write_async_cb,
+                None)
+        else:
+            self._chunks.append(data)
+            self._downloaded_size += data.get_size()
+            self._emit_progress()
+            self._read_next_chunk()
+
+    def _emit_progress(self):
         if self._total_size > 0:
             progress = self._downloaded_size / float(self._total_size)
             self.emit('progress', progress)
 
-        self._check_if_finished()
-
     def _complete(self):
+        if self._completed:
+            return
+
+        self._completed = True
+
+        if self._input_stream:
+            try:
+                self._input_stream.close(None)
+            except GLib.Error:
+                pass
+
         if self._output_stream:
-            self._output_stream.close(None)
+            try:
+                self._output_stream.close(None)
+            except GLib.Error as error:
+                if self._error is None:
+                    self._error = error
 
-        result = None
-        if soup_status_is_successful(self._status_code):
-            if self._message.get_method() == "HEAD":
-                # this is a get_size request
-                result = self._total_size
-            else:
-                result = self._session.send_and_read(self._message, None)
-        else:
+        if self._error is not None:
+            result = self._error
+        elif not soup_status_is_successful(self._status_code):
             result = IOError("HTTP error code %d" % self._status_code)
+        elif self._message.get_method() == "HEAD":
+            result = self._total_size
+        elif self._output_stream:
+            result = None
+        else:
+            result = GLib.Bytes.new(
+                b''.join(chunk.get_data() for chunk in self._chunks))
+
         self.emit('complete', result)
-
-    def _check_if_finished(self):
-        # To finish (for both successful completion and cancellation), we
-        # require two conditions to become true:
-        #  1. Soup message callback has been called
-        #  2. Any pending output file write completes
-        # Those conditions can become true in either order.
-        if not self._output_stream:
-            self._complete()
-            return
-
-        if self._cancelling or not self._pending_buffers:
-            if self._status_code is not None \
-                    and not self._output_stream.has_pending():
-                self._complete()
-            return
-
-        self._write_next_buffer()
-
-    def _write_next_buffer(self):
-        if not self._output_stream.has_pending():
-            data = self._pending_buffers.pop(0)
-            self._output_stream.write_bytes_async(data, GLib.PRIORITY_LOW,
-                                                  None, self.__write_async_cb,
-                                                  None)
 
     def _get_temp_file_path(self, uri):
         # TODO: Should we use the HTTP headers for the file name?
@@ -211,8 +269,8 @@ class Downloader(GObject.GObject):
 
         tmp_dir = os.path.join(env.get_profile_path(), 'data')
         base_name, extension_ = os.path.splitext(path)
-        fd, file_path = tempfile.mkstemp(dir=tmp_dir,
-                                         prefix=base_name, suffix=extension_)
+        fd, file_path = tempfile.mkstemp(
+            dir=tmp_dir, prefix=base_name, suffix=extension_)
         os.close(fd)
         os.unlink(file_path)
 
