@@ -103,8 +103,16 @@ class Frame(object):
         else:
             self.hide()
 
-    def hide(self):
+    def hide(self, hidden_cb=None):
+        """Retract the frame. If hidden_cb is given it is called once
+        the frame is actually gone (or immediately when it is already
+        hidden or already retracting), so callers can sequence on that
+        instead of guessing a delay. A show() partway through the
+        retract cancels the call rather than firing it early.
+        """
         if not self._wanted:
+            if hidden_cb is not None:
+                hidden_cb()
             return
 
         self._wanted = False
@@ -115,7 +123,16 @@ class Frame(object):
         palettegroup.popdown_all()
         self._animator = animator.Animator(0.5, widget=self._top_panel)
         self._animator.add(_Animation(self, 0.0))
+        if hidden_cb is not None:
+            self._animator.connect('completed', self.__hidden_cb, hidden_cb)
         self._animator.start()
+
+    def __hidden_cb(self, animator_, hidden_cb):
+        # Animator.stop() emits completed just as a finished run does,
+        # so a show() partway through the retract lands here with the
+        # frame on its way back up. Only report it gone if it is.
+        if not self._wanted:
+            hidden_cb()
 
     def show(self):
         if self._wanted:

@@ -22,5 +22,9 @@ sugar_PYTHON =				\
 	projectview.py			\
 	timeline.py			\
 	palettes.py			\
+	joglyph.py			\
+	momentcard.py			\
+	reflectguard.py			\
 	reflection.py			\
+	reflectstyle.py			\
 	volumestoolbar.py

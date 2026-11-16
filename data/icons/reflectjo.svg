@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="75px" height="75px"
+    viewBox="0 0 75 75">
+  <!-- Jo the robot, frame chrome: white line-art like every
+       neighbouring glyph - the ember visor is the one light. -->
+  <circle cx="37.5" cy="9.2" r="4.2" fill="#FFFFFF"/>
+  <line x1="37.5" y1="13.4" x2="37.5" y2="18"
+      stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M17.5,38 a20,20 0 0 1 40,0 v22
+           a4.8,4.8 0 0 1 -4.8,4.8 h-30.4
+           a4.8,4.8 0 0 1 -4.8,-4.8 z"
+      fill="#FFFFFF" stroke="#FFFFFF" stroke-width="3"/>
+  <rect x="23" y="33.5" width="29" height="13" rx="6.5"
+      fill="#E8A33D"/>
+  <circle cx="31" cy="40" r="3.2" fill="#FFFFFF"/>
+  <circle cx="44" cy="40" r="3.2" fill="#FFFFFF"/>
+  <path d="M29.5,55 C34.8,58.3 40.2,58.3 45.5,55" fill="none"
+      stroke="#E8A33D" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
