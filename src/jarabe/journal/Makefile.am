@@ -18,5 +18,6 @@ sugar_PYTHON =				\
 	model.py			\
 	objectchooser.py		\
 	projectview.py			\
+	timeline.py			\
 	palettes.py			\
 	volumestoolbar.py
