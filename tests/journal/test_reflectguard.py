@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
 import logging
 import os
 import sys
@@ -175,8 +176,7 @@ class TestRemergeRestoresClobberedWrite(unittest.TestCase):
         guard.note_moments(uid, [moment], {reflectguard.SNAP_KEY % 0: 'AAA'})
         model.updated.send(None, object_id=uid)  # swallow our own echo
 
-        def boom(*args, **kwargs):
-            raise AssertionError('write touched when nothing was lost')
+        written = []
         intact = {
             'reflections': reflection.dumps({'moments': [moment]}),
             reflectguard.SNAP_KEY % 0: 'AAA',
@@ -184,7 +184,9 @@ class TestRemergeRestoresClobberedWrite(unittest.TestCase):
         patcher = mock.patch.object(model, 'get', lambda object_id: intact)
         patcher.start()
         self.addCleanup(patcher.stop)
-        patcher = mock.patch.object(model, 'write', boom)
+        patcher = mock.patch.object(
+            model, 'write',
+            lambda metadata, **kwargs: written.append(dict(metadata)))
         patcher.start()
         self.addCleanup(patcher.stop)
 
@@ -192,6 +194,7 @@ class TestRemergeRestoresClobberedWrite(unittest.TestCase):
         # its snapshot is actually missing from the datastore's copy
         model.updated.send(None, object_id=uid)
 
+        self.assertEqual(written, [])
         self.assertIs(guard._entries[uid]['pending'], False)
 
     def test_remerge_evicts_oldest_moments_past_the_cap(self):
@@ -230,38 +233,6 @@ class TestRemergeRestoresClobberedWrite(unittest.TestCase):
             [m['snap_seq'] for m in data['moments']], list(range(1, cap + 1)))
         self.assertNotIn(reflectguard.SNAP_KEY % 0, written[0])
         self.assertIn(reflectguard.SNAP_KEY % 1, written[0])
-
-
-# --- the echo counter also guards the re-merge's own follow-up write ---
-
-class TestRemergeOwnWriteEchoSwallowed(unittest.TestCase):
-
-    def test_remerges_own_write_echo_is_swallowed_next_time(self):
-        _run_idle(self)
-        uid = 'uid-loop-guard'
-        moment = {'caption': 'x', 'mark': 'wonder', 'ts': 1, 'snap_seq': 0}
-        guard = reflectguard.ReflectionsGuard()
-        guard.note_moments(uid, [moment], {})
-        model.updated.send(None, object_id=uid)  # swallow our own echo
-
-        written = []
-        patcher = mock.patch.object(model, 'get', lambda object_id: {})
-        patcher.start()
-        self.addCleanup(patcher.stop)
-        patcher = mock.patch.object(
-            model, 'write',
-            lambda md, **kwargs: written.append(dict(md)))
-        patcher.start()
-        self.addCleanup(patcher.stop)
-
-        model.updated.send(None, object_id=uid)  # the real clobber -> remerge
-        self.assertEqual(len(written), 1)
-
-        # the Updated signal the remerge's own model.write() just emitted is
-        # the next one in -- it must be swallowed, not chased as another
-        # clobber, or every remerge would retrigger itself forever.
-        model.updated.send(None, object_id=uid)
-        self.assertEqual(len(written), 1)
 
 
 # --- the pending flag: only one re-merge in flight per entry ---
@@ -466,6 +437,208 @@ class TestMixedMomentsAndSessionsEchoSuppression(unittest.TestCase):
         model.updated.send(None, object_id=uid)  # the write's own echo
         self.assertEqual(guard._entries[uid]['echoes'], 0)
         self.assertEqual(len(written), 1)
+
+
+# delivered comments
+
+class TestDeliveredComments(unittest.TestCase):
+
+    def _clobber(self, on_disk):
+        written = []
+        patcher = mock.patch.object(
+            model, 'get', lambda object_id: dict(on_disk))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = mock.patch.object(
+            model, 'write',
+            lambda metadata, **kwargs: written.append(dict(metadata)))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        return written
+
+    def test_a_comment_the_disk_still_holds_keeps_its_place(self):
+        _run_idle(self)
+        uid = 'uid-comment-order'
+        theirs = {'from': 'Bo', 'message': 'nice rocket'}
+        ours = {'from': 'Ana', 'message': 'how?'}
+        guard = reflectguard.ReflectionsGuard()
+        guard.note_delivered_comment(uid, ours)
+        model.updated.send(None, object_id=uid)
+
+        written = self._clobber({'comments': json.dumps([theirs])})
+        model.updated.send(None, object_id=uid)
+
+        self.assertEqual(json.loads(written[0]['comments']),
+                         [theirs, ours])
+
+    def test_a_writer_adding_keys_does_not_duplicate_the_comment(self):
+        _run_idle(self)
+        uid = 'uid-comment-keys'
+        guard = reflectguard.ReflectionsGuard()
+        guard.note_delivered_comment(
+            uid, {'from': 'Ana', 'message': 'how?'})
+        model.updated.send(None, object_id=uid)
+
+        written = []
+        on_disk = [{'from': 'Ana', 'message': 'how?', 'ctime': '2026',
+                    'icon': 'computer-xo'}]
+        patcher = mock.patch.object(
+            model, 'get',
+            lambda object_id: {'comments': json.dumps(on_disk)})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = mock.patch.object(
+            model, 'write',
+            lambda metadata, **kwargs: written.append(dict(metadata)))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+        model.updated.send(None, object_id=uid)
+
+        self.assertEqual(written, [])
+
+    def test_the_childs_erase_wins_and_stays_won(self):
+        _run_idle(self)
+        uid = 'uid-comment-erase'
+        erased = {'from': 'Ana', 'message': 'how?'}
+        kept = {'from': 'Bo', 'message': 'nice rocket'}
+        guard = reflectguard.ReflectionsGuard()
+        guard.note_delivered_comment(uid, erased)
+        guard.note_delivered_comment(uid, kept)
+        model.updated.send(None, object_id=uid)
+        model.updated.send(None, object_id=uid)
+
+        guard.note_comments_pruned(uid, json.dumps([kept]))
+        self.assertEqual(guard._entries[uid]['comments'],
+                         [('Bo', 'nice rocket')])
+        model.updated.send(None, object_id=uid)  # the erase write's echo
+
+        # a full clobber afterwards should still bring back only 'kept'
+        written = self._clobber({})
+        model.updated.send(None, object_id=uid)
+        self.assertEqual(json.loads(written[0]['comments']), [kept])
+
+    def test_the_hold_stops_at_the_cap(self):
+        uid = 'uid-comment-cap'
+        guard = reflectguard.ReflectionsGuard()
+        for index in range(reflectguard.MAX_COMMENTS + 5):
+            guard.note_delivered_comment(
+                uid, {'from': 'Ana', 'message': 'q%d' % index})
+
+        held = guard._entries[uid]['comments']
+        self.assertEqual(len(held), reflectguard.MAX_COMMENTS)
+        # check by identity, not by the internal tuple shape
+        self.assertEqual(
+            held[0], reflectguard.comment_identity(
+                {'from': 'Ana', 'message': 'q5'}))
+        self.assertEqual(
+            held[-1], reflectguard.comment_identity(
+                {'from': 'Ana', 'message': 'q28'}))
+
+    def test_pruning_an_entry_nobody_guards_does_nothing(self):
+        guard = reflectguard.ReflectionsGuard()
+        guard.note_comments_pruned('never-held', '[]')
+        self.assertEqual(guard._entries, {})
+
+
+# note_shared vs. a foreign clobber
+
+class TestNoteSharedOutranksForeignWrite(unittest.TestCase):
+
+    def test_remerge_restores_shared_dropped_by_a_clobbering_write(self):
+        _run_idle(self)
+        uid = 'uid-shared-restore'
+        guard = reflectguard.ReflectionsGuard()
+        guard.note_shared(uid, '1')
+        model.updated.send(None, object_id=uid)  # swallow our own echo
+
+        written = []
+        patcher = mock.patch.object(
+            model, 'get', lambda object_id: {'title': 'my rockit'})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = mock.patch.object(
+            model, 'write',
+            lambda metadata, **kwargs: written.append(dict(metadata)))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+        model.updated.send(None, object_id=uid)
+
+        self.assertEqual(len(written), 1)
+        self.assertEqual(written[0]['shared'], '1')
+        self.assertEqual(written[0]['title'], 'my rockit')
+
+    def test_held_zero_does_not_spuriously_reshare(self):
+        _run_idle(self)
+        uid = 'uid-shared-zero'
+        guard = reflectguard.ReflectionsGuard()
+        guard.note_shared(uid, '0')
+        model.updated.send(None, object_id=uid)  # swallow our own echo
+
+        written = []
+        patcher = mock.patch.object(model, 'get', lambda object_id: {})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = mock.patch.object(
+            model, 'write',
+            lambda metadata, **kwargs: written.append(dict(metadata)))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+        model.updated.send(None, object_id=uid)
+
+        self.assertEqual(written, [])
+
+    def test_the_toggles_own_write_is_swallowed_not_fought(self):
+        _forbid_model_access(self)
+        guard = reflectguard.ReflectionsGuard()
+        guard.note_shared('uid-shared-echo', '1')
+
+        model.updated.send(None, object_id='uid-shared-echo')
+
+        self.assertEqual(guard._entries['uid-shared-echo']['echoes'], 0)
+
+    def test_a_lossless_write_after_noting_an_unheld_uid_does_not_restore(
+            self):
+        _run_idle(self)
+        uid = 'uid-shared-lossless'
+        guard = reflectguard.ReflectionsGuard()
+        guard.note_shared(uid, '1')
+        model.updated.send(None, object_id=uid)  # swallow our own echo
+
+        written = []
+        patcher = mock.patch.object(
+            model, 'get', lambda object_id: {'shared': '1'})
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = mock.patch.object(
+            model, 'write',
+            lambda metadata, **kwargs: written.append(dict(metadata)))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+        model.updated.send(None, object_id=uid)
+
+        self.assertEqual(written, [])
+
+
+# delete drops the hold
+
+class TestDeletedEntryDropsHold(unittest.TestCase):
+
+    def test_a_deleted_entrys_hold_goes_with_it(self):
+        guard = reflectguard.ReflectionsGuard()
+        guard.note_shared('uid-gone', '1')
+        self.assertIn('uid-gone', guard._entries)
+
+        model.deleted.send(None, object_id='uid-gone')
+        self.assertNotIn('uid-gone', guard._entries)
+
+    def test_a_delete_of_something_never_held_is_nothing(self):
+        guard = reflectguard.ReflectionsGuard()
+        model.deleted.send(None, object_id='never-held')
+        self.assertEqual(guard._entries, {})
 
 
 # --- guarding against a naming drift between the two modules under test ---

@@ -24,6 +24,7 @@ sugar_PYTHON =				\
 	palettes.py			\
 	joglyph.py			\
 	momentcard.py			\
+	peershare.py			\
 	reflectguard.py			\
 	reflection.py			\
 	reflectiontrigger.py		\

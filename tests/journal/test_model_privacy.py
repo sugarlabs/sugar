@@ -17,6 +17,7 @@ import os
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 # gi is an apt-installed system package, not something `uvx pytest`'s
 # own managed interpreter has -- skip rather than error when it isn't
@@ -92,6 +93,23 @@ class TestRewritesEntryInPlace(unittest.TestCase):
         # already indexed 'mountpoint', but 'uid' may legitimately be
         # absent, and testing it first is what keeps that safe.
         self.assertFalse(model._rewrites_entry_in_place({}))
+
+
+class TestCopyLeavesTheAudienceBehind(unittest.TestCase):
+
+    def test_a_copy_of_a_shared_entry_is_not_shared(self):
+        written = {}
+
+        def _capture(metadata, file_path='', **kwargs):
+            written.update(metadata)
+
+        with mock.patch.object(model, 'get', return_value={
+                'uid': 'u1', 'title': 't', 'shared': '1'}), \
+                mock.patch.object(model, 'get_file', return_value=None), \
+                mock.patch.object(model, 'write', side_effect=_capture):
+            model.copy({'uid': 'u1'}, '/media/stick')
+        self.assertNotIn('shared', written)
+        self.assertEqual(written['mountpoint'], '/media/stick')
 
 
 def _rmtree(path):

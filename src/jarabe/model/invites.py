@@ -37,6 +37,7 @@ from jarabe.model import telepathyclient
 from jarabe.model import bundleregistry
 from jarabe.model import neighborhood
 from jarabe.journal import misc
+from jarabe.journal import peershare
 
 
 CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
@@ -152,6 +153,14 @@ class PrivateInvite(BaseInvite):
                     uri=self._private_channel)
 
 
+class _StrayChatInvite(PrivateInvite):
+    """Invitation on a channel we already claimed for peer-share, which
+    Chat takes from the invite as there's no dispatch operation left."""
+
+    def _call_handle_with(self):
+        pass
+
+
 class Invites(GObject.GObject):
     __gsignals__ = {
         'invite-added': (GObject.SignalFlags.RUN_FIRST, None,
@@ -164,10 +173,12 @@ class Invites(GObject.GObject):
         GObject.GObject.__init__(self)
 
         self._dispatch_operations = {}
+        self._claimed_lines = {}
 
         client_handler = telepathyclient.get_instance()
         client_handler.got_dispatch_operation.connect(
             self.__got_dispatch_operation_cb)
+        peershare.set_stray_chat_cb(self.__stray_chat_cb)
 
     def __got_dispatch_operation_cb(self, **kwargs):
         logging.debug('__got_dispatch_operation_cb')
@@ -233,9 +244,11 @@ class Invites(GObject.GObject):
         if channel_type == CHANNEL_TYPE_CONTACT_LIST:
             self._handle_with(dispatch_operation_path, CLIENT + '.Sugar')
         elif channel_type == CHANNEL_TYPE_TEXT:
-            handler = CLIENT + '.org.laptop.Chat'
-            self._add_private_invite(dispatch_operation_path, handle, handler,
-                                     channel_path, properties)
+            # A window fetching a shared Journal entry uses a channel
+            # that looks just like a chat. the pending messages are the
+            # only way to tell them apart, so peek at those first.
+            self._sort_text_invitation(dispatch_operation_path, handle,
+                                       channel_path, properties)
             return
         else:
             self._call_handle_with(dispatch_operation_path, '')
@@ -243,6 +256,65 @@ class Invites(GObject.GObject):
         if handler is not None:
             logging.debug('Adding an invite from a non-Sugar client')
             self._add_invite(dispatch_operation_path, handle, handler)
+
+    def _sort_text_invitation(self, dispatch_operation_path, handle,
+                              channel_path, properties):
+        connection_path = properties[CHANNEL_DISPATCH_OPERATION +
+                                     '.Connection']
+        connection_name = connection_path.replace('/', '.')[1:]
+        bus = dbus.Bus()
+        channel = bus.get_object(connection_name, channel_path)
+        surface = partial(self._add_private_invite, dispatch_operation_path,
+                          handle, CLIENT + '.org.laptop.Chat', channel_path,
+                          properties)
+        channel.ListPendingMessages(
+            False, dbus_interface=CHANNEL_TYPE_TEXT,
+            reply_handler=partial(self.__pending_peeked_cb,
+                                  dispatch_operation_path, surface,
+                                  connection_name, connection_path,
+                                  channel_path, handle),
+            error_handler=lambda error: surface())
+
+    def __pending_peeked_cb(self, dispatch_operation_path, surface,
+                            connection_name, connection_path, channel_path,
+                            handle, messages):
+        lines = [message[5] for message in messages]
+        if not lines or \
+                any(peershare.parse_message(line) is None for line in lines):
+            surface()
+            return
+        # Everything waiting is protocol, so nobody is knocking. it's a
+        # window fetching and peershare is already serving it. claiming
+        # the operation keeps Chat out of the way without launching it.
+        logging.debug('invites: claiming a peer-share line quietly')
+        bus = dbus.Bus()
+        obj = bus.get_object(CHANNEL_DISPATCHER, dispatch_operation_path)
+        dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
+        dispatch_operation.Claim(
+            reply_handler=partial(self.__claimed_cb, connection_name,
+                                  connection_path, channel_path, handle),
+            error_handler=self.__claim_error_cb)
+
+    def __claimed_cb(self, connection_name, connection_path, channel_path,
+                     handle):
+        self._claimed_lines[channel_path] = (connection_name,
+                                             connection_path, handle)
+
+    def __claim_error_cb(self, error):
+        logging.error('invites: could not claim a peer-share line: %s', error)
+
+    def __stray_chat_cb(self, channel_path, sender):
+        line = self._claimed_lines.pop(channel_path, None)
+        if line is None:
+            return
+        connection_name, connection_path, handle = line
+        private_channel = json.dumps([connection_name, connection_path,
+                                      channel_path])
+        invite = _StrayChatInvite(channel_path, handle,
+                                  CLIENT + '.org.laptop.Chat',
+                                  private_channel)
+        self._dispatch_operations[channel_path] = invite
+        self.emit('invite-added', invite)
 
     def _call_handle_with(self, dispatch_operation_path, handler):
         logging.debug('_handle_with %r %r', dispatch_operation_path, handler)
