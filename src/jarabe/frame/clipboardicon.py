@@ -79,6 +79,8 @@ class ClipboardIcon(RadioToolButton):
         target_name = target_atom.name()
         logging.debug('_drag_data_get_cb: requested target %s', target_name)
         data = self._cb_object.get_formats()[target_name].get_data()
+        if isinstance(data, str):
+            data = data.encode()
         selection.set(target_atom, 8, data)
         GLib.source_remove(self._timeout_id)
 
@@ -122,6 +124,8 @@ class ClipboardIcon(RadioToolButton):
                             entries_targets)
             return
         data = self._cb_object.get_formats()[str(selection_target)].get_data()
+        if isinstance(data, str):
+            data = data.encode()
         selection.set(selection_target, 8, data)
 
     def _clipboard_clear_cb(self, x_clipboard, targets):
