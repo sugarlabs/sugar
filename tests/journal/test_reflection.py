@@ -17,9 +17,11 @@ import contextlib
 import json
 import os
 import pathlib
+import socket
 import sys
 import tempfile
 import unittest
+import urllib.error
 from unittest import mock
 
 # jarabe/__init__.py and jarabe/journal/__init__.py are both gi-free, but
@@ -28,6 +30,31 @@ sys.path.insert(
     0, os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
 
 from jarabe.journal import reflection  # noqa: E402
+
+
+VALID_CONFIG = {'url': 'https://ai.example.org', 'api_key': 'k',
+                'enabled': True}
+
+
+class FakeResponse:
+
+    def __init__(self, body):
+        self._body = body
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc_info):
+        return False
+
+    def read(self, size=None):
+        return self._body if size is None else self._body[:size]
+
+
+def fake_urlopen(body):
+    def opener(request, timeout=None):
+        return FakeResponse(body)
+    return opener
 
 
 class TestConversationModel(unittest.TestCase):
@@ -347,13 +374,637 @@ class TestKeepDescription(unittest.TestCase):
             'it flies\nmore words')
 
 
+class TestPayload(unittest.TestCase):
+
+    # --- Payload whitelist ---
+
+    def test_build_payload_matches_server_schema(self):
+        turns = [{'role': 'jo', 'text': 'Hi', 'kind': 'question',
+                  'open': True, 'engagement': 'engaged'},
+                 {'role': 'child', 'text': 'A rocket'}]
+        payload = reflection._build_payload(
+            'My Title', 'a description', 'org.laptop.TurtleArtActivity',
+            turns)
+        self.assertEqual(set(payload.keys()), {
+            'title', 'description', 'activity_id', 'records'})
+        self.assertEqual(
+            payload['activity_id'], 'org.laptop.TurtleArtActivity')
+        self.assertEqual(payload['records'], [
+            {'type': 'engine_turn', 'by': 'engine', 'kind': 'question',
+             'text': 'Hi',
+             'flags': {'open': True, 'simplified': False,
+                       'people_adjacent': False},
+             'engagement': 'engaged'},
+            {'type': 'child_turn', 'by': 'host', 'text': 'A rocket'}])
+
+    def test_a_stored_turn_without_typed_fields_becomes_a_question(self):
+        # Floor questions and turns stored before the typed fields
+        # existed are what the child saw; the engine counts them.
+        payload = reflection._build_payload(
+            'T', 'd', 'x', [{'role': 'jo', 'text': 'What broke?'}])
+        record = payload['records'][0]
+        self.assertEqual(record['kind'], 'question')
+        self.assertEqual(record['engagement'], 'engaged')
+
+    def test_build_payload_never_carries_forbidden_keys(self):
+        payload = reflection._build_payload('T', 'd', 'x', [])
+        for forbidden in ('reflections', 'preview', 'metadata', 'uid',
+                          'category', 'activity', 'next_steps'):
+            self.assertNotIn(forbidden, payload)
+
+
+class TestWorkContext(unittest.TestCase):
+
+    @staticmethod
+    def _metadata(moments=(), snaps=(), **extra):
+        metadata = {'reflections': json.dumps(
+            {'version': 1, 'sessions': [], 'moments': list(moments)})}
+        for seq, data in snaps:
+            metadata['moment-snap-%d' % seq] = data
+        metadata.update(extra)
+        return metadata
+
+    def test_full_entry_packs_every_field(self):
+        import base64
+        metadata = self._metadata(
+            moments=[{'caption': 'the jump worked', 'mark': 'proud',
+                      'ts': 1, 'snap_seq': 0},
+                     {'caption': '', 'mark': None, 'ts': 2,
+                      'snap_seq': 1}],
+            snaps=[(0, 'QUFBQQ=='), (1, 'QkJCQg==')],
+            preview=b'png-bytes', tags='dragon maze',
+            **{'spent-times': '120,60,bad'})
+        context = reflection.build_work_context(metadata)
+        self.assertEqual(context['spent_seconds'], 180)
+        self.assertEqual(context['tags'], ['dragon', 'maze'])
+        self.assertEqual(context['preview'], {
+            'mime': 'image/png',
+            'data': base64.b64encode(b'png-bytes').decode('ascii')})
+        self.assertEqual(context['images'], [
+            {'mime': 'image/jpeg', 'data': 'QUFBQQ==',
+             'caption': 'the jump worked'},
+            {'mime': 'image/jpeg', 'data': 'QkJCQg=='}])
+
+    def test_bare_entry_packs_nothing(self):
+        self.assertEqual(reflection.build_work_context({}), {})
+        payload = reflection._build_payload('T', 'd', 'x', [],
+                                            work_context={})
+        self.assertNotIn('work_context', payload)
+
+    def test_payload_carries_the_context_it_is_given(self):
+        context = {'tags': ['dragon']}
+        payload = reflection._build_payload('T', 'd', 'x', [],
+                                            work_context=context)
+        self.assertEqual(payload['work_context'], context)
+
+    def test_marks_never_travel(self):
+        context = reflection.build_work_context(self._metadata(
+            moments=[{'caption': 'hi', 'mark': 'proud', 'ts': 1,
+                      'snap_seq': 0}],
+            snaps=[(0, 'QQ==')]))
+        self.assertNotIn('mark', json.dumps(context))
+
+    def test_snapless_moment_is_skipped(self):
+        context = reflection.build_work_context(self._metadata(
+            moments=[{'caption': 'gone', 'ts': 1, 'snap_seq': 7}]))
+        self.assertNotIn('images', context)
+
+    def test_tags_clip_to_the_far_ceiling(self):
+        context = reflection.build_work_context(
+            {'tags': ' '.join('t%d' % i + 'x' * 100 for i in range(20))})
+        self.assertEqual(len(context['tags']), 16)
+        for tag in context['tags']:
+            self.assertLessEqual(len(tag), 60)
+
+    def test_budget_drops_oldest_snaps_and_keeps_story_order(self):
+        metadata = self._metadata(
+            moments=[{'caption': 'old', 'ts': 1, 'snap_seq': 0},
+                     {'caption': 'mid', 'ts': 2, 'snap_seq': 1},
+                     {'caption': 'new', 'ts': 3, 'snap_seq': 2}],
+            snaps=[(0, 'A' * 40), (1, 'B' * 40), (2, 'C' * 40)])
+        with mock.patch.object(reflection, '_CONTEXT_BUDGET', 100):
+            context = reflection.build_work_context(metadata)
+        self.assertEqual([i['caption'] for i in context['images']],
+                         ['mid', 'new'])
+
+    def test_malformed_reflections_and_junk_never_crash(self):
+        context = reflection.build_work_context({
+            'reflections': 'not json', 'preview': 'not-bytes',
+            'tags': None, 'spent-times': None})
+        self.assertEqual(context, {})
+
+
+class TestConfig(unittest.TestCase):
+
+    # --- Config ---
+
+    def test_read_config_file_absent(self):
+        tmp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp_dir.cleanup)
+        tmp_path = pathlib.Path(tmp_dir.name)
+        path = str(tmp_path / 'missing.conf')
+        config = reflection.read_config(path)
+        self.assertEqual(
+            config,
+            {'url': '', 'api_key': '',
+             'enabled': reflection.DEFAULT_ENABLED})
+
+    def test_read_config_file_partial(self):
+        tmp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp_dir.cleanup)
+        tmp_path = pathlib.Path(tmp_dir.name)
+        path = tmp_path / 'reflection.conf'
+        path.write_text('[reflection]\nurl = https://ai.example.org\n')
+        config = reflection.read_config(str(path))
+        self.assertEqual(config['url'], 'https://ai.example.org')
+        self.assertEqual(config['api_key'], '')
+        self.assertEqual(config['enabled'], reflection.DEFAULT_ENABLED)
+
+    def test_read_config_file_full(self):
+        tmp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp_dir.cleanup)
+        tmp_path = pathlib.Path(tmp_dir.name)
+        path = tmp_path / 'reflection.conf'
+        path.write_text(
+            '[reflection]\n'
+            'url = https://ai.example.org\n'
+            'api_key = secret123\n'
+            'enabled = false\n')
+        config = reflection.read_config(str(path))
+        self.assertEqual(
+            config,
+            {'url': 'https://ai.example.org', 'api_key': 'secret123',
+             'enabled': False})
+
+    def test_read_config_enabled_flag_variants(self):
+        tmp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp_dir.cleanup)
+        tmp_path = pathlib.Path(tmp_dir.name)
+        cases = [
+            ('true', True), ('True', True), ('yes', True), ('1', True),
+            ('false', False), ('no', False), ('0', False),
+        ]
+        for value, expected in cases:
+            with self.subTest(value=value):
+                path = tmp_path / 'reflection.conf'
+                path.write_text('[reflection]\nenabled = %s\n' % value)
+                config = reflection.read_config(str(path))
+                self.assertIs(config['enabled'], expected)
+
+    def test_read_config_env_overrides_file(self):
+        tmp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp_dir.cleanup)
+        tmp_path = pathlib.Path(tmp_dir.name)
+        path = tmp_path / 'reflection.conf'
+        path.write_text(
+            '[reflection]\n'
+            'url = https://file.example.org\n'
+            'api_key = file-key\n'
+            'enabled = false\n')
+
+        p = mock.patch.dict(os.environ, {
+            'SUGAR_AI_URL': 'https://env.example.org',
+            'SUGAR_AI_KEY': 'env-key',
+            'SUGAR_AI_REFLECTION_ENABLED': 'true'})
+        p.start()
+        self.addCleanup(p.stop)
+
+        config = reflection.read_config(str(path))
+        self.assertEqual(
+            config,
+            {'url': 'https://env.example.org', 'api_key': 'env-key',
+             'enabled': True})
+
+    def test_read_config_env_override_without_file(self):
+        tmp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp_dir.cleanup)
+        tmp_path = pathlib.Path(tmp_dir.name)
+        path = str(tmp_path / 'missing.conf')
+        p = mock.patch.dict(os.environ, {
+            'SUGAR_AI_URL': 'https://env.example.org'})
+        p.start()
+        self.addCleanup(p.stop)
+        config = reflection.read_config(path)
+        self.assertEqual(config['url'], 'https://env.example.org')
+
+
 class TestHttpClient(unittest.TestCase):
 
     # --- HTTP client: _post_json ---
 
+    def test_post_json_happy_path(self):
+        body = json.dumps({'question': 'What did you build?'}).encode('utf-8')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(body))
+        p.start()
+        self.addCleanup(p.stop)
+        result = reflection._post_json('https://ai.example.org/reflect/chat',
+                                       'key', {'title': 't'})
+        self.assertEqual(result, {'question': 'What did you build?'})
+
+    def test_post_json_timeout(self):
+        def raise_timeout(request, timeout=None):
+            raise socket.timeout()
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', raise_timeout)
+        p.start()
+        self.addCleanup(p.stop)
+        with self.assertRaises(reflection.ReflectionTimeout):
+            reflection._post_json('https://ai.example.org/reflect/chat', 'key',
+                                  {})
+
+    def test_post_json_http_error(self):
+        def raise_http_error(request, timeout=None):
+            raise urllib.error.HTTPError(
+                'https://ai.example.org/reflect/chat', 500,
+                'Internal Server Error', {}, None)
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', raise_http_error)
+        p.start()
+        self.addCleanup(p.stop)
+        with self.assertRaises(reflection.ReflectionHTTPError) as cm:
+            reflection._post_json('https://ai.example.org/reflect/chat', 'key',
+                                  {})
+        self.assertEqual(cm.exception.status, 500)
+
+    def test_post_json_connection_refused_is_offline(self):
+        def raise_url_error(request, timeout=None):
+            raise urllib.error.URLError('connection refused')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', raise_url_error)
+        p.start()
+        self.addCleanup(p.stop)
+        with self.assertRaises(reflection.ReflectionOffline):
+            reflection._post_json('https://ai.example.org/reflect/chat', 'key',
+                                  {})
+
+    def test_post_json_garbage_response_is_bad_response(self):
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(b'not json'))
+        p.start()
+        self.addCleanup(p.stop)
+        with self.assertRaises(reflection.ReflectionBadResponse):
+            reflection._post_json('https://ai.example.org/reflect/chat', 'key',
+                                  {})
+
     # --- request_turn: end-to-end client behavior + identity contract ---
 
+    def test_request_turn_happy_path(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+        body = json.dumps({'record': {
+            'type': 'engine_turn', 'by': 'engine', 'kind': 'question',
+            'text': 'What was tricky?',
+            'flags': {'open': True, 'simplified': False,
+                      'people_adjacent': False},
+            'engagement': 'engaged'}}).encode('utf-8')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(body))
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-1', 3, 'org.laptop.PippyActivity', 'My Program', 'desc', [],
+            config=VALID_CONFIG)
+
+        self.assertEqual(result, {
+            'object_id': 'obj-1', 'generation': 3,
+            'status': reflection.STATUS_OK,
+            'turn': {'role': 'jo', 'text': 'What was tricky?',
+                     'kind': 'question', 'engagement': 'engaged',
+                     'open': True},
+            'should_continue': True,
+        })
+
+    def test_request_turn_session_end_closes_with_the_typed_answer(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+        body = json.dumps({'record': {
+            'type': 'session_end', 'by': 'engine', 'reason': 'child_done',
+            'next_step': 'teach my dog to paint',
+            'asked': True}}).encode('utf-8')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(body))
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-1', 3, 'x', 't', 'd', [], config=VALID_CONFIG)
+
+        self.assertIsNone(result['turn'])
+        self.assertFalse(result['should_continue'])
+        self.assertEqual(result['end'], {
+            'reason': 'child_done',
+            'next_step': 'teach my dog to paint', 'asked': True})
+
+    def test_request_turn_engine_floor_lands_on_the_local_bank(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+        body = json.dumps({'record': {
+            'type': 'engine_turn', 'by': 'engine', 'kind': 'floor_request',
+            'text': None,
+            'flags': {'open': False, 'simplified': False,
+                      'people_adjacent': False},
+            'engagement': 'engaged'}}).encode('utf-8')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(body))
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-9', 2, 'x', 't', 'd', [], config=VALID_CONFIG)
+        self.assertEqual(
+            result['turn']['text'], reflection.DEFAULT_FLOOR_BANK[0])
+
+    def test_request_turn_timeout(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+
+        def raise_timeout(request, timeout=None):
+            raise socket.timeout()
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', raise_timeout)
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-2', 7, 'x', 't', 'd', [], config=VALID_CONFIG)
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(result['object_id'], 'obj-2')
+        self.assertEqual(result['generation'], 7)
+        self.assertEqual(
+            result['turn']['text'], reflection.DEFAULT_FLOOR_BANK[0])
+
+    def test_request_turn_http_500(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+
+        def raise_http_error(request, timeout=None):
+            raise urllib.error.HTTPError(
+                'https://ai.example.org/reflect/chat', 500,
+                'Internal Server Error', {}, None)
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', raise_http_error)
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-3', 1, 'x', 't', 'd', [], config=VALID_CONFIG)
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(
+            result['turn']['text'], reflection.DEFAULT_FLOOR_BANK[0])
+
+    def test_request_turn_garbage_json(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(b'{not valid'))
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-4', 1, 'x', 't', 'd', [], config=VALID_CONFIG)
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(
+            result['turn']['text'], reflection.DEFAULT_FLOOR_BANK[0])
+
+    def test_request_turn_response_missing_question_is_bad_response(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen',
+            fake_urlopen(
+                json.dumps({'framework': 'creative_spiral'}).encode()))
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-5', 1, 'x', 't', 'd', [], config=VALID_CONFIG)
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(
+            result['turn']['text'], reflection.DEFAULT_FLOOR_BANK[0])
+
+    def test_request_turn_offline_short_circuits_before_urlopen(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: False)
+        p.start()
+        self.addCleanup(p.stop)
+
+        def fail_if_called(request, timeout=None):
+            raise AssertionError('urlopen must not be called while offline')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fail_if_called)
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-6', 2, 'org.laptop.Chat', 't', 'd', [], config=VALID_CONFIG)
+
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(result['turn']['role'], reflection.ROLE_JO)
+        self.assertEqual(result['turn']['text'], reflection.floor_question(
+            'org.laptop.Chat'))
+
+    def test_request_turn_not_configured_uses_floor_without_probing(self):
+        probed = []
+        p = mock.patch.object(
+            reflection, 'is_online', lambda url: probed.append(1) or True)
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-7', 1, 'org.laptop.TurtleArtActivity', 't', 'd', [],
+            config={'url': '', 'api_key': '', 'enabled': True})
+
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(result['turn']['role'], reflection.ROLE_JO)
+        self.assertFalse(probed)
+
+    def test_request_turn_disabled_uses_floor(self):
+        result = reflection.request_turn(
+            'obj-8', 1, 'org.laptop.TurtleArtActivity', 't', 'd', [],
+            config={'url': 'https://ai.example.org', 'api_key': 'k',
+                    'enabled': False})
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(result['turn']['role'], reflection.ROLE_JO)
+
+    def test_request_turn_server_unreachable_falls_back_to_floor(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+
+        def raise_url_error(request, timeout=None):
+            raise urllib.error.URLError('no route to host')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', raise_url_error)
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-9', 1, 'org.laptop.Chat', 't', 'd', [], config=VALID_CONFIG)
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(result['turn']['role'], reflection.ROLE_JO)
+
+    def test_request_turn_offline_never_repeats_a_floor_question(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: False)
+        p.start()
+        self.addCleanup(p.stop)
+        bank = reflection.FLOOR_BANK['communication']
+
+        data = reflection.empty_conversation()
+        session = reflection.new_session('communication')
+        reflection.add_turn(session, reflection.ROLE_JO, bank[0])
+        reflection.add_turn(session, reflection.ROLE_CHILD, 'my friend')
+        data['sessions'].append(session)
+
+        result = reflection.request_turn(
+            'obj-10', 1, 'org.laptop.Chat', 't', 'd', [], config=VALID_CONFIG,
+            conversation=data)
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(result['turn']['text'], bank[1])
+
+    def test_request_turn_offline_counts_current_session_turns(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: False)
+        p.start()
+        self.addCleanup(p.stop)
+        p = mock.patch.object(reflection.random, 'random', lambda: 0.99)
+        p.start()
+        self.addCleanup(p.stop)
+        bank = reflection.FLOOR_BANK['communication']
+        turns = [{'role': reflection.ROLE_JO, 'text': bank[0]},
+                 {'role': reflection.ROLE_CHILD, 'text': 'my friend'}]
+
+        result = reflection.request_turn(
+            'obj-11', 1, 'org.laptop.Chat', 't', 'd', turns,
+            config=VALID_CONFIG)
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(result['turn']['text'], bank[1])
+
+    def test_request_turn_dry_floor_bank_goes_silent(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: False)
+        p.start()
+        self.addCleanup(p.stop)
+        bank = reflection.FLOOR_BANK['communication']
+
+        data = reflection.empty_conversation()
+        session = reflection.new_session('communication')
+        for question in bank:
+            reflection.add_turn(session, reflection.ROLE_JO, question)
+        data['sessions'].append(session)
+
+        result = reflection.request_turn(
+            'obj-12', 1, 'org.laptop.Chat', 't', 'd', [], config=VALID_CONFIG,
+            conversation=data)
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertIsNone(result['turn'])
+
+    def test_request_turn_only_a_typed_end_stops_the_session(self):
+        # The old wire let a truthy flag beside a question stop the
+        # talk; on the typed wire only a session_end record does.
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+        body = json.dumps({'record': {
+            'type': 'engine_turn', 'by': 'engine', 'kind': 'wrap_offer',
+            'text': 'Keep going or stop here?',
+            'flags': {'open': False, 'simplified': False,
+                      'people_adjacent': False},
+            'engagement': 'engaged'}}).encode('utf-8')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(body))
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-13', 1, 'x', 't', 'd', [], config=VALID_CONFIG)
+        self.assertIs(result['should_continue'], True)
+        self.assertEqual(result['turn']['kind'], 'wrap_offer')
+
+    def test_request_turn_should_continue_defaults_true(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+        body = json.dumps({'question': 'q'}).encode('utf-8')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(body))
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-14', 1, 'x', 't', 'd', [], config=VALID_CONFIG)
+        self.assertIs(result['should_continue'], True)
+
+    def test_request_turn_floor_path_should_continue_true(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: False)
+        p.start()
+        self.addCleanup(p.stop)
+        result = reflection.request_turn(
+            'obj-15', 1, 'org.laptop.Chat', 't', 'd', [], config=VALID_CONFIG)
+        self.assertIs(result['should_continue'], True)
+
     # --- Identity contract ---
+
+    def test_identity_tagging_survives_every_status(self):
+        setups = [
+            'happy', 'timeout', 'http_error', 'bad_response', 'offline',
+            'not_configured',
+        ]
+        for setup in setups:
+            with self.subTest(setup=setup), contextlib.ExitStack() as stack:
+                object_id = 'entry-uid-%s' % setup
+                generation = 42
+                config = dict(VALID_CONFIG)
+
+                if setup == 'happy':
+                    stack.enter_context(mock.patch.object(
+                        reflection, 'is_online', lambda url: True))
+                    body = json.dumps({'question': 'q'}).encode('utf-8')
+                    stack.enter_context(mock.patch.object(
+                        reflection.urllib.request, 'urlopen',
+                        fake_urlopen(body)))
+                elif setup == 'timeout':
+                    stack.enter_context(mock.patch.object(
+                        reflection, 'is_online', lambda url: True))
+
+                    def raise_timeout(request, timeout=None):
+                        raise socket.timeout()
+                    stack.enter_context(mock.patch.object(
+                        reflection.urllib.request, 'urlopen',
+                        raise_timeout))
+                elif setup == 'http_error':
+                    stack.enter_context(mock.patch.object(
+                        reflection, 'is_online', lambda url: True))
+
+                    def raise_http_error(request, timeout=None):
+                        raise urllib.error.HTTPError(
+                            'u', 503, 'Service Unavailable', {}, None)
+                    stack.enter_context(mock.patch.object(
+                        reflection.urllib.request, 'urlopen',
+                        raise_http_error))
+                elif setup == 'bad_response':
+                    stack.enter_context(mock.patch.object(
+                        reflection, 'is_online', lambda url: True))
+                    stack.enter_context(mock.patch.object(
+                        reflection.urllib.request, 'urlopen',
+                        fake_urlopen(b'garbage')))
+                elif setup == 'offline':
+                    stack.enter_context(mock.patch.object(
+                        reflection, 'is_online', lambda url: False))
+                elif setup == 'not_configured':
+                    config = {'url': '', 'api_key': '', 'enabled': True}
+
+                result = reflection.request_turn(
+                    object_id, generation, 'org.laptop.TurtleArtActivity',
+                    't', 'd', [], config=config)
+
+                self.assertEqual(result['object_id'], object_id)
+                self.assertEqual(result['generation'], generation)
 
     # --- turn_acceptable: the shape contract on Jo's own voice ---
 
@@ -385,6 +1036,28 @@ class TestHttpClient(unittest.TestCase):
     def test_turn_acceptable_rejects_question_pile(self):
         self.assertFalse(reflection.turn_acceptable(
             'What is it? How did you make it? What comes next?'))
+
+    def test_request_turn_slop_reply_falls_back_to_floor(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+        slop = ('The key to a great reflection is considering your process: '
+                'what worked, what did not, and what you might change.')
+        body = json.dumps({'question': slop}).encode('utf-8')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(body))
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-20', 1, 'org.laptop.PippyActivity', 't', 'd', [],
+            config=VALID_CONFIG)
+
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertIsNotNone(result['turn'])
+        self.assertNotEqual(result['turn']['text'], slop)
+        self.assertTrue(result['turn']['text'].endswith('?'))
+
 
 def _held_data(last_role, text='make the middle rounder', ts=1000):
     return {'sessions': [{'ts': ts, 'turns': [
@@ -555,6 +1228,25 @@ class TestQuestionBanks(unittest.TestCase):
         self.assertEqual(reflection.nearby_followup(
             used={reflection.NEARBY_MIDFLOW}), reflection.NEARBY_FOLLOWUP)
 
+    def test_request_turn_rolls_the_midflow_on_the_floor(self):
+        config = {'enabled': False, 'api_key': '', 'url': ''}
+        p = mock.patch.object(reflection.random, 'random', lambda: 0.0)
+        p.start()
+        self.addCleanup(p.stop)
+        result = reflection.request_turn(
+            'obj-m', 1, 'org.example.Unknown', 't', 'd', list(WARM_TURNS),
+            config=config)
+        self.assertEqual(result['turn']['text'], reflection.NEARBY_MIDFLOW)
+        p = mock.patch.object(reflection.random, 'random', lambda: 0.99)
+        p.start()
+        self.addCleanup(p.stop)
+        result = reflection.request_turn(
+            'obj-m', 2, 'org.example.Unknown', 't', 'd', list(WARM_TURNS),
+            config=config)
+        self.assertEqual(
+            result['turn']['text'],
+            reflection.VISIBLE_WORK_OPENERS[reflection.DEFAULT_FLOOR_BANK[0]])
+
     def test_followup_waits_for_real_time_away(self):
         used = {reflection.NEARBY_MIDFLOW}
         fresh = {'sessions': [{'ts': 10000, 'turns': []}]}
@@ -564,6 +1256,43 @@ class TestQuestionBanks(unittest.TestCase):
                 used, fresh,
                 now=10000 + reflection.FEED_FORWARD_GAP + 1),
             reflection.NEARBY_FOLLOWUP)
+
+    def test_people_turns_stay_off_the_wire(self):
+        turns = [
+            {'role': 'jo', 'text': 'What was tricky about this one?'},
+            {'role': 'child', 'text': 'the roof'},
+            {'role': 'jo', 'text': reflection.NEARBY_MIDFLOW},
+            {'role': 'child', 'text': 'Ana says it needs a beam'},
+            {'role': 'child', 'text': 'she liked the roof'},
+            {'role': 'jo', 'text': 'What will you try next time?'},
+            {'role': 'child', 'text': 'a beam'}]
+        payload = reflection._build_payload('t', 'd', 'a', turns)
+        contents = [t.get('text', '') for t in payload['records']]
+        self.assertNotIn('Ana says it needs a beam', contents)
+        self.assertNotIn('she liked the roof', contents)
+        self.assertNotIn(reflection.NEARBY_MIDFLOW, contents)
+        self.assertIn('the roof', contents)
+        self.assertIn('a beam', contents)
+
+    def test_midflow_walks_the_real_floor_sequence(self):
+        config = {'enabled': False, 'api_key': '', 'url': ''}
+        bank = list(reflection.DEFAULT_FLOOR_BANK)
+        turns = [{'role': 'jo', 'text': bank[0]},
+                 {'role': 'child', 'text': 'the tower kept falling over'}]
+        p = mock.patch.object(reflection.random, 'random', lambda: 0.99)
+        p.start()
+        self.addCleanup(p.stop)
+        result = reflection.request_turn(
+            'obj-s', 1, 'org.example.Unknown', 't', 'd', list(turns),
+            config=config)
+        self.assertEqual(result['turn']['text'], bank[1])
+        p = mock.patch.object(reflection.random, 'random', lambda: 0.0)
+        p.start()
+        self.addCleanup(p.stop)
+        result = reflection.request_turn(
+            'obj-s', 2, 'org.example.Unknown', 't', 'd', list(turns),
+            config=config)
+        self.assertEqual(result['turn']['text'], reflection.NEARBY_MIDFLOW)
 
     def test_strip_private_drops_talk_and_snaps_only(self):
         metadata = {'reflections': '{"sessions": []}', 'next_steps': 'x',
@@ -626,6 +1355,23 @@ class TestPeerQuestions(unittest.TestCase):
         self.assertIsNone(reflection.peer_question(json.dumps(['x', 3])))
         self.assertIsNone(reflection.peer_question(
             json.dumps([{'from': 'Ana'}])))
+
+    def test_peer_turns_and_their_answers_stay_off_the_wire(self):
+        voiced = reflection.PEER_QUESTION_OPENER % {
+            'who': 'Ana', 'question': 'How did you build it?'}
+        turns = [
+            {'role': 'jo', 'text': 'What was tricky about this one?'},
+            {'role': 'child', 'text': 'the roof'},
+            {'role': 'jo', 'text': voiced, 'peer': True},
+            {'role': 'child', 'text': 'I will tell Ana about the beam'},
+            {'role': 'jo', 'text': 'What will you try next time?'},
+            {'role': 'child', 'text': 'a beam'}]
+        payload = reflection._build_payload('t', 'd', 'a', turns)
+        contents = [t.get('text', '') for t in payload['records']]
+        self.assertNotIn(voiced, contents)
+        self.assertNotIn('I will tell Ana about the beam', contents)
+        self.assertIn('the roof', contents)
+        self.assertIn('a beam', contents)
 
     def test_add_turn_keeps_ordinary_turns_flag_free(self):
         session = reflection.new_session('creative')
@@ -803,6 +1549,15 @@ class TestQuestionIds(unittest.TestCase):
         used = reflection.used_floor_questions(None, [foreign])
         self.assertIn(reflection.FLOOR_BANK['creative'][0], used)
 
+    def test_people_ids_latch_off_the_wire(self):
+        turns = [
+            {'role': 'jo', 'text': 'translated nudge', 'q': 'nearby:nudge'},
+            {'role': 'child', 'text': 'Maya likes the wing'},
+        ]
+        payload = reflection._build_payload('t', 'd', 'x', turns)
+        self.assertEqual(payload['records'], [])
+
+
 class TestTitledOpener(unittest.TestCase):
 
     # --- the child's own words lead, safely quoted ---
@@ -826,6 +1581,53 @@ class TestTitledOpener(unittest.TestCase):
         opener = reflection.FLOOR_BANK['creative'][0]
         self.assertNotEqual(reflection.floor_question(
             'org.laptop.TurtleArtActivity', used), opener)
+
+    def test_local_turns_stay_off_the_wire_with_their_answers(self):
+        session = reflection.new_session('creative_spiral')
+        reflection.add_turn(session, reflection.ROLE_JO,
+                            reflection.titled_opener('my caption'),
+                            q='floor:creative:0', local=True)
+        reflection.add_turn(session, reflection.ROLE_CHILD,
+                            'it is about my dad')
+        reflection.add_turn(session, reflection.ROLE_JO,
+                            reflection.FLOOR_BANK['creative'][1])
+        reflection.add_turn(session, reflection.ROLE_CHILD, 'more stars')
+        payload = reflection._build_payload(
+            't', 'd', 'x', session['turns'])
+        contents = [t.get('text', '') for t in payload['records']]
+        self.assertNotIn('it is about my dad', contents)
+        self.assertIn('more stars', contents)
+
+
+class TestFloorFallback(unittest.TestCase):
+
+    # --- every server death lands on the floor, mid-talk included ---
+
+    def test_timeout_mid_talk_serves_the_beside_voice(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+
+        def raise_timeout(request, timeout=None):
+            raise socket.timeout()
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', raise_timeout)
+        p.start()
+        self.addCleanup(p.stop)
+        p = mock.patch.object(reflection.random, 'random', lambda: 0.99)
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-f', 1, 'org.example.Unknown', 't', 'd',
+            [{'role': 'jo', 'text': 'A server question?'},
+             {'role': 'child', 'text': 'i made a robot out of a box'}],
+            config=VALID_CONFIG)
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(
+            result['turn']['text'],
+            reflection.VISIBLE_WORK_OPENERS[reflection.DEFAULT_FLOOR_BANK[0]])
+
 
 class TestQuotedChildText(unittest.TestCase):
 
@@ -862,24 +1664,51 @@ class TestQuotedChildText(unittest.TestCase):
         self.assertIs(reflection._people_turn(bad[0]), False)
 
 
+class TestServerMemory(unittest.TestCase):
+
+    # --- memory is the server's alone ---
+
+    def test_a_typed_end_produces_the_note(self):
+        session = reflection.new_session('creative_spiral')
+        session['end'] = {'reason': 'child_done',
+                          'next_step': 'more stars', 'asked': True}
+        self.assertEqual(
+            reflection.resolve_next_steps(session, 'old'), 'more stars')
+
+    def test_a_giant_answer_is_clipped_at_the_write(self):
+        session = reflection.new_session('creative_spiral')
+        session['end'] = {'reason': 'child_done',
+                          'next_step': 'wing ' * 200, 'asked': True}
+        note = reflection.resolve_next_steps(session, '')
+        self.assertLessEqual(len(note), 121)
+
+    def test_a_session_with_no_end_keeps_the_note(self):
+        session = reflection.new_session('creative_spiral')
+        self.assertEqual(reflection.resolve_next_steps(session, 'old'), 'old')
+        reflection.add_turn(session, reflection.ROLE_JO,
+                            'What will you try tomorrow?')
+        reflection.add_turn(session, reflection.ROLE_CHILD, 'a moon')
+        # No typed end means no server close: the engine owns the
+        # note now, and nothing here re-derives it from text.
+        self.assertEqual(
+            reflection.resolve_next_steps(session, 'old'), 'old')
+
+    def test_payload_carries_the_previous_note_online(self):
+        payload = reflection._build_payload(
+            'T', 'd', 'org.laptop.Chat', [], 'try a bigger maze')
+        self.assertEqual(payload['previous_next_steps'], 'try a bigger maze')
+        bare = reflection._build_payload('T', 'd', 'org.laptop.Chat', [])
+        self.assertNotIn('previous_next_steps', bare)
+
+
 class TestSeverePassFixes(unittest.TestCase):
 
     # --- the severe pass's catches, pinned ---
 
-    def test_marker_needs_a_word_boundary(self):
-        for q in ('What country is your story set in?',
-                  'What did the poetry sound like?',
-                  'Was it a willow tree or an oak?'):
-            session = reflection.new_session('creative_spiral')
-            reflection.add_turn(session, reflection.ROLE_JO, q)
-            reflection.add_turn(session, reflection.ROLE_CHILD, 'a secret')
-            self.assertEqual(reflection.extract_next_steps(session), '', q)
-
-    def test_a_server_session_retires_an_unrenewed_note(self):
+    def test_a_closed_session_retires_an_unrenewed_note(self):
         session = reflection.new_session('creative_spiral')
-        reflection.add_turn(session, reflection.ROLE_JO,
-                            'What was the best part?')
-        reflection.add_turn(session, reflection.ROLE_CHILD, 'the sky')
+        session['end'] = {'reason': 'disengaged',
+                          'next_step': None, 'asked': False}
         self.assertEqual(
             reflection.resolve_next_steps(session, 'old note'), '')
 
@@ -890,16 +1719,6 @@ class TestSeverePassFixes(unittest.TestCase):
         reflection.add_turn(session, reflection.ROLE_CHILD, 'the sky')
         self.assertEqual(reflection.resolve_next_steps(
             session, 'old note'), 'old note')
-
-    def test_the_intro_is_never_a_server_question(self):
-        session = reflection.new_session('creative_spiral')
-        reflection.add_turn(session, reflection.ROLE_JO,
-                            reflection.INTRO_LINE)
-        reflection.add_turn(session, reflection.ROLE_CHILD,
-                            'I will try a dragon')
-        self.assertEqual(reflection.extract_next_steps(session), '')
-        self.assertEqual(
-            reflection.resolve_next_steps(session, 'kept'), 'kept')
 
     def test_a_corrupt_session_element_is_dropped(self):
         raw = json.dumps({'version': 1, 'sessions': ['corrupt', {
@@ -923,3 +1742,187 @@ class TestSeverePassFixes(unittest.TestCase):
         self.assertTrue(reflection.turn_acceptable('Ինչ սարքեցիր՞'))
         self.assertTrue(reflection.turn_acceptable('ምን ሠራህ፧'))
         self.assertFalse(reflection.turn_acceptable('a statement;'))
+
+
+class TestReviewPassFixes(unittest.TestCase):
+
+    # --- the review pass's catches, pinned ---
+
+    def test_the_ai_switch_ships_unticked(self):
+        self.assertIs(reflection.DEFAULT_ENABLED, False)
+
+    def test_a_read_waits_half_a_minute(self):
+        self.assertEqual(reflection.READ_TIMEOUT, 30)
+
+    def test_a_schemeless_address_lands_on_the_floor(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-30', 1, 'org.laptop.Chat', 't', 'd', [],
+            config={'url': 'example.com', 'api_key': 'k', 'enabled': True})
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(result['turn']['text'], reflection.floor_question(
+            'org.laptop.Chat'))
+
+    def test_post_json_reads_a_schemeless_address_as_offline(self):
+        with self.assertRaises(reflection.ReflectionOffline):
+            reflection._post_json('example.com/reflect/chat', 'key', {})
+
+    def test_the_probe_knocks_on_the_configured_server(self):
+        self.assertEqual(
+            reflection._probe_address('https://ai.example.org'),
+            ('ai.example.org', 443))
+        self.assertEqual(
+            reflection._probe_address('http://ai.example.org/reflect'),
+            ('ai.example.org', 80))
+        self.assertEqual(
+            reflection._probe_address('http://localhost:8080'),
+            ('localhost', 8080))
+
+    def test_an_address_with_no_host_is_offline(self):
+        self.assertFalse(reflection.is_online(''))
+        self.assertFalse(reflection.is_online('example.com'))
+        self.assertFalse(reflection.is_online('https://'))
+        self.assertFalse(reflection.is_online('http://ai.example.org:port'))
+
+    def test_read_config_without_a_section_header_uses_defaults(self):
+        tmp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp_dir.cleanup)
+        tmp_path = pathlib.Path(tmp_dir.name)
+        path = tmp_path / 'reflection.conf'
+        path.write_text('url = https://ai.example.org\napi_key = k\n')
+        config = reflection.read_config(str(path))
+        self.assertEqual(
+            config,
+            {'url': '', 'api_key': '',
+             'enabled': reflection.DEFAULT_ENABLED})
+
+    def test_read_config_of_a_non_utf8_file_uses_defaults(self):
+        tmp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp_dir.cleanup)
+        tmp_path = pathlib.Path(tmp_dir.name)
+        path = tmp_path / 'reflection.conf'
+        path.write_bytes(b'[reflection]\nurl = https://ai.\xff\xfe.org\n')
+        config = reflection.read_config(str(path))
+        self.assertEqual(
+            config,
+            {'url': '', 'api_key': '',
+             'enabled': reflection.DEFAULT_ENABLED})
+
+    def test_a_corrupt_turn_never_reaches_the_wire(self):
+        turns = ['corrupt', 7, None,
+                 {'text': 'no role at all'},
+                 {'role': 'kangaroo', 'text': 'unknown role'},
+                 {'role': 'child', 'text': 'a rocket'}]
+        payload = reflection._build_payload('t', 'd', 'a', turns)
+        self.assertEqual(
+            payload['records'],
+            [{'type': 'child_turn', 'by': 'host', 'text': 'a rocket'}])
+
+    def test_a_starred_people_answer_empties_the_description(self):
+        answer = 'Ana says it needs a beam'
+        turns = [{'role': 'jo', 'text': reflection.NEARBY_MIDFLOW},
+                 {'role': 'child', 'text': answer}]
+        description = reflection.keep_in_description('My tower.', answer)
+        payload = reflection._build_payload('t', description, 'a', turns)
+        self.assertEqual(payload['description'], '')
+        self.assertEqual(payload['records'], [])
+
+    def test_an_unstarred_people_answer_leaves_the_description(self):
+        turns = [{'role': 'jo', 'text': reflection.NEARBY_MIDFLOW},
+                 {'role': 'child', 'text': 'Ana says it needs a beam'}]
+        payload = reflection._build_payload('t', 'My tower.', 'a', turns)
+        self.assertEqual(payload['description'], 'My tower.')
+
+    def test_a_people_answer_starred_in_an_older_session_is_seen(self):
+        raw = json.dumps({'sessions': [
+            {'ts': 1, 'turns': [
+                {'role': 'jo', 'text': reflection.NEARBY_MIDFLOW},
+                {'role': 'child', 'text': 'Ana says it needs a beam'}]},
+            {'ts': 2, 'turns': [
+                {'role': 'jo', 'text': 'What was tricky about this one?'},
+                {'role': 'child', 'text': 'the roof'}]},
+        ]})
+        description = reflection.keep_in_description(
+            'My tower.', 'Ana says it needs a beam')
+        self.assertTrue(
+            reflection.people_kept_in_description(raw, description))
+        self.assertFalse(
+            reflection.people_kept_in_description(raw, 'My tower.'))
+        self.assertFalse(reflection.people_kept_in_description(raw, ''))
+
+    def test_an_ordinary_starred_answer_is_not_a_people_answer(self):
+        raw = json.dumps({'sessions': [
+            {'ts': 1, 'turns': [
+                {'role': 'jo', 'text': 'What was tricky about this one?'},
+                {'role': 'child', 'text': 'the roof'}]},
+        ]})
+        description = reflection.keep_in_description('My tower.', 'the roof')
+        self.assertFalse(
+            reflection.people_kept_in_description(raw, description))
+
+    def test_a_people_stamp_is_read_before_the_stored_wording(self):
+        qid = reflection._QUESTION_ID[reflection.NEARBY_MIDFLOW]
+        raw = json.dumps({'sessions': [
+            {'ts': 1, 'turns': [
+                {'role': 'jo', 'text': 'the wording of another locale',
+                 'q': qid},
+                {'role': 'child', 'text': 'Ana says it needs a beam'}]},
+        ]})
+        description = reflection.keep_in_description(
+            'My tower.', 'Ana says it needs a beam')
+        self.assertTrue(
+            reflection.people_kept_in_description(raw, description))
+
+    def test_a_peer_answer_starred_in_an_older_session_is_seen(self):
+        voiced = reflection.PEER_QUESTION_OPENER % {
+            'who': 'Ana', 'question': 'How did you build it?'}
+        raw = json.dumps({'sessions': [
+            {'ts': 1, 'turns': [
+                {'role': 'jo', 'text': voiced, 'peer': True},
+                {'role': 'child', 'text': 'I will tell Ana about the beam'}]},
+        ]})
+        description = reflection.keep_in_description(
+            'My tower.', 'I will tell Ana about the beam')
+        self.assertTrue(
+            reflection.people_kept_in_description(raw, description))
+
+    def test_a_malformed_record_keeps_the_description_question_shut(self):
+        for raw in ('', None, 'not json', '{"sessions": "gone"}',
+                    json.dumps({'sessions': ['corrupt', {'turns': 5},
+                                             {'turns': ['x']}]})):
+            self.assertFalse(
+                reflection.people_kept_in_description(raw, 'My tower.'), raw)
+
+    def test_an_oversized_reply_is_a_bad_response(self):
+        body = json.dumps(
+            {'question': 'What did you make?',
+             'pad': 'x' * reflection._MAX_RESPONSE_BYTES}).encode('utf-8')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(body))
+        p.start()
+        self.addCleanup(p.stop)
+        with self.assertRaises(reflection.ReflectionBadResponse):
+            reflection._post_json('https://ai.example.org/reflect/chat',
+                                  'key', {})
+
+    def test_an_oversized_reply_lands_on_the_floor(self):
+        p = mock.patch.object(reflection, 'is_online', lambda url: True)
+        p.start()
+        self.addCleanup(p.stop)
+        body = json.dumps(
+            {'question': 'What did you make?',
+             'pad': 'x' * reflection._MAX_RESPONSE_BYTES}).encode('utf-8')
+        p = mock.patch.object(
+            reflection.urllib.request, 'urlopen', fake_urlopen(body))
+        p.start()
+        self.addCleanup(p.stop)
+
+        result = reflection.request_turn(
+            'obj-31', 1, 'org.laptop.Chat', 't', 'd', [],
+            config=VALID_CONFIG)
+        self.assertEqual(result['status'], reflection.STATUS_OK)
+        self.assertEqual(result['turn']['text'], reflection.floor_question(
+            'org.laptop.Chat'))
