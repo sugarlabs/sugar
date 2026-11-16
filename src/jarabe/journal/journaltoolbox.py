@@ -51,6 +51,7 @@ from jarabe.journal import model
 from jarabe.journal.palettes import CopyMenuBuilder
 from jarabe.journal.palettes import BatchOperator
 from jarabe.journal import journalwindow
+from jarabe.journal.reflectionview import ReflectionView
 from jarabe.webservice import accountsmanager
 
 
@@ -532,6 +533,8 @@ class DetailToolbox(ToolbarBox):
     __gsignals__ = {
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
+        'back-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'rail-toggled': (GObject.SignalFlags.RUN_FIRST, None, ([bool])),
     }
 
     def __init__(self, journalactivity):
@@ -540,6 +543,17 @@ class DetailToolbox(ToolbarBox):
         self._metadata = None
         self._temp_file_path = None
         self._refresh = None
+
+        back = ToolButton('go-previous-paired')
+        back.set_tooltip(_('Back'))
+        back.connect('clicked',
+                     lambda button: self.emit('back-clicked'))
+        self.toolbar.insert(back, -1)
+        back.show()
+
+        separator = Gtk.SeparatorToolItem()
+        self.toolbar.insert(separator, -1)
+        separator.show()
 
         self._resume = ToolButton('activity-start')
         self._resume.connect('clicked', self._resume_clicked_cb)
@@ -581,8 +595,32 @@ class DetailToolbox(ToolbarBox):
         self.toolbar.insert(erase_button, -1)
         erase_button.show()
 
+        stretch = Gtk.SeparatorToolItem()
+        stretch.props.draw = False
+        stretch.set_expand(True)
+        self.toolbar.insert(stretch, -1)
+        stretch.show()
+
+        self._rail_toggle = ToggleToolButton('reflectjo')
+        self._rail_toggle.set_active(True)
+        self._rail_toggle.set_tooltip(_('Show or hide the talk'))
+        self._rail_toggle.connect('toggled', self.__rail_toggled_cb)
+        self.toolbar.insert(self._rail_toggle, -1)
+        self._rail_toggle.show()
+
+    def __rail_toggled_cb(self, button):
+        self.emit('rail-toggled', button.get_active())
+
+    def sync_rail_toggle(self, shown):
+        if self._rail_toggle.get_active() != shown:
+            self._rail_toggle.handler_block_by_func(self.__rail_toggled_cb)
+            self._rail_toggle.set_active(shown)
+            self._rail_toggle.handler_unblock_by_func(
+                self.__rail_toggled_cb)
+
     def set_metadata(self, metadata):
         self._metadata = metadata
+        self.sync_rail_toggle(not ReflectionView.rail_shut())
         self._refresh_copy_palette()
         self._refresh_duplicate_palette()
         self._refresh_refresh_palette()
