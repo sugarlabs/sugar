@@ -20,9 +20,13 @@ from gettext import gettext as _
 import logging
 
 import dbus
+from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gio
+from gi.repository import Gtk
 
+from sugar3 import mime
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import CanvasIcon
 from sugar3.graphics import style
@@ -44,10 +48,16 @@ from jarabe.model import network
 from jarabe.model.network import AccessPoint
 from jarabe.model.olpcmesh import OlpcMeshManager
 from jarabe.model.adhoc import get_adhoc_manager_instance
+from jarabe.journal import journalactivity
 from jarabe.journal import misc
+from jarabe.journal import peershare
+from jarabe.journal import peerview
 
 
 _FILTERED_ALPHA = 0.33
+
+_BADGE_SCALE = 0.4
+_BADGE_INSET = style.zoom(2)
 
 
 class _ActivityIcon(CanvasIcon):
@@ -103,6 +113,246 @@ class _ActivityIcon(CanvasIcon):
         bundle = self._model.get_bundle()
         misc.launch(bundle, activity_id=self._model.activity_id,
                     color=self._model.get_color())
+
+
+class _SharedEntryIcon(CanvasIcon):
+
+    def __init__(self, model):
+        CanvasIcon.__init__(self, icon_name='activity-journal',
+                            xo_color=model.get_color(),
+                            pixel_size=style.STANDARD_ICON_SIZE)
+        self._model = model
+        self._filtered = False
+        self._badge = None
+        self._badge_size = 0
+        self._load_icon()
+        # Icons get remade every time entries group and ungroup, but
+        # the model sticks around. drop the handlers with the widget or
+        # the model keeps the dead icons alive for the whole session.
+        self._model_handlers = [
+            self._model.connect('notify::name', self.__model_notify_cb),
+            self._model.connect('notify::color', self.__model_notify_cb),
+            self._model.connect('notify::bundle', self.__bundle_notify_cb),
+            self._model.connect('buddy-added', self.__buddy_added_cb),
+        ]
+        self.connect('destroy', self.__destroy_cb)
+        self.palette_invoker.props.toggle_palette = True
+        self.palette_invoker.cache_palette = False
+        self.connect('activate', self.__activate_cb)
+
+    def get_model(self):
+        return self._model
+
+    def __destroy_cb(self, icon):
+        for handler in self._model_handlers:
+            self._model.disconnect(handler)
+        self._model_handlers = []
+
+    def _face(self):
+        """(file_name, icon_name) for the entry: the source activity's
+        own icon if we have it, else one for the mime type, else the
+        Journal's.
+        """
+        bundle = self._model.get_bundle()
+        if bundle is not None:
+            return bundle.get_icon(), None
+        mime_type = self._model.entry_mime
+        if mime_type:
+            name = mime.get_mime_icon(mime_type)
+            if name and Gtk.IconTheme.get_default().has_icon(name):
+                return None, name
+        return None, 'activity-journal'
+
+    def _load_icon(self):
+        # File_name wins over icon_name in the toolkit's buffer, so
+        # clear it when we're using a themed icon. keep the face
+        # around, do_draw wants it on every repaint.
+        self._face_now = self._face()
+        file_name, icon_name = self._face_now
+        if file_name is not None:
+            self.props.file_name = file_name
+        else:
+            self.props.file_name = None
+            self.props.icon_name = icon_name
+
+    def __activate_cb(self, icon):
+        palette = self.get_palette()
+        if palette is not None and palette.is_up():
+            palette.popdown(immediate=True)
+        if peershare.is_ours(self._model.entry_uid):
+            # Our own entry, so go to the real page where the sharing
+            # switch is
+            journal = journalactivity.get_journal()
+            journal.reveal()
+            journal.show_object(self._model.entry_uid)
+            return
+        peerview.open_entry(self._model)
+
+    def _secondary_text(self):
+        owner = self._model.get_owner()
+        nick = owner.get_nick() if owner is not None else ''
+        if nick:
+            # Isolated so a right to left nick can't reorder the
+            # sentence around it
+            # TRANS: %s is the name of the friend the entry came from
+            return _("From %s's Journal") % ('\u2068%s\u2069' % nick)
+        return _('A shared Journal entry')
+
+    def _badge_pixbuf(self):
+        """The Journal mark for the corner, at this icon's size.
+
+        The toolkit's badge code hangs badges off theme attach points,
+        which a bundle's svg doesn't have, so the badge ends up
+        clipped outside the icon. Draw it ourselves instead.
+        """
+        # Keep the mark even when the face is already the Journal icon,
+        # it's the only thing that tells a shared entry from an activity
+        size = max(1, int(self.props.pixel_size * _BADGE_SCALE))
+        if size != self._badge_size:
+            self._badge_size = size
+            theme = Gtk.IconTheme.get_default()
+            try:
+                self._badge = theme.load_icon('activity-journal', size, 0)
+            except GLib.Error:
+                self._badge = None
+        return self._badge
+
+    def do_draw(self, cr):
+        CanvasIcon.do_draw(self, cr)
+        badge = self._badge_pixbuf()
+        if badge is None:
+            return
+        allocation = self.get_allocation()
+        Gdk.cairo_set_source_pixbuf(
+            cr, badge,
+            allocation.width - badge.get_width() - _BADGE_INSET,
+            allocation.height - badge.get_height() - _BADGE_INSET)
+        cr.paint()
+
+    def create_palette(self):
+        file_name, icon_name = self._face()
+        if file_name is not None:
+            palette_icon = Icon(file=file_name,
+                                pixel_size=style.STANDARD_ICON_SIZE,
+                                xo_color=self._model.get_color())
+        else:
+            palette_icon = Icon(icon_name=icon_name,
+                                pixel_size=style.STANDARD_ICON_SIZE,
+                                xo_color=self._model.get_color())
+        palette = Palette(None,
+                          primary_text=self._model.get_name(),
+                          secondary_text=self._secondary_text(),
+                          icon=palette_icon)
+        self.connect_to_palette_pop_events(palette)
+        return palette
+
+    def __model_notify_cb(self, model, pspec):
+        self._update()
+
+    def __bundle_notify_cb(self, model, pspec):
+        # The advert can arrive in pieces, and the source activity is
+        # often only named on a later properties signal
+        self._load_icon()
+        self.queue_draw()
+
+    def __buddy_added_cb(self, model, buddy):
+        palette = self.get_palette()
+        if palette is not None:
+            palette.props.secondary_text = self._secondary_text()
+
+    def _update(self):
+        # The advert can arrive in pieces, and a later signal may bring
+        # the tags that name a better face
+        self._load_icon()
+        self.props.xo_color = self._model.get_color()
+        if self._filtered:
+            self.alpha = _FILTERED_ALPHA
+        else:
+            self.alpha = 1.0
+        palette = self.get_palette()
+        if palette is not None:
+            palette.props.primary_text = self._model.get_name()
+            palette.props.icon.props.xo_color = self._model.get_color()
+
+    def set_filter(self, query):
+        name = normalize_string(self._model.get_name() or '')
+        self._filtered = name.find(query) == -1
+        self._update()
+
+
+class _SharedEntriesGroup(SnowflakeLayout):
+
+    def __init__(self, owner_model, center_icon):
+        SnowflakeLayout.__init__(self)
+        self._owner_model = owner_model
+        self._center = center_icon
+        self._entries = {}
+        self.add_icon(center_icon, center=True)
+        center_icon.show()
+
+    def get_owner_model(self):
+        return self._owner_model
+
+    def do_forall(self, include_internals, callback):
+        # GTK walks the children once more during teardown, after the
+        # Python side has gone, and by then the wrapper we get has no
+        # attributes left. raising here doesn't just fail once. the
+        # traceback machinery keeps the dead wrapper alive, then drops
+        # it, and the drop runs teardown again, and round it goes. any
+        # SnowflakeLayout vfunc that reaches into self._children can
+        # hit this, so guard them all and not only the one we saw fire.
+        for child in list(getattr(self, '_children', {}).keys()):
+            callback(child)
+
+    def do_realize(self):
+        self.set_realized(True)
+        self.set_window(self.get_parent_window())
+        for child in list(getattr(self, '_children', {}).keys()):
+            child.set_parent_window(self.get_parent_window())
+        self.queue_resize()
+
+    def do_size_allocate(self, allocation):
+        if not hasattr(self, '_children'):
+            self.set_allocation(allocation)
+            return
+        SnowflakeLayout.do_size_allocate(self, allocation)
+
+    def _get_radius(self):
+        if not hasattr(self, '_children'):
+            return 0
+        return SnowflakeLayout._get_radius(self)
+
+    def _calculate_size(self):
+        if not hasattr(self, '_children'):
+            return 0
+        return SnowflakeLayout._calculate_size(self)
+
+    def add_entry(self, activity_id, icon):
+        self._entries[activity_id] = icon
+        self.add_icon(icon)
+        icon.show()
+
+    def has_entry(self, activity_id):
+        return activity_id in self._entries
+
+    def remove_entry(self, activity_id):
+        icon = self._entries.pop(activity_id)
+        self.remove(icon)
+        icon.destroy()
+
+    def entry_ids(self):
+        return list(self._entries.keys())
+
+    def is_empty(self):
+        return not self._entries
+
+    def set_filter(self, query):
+        self._center.set_filter(query)
+        for icon in self._entries.values():
+            icon.set_filter(query)
+
+    def get_positioning_data(self):
+        return 'entries-of-%s' % (self._owner_model.props.key or '')
 
 
 class ActivityView(SnowflakeLayout):
@@ -378,6 +628,7 @@ class MeshBox(ViewContainer):
         self._model = neighborhood.get_model()
         self._buddies = {}
         self._activities = {}
+        self._entry_groups = {}
         self._mesh = []
         self._buddy_to_activity = {}
         self._suspended = True
@@ -429,12 +680,17 @@ class MeshBox(ViewContainer):
             icon.set_filter(self._query)
 
         self._buddies[buddy_model.props.key] = icon
+        self._adopt_entries(buddy_model)
 
     def _remove_buddy(self, buddy_model):
         logging.debug('MeshBox._remove_buddy')
-        icon = self._buddies[buddy_model.props.key]
+        key = buddy_model.props.key
+        if key in self._entry_groups:
+            self._dissolve_group(key, keep_buddy=False)
+            return
+        icon = self._buddies[key]
         self.remove(icon)
-        del self._buddies[buddy_model.props.key]
+        del self._buddies[key]
 
     def __buddy_notify_current_activity_cb(self, buddy_model, pspec):
         logging.debug('MeshBox.__buddy_notify_current_activity_cb %s',
@@ -446,6 +702,19 @@ class MeshBox(ViewContainer):
             self._remove_buddy(buddy_model)
 
     def _add_activity(self, activity_model):
+        if activity_model.entry_uid is not None:
+            activity_model.connect('notify::owner',
+                                   self.__entry_owner_notify_cb)
+            icon = _SharedEntryIcon(activity_model)
+            group = self._group_for(activity_model)
+            if group is not None:
+                group.add_entry(activity_model.activity_id, icon)
+            else:
+                self.add(icon)
+                icon.show()
+            icon.set_filter(self._query)
+            self._activities[activity_model.activity_id] = icon
+            return
         icon = ActivityView(activity_model)
         self.add(icon)
         icon.show()
@@ -456,9 +725,90 @@ class MeshBox(ViewContainer):
         self._activities[activity_model.activity_id] = icon
 
     def _remove_activity(self, activity_model):
-        icon = self._activities[activity_model.activity_id]
+        activity_id = activity_model.activity_id
+        icon = self._activities.pop(activity_id)
+        for key, group in list(self._entry_groups.items()):
+            if group.has_entry(activity_id):
+                group.remove_entry(activity_id)
+                if group.is_empty():
+                    self._dissolve_group(key, keep_buddy=True)
+                return
         self.remove(icon)
-        del self._activities[activity_model.activity_id]
+        if isinstance(icon, _SharedEntryIcon):
+            # Its model handlers only come off on destroy
+            icon.destroy()
+
+    def _group_for(self, activity_model):
+        """The snowflake around this entry's owner, made if it isn't
+        there yet. None if the owner has no icon of their own to
+        gather around.
+        """
+        owner = activity_model.get_owner()
+        if owner is None or owner.is_owner():
+            return None
+        key = owner.props.key
+        group = self._entry_groups.get(key)
+        if group is not None:
+            return group
+        if key not in self._buddies:
+            return None
+        old = self._buddies.pop(key)
+        self.remove(old)
+        old.destroy()
+        group = _SharedEntriesGroup(owner, BuddyIcon(owner))
+        self.add(group)
+        group.show()
+        group.set_filter(self._query)
+        self._entry_groups[key] = group
+        self._buddies[key] = group
+        return group
+
+    def _dissolve_group(self, key, keep_buddy):
+        group = self._entry_groups.pop(key)
+        owner_model = group.get_owner_model()
+        leftovers = [(activity_id,
+                      self._activities[activity_id].get_model())
+                     for activity_id in group.entry_ids()
+                     if activity_id in self._activities]
+        self.remove(group)
+        group.destroy()
+        del self._buddies[key]
+        if keep_buddy:
+            icon = BuddyIcon(owner_model)
+            self.add(icon)
+            icon.show()
+            icon.set_filter(self._query)
+            self._buddies[key] = icon
+        for activity_id, model in leftovers:
+            icon = _SharedEntryIcon(model)
+            self.add(icon)
+            icon.show()
+            icon.set_filter(self._query)
+            self._activities[activity_id] = icon
+
+    def _adopt_entries(self, buddy_model):
+        for activity_model in self._model.get_activities():
+            if activity_model.entry_uid is not None and \
+                    activity_model.get_owner() is buddy_model:
+                self.__entry_owner_notify_cb(activity_model, None)
+
+    def __entry_owner_notify_cb(self, activity_model, pspec):
+        activity_id = activity_model.activity_id
+        icon = self._activities.get(activity_id)
+        if icon is None:
+            return
+        if any(group.has_entry(activity_id)
+               for group in self._entry_groups.values()):
+            return
+        group = self._group_for(activity_model)
+        if group is None:
+            return
+        self.remove(icon)
+        icon.destroy()
+        fresh = _SharedEntryIcon(activity_model)
+        group.add_entry(activity_id, fresh)
+        fresh.set_filter(self._query)
+        self._activities[activity_id] = fresh
 
     # add AP to its corresponding network icon on the desktop,
     # creating one if it doesn't already exist

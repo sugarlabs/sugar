@@ -71,6 +71,7 @@ from jarabe.view import gesturehandler
 from jarabe.view import cursortracker
 from jarabe.journal import journalactivity
 from jarabe.journal import reflectiontrigger
+from jarabe.journal import peershare
 from jarabe.model import notifications
 from jarabe.model import filetransfer
 from jarabe.view import launcher
@@ -121,6 +122,7 @@ def setup_journal_cb():
     logging.debug('STARTUP: setup_journal_cb')
     journalactivity.start()
     reflectiontrigger.start()
+    peershare.start()
 
 
 def setup_notification_service_cb():

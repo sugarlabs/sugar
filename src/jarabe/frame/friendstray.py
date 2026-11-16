@@ -82,7 +82,13 @@ class FriendsTray(VTray):
     def __neighborhood_activity_added_cb(self, neighborhood_model,
                                          shared_activity):
         logging.debug('FriendsTray.__neighborhood_activity_added_cb')
+        if shared_activity.entry_uid is not None:
+            # A shared Journal entry isn't a session, so there's
+            # nothing here for the tray to follow.
+            return
         active_activity = shell.get_model().get_active_activity()
+        if active_activity is None:
+            return
         if active_activity.get_activity_id() != shared_activity.activity_id:
             return
 
