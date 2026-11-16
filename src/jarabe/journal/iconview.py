@@ -198,7 +198,15 @@ class IconView(Gtk.Bin):
 
         # Cannot set it up earlier because will try to access the model
         # and it needs to be ready.
+        toplevel = self.get_toplevel()
+        focus_widget = None
+        if hasattr(toplevel, "get_focus"):
+            focus_widget = toplevel.get_focus()
+
         self.icon_view.set_model(self._model)
+
+        if focus_widget is not None and focus_widget.get_toplevel() == toplevel:
+            focus_widget.grab_focus()
 
         self.icon_view.props.vadjustment.props.value = self._scroll_position
         self.icon_view.props.vadjustment.value_changed()
