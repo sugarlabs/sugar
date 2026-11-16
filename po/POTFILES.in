@@ -78,6 +78,7 @@ src/jarabe/journal/momentcard.py
 src/jarabe/journal/objectchooser.py
 src/jarabe/journal/palettes.py
 src/jarabe/journal/reflection.py
+src/jarabe/journal/reflectionview.py
 src/jarabe/journal/volumestoolbar.py
 src/jarabe/journal/iconmodel.py
 src/jarabe/journal/iconview.py
