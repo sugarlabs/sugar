@@ -54,7 +54,6 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     COLUMN_BUDDY_1 = 9
     COLUMN_BUDDY_2 = 10
     COLUMN_BUDDY_3 = 11
-    COLUMN_SELECT = 12
 
     _COLUMN_TYPES = {
         COLUMN_UID: str,
@@ -69,7 +68,6 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         COLUMN_BUDDY_1: object,
         COLUMN_BUDDY_3: object,
         COLUMN_BUDDY_2: object,
-        COLUMN_SELECT: bool,
     }
 
     _PAGE_SIZE = 10
@@ -141,6 +139,9 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         if column == ListModel.COLUMN_TITLE:
             metadata['title'] = value
         self._updated_entries[metadata['uid']] = metadata
+        # The edit must survive a re-read of this same row: the row
+        # cache was primed by the read that preceded this write.
+        self._last_requested_index = None
         if self._updated_callback is not None:
             model.updated.disconnect(self._updated_callback)
         model.write(metadata, update_mtime=False,
@@ -165,22 +166,27 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         metadata = self._result_set.read()
         metadata.update(self._updated_entries.get(metadata['uid'], {}))
 
-        self._last_requested_index = index
-        self._cached_row = []
-        self._cached_row.append(metadata['uid'])
-        self._cached_row.append(metadata.get('keep', '0') == '1')
-        self._cached_row.append(misc.get_icon_name(metadata))
+        row = []
+        row.append(metadata['uid'])
+        row.append(metadata.get('keep', '0') == '1')
+        row.append(misc.get_icon_name(metadata))
 
         if misc.is_activity_bundle(metadata):
             xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                           style.COLOR_TRANSPARENT.get_svg()))
         else:
             xo_color = misc.get_icon_color(metadata)
-        self._cached_row.append(xo_color)
+        row.append(xo_color)
 
-        title = GObject.markup_escape_text(metadata.get('title',
-                                                        _('Untitled')))
-        self._cached_row.append('<b>%s</b>' % (title, ))
+        title_value = metadata.get('title', _('Untitled'))
+        if not isinstance(title_value, str):
+            # GObject.markup_escape_text raises TypeError on
+            # anything that isn't a string.
+            logging.warning('Content of title for %r is not a string: %r',
+                            metadata['uid'], title_value)
+            title_value = _('Untitled')
+        title = GObject.markup_escape_text(title_value)
+        row.append('<b>%s</b>' % (title, ))
 
         try:
             timestamp = float(metadata.get('timestamp', 0))
@@ -188,27 +194,27 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
             timestamp_content = _('Unknown')
         else:
             timestamp_content = util.timestamp_to_elapsed_string(timestamp)
-        self._cached_row.append(timestamp_content)
+        row.append(timestamp_content)
 
         try:
             creation_time = float(metadata.get('creation_time'))
         except (TypeError, ValueError):
-            self._cached_row.append(_('Unknown'))
+            row.append(_('Unknown'))
         else:
-            self._cached_row.append(
+            row.append(
                 util.timestamp_to_elapsed_string(float(creation_time)))
 
         try:
             size = int(metadata.get('filesize'))
         except (TypeError, ValueError):
             size = None
-        self._cached_row.append(util.format_size(size))
+        row.append(util.format_size(size))
 
         try:
             progress = int(float(metadata.get('progress', 100)))
         except (TypeError, ValueError):
             progress = 100
-        self._cached_row.append(progress)
+        row.append(progress)
 
         buddies = []
         if metadata.get('buddies'):
@@ -231,11 +237,13 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
                     logging.warning('Malformed buddies for %r: %s',
                                     metadata['uid'], exception)
                 else:
-                    self._cached_row.append([nick, XoColor(color)])
+                    row.append([nick, XoColor(color)])
                     continue
 
-            self._cached_row.append(None)
+            row.append(None)
 
+        self._cached_row = row
+        self._last_requested_index = index
         return self._cached_row[column]
 
     def do_iter_nth_child(self, parent_iter, n):

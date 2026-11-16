@@ -51,7 +51,6 @@ from jarabe.journal import model
 from jarabe.journal.journalwindow import JournalWindow
 from jarabe.journal.bundlelauncher import launch_bundle, get_bundle
 from jarabe.journal import journalwindow
-from jarabe.journal.listmodel import ListModel
 
 from jarabe.model import session, shell
 
@@ -410,6 +409,12 @@ class JournalActivity(JournalWindow):
                 self._main_toolbox.search_entry.grab_focus()
 
         elif self._active_view == JournalViews.DETAIL:
+            # Arrow keys and Return are writing when a text field has
+            # the keyboard; they only steer the Journal when none does.
+            focus = self.get_focus()
+            if isinstance(focus, (Gtk.Entry, Gtk.TextView)):
+                return False
+
             if keyname == 'Left':
                 path, col = self._list_view.tree_view.get_cursor()
                 self._list_view.tree_view.grab_focus()

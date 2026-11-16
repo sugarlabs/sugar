@@ -773,7 +773,7 @@ class ListView(BaseListView):
                 if self.cell_title.props.editable:
                     self.emit('title-edit-started')
 
-                column = self.tree_view.get_column(3)
+                column = self._title_column
                 tree_view.set_cursor_on_cell(path, column, self.cell_title,
                                          start_editing=True)
 
