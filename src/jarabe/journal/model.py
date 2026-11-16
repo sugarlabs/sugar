@@ -36,6 +36,8 @@ from sugar3 import dispatch
 from sugar3 import mime
 from sugar3 import util
 
+from jarabe.journal import reflection
+
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
@@ -775,6 +777,17 @@ def _rename_entry_on_external_device(file_path, destination_path,
                                   'for file=%s', ofile, old_fname)
 
 
+def _rewrites_entry_in_place(metadata):
+    """True when the write lands back on the very file the entry
+    already is, on its own volume. That is the only case where the
+    sidecar may keep the child's talk with Jo; everything else is a
+    copy going somewhere new.
+    """
+    return ('uid' in metadata and os.path.exists(metadata['uid']) and
+            metadata['uid'].startswith(
+                metadata['mountpoint'].rstrip('/') + '/'))
+
+
 def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
     """Create and update an entry copied from the
     DS to an external storage device.
@@ -841,6 +854,11 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
     metadata_copy.pop('mountpoint', None)
     metadata_copy.pop('uid', None)
     metadata_copy.pop('filesize', None)
+    # A copy leaving the Journal, or moving between volumes, never
+    # carries the child's talk with Jo; only a rewrite of an entry on
+    # its own volume keeps what its sidecar already holds.
+    if not _rewrites_entry_in_place(metadata):
+        reflection.strip_private(metadata_copy)
 
     metadata_dir_path = os.path.join(metadata['mountpoint'],
                                      JOURNAL_METADATA_DIR)
