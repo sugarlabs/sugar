@@ -26,6 +26,7 @@ sugar_PYTHON =				\
 	momentcard.py			\
 	reflectguard.py			\
 	reflection.py			\
+	reflectiontrigger.py		\
 	reflectionview.py		\
 	reflectstyle.py			\
 	volumestoolbar.py
