@@ -40,6 +40,7 @@ from jarabe.journal.journaltoolbox import EditToolbox
 from jarabe.journal.projectview import ProjectView
 
 from jarabe.journal.listview import ListView
+from jarabe.journal.gridview import GridView
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.detailview import DetailView
 from jarabe.journal.volumestoolbar import VolumesToolbar
@@ -208,6 +209,7 @@ class JournalActivity(JournalWindow):
         self._active_view = JournalViews.MAIN
         self.project_metadata = None
         self._editing_mode = False
+        self._grid_view_active = False
 
         self._setup_main_view()
         self._setup_secondary_view()
@@ -278,7 +280,7 @@ class JournalActivity(JournalWindow):
         return self._volumes_toolbar
 
     def _setup_main_view(self):
-        self._main_toolbox = MainToolbox()
+        self._main_toolbox = MainToolbox(enable_grid_view=True)
         self._edit_toolbox = EditToolbox(self)
         self._main_view = Gtk.VBox()
 
@@ -286,7 +288,8 @@ class JournalActivity(JournalWindow):
         self._add_new_box.activate.connect(self.__add_project_activate_cb)
         self._main_view.pack_start(self._add_new_box, False, True,
                                    style.DEFAULT_SPACING)
-        self._main_view.set_can_focus(True)
+        # HACK: leave unfocusable -- a focusable GtkContainer grabs Tab
+        # for itself instead of recursing into children.
 
         self._list_view = ListView(self, enable_multi_operations=True)
         self.list_view_signal_connect(self._list_view)
@@ -295,10 +298,19 @@ class JournalActivity(JournalWindow):
         self._main_view.pack_start(self._list_view, True, True, 0)
         self._list_view.show_all()
 
+        self._grid_view = GridView(self)
+        self._grid_view.connect('clear-clicked', self.__clear_clicked_cb)
+        self._grid_view.connect('selection-changed',
+                                self.__selection_changed_cb)
+        self._main_view.pack_start(self._grid_view, True, True, 0)
+        self._grid_view.set_no_show_all(True)
+
         volumes_toolbar = self._create_volumes_toolbar()
         self._main_view.pack_start(volumes_toolbar, False, True, 0)
 
         self._main_toolbox.connect('query-changed', self._query_changed_cb)
+        self._main_toolbox.connect('view-mode-changed',
+                                   self.__view_mode_changed_cb)
 
         self._main_toolbox.search_entry.connect('icon-press',
                                                 self.__search_icon_pressed_cb)
@@ -324,6 +336,10 @@ class JournalActivity(JournalWindow):
         return self._add_new_box
 
     def get_list_view(self):
+        # HACK: returns whichever of list/grid is on screen; GridView
+        # fakes is_dragging() with a plain False so callers can duck-type.
+        if self._grid_view_active:
+            return self._grid_view
         return self._list_view
 
     def project_view_activated_cb(self, list_view, metadata):
@@ -397,13 +413,11 @@ class JournalActivity(JournalWindow):
 
         if self._active_view == JournalViews.MAIN:
             if keyname == 'Up' or keyname == 'Down':
-                if not self._list_view.tree_view.has_focus():
-                    self._list_view.tree_view.grab_focus()
+                self.__focus_visible_view()
 
             elif keyname == 'Escape':
                 self._main_toolbox.clear_query()
-                if not self._list_view.tree_view.has_focus():
-                    self._list_view.tree_view.grab_focus()
+                self.__focus_visible_view()
 
             elif event.state & Gdk.ModifierType.CONTROL_MASK and keyname == 'f':
                 self._main_toolbox.search_entry.grab_focus()
@@ -416,10 +430,20 @@ class JournalActivity(JournalWindow):
                 return False
 
             if keyname == 'Left':
-                path, col = self._list_view.tree_view.get_cursor()
-                self._list_view.tree_view.grab_focus()
-                column = self._list_view.tree_view.get_column(5)
-                self._list_view.tree_view.set_cursor_on_cell(path, column, None, True)
+                # HACK: a grid-opened entry never touched the list's
+                # tree_view, so get_cursor() is (None, None) here.
+                try:
+                    if self._grid_view_active:
+                        self._grid_view.child_focus(
+                            Gtk.DirectionType.TAB_FORWARD)
+                    else:
+                        path, col = self._list_view.tree_view.get_cursor()
+                        self._list_view.tree_view.grab_focus()
+                        column = self._list_view.tree_view.get_column(6)
+                        self._list_view.tree_view.set_cursor_on_cell(
+                            path, column, None, True)
+                except Exception:
+                    logging.exception('Exception while restoring focus:')
                 self._detail_view.emit('go-back-clicked')
 
             if keyname == 'Return':
@@ -427,6 +451,12 @@ class JournalActivity(JournalWindow):
                 misc.resume(metadata,
                     alert_window=journalwindow.get_journal_window())
 
+    def __focus_visible_view(self):
+        if self._grid_view_active:
+            if self._grid_view.get_focus_child() is None:
+                self._grid_view.child_focus(Gtk.DirectionType.TAB_FORWARD)
+        elif not self._list_view.tree_view.has_focus():
+            self._list_view.tree_view.grab_focus()
 
     def __choose_project_cb(self, tree_view, metadata_to_send):
         project_chooser = ObjectChooser(self.get_window())
@@ -467,15 +497,45 @@ class JournalActivity(JournalWindow):
         self.show_main_view()
 
     def update_selected_items_ui(self):
-        selected_items = \
-            len(self.get_list_view().get_model().get_selected_items())
+        active_model = self.get_list_view().get_model()
+        selected_items = len(active_model.get_selected_items()) \
+            if active_model is not None else 0
         self.__selection_changed_cb(None, selected_items)
 
     def __go_back_clicked_cb(self, detail_view):
         self.show_main_view()
 
+    def __view_mode_changed_cb(self, toolbar, grid_active):
+        self._carry_selection_between_views(grid_active)
+        self._grid_view_active = grid_active
+        if grid_active:
+            self._list_view.hide()
+            self._grid_view.set_no_show_all(False)
+            self._grid_view.show_all()
+        else:
+            self._grid_view.hide()
+            self._grid_view.set_no_show_all(True)
+            self._list_view.show_all()
+        # The entering view may still be building its model; its own
+        # refresh reports the carried selection when it lands.
+        if self._editing_mode and \
+                self.get_list_view().get_model() is not None:
+            self.update_selected_items_ui()
+
+    def _carry_selection_between_views(self, grid_active):
+        leaving = self._grid_view if self._grid_view_active \
+            else self._list_view
+        entering = self._grid_view if grid_active else self._list_view
+        if leaving is entering:
+            return
+        source_model = leaving.get_model()
+        if source_model is None:
+            return
+        entering.carry_selection(list(source_model.get_selected_items()))
+
     def _query_changed_cb(self, toolbar, query):
         self._list_view.update_with_query(query)
+        self._grid_view.update_with_query(dict(query))
         self.show_main_view()
         self._main_toolbox.search_entry.grab_focus()
         Gtk.Entry.do_move_cursor(self._main_toolbox.search_entry,
@@ -484,7 +544,10 @@ class JournalActivity(JournalWindow):
             query.get('activity') == PROJECT_BUNDLE_ID
 
     def __search_icon_pressed_cb(self, entry, icon_pos, event):
-        self._main_view.grab_focus()
+        if self._grid_view_active:
+            self._grid_view.child_focus(Gtk.DirectionType.TAB_FORWARD)
+        else:
+            self._list_view.tree_view.grab_focus()
 
     def __title_edit_started_cb(self, list_view):
         self.disconnect_by_func(self.__key_press_event_cb)
@@ -578,7 +641,7 @@ class JournalActivity(JournalWindow):
 
     def _set_is_visible(self, visible):
         if self._active_view == JournalViews.MAIN:
-            self._list_view.set_is_visible(visible)
+            self.get_list_view().set_is_visible(visible)
         elif self._active_view == JournalViews.PROJECT:
             self._list_view_project.set_is_visible(visible)
 
@@ -613,8 +676,10 @@ class JournalActivity(JournalWindow):
         self.show_main_view()
 
     def get_total_number_of_entries(self):
-        list_view_model = self.get_list_view().get_model()
-        return len(list_view_model)
+        active_model = self.get_list_view().get_model()
+        if active_model is None:
+            return 0
+        return len(active_model)
 
     def get_editing_mode(self):
         return self._editing_mode
@@ -624,9 +689,9 @@ class JournalActivity(JournalWindow):
             return
         self._editing_mode = editing_mode
         if self._editing_mode:
-            self.get_list_view().disable_drag_and_copy()
+            self._list_view.disable_drag_and_copy()
         else:
-            self.get_list_view().enable_drag_and_copy()
+            self._list_view.enable_drag_and_copy()
         self.show_main_view()
 
     def get_mount_point(self):
@@ -634,11 +699,15 @@ class JournalActivity(JournalWindow):
 
     def _set_widgets_sensitive_state(self, sensitive_state):
         self._toolbox.set_sensitive(sensitive_state)
-        self._list_view.set_sensitive(sensitive_state)
-        if sensitive_state:
-            self._list_view.enable_updates()
-        else:
-            self._list_view.disable_updates()
+        # Both views, not just the visible one: a volume change from
+        # the frame can swap views while the UI is frozen, and the
+        # freeze must lift from whichever view then shows.
+        for view in (self._list_view, self._grid_view):
+            view.set_sensitive(sensitive_state)
+            if sensitive_state:
+                view.enable_updates()
+            else:
+                view.disable_updates()
         self._volumes_toolbar.set_sensitive(sensitive_state)
 
     def freeze_ui(self):
