@@ -66,7 +66,7 @@ _FIND_VERSION = './/{http://www.mozilla.org/2004/em-rdf#}version'
 _FIND_LINK = './/{http://www.mozilla.org/2004/em-rdf#}updateLink'
 _FIND_SIZE = './/{http://www.mozilla.org/2004/em-rdf#}updateSize'
 
-_UPDATE_PATH = 'http://activities.sugarlabs.org/services/update-aslo.php'
+_UPDATE_PATH = 'https://v4.activities.sugarlabs.org/services/update-aslo.php'
 
 _logger = logging.getLogger('ASLO')
 
@@ -82,9 +82,8 @@ class _UpdateChecker(GObject.GObject):
         self._bundle = None
 
     def check(self, bundle):
-        # ASLO knows only about stable SP releases
         major, minor = config.version.split('.')[0:2]
-        sp_version = '%s.%s' % (major, int(minor) + int(minor) % 2)
+        sp_version = '%s.%s' % (major, minor)
 
         url = '%s?id=%s&appVersion=%s' % \
             (_UPDATE_PATH, bundle.get_bundle_id(), sp_version)
