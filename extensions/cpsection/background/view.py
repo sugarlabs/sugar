@@ -37,6 +37,8 @@ class Background(SectionView):
         self._model = model
         self._images_loaded = False
         self._append_to_store_sid = None
+        self._available_height = 0
+        self._last_scrolled_height = None
 
         self.connect('realize', self.__realize_cb)
         self.connect('unrealize', self.__unrealize_cb)
@@ -59,21 +61,29 @@ class Background(SectionView):
         clear_button.show()
         self.pack_end(clear_button, False, True, 0)
 
-        scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
-                                   Gtk.PolicyType.AUTOMATIC)
-        self.pack_start(scrolled_window, True, True, 0)
-        scrolled_window.show()
+        self._grid_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self._grid_box.connect('size-allocate',
+                               self.__grid_box_size_allocate_cb)
+        self.pack_start(self._grid_box, True, True, 0)
+        self._grid_box.show()
+
+        self._scrolled_window = Gtk.ScrolledWindow()
+        self._scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        self._scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
+                                         Gtk.PolicyType.AUTOMATIC)
+        self._grid_box.pack_start(self._scrolled_window, False, False, 0)
+        self._scrolled_window.show()
 
         self._store = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
 
         self._icon_view = Gtk.IconView.new_with_model(self._store)
         self._icon_view.set_selection_mode(Gtk.SelectionMode.SINGLE)
         self._icon_view.connect('selection-changed', self._background_selected)
+        self._icon_view.connect('size-allocate',
+                                self.__icon_view_size_allocate_cb)
         self._icon_view.set_pixbuf_column(0)
         self._icon_view.grab_focus()
-        scrolled_window.add(self._icon_view)
+        self._scrolled_window.add(self._icon_view)
         self._icon_view.show()
 
         alpha = self._model.get_background_alpha_level()
@@ -161,6 +171,62 @@ class Background(SectionView):
     def __unrealize_cb(self, widget):
         self.get_window().set_cursor(None)
         Gdk.flush()
+
+    def __grid_box_size_allocate_cb(self, widget, allocation):
+        if (allocation.height > 1 and
+                allocation.height != self._available_height):
+            self._available_height = allocation.height
+            self._update_scrolled_window_height()
+
+    def __icon_view_size_allocate_cb(self, widget, allocation):
+        if self._available_height > 1:
+            self._update_scrolled_window_height()
+
+    def _get_icon_view_row_metrics(self):
+        item_padding = self._icon_view.get_item_padding()
+        row_height = 0
+        total_rows = 0
+
+        for row in self._store:
+            ok, rect = self._icon_view.get_cell_rect(row.path, None)
+            if ok and rect.height > 0:
+                row_height = max(row_height, rect.height + 2 * item_padding)
+            item_row = self._icon_view.get_item_row(row.path)
+            if item_row >= 0:
+                total_rows = max(total_rows, item_row + 1)
+
+        if row_height <= 0:
+            row_height = style.XLARGE_ICON_SIZE + 2 * item_padding
+
+        return row_height, total_rows
+
+    def _update_scrolled_window_height(self):
+        if self._available_height <= 1:
+            return
+
+        if len(self._store) == 0:
+            target_height = self._available_height
+        else:
+            row_height, total_rows = self._get_icon_view_row_metrics()
+            margin = self._icon_view.get_margin()
+            row_spacing = self._icon_view.get_row_spacing()
+            frame = style.LINE_WIDTH * 2
+
+            content_avail = self._available_height - frame
+            rows = (content_avail - 2 * margin + row_spacing) // (
+                row_height + row_spacing)
+            if total_rows > 0:
+                rows = min(rows, total_rows)
+            rows = max(1, rows)
+
+            target_content_h = (2 * margin + rows * row_height +
+                                (rows - 1) * row_spacing)
+            target_height = min(self._available_height,
+                                target_content_h + frame)
+
+        if target_height != self._last_scrolled_height:
+            self._last_scrolled_height = target_height
+            self._scrolled_window.set_size_request(-1, target_height)
 
     def _set_alpha_cb(self, widget):
         if widget.get_active():
