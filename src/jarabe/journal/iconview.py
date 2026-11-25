@@ -22,11 +22,15 @@ from gi.repository import Gtk
 from gi.repository import GLib
 
 from jarabe.journal.iconmodel import IconModel
+from sugar3.activity.activity import PREVIEW_SIZE
 from sugar3.graphics.icon import Icon
 from jarabe.journal import model
 from sugar3.graphics.objectchooser import get_preview_pixbuf
 from sugar3.graphics import style
-from sugar3.activity.activity import PREVIEW_SIZE
+
+# Previews are saved at PREVIEW_SIZE; the grid shows them at 5/12
+# scale so the chooser keeps its classic 300x225 cells.
+THUMB_SIZE = (PREVIEW_SIZE[0] * 5 // 12, PREVIEW_SIZE[1] * 5 // 12)
 
 
 class PreviewRenderer(Gtk.CellRendererPixbuf):
@@ -39,15 +43,16 @@ class PreviewRenderer(Gtk.CellRendererPixbuf):
         self._preview_data = data
 
     def do_render(self, cr, widget, background_area, cell_area, flags):
-        self.props.pixbuf = get_preview_pixbuf(self._preview_data)
+        self.props.pixbuf = get_preview_pixbuf(self._preview_data,
+                                               THUMB_SIZE[0], THUMB_SIZE[1])
         Gtk.CellRendererPixbuf.do_render(self, cr, widget, background_area,
                                          cell_area, flags)
 
     def do_get_size(self, widget, cell_area):
         x_offset, y_offset, width, height = Gtk.CellRendererPixbuf.do_get_size(
             self, widget, cell_area)
-        width = PREVIEW_SIZE[0]
-        height = PREVIEW_SIZE[1]
+        width = THUMB_SIZE[0]
+        height = THUMB_SIZE[1]
         return (x_offset, y_offset, width, height)
 
 
