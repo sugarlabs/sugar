@@ -70,6 +70,7 @@ src/jarabe/Makefile
 src/jarabe/model/Makefile
 src/jarabe/model/update/Makefile
 src/jarabe/util/Makefile
+src/jarabe/util/sugarpycha/Makefile
 src/jarabe/util/telepathy/Makefile
 src/jarabe/view/Makefile
 src/jarabe/webservice/Makefile
