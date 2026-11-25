@@ -71,6 +71,8 @@ class ControlPanel(Gtk.Window):
         self._hbox.pack_start(self._main_view, True, True, 0)
         self._main_view.modify_bg(Gtk.StateType.NORMAL,
                                   style.COLOR_BLACK.get_gdk_color())
+        self._main_view.connect('size-allocate',
+                                self.__main_view_size_allocate_cb)
         self._main_view.show()
 
         self.add(self._vbox)
@@ -88,6 +90,7 @@ class ControlPanel(Gtk.Window):
 
         self._busy_count = 0
         self._selected = []
+        self._last_scrolled_height = None
 
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
@@ -142,6 +145,10 @@ class ControlPanel(Gtk.Window):
             for child in self._table.get_children():
                 child.destroy()
             self._setup_options()
+            self._last_scrolled_height = None
+            available_height = self._main_view.get_allocated_height()
+            if available_height > 1:
+                self._update_scrolled_window_height(available_height)
 
     def _set_canvas(self, canvas):
         if self._canvas in self._main_view:
@@ -172,6 +179,7 @@ class ControlPanel(Gtk.Window):
 
         self._scrolledwindow = Gtk.ScrolledWindow()
         self._scrolledwindow.set_can_focus(False)
+        self._scrolledwindow.set_valign(Gtk.Align.START)
         self._scrolledwindow.set_policy(Gtk.PolicyType.AUTOMATIC,
                                         Gtk.PolicyType.AUTOMATIC)
         self._scrolledwindow.add_with_viewport(self._table)
@@ -184,6 +192,38 @@ class ControlPanel(Gtk.Window):
                                    self.__stop_clicked_cb)
         self._main_toolbar.connect('search-changed',
                                    self.__search_changed_cb)
+
+    def __main_view_size_allocate_cb(self, widget, allocation):
+        if self._canvas == self._scrolledwindow and allocation.height > 1:
+            self._update_scrolled_window_height(allocation.height)
+
+    def _update_scrolled_window_height(self, available_height):
+        children = self._table.get_children()
+        if not children:
+            return
+
+        row_height = max(
+            child.get_preferred_height()[1] for child in children)
+        if row_height <= 0:
+            return
+
+        border = self._table.get_border_width()
+        row_spacing = style.GRID_CELL_SIZE
+        total_rows = self._table.props.n_rows
+
+        rows = (available_height - 2 * border + row_spacing) // (
+            row_height + row_spacing)
+        if total_rows > 0:
+            rows = min(rows, total_rows)
+        rows = max(1, rows)
+
+        target_height = min(
+            available_height,
+            2 * border + rows * row_height + (rows - 1) * row_spacing)
+
+        if target_height != self._last_scrolled_height:
+            self._last_scrolled_height = target_height
+            self._scrolledwindow.set_size_request(-1, target_height)
 
     def _setup_options(self):
         # If the screen width only supports two columns, start

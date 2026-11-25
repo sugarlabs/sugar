@@ -172,6 +172,16 @@ class AboutMe(SectionView):
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
 
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.NEVER,
+                                   Gtk.PolicyType.AUTOMATIC)
+        self.pack_start(scrolled_window, True, True, 0)
+        scrolled_window.show()
+
+        self._vbox = Gtk.VBox(spacing=style.DEFAULT_SPACING)
+        scrolled_window.add_with_viewport(self._vbox)
+        self._vbox.show()
+
         self._color = XoColor(self._model.get_color())
 
         self._original_nick = self._model.get_nick()
@@ -221,8 +231,8 @@ class AboutMe(SectionView):
         center_alert.add(alert_grid)
         alert_grid.show()
 
-        self.pack_start(center_in_panel, False, False, 0)
-        self.pack_start(center_alert, False, False, 0)
+        self._vbox.pack_start(center_in_panel, False, False, 0)
+        self._vbox.pack_start(center_alert, False, False, 0)
         center_in_panel.show()
         center_alert.show()
 
@@ -280,7 +290,7 @@ class AboutMe(SectionView):
         center_in_panel.add(grid)
         grid.show()
 
-        self.pack_start(center_in_panel, False, False, 0)
+        self._vbox.pack_start(center_in_panel, False, False, 0)
         center_in_panel.show()
 
     def _setup_gender(self):
@@ -305,7 +315,7 @@ class AboutMe(SectionView):
         center_in_panel.add(grid)
         grid.show()
 
-        self.pack_start(center_in_panel, False, False, 0)
+        self._vbox.pack_start(center_in_panel, False, False, 0)
         center_in_panel.show()
 
     def _setup_age(self):
@@ -337,7 +347,7 @@ class AboutMe(SectionView):
         center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
         center_in_panel.add(grid)
         grid.show()
-        self.pack_start(center_in_panel, False, False, 0)
+        self._vbox.pack_start(center_in_panel, False, False, 0)
         center_in_panel.show()
 
     def setup(self):
