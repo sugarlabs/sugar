@@ -251,7 +251,7 @@ class InplaceResultSet(BaseResultSet):
 
         query_text = query.get('query', '')
         if query_text.startswith('"') and query_text.endswith('"'):
-            self._regex = re.compile('*%s*' % query_text.strip(['"']))
+            self._regex = re.compile('.*%s.*' % query_text.strip('"'))
         elif query_text:
             expression = ''
             for word in query_text.split(' '):
