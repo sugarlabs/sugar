@@ -21,9 +21,9 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gettext import gettext as _
 
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics import style
-from sugar3 import util
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics import style
+from sugar4 import util
 
 from jarabe.journal import model
 from jarabe.journal import misc

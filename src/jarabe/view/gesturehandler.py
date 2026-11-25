@@ -18,7 +18,7 @@ from gi.repository import Gdk
 from gi.repository import SugarExt
 from gi.repository import SugarGestures
 
-from sugar3.graphics import style
+from sugar4.graphics import style
 
 _instance = None
 
@@ -36,7 +36,7 @@ class GestureHandler(object):
     def __init__(self, frame):
         self._frame = frame
 
-        self._gesture_grabber = SugarExt.GestureGrabber()
+        #self._gesture_grabber = SugarExt.GestureGrabber()
         self._controller = []
 
         screen = Gdk.Screen.get_default()
@@ -49,7 +49,7 @@ class GestureHandler(object):
 
     def _add_controller(self):
         for controller in self._controller:
-            self._gesture_grabber.remove(controller)
+            #self._gesture_grabber.remove(controller)
 
         self._track_gesture_for_area(SugarGestures.SwipeDirectionFlags.DOWN,
                                      0, 0, Gdk.Screen.width(),

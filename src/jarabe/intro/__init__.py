@@ -2,8 +2,8 @@ import os
 
 from gi.repository import Gio
 
-from sugar3 import env
-from sugar3.profile import get_profile
+from sugar4 import env
+from sugar4.profile import get_profile
 
 
 def check_profile():

@@ -26,7 +26,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 
 from jarabe import config
-from sugar3 import env
+from sugar4 import env
 
 _session = None
 

@@ -27,16 +27,16 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
-from sugar3.graphics.icon import CanvasIcon
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.alert import Alert, ErrorAlert
-from sugar3.graphics.xocolor import XoColor
-from sugar3.activity import activityfactory
-from sugar3 import dispatch
-from sugar3.datastore import datastore
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
+from sugar4.graphics.icon import CanvasIcon
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar4.graphics.alert import Alert, ErrorAlert
+from sugar4.graphics.xocolor import XoColor
+from sugar4.activity import activityfactory
+from sugar4 import dispatch
+from sugar4.datastore import datastore
 
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette
@@ -73,11 +73,11 @@ about the layout can be accessed with fields of the class."""
 _favorites_settings = None
 
 
-class FavoritesBox(Gtk.VBox):
+class FavoritesBox(Gtk.Box):
     __gtype_name__ = 'SugarFavoritesBox'
 
     def __init__(self, favorite_view):
-        Gtk.VBox.__init__(self)
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.VERTICAL)
 
         self.favorite_view = favorite_view
         self._view = FavoritesView(self)

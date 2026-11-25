@@ -16,7 +16,7 @@
 import logging
 from gettext import gettext as _
 
-from sugar3.graphics.alert import ErrorAlert
+from sugar4.graphics.alert import ErrorAlert
 
 
 class BaseErrorAlert(ErrorAlert):

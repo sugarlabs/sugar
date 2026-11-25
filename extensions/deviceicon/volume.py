@@ -21,10 +21,10 @@ from gi.repository import GLib
 from gi.repository import Gio
 from gi.repository import Gtk
 
-from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.icon import Icon
-from sugar3.graphics import style
+from sugar4.graphics.tray import TrayIcon
+from sugar4.graphics.palettemenu import PaletteMenuItem
+from sugar4.graphics.icon import Icon
+from sugar4.graphics import style
 
 from jarabe.journal import journalactivity
 from jarabe.journal.misc import get_mount_icon_name

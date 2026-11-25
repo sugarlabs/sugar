@@ -25,7 +25,7 @@ from gi.repository import Gio
 from gwebsockets.server import Server
 from gwebsockets.server import Message
 
-from sugar3 import env
+from sugar4 import env
 
 from jarabe.model import shell
 from jarabe.model import session

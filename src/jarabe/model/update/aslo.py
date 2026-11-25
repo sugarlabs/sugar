@@ -53,8 +53,8 @@ from xml.etree.ElementTree import XML
 from gi.repository import GLib
 from gi.repository import GObject
 
-from sugar3.bundle.bundleversion import NormalizedVersion
-from sugar3.bundle.bundleversion import InvalidVersionError
+from sugar4.bundle.bundleversion import NormalizedVersion
+from sugar4.bundle.bundleversion import InvalidVersionError
 
 from jarabe import config
 from jarabe.model.update import BundleUpdate

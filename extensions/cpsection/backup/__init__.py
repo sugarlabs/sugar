@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gettext import gettext as _
-from sugar3.graphics.xocolor import XoColor
+from sugar4.graphics.xocolor import XoColor
 
 CLASS = 'BackupView'
 ICON = 'backup'

@@ -17,7 +17,7 @@ AM_PATH_PYTHON
 
 AS_IF([$PYTHON -m em </dev/null >/dev/null 2>&1], AC_MSG_RESULT([empy found]), AC_MSG_ERROR([empy not found]))
 
-PKG_CHECK_MODULES(SHELL, gtk+-3.0)
+PKG_CHECK_MODULES(SHELL, gtk4)
 
 IT_PROG_INTLTOOL([0.35.0])
 GETTEXT_PACKAGE=sugar

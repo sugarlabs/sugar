@@ -26,9 +26,9 @@ from jarabe.journal.detailview import BackBar
 from jarabe.journal.listview import ListView
 from jarabe.journal import model
 
-from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics import style
-from sugar3.graphics.icon import Icon
+from sugar4.graphics.xocolor import XoColor
+from sugar4.graphics import style
+from sugar4.graphics.icon import Icon
 
 _SERVICE_NAME = 'org.laptop.Activity'
 _SERVICE_PATH = '/org/laptop/Activity'
@@ -50,7 +50,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         self._project = None
         self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
-        self._vbox = Gtk.VBox()
+        self._vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(self._vbox)
 
         back_bar = BackBar()
@@ -131,7 +131,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
             model.write(self.project_metadata)
 
     def _create_scrollable(self, widget, label=None):
-        vbox = Gtk.VBox()
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         vbox.props.spacing = style.DEFAULT_SPACING
 
         if label is not None:
