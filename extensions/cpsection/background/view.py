@@ -210,7 +210,13 @@ class Background(SectionView):
             row_height, total_rows = self._get_icon_view_row_metrics()
             margin = self._icon_view.get_margin()
             row_spacing = self._icon_view.get_row_spacing()
-            frame = style.LINE_WIDTH * 2
+            ctx = self._scrolled_window.get_style_context()
+            border = ctx.get_border(Gtk.StateFlags.NORMAL)
+            padding = ctx.get_padding(Gtk.StateFlags.NORMAL)
+            frame = (border.top + border.bottom +
+                     padding.top + padding.bottom)
+            if frame <= 0:
+                frame = style.LINE_WIDTH * 2
 
             content_avail = self._available_height - frame
             rows = (content_avail - 2 * margin + row_spacing) // (
