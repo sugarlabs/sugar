@@ -13,14 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from jarabe.frame.frame import Frame
-
-
 _view = None
 
 
 def get_view():
     global _view
     if not _view:
+        from jarabe.frame.frame import Frame
         _view = Frame()
     return _view
