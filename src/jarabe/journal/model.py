@@ -715,7 +715,7 @@ def copy(metadata, mount_point, ready_callback=None):
           ready_callback=ready_callback)
 
 
-def write(metadata, file_path='', update_mtime=True, transfer_ownership=True,
+def write(metadata:dict, file_path: str='', update_mtime: bool=True, transfer_ownership: bool=True,
           ready_callback=None):
     """Creates or updates an entry for that id
     """
