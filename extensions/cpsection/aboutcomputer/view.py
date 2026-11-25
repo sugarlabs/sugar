@@ -32,6 +32,7 @@ class AboutComputer(SectionView):
         SectionView.__init__(self)
 
         self._model = model
+        self._license_expander_label = None
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
@@ -179,7 +180,12 @@ class AboutComputer(SectionView):
         label_info.show()
         vbox_copyright.pack_start(label_info, False, True, 0)
 
-        expander = Gtk.Expander(label=_('Full license:'))
+        expander = Gtk.Expander()
+        self._license_expander_label = Gtk.Label()
+        self._license_expander_label.set_alignment(0, 0.5)
+        self._license_expander_label.show()
+        expander.set_label_widget(self._license_expander_label)
+        self._update_license_expander_label(expander)
         expander.connect('notify::expanded', self.license_expander_cb)
         expander.show()
         vbox_copyright.pack_start(expander, False, True, 0)
@@ -201,6 +207,8 @@ class AboutComputer(SectionView):
         vbox_copyright.show()
 
     def license_expander_cb(self, expander, param_spec):
+        self._update_license_expander_label(expander)
+
         # load/destroy the license viewer on-demand, to avoid storing the
         # GPL in memory at all times
         if expander.get_expanded():
@@ -212,4 +220,11 @@ class AboutComputer(SectionView):
             view_license.show()
             expander.add(view_license)
         else:
-            expander.get_child().destroy()
+            child = expander.get_child()
+            if child is not None:
+                child.destroy()
+
+    def _update_license_expander_label(self, expander):
+        indicator = '▾' if expander.get_expanded() else '▸'
+        text = '%s %s' % (indicator, _('Full license:'))
+        self._license_expander_label.set_text(text)
